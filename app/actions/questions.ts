@@ -5,7 +5,8 @@ import { QuestionWithCategory } from '@/types/database.types'
 
 export async function getRandomQuestions(limit: number = 10): Promise<QuestionWithCategory[]> {
   const supabase = createServerClient()
-  
+  if (!supabase) return []
+
   try {
     // Obtener preguntas aleatorias con sus categorías
     const { data, error } = await supabase
