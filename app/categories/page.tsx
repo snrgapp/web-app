@@ -83,7 +83,7 @@ export default function CategorySelection() {
           <div className="text-black">
             <Coffee size={20} className="sm:w-6 sm:h-6 md:w-8 md:h-8 mb-4 sm:mb-6 md:mb-8" strokeWidth={2.5} />
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-none tracking-tighter mb-2 sm:mb-3 md:mb-4">
-              LET'S <br /> CONNECT
+              LET&apos;S <br /> CONNECT
             </h2>
             <p className="text-[9px] sm:text-[10px] md:text-[11px] font-medium leading-tight text-black/70">
               conozcamos tu empresa
