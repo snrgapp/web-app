@@ -1,6 +1,6 @@
-# Question Card App
+# web-app
 
-Aplicación interactiva de cartas de preguntas con animaciones fluidas usando Next.js, Framer Motion y Supabase.
+**networking app** — Aplicación interactiva de cartas de preguntas con animaciones fluidas usando Next.js, Framer Motion y Supabase.
 
 ## Características
 
