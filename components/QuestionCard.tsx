@@ -67,10 +67,12 @@ export default function QuestionCard({
         />
       </div>
 
-      {/* Contenido de la pregunta: misma tipografía que "tienes 3 min" (SF Pro 20px Heavy, line-height 16, letter-spacing -1px) */}
-      <p className="text-black font-timer-label text-left flex-1 flex items-start">
-        {content}
-      </p>
+      {/* Contenido de la pregunta: wrap y scroll para que no se desborde, se vea todo */}
+      <div className="flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden flex flex-col">
+        <p className="text-black font-timer-label text-left break-words [overflow-wrap:anywhere]">
+          {content}
+        </p>
+      </div>
 
       {/* Logo centrado en la parte inferior, 16x16px */}
       <div className="flex justify-center w-full shrink-0 pt-2">

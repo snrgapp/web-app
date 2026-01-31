@@ -151,9 +151,9 @@ export default function CardDeckContainer({ questions }: CardDeckContainerProps)
           ) : null}
         </div>
         
-        {/* "tienes 3 min" centrada arriba; timer y girar alineados frente a frente */}
+        {/* "tienes 3 min", timer y girar: mucho más cerca de la tarjeta */}
         {selectedCardIndex !== null && (
-          <div className="mt-10 sm:mt-12 w-full max-w-xl mx-auto px-4 flex flex-col items-center">
+          <div className="-mt-4 sm:-mt-6 w-full max-w-xl mx-auto px-4 flex flex-col items-center">
             <div className={`flex items-center justify-center gap-2 mb-4 font-timer-label ${backgroundColor === 'dark' ? 'text-white' : 'text-black'}`}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                 <circle cx="12" cy="12" r="10"/>
