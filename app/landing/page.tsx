@@ -62,23 +62,23 @@ export default function LandingPage() {
         </motion.div>
       </div>
 
-      {/* Sección de Texto */}
-      <div className="flex flex-col items-start w-full max-w-sm mt-12 px-4 z-20">
+      {/* Sección de Texto - más pegada a las tarjetas, separada del botón */}
+      <div className="flex flex-col items-start w-full max-w-sm -mt-6 sm:-mt-8 px-4 z-20">
         <motion.h1 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-7xl font-bold tracking-tighter text-black leading-none"
+          className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter text-black leading-none mb-0"
         >
-          networking
+          networking,
         </motion.h1>
         <motion.p 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-6xl font-extralight tracking-tight text-black leading-tight"
+          className="text-4xl sm:text-5xl md:text-6xl font-extralight tracking-tight text-black leading-tight -mt-3"
         >
-          pero facil
+          pero facil.
         </motion.p>
       </div>
 
