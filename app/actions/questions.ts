@@ -3,19 +3,23 @@
 import { createServerClient } from '@/utils/supabase/server'
 import { QuestionWithCategory } from '@/types/database.types'
 
-export async function getRandomQuestions(limit: number = 10): Promise<QuestionWithCategory[]> {
+export async function getRandomQuestions(limit: number = 10, categorySlug?: string | null): Promise<QuestionWithCategory[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
   try {
-    // Obtener preguntas aleatorias con sus categorías
-    const { data, error } = await supabase
+    let query = supabase
       .from('questions')
       .select(`
         *,
-        categories(*)
+        categories!inner(*)
       `)
-      .limit(limit * 2) // Obtener más para tener variedad al mezclar
+
+    if (categorySlug) {
+      query = query.eq('categories.slug', categorySlug)
+    }
+
+    const { data, error } = await query.limit(limit * 2)
     
     if (error) {
       console.error('Error fetching questions:', error)
@@ -38,9 +42,10 @@ export async function getRandomQuestions(limit: number = 10): Promise<QuestionWi
         category_id: q.category_id,
         difficulty_level: q.difficulty_level,
         created_at: q.created_at,
-        category: category || {
+        category: category ? { ...category, slug: category.slug ?? null } : {
           id: '',
           name: 'Sin categoría',
+          slug: null,
           color_hex: '#6b7280',
           icon_slug: 'help-circle',
           created_at: new Date().toISOString(),

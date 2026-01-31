@@ -24,7 +24,7 @@ export default function CategorySelection() {
       setIsShuffling(false)
       // Después del barajado, navegar a preguntas con la categoría seleccionada
       setTimeout(() => {
-        router.push('/questions')
+        router.push(`/questions?category=${selectedCategory}`)
       }, 500)
     }, 3000)
   }

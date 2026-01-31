@@ -1,8 +1,11 @@
 import { getRandomQuestions } from '../actions/questions'
 import CardDeckContainer from '@/components/CardDeckContainer'
 
-export default async function QuestionsPage() {
-  const questions = await getRandomQuestions(10)
+type Props = { searchParams: Promise<{ category?: string }> }
+
+export default async function QuestionsPage({ searchParams }: Props) {
+  const { category } = await searchParams
+  const questions = await getRandomQuestions(10, category ?? null)
   
   if (questions.length === 0) {
     return (
