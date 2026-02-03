@@ -62,7 +62,7 @@ export default function QuestionCard({
       animate={animate}
     >
       {/* Icono en la esquina superior izquierda */}
-      <div className={isDark ? 'text-[#FFE100]' : 'text-black'}>
+      <div className={isDark ? 'text-white' : 'text-black'}>
         <IconComponent 
           size={20} 
           className="sm:w-6 sm:h-6 md:w-8 md:h-8 mb-4 sm:mb-6 md:mb-8" 
@@ -72,7 +72,7 @@ export default function QuestionCard({
 
       {/* Contenido de la pregunta: wrap y scroll, fuente más pequeña para evitar palabras partidas */}
       <div className="flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden flex flex-col">
-        <p className={`font-question text-left break-words [overflow-wrap:anywhere] ${isDark ? 'text-[#FFE100]' : 'text-black'}`}>
+        <p className={`font-question text-left break-words [overflow-wrap:anywhere] ${isDark ? 'text-white' : 'text-black'}`}>
           {content}
         </p>
       </div>
@@ -87,7 +87,7 @@ export default function QuestionCard({
         className="absolute bottom-0 left-0 right-0 h-[28%] pointer-events-none rounded-b-[20px] sm:rounded-b-[25px] md:rounded-b-[30px]"
         style={{
           background: isDark
-            ? 'linear-gradient(to top, rgba(255,225,0,0.15) 0%, transparent 100%)'
+            ? 'linear-gradient(to top, rgba(255,255,255,0.1) 0%, transparent 100%)'
             : 'linear-gradient(to top, rgba(255,255,255,0.25) 0%, transparent 100%)',
         }}
       />

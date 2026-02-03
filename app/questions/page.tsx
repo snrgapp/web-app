@@ -4,8 +4,9 @@ import CardDeckContainer from '@/components/CardDeckContainer'
 type Props = { searchParams: Promise<{ category?: string }> }
 
 export default async function QuestionsPage({ searchParams }: Props) {
-  const { category } = await searchParams
-  const questions = await getRandomQuestions(10, category ?? null)
+  const params = await searchParams
+  const category = typeof params.category === 'string' ? params.category : params.category?.[0] ?? null
+  const questions = await getRandomQuestions(10, category)
   
   if (questions.length === 0) {
     return (
