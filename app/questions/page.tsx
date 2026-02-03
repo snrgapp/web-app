@@ -20,5 +20,6 @@ export default async function QuestionsPage({ searchParams }: Props) {
     )
   }
   
-  return <CardDeckContainer questions={questions} />
+  const categorySlug = category ?? questions[0]?.category?.slug ?? undefined
+  return <CardDeckContainer questions={questions} categorySlug={categorySlug} />
 }

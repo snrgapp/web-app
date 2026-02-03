@@ -38,6 +38,15 @@
   letter-spacing: -1px;
 }
 
+/* Preguntas: menor tamaño y grosor para evitar palabras partidas en la tarjeta */
+.font-question {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

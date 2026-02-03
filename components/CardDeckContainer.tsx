@@ -10,10 +10,10 @@ import { Coffee, Rocket, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
 
 interface CardDeckContainerProps {
   questions: QuestionWithCategory[]
+  categorySlug?: string
 }
 
-
-export default function CardDeckContainer({ questions }: CardDeckContainerProps) {
+export default function CardDeckContainer({ questions, categorySlug }: CardDeckContainerProps) {
   const router = useRouter()
   const [countdown, setCountdown] = useState<number | null>(null)
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null)
@@ -26,34 +26,32 @@ export default function CardDeckContainer({ questions }: CardDeckContainerProps)
     return questions[selectedCardIndex]
   }, [questions, selectedCardIndex])
   
-  // Iniciar contador regresivo al montar el componente
+  // Conteo regresivo de 3 segundos; fondo y tarjetas según categoría elegida
   useEffect(() => {
-    setCountdown(5)
+    setCountdown(3)
     
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev === null) return null
         
-        // Cambiar color en cada número
         setBackgroundColor((currentColor) => 
           currentColor === 'yellow' ? 'dark' : 'yellow'
         )
         
         if (prev <= 1) {
-          // Seleccionar pregunta aleatoria al llegar a 1
           const randomIndex = Math.floor(Math.random() * questions.length)
           setSelectedCardIndex(randomIndex)
-          setBackgroundColor('dark') // Pantalla termina en gris
+          setBackgroundColor(categorySlug === 'founder' ? 'yellow' : 'dark')
           clearInterval(interval)
           return null
         }
         
         return prev - 1
       })
-    }, 1000) // Cambiar cada segundo
+    }, 1000)
     
     return () => clearInterval(interval)
-  }, [questions.length])
+  }, [questions.length, categorySlug])
   
   // Si no hay preguntas suficientes, mostrar mensaje
   if (questions.length === 0) {
@@ -168,7 +166,11 @@ export default function CardDeckContainer({ questions }: CardDeckContainerProps)
               <div className="flex flex-col items-center pt-5">
                 <motion.button
                   onClick={handleGirar}
-                  className="flex-shrink-0 w-20 h-20 rounded-full border-2 border-black/20 bg-[#FFE100] text-black font-timer-label flex items-center justify-center"
+                  className={`flex-shrink-0 w-20 h-20 rounded-full border-2 font-timer-label flex items-center justify-center ${
+                    backgroundColor === 'yellow'
+                      ? 'border-[#FFE100]/30 bg-[#1a1a1a] text-[#FFE100]'
+                      : 'border-black/20 bg-[#FFE100] text-black'
+                  }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

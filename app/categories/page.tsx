@@ -85,7 +85,7 @@ export default function CategorySelection() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-none tracking-tighter mb-2 sm:mb-3 md:mb-4">
               {`LET'S`} <br /> CONNECT
             </h2>
-            <p className="text-[9px] sm:text-[10px] md:text-[11px] font-medium leading-tight text-black/70">
+            <p className="text-xs sm:text-[11px] md:text-[12px] font-medium leading-tight text-black/70">
               conozcamos tu empresa
             </p>
           </div>
@@ -122,7 +122,7 @@ export default function CategorySelection() {
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black leading-none tracking-tighter mb-2 sm:mb-3 md:mb-4">
               MEET <br /> A NEW <br /> FRIEND
             </h2>
-            <p className="text-[9px] sm:text-[10px] md:text-[11px] font-medium leading-tight text-[#FFE100]/70">
+            <p className="text-xs sm:text-[11px] md:text-[12px] font-medium leading-tight text-[#FFE100]/70">
               conozcamos al founder
             </p>
           </div>
