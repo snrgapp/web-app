@@ -102,9 +102,9 @@ export default function CardDeckContainer({ questions, categorySlug }: CardDeckC
         </button>
       </div>
 
-      <div className="relative w-full flex-1 flex flex-col min-h-0 px-4 sm:px-6">
-        {/* Header: iconos y frase arriba de la pantalla */}
-        <div className="w-full flex-shrink-0 flex flex-col items-center gap-2 sm:gap-3 z-30 pt-4 sm:pt-6">
+      <div className="relative w-full flex-1 flex flex-col min-h-0 px-4 sm:px-6 pb-20 sm:pb-28">
+        {/* Header: iconos y frase más pegados a las tarjetas */}
+        <div className="w-full flex-shrink-0 flex flex-col items-center gap-1 sm:gap-2 z-30 pt-2 sm:pt-3">
           <div className="flex justify-center gap-6 sm:gap-10 opacity-10">
             <Coffee size={28} className={`sm:w-[42px] sm:h-[42px] ${backgroundColor === 'yellow' ? 'text-black' : 'text-white'}`} />
             <Rocket size={28} className={`sm:w-[42px] sm:h-[42px] ${backgroundColor === 'yellow' ? 'text-black' : 'text-white'}`} />
@@ -121,7 +121,7 @@ export default function CardDeckContainer({ questions, categorySlug }: CardDeckC
         </div>
 
         {/* Contador regresivo o tarjeta: centrado en el resto de la pantalla */}
-        <div className="relative w-full flex-1 flex justify-center items-center min-h-0 z-10 px-2 sm:px-6 py-4">
+        <div className="relative w-full flex-1 flex justify-center items-center min-h-0 z-10 px-2 sm:px-6 py-2">
           {countdown !== null ? (
             <motion.div
               key={countdown}
@@ -151,10 +151,10 @@ export default function CardDeckContainer({ questions, categorySlug }: CardDeckC
           ) : null}
         </div>
 
-        {/* "tienes 3 min", timer y girar: mucho más cerca de la tarjeta */}
+        {/* "tienes 3 min", timer y girar: más pegados a la tarjeta */}
         {selectedCardIndex !== null && (
-          <div className="-mt-4 sm:-mt-6 w-full max-w-xl mx-auto px-4 flex flex-col items-center">
-            <div className={`flex items-center justify-center gap-2 mb-4 font-timer-label ${backgroundColor === 'dark' ? 'text-white' : 'text-black'}`}>
+          <div className="-mt-8 sm:-mt-12 w-full max-w-xl mx-auto px-4 flex flex-col items-center">
+            <div className={`flex items-center justify-center gap-2 mb-2 sm:mb-3 font-timer-label ${backgroundColor === 'dark' ? 'text-white' : 'text-black'}`}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
@@ -162,10 +162,10 @@ export default function CardDeckContainer({ questions, categorySlug }: CardDeckC
               <span>tienes 3 min</span>
             </div>
             <div className="flex items-start justify-center gap-6 sm:gap-8">
-              <div className="flex flex-col items-center pt-5">
+              <div className="flex flex-col items-center pt-2">
                 <Timer initialMinutes={3} dark={backgroundColor === 'dark'} hideLabel />
               </div>
-              <div className="flex flex-col items-center pt-5">
+              <div className="flex flex-col items-center pt-2">
                 <motion.button
                   onClick={handleGirar}
                   className={`flex-shrink-0 w-20 h-20 rounded-full border-2 font-timer-label flex items-center justify-center ${

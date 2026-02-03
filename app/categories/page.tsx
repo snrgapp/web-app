@@ -137,8 +137,8 @@ export default function CategorySelection() {
         </motion.div>
       </div>
 
-      {/* Footer y Botón */}
-      <div className="w-full max-w-[320px] flex flex-col items-center gap-4 sm:gap-5 z-50 px-4">
+      {/* Footer y Botón: más pegados a las tarjetas */}
+      <div className="w-full max-w-[320px] flex flex-col items-center gap-3 sm:gap-4 -mt-8 sm:-mt-12 z-50 px-4">
         <p className="text-xl sm:text-2xl font-light text-gray-500 italic">ahora si</p>
         
         <button 

@@ -67,6 +67,51 @@ export interface Database {
           }
         ]
       }
+      asistentes: {
+        Row: {
+          id: string
+          nombre: string | null
+          apellido: string | null
+          telefono: string | null
+          correo: string | null
+          empresa: string | null
+          sector: string | null
+          soluciones: string | null
+          desafios: string | null
+          mesa: string | null
+          codigo_mesa: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nombre?: string | null
+          apellido?: string | null
+          telefono?: string | null
+          correo?: string | null
+          empresa?: string | null
+          sector?: string | null
+          soluciones?: string | null
+          desafios?: string | null
+          mesa?: string | null
+          codigo_mesa?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nombre?: string | null
+          apellido?: string | null
+          telefono?: string | null
+          correo?: string | null
+          empresa?: string | null
+          sector?: string | null
+          soluciones?: string | null
+          desafios?: string | null
+          mesa?: string | null
+          codigo_mesa?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -86,6 +131,7 @@ export interface Database {
 // Tipos auxiliares para uso en la aplicación
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']
+export type Asistente = Database['public']['Tables']['asistentes']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }
