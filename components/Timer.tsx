@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface TimerProps {
   initialMinutes?: number
@@ -15,21 +15,30 @@ export default function Timer({ initialMinutes = 3, onComplete, dark = false, hi
   const totalSeconds = initialMinutes * 60
   const [seconds, setSeconds] = useState(totalSeconds)
   const [isRunning, setIsRunning] = useState(false)
+  const onCompleteRef = useRef(onComplete)
+  onCompleteRef.current = onComplete
 
   useEffect(() => {
     if (!isRunning) return
     if (seconds <= 0) {
-      onComplete?.()
       setIsRunning(false)
+      requestAnimationFrame(() => onCompleteRef.current?.())
       return
     }
 
     const interval = setInterval(() => {
-      setSeconds((prev) => prev - 1)
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          setTimeout(() => onCompleteRef.current?.(), 0)
+          return 0
+        }
+        return prev - 1
+      })
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [isRunning, seconds, onComplete])
+  }, [isRunning, seconds])
 
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60

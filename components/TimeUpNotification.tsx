@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 
@@ -51,14 +52,15 @@ export default function TimeUpNotification({ isOpen, onClose }: TimeUpNotificati
     [onClose]
   )
 
-  return (
+  const popup = (
     <AnimatePresence>
       {isOpen && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50"
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100dvh' }}
           onClick={handleBackdropClick}
         >
           <motion.div
@@ -71,7 +73,7 @@ export default function TimeUpNotification({ isOpen, onClose }: TimeUpNotificati
           >
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors"
+              className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors touch-manipulation"
               aria-label="Cerrar"
             >
               <X size={20} className="text-gray-500" />
@@ -84,4 +86,9 @@ export default function TimeUpNotification({ isOpen, onClose }: TimeUpNotificati
       )}
     </AnimatePresence>
   )
+
+  if (typeof document !== 'undefined') {
+    return createPortal(popup, document.body)
+  }
+  return popup
 }
