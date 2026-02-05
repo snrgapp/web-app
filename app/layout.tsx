@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Question Card App",
-  description: "Aplicación interactiva de cartas de preguntas",
+  title: "Synergy | Founders & Makers",
+  description: "Networking, pero fácil. Conecta founders y makers.",
 };
 
 export default function RootLayout({
