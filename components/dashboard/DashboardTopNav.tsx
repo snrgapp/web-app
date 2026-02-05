@@ -2,14 +2,15 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, ChevronDown, Moon } from 'lucide-react'
+import { LayoutDashboard, Wallet, Database, Search, ChevronDown } from 'lucide-react'
+import { LogoutButton } from './LogoutButton'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { href: '/panel', label: 'Dashboard' },
-  { href: '/panel/finanzas', label: 'Finanzas' },
-  { href: '/panel/base-datos', label: 'Base de Datos' },
+  { href: '/panel', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/panel/finanzas', icon: Wallet, label: 'Finanzas' },
+  { href: '/panel/base-datos', icon: Database, label: 'Base de Datos' },
 ]
 
 export function DashboardTopNav() {
@@ -18,23 +19,25 @@ export function DashboardTopNav() {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-zinc-200">
       <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-        <nav className="flex items-center gap-6">
+        <nav className="flex items-center gap-2">
           {navItems.map((item) => {
             const isActive = pathname === item.href
+            const Icon = item.icon
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                title={item.label}
                 className={cn(
-                  'relative py-2 text-sm font-medium transition-colors',
-                  isActive ? 'text-black' : 'text-zinc-400 hover:text-zinc-600'
+                  'relative p-2 rounded-lg transition-colors',
+                  isActive ? 'text-black bg-zinc-100' : 'text-zinc-400 hover:text-zinc-600 hover:bg-zinc-50'
                 )}
               >
-                {item.label}
+                <Icon className="w-5 h-5" />
                 {isActive && (
                   <motion.div
                     layoutId="nav-underline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-black"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-black rounded-full"
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -64,12 +67,7 @@ export function DashboardTopNav() {
             >
               <ChevronDown className="w-4 h-4" />
             </button>
-            <button
-              className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 transition-colors"
-              aria-label="Modo oscuro"
-            >
-              <Moon className="w-5 h-5" />
-            </button>
+            <LogoutButton />
           </div>
         </div>
       </div>

@@ -119,6 +119,13 @@ export default function LandingPage() {
             }}
           />
         </div>
+        <span className="text-gray-300">·</span>
+        <button
+          onClick={() => router.push('/login')}
+          className="text-gray-400 hover:text-gray-600 text-sm"
+        >
+          Panel
+        </button>
       </motion.div>
 
       {/* Degradado blanco inferior */}

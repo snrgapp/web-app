@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Moon, Plus, Info } from 'lucide-react'
+import { Plus, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { TotalAsistentesChart } from './charts/TotalAsistentesChart'
@@ -23,7 +23,6 @@ export function DashboardContent() {
             DASHBOARD
           </p>
           <div className="flex items-center gap-2">
-            <Moon className="w-5 h-5 text-neon-lime" />
             <h1 className="text-2xl sm:text-3xl font-hero text-black">
               Asistentes
             </h1>
