@@ -12,7 +12,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-between p-8 font-sans relative overflow-hidden">
       
       {/* Contenedor de Tarjetas Apiladas */}
-      <div className="relative w-full max-w-sm mt-20 h-[300px] flex justify-center z-10">
+      <div className="relative w-full max-w-sm mt-8 sm:mt-12 h-[300px] flex justify-center z-10">
         
         {/* Tarjeta Superior (Amarilla) */}
         <motion.div 
@@ -68,7 +68,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter text-black leading-none mb-0"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-black leading-none mb-0"
         >
           networking,
         </motion.h1>
@@ -76,9 +76,9 @@ export default function LandingPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-4xl sm:text-5xl md:text-6xl font-extralight tracking-tight text-black leading-tight -mt-3"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extralight tracking-tight text-black leading-tight -mt-3"
         >
-          pero facil.
+          pero fácil.
         </motion.p>
       </div>
 
@@ -89,11 +89,11 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="w-full bg-black text-white rounded-full py-5 flex items-center justify-center gap-4 hover:opacity-90 transition-all active:scale-95 shadow-xl"
+          className="w-full bg-black text-white rounded-full py-3.5 sm:py-4 flex items-center justify-center gap-2 sm:gap-3 hover:opacity-90 transition-all active:scale-95 shadow-xl"
         >
-          <span className="text-3xl font-light">ingresar</span>
+          <span className="text-xl sm:text-2xl font-light">ingresar</span>
           <div className="bg-white/20 p-1 rounded-full">
-            <ArrowRight className="w-6 h-6" />
+            <ArrowRight className="w-5 h-5 sm:w-5 sm:h-5" />
           </div>
         </motion.button>
       </div>
@@ -119,13 +119,6 @@ export default function LandingPage() {
             }}
           />
         </div>
-        <span className="text-gray-300">·</span>
-        <button
-          onClick={() => router.push('/login')}
-          className="text-gray-400 hover:text-gray-600 text-sm"
-        >
-          Panel
-        </button>
       </motion.div>
 
       {/* Degradado blanco inferior */}
