@@ -29,6 +29,16 @@
   --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
 }
 
+/* Hero /inicio: SF Pro Bold para título, SF Pro Thin para subtítulo */
+.font-hero-title {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+.font-hero-subtitle {
+  font-family: var(--font-sans);
+  font-weight: 100;
+}
+
 /* Estilo para etiqueta "tienes 3 min": SF Pro 20px Heavy, line-height 16, letter-spacing -1px */
 .font-timer-label {
   font-family: var(--font-sans);

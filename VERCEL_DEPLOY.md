@@ -31,3 +31,28 @@ Cada vez que hagas **push a `main`** en GitHub, Vercel desplegará automáticame
 ---
 
 **Nota:** Si no configuras las variables de Supabase, el build puede fallar. Añádelas antes del primer deploy.
+
+---
+
+## Solución de problemas: Error 404
+
+Si ves un 404 en Vercel tras desplegar:
+
+1. **Limpiar caché y redesplegar:**
+   - Ve a tu proyecto en [vercel.com](https://vercel.com)
+   - Pestaña **Deployments**
+   - Haz clic en los tres puntos (⋮) del último deployment
+   - Selecciona **Redeploy**
+   - Marca la opción **Clear build cache**
+   - Haz clic en **Redeploy**
+
+2. **Verificar que el build termina bien:**
+   - En el deployment, revisa que el build haya sido exitoso (✓)
+   - Si falla, abre los logs y busca errores como `PageNotFoundError` o `Cannot find module`
+
+3. **Probar localmente antes de desplegar:**
+   ```bash
+   rm -rf .next   # o en Windows: Remove-Item -Recurse -Force .next
+   npm run build
+   npm run start
+   ```
