@@ -112,6 +112,51 @@ export interface Database {
         }
         Relationships: []
       }
+      eventos: {
+        Row: {
+          id: string
+          titulo: string | null
+          image_url: string
+          link: string
+          orden: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          titulo?: string | null
+          image_url: string
+          link: string
+          orden?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          titulo?: string | null
+          image_url?: string
+          link?: string
+          orden?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          id: string
+          email: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -132,6 +177,8 @@ export interface Database {
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']
 export type Asistente = Database['public']['Tables']['asistentes']['Row']
+export type Evento = Database['public']['Tables']['eventos']['Row']
+export type Lead = Database['public']['Tables']['leads']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }

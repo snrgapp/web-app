@@ -5,14 +5,32 @@ import Image from 'next/image'
 import { Mail, ArrowRight, Star } from 'lucide-react'
 import { useState } from 'react'
 import { heroImages } from '@/lib/inicio-data'
+import { supabase } from '@/utils/supabase/client'
 
 export default function Hero() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
+    setLoading(true)
+    if (!supabase) {
+      setError('No se pudo conectar. Intenta más tarde.')
+      setLoading(false)
+      return
+    }
+    const { error: insertError } = await supabase.from('leads').insert({ email: email.trim().toLowerCase() })
+    if (insertError) {
+      setError(insertError.code === '23505' ? 'Este correo ya está registrado.' : 'No se pudo guardar. Intenta de nuevo.')
+      setLoading(false)
+      return
+    }
     setSubmitted(true)
+    setEmail('')
+    setLoading(false)
   }
 
   const col1Images = [heroImages[0], heroImages[1]]
@@ -60,14 +78,21 @@ export default function Hero() {
               </div>
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-8 py-3.5 rounded-2xl bg-black text-white font-medium flex items-center justify-center gap-2 hover:bg-black/90 transition-colors shrink-0"
+                disabled={loading}
+                whileHover={loading ? undefined : { scale: 1.03 }}
+                whileTap={loading ? undefined : { scale: 0.98 }}
+                className="px-8 py-3.5 rounded-2xl bg-black text-white font-medium flex items-center justify-center gap-2 hover:bg-black/90 transition-colors shrink-0 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                regístrame
+                {loading ? 'guardando...' : 'regístrame'}
                 <ArrowRight className="w-4 h-4" />
               </motion.button>
             </motion.form>
+
+            {error && (
+              <p className="text-sm text-red-600 font-light">
+                {error}
+              </p>
+            )}
 
             {/* Rating: 4,9 con estrellas doradas */}
             <div className="flex flex-col gap-4 max-w-md">
@@ -81,7 +106,7 @@ export default function Hero() {
                     <Star className="w-4 h-4 text-[#E5B318] fill-[#E5B318]" />
                   </div>
                 </div>
-                <span className="font-light text-gray-600">en + 130 reviews</span>
+                <span className="font-light text-gray-600">en + 350 founders</span>
               </div>
             </div>
 
