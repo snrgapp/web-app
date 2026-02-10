@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Mail, ArrowRight, Star } from 'lucide-react'
+import { Mail, ArrowRight, Star, Instagram, Linkedin } from 'lucide-react'
 import { useState } from 'react'
 import { heroImages } from '@/lib/inicio-data'
 import { supabase } from '@/utils/supabase/client'
@@ -107,6 +107,27 @@ export default function Hero() {
                   </div>
                 </div>
                 <span className="font-light text-gray-600">en + 350 founders</span>
+              </div>
+              {/* Redes sociales */}
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://www.instagram.com/_____synergy?igsh=MjhocGI0eWp3dDJr&utm_source=qr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-4 h-4" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/synergy-founders-makers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-4 h-4" />
+                </a>
               </div>
             </div>
 

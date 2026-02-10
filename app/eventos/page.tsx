@@ -49,7 +49,7 @@ export default function EventosPage() {
             No hay eventos por ahora.
           </p>
         ) : (
-          <ul className="flex flex-wrap gap-4 justify-start">
+          <ul className="flex flex-wrap gap-4 justify-center sm:justify-start">
             {eventos.map((evento) => (
               <li key={evento.id} className="flex-shrink-0">
                 <a
