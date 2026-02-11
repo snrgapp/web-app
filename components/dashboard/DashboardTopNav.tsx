@@ -2,15 +2,17 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Wallet, Database, Search, ChevronDown } from 'lucide-react'
+import { LayoutDashboard, Calendar, MessageCircle, Wallet, Database, Search, ChevronDown } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 const navItems = [
-  { href: '/panel', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/panel/finanzas', icon: Wallet, label: 'Finanzas' },
-  { href: '/panel/base-datos', icon: Database, label: 'Base de Datos' },
+  { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
+  { href: '/panel/eventos', icon: Calendar, label: 'Eventos', exact: false },
+  { href: '/panel/finanzas', icon: Wallet, label: 'Finanzas', exact: false },
+  { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },
+  { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
 ]
 
 export function DashboardTopNav() {
@@ -21,7 +23,7 @@ export function DashboardTopNav() {
       <div className="flex items-center justify-between h-14 px-4 lg:px-6">
         <nav className="flex items-center gap-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href
+            const isActive = item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(item.href + '/')
             const Icon = item.icon
             return (
               <Link

@@ -14,7 +14,7 @@ export default function AliadosSection() {
         algunos aliados
       </h2>
 
-      <div className="bg-black overflow-hidden py-8">
+      <div className="overflow-hidden py-8">
         <motion.div
           className="flex gap-12 lg:gap-16 items-center min-w-max"
           animate={{ x: [0, '-50%'] }}
@@ -30,7 +30,7 @@ export default function AliadosSection() {
           {duplicatedLogos.map((src, i) => (
             <div
               key={`${src}-${i}`}
-              className="flex-shrink-0 flex items-center justify-center grayscale invert opacity-80 hover:opacity-100 transition-opacity"
+              className="flex-shrink-0 flex items-center justify-center grayscale brightness-[0.5] opacity-90 hover:opacity-100 transition-opacity"
               style={{ width: '140px', height: '60px' }}
             >
               <Image

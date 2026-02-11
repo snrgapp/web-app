@@ -21,13 +21,12 @@ export default function Partners() {
         </motion.h2>
       </div>
 
-      {/* Barra corta oscura - tira negra con logos */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-50px' }}
         transition={{ duration: 0.6 }}
-        className="mx-4 sm:mx-6 lg:mx-8 rounded-xl bg-black py-2 overflow-hidden"
+        className="mx-4 sm:mx-6 lg:mx-8 py-2 overflow-hidden"
       >
         <motion.div
           className="flex gap-2 lg:gap-2.5 items-center min-w-max px-6"
@@ -44,14 +43,14 @@ export default function Partners() {
           {duplicatedLogos.map((logo, i) => (
             <div
               key={`${logo.src}-${i}`}
-              className="relative h-14 w-40 sm:h-16 sm:w-48 lg:h-20 lg:w-56 flex-shrink-0 flex items-center justify-center"
+              className="relative h-14 w-40 sm:h-16 sm:w-48 lg:h-20 lg:w-56 flex-shrink-0 flex items-center justify-center grayscale brightness-[0.5] opacity-90 hover:opacity-100 transition-opacity"
             >
               <Image
                 src={logo.src}
                 alt={logo.alt}
                 width={224}
                 height={80}
-                className={`h-full w-auto object-contain object-center ${logo.invert ? 'brightness-0 invert' : ''}`}
+                className="h-full w-auto object-contain object-center"
               />
             </div>
           ))}

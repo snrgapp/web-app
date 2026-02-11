@@ -4,11 +4,11 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Ticket, Mail } from 'lucide-react'
 
 const navLinks = [
-  { href: '/eventos', label: 'eventos' },
-  { href: '/contacto', label: 'contacto' },
+  { href: '/eventos', label: 'eventos', icon: Ticket },
+  { href: '/contacto', label: 'contacto', icon: Mail },
 ]
 
 export default function Navbar() {
@@ -36,15 +36,19 @@ export default function Navbar() {
 
         {/* Desktop: enlaces horizontales */}
         <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-light text-[#1a1a1a] lowercase hover:text-black/80 transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const Icon = link.icon
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex items-center gap-2 text-sm font-medium text-[#1a1a1a] lowercase hover:text-black/80 transition-colors"
+              >
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                {link.label}
+              </Link>
+            )
+          })}
         </div>
 
         {/* Mobile: botón hamburguesa */}
@@ -73,16 +77,20 @@ export default function Navbar() {
             className="md:hidden overflow-hidden bg-[#f2f2f2] border-t border-black/5"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={closeMenu}
-                  className="py-3 px-2 text-base font-light text-[#1a1a1a] lowercase hover:bg-black/5 rounded-lg transition-colors"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const Icon = link.icon
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={closeMenu}
+                    className="flex items-center gap-2 py-3 px-2 text-base font-medium text-[#1a1a1a] lowercase hover:bg-black/5 rounded-lg transition-colors"
+                  >
+                    <Icon className="w-5 h-5 flex-shrink-0" />
+                    {link.label}
+                  </Link>
+                )
+              })}
             </div>
           </motion.div>
         )}

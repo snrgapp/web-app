@@ -1,17 +1,18 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import {
   Loader2,
-  Plus,
-  Trash2,
-  ExternalLink,
-  ImagePlus,
+  Camera,
+  Globe,
+  MapPin,
+  FileText,
   CheckCircle,
   AlertCircle,
+  Trash2,
+  ExternalLink,
 } from 'lucide-react'
-import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { supabase } from '@/utils/supabase/client'
@@ -28,13 +29,17 @@ export default function PanelEventosPage() {
     message: '',
   })
 
-  // Form state
   const [titulo, setTitulo] = useState('')
   const [link, setLink] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [fecha, setFecha] = useState('')
+  const [horaInicio, setHoraInicio] = useState('17:00')
+  const [horaFin, setHoraFin] = useState('18:00')
+  const [ciudad, setCiudad] = useState('')
   const [orden, setOrden] = useState(0)
   const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function fetchEventos() {
     if (!supabase) {
@@ -55,6 +60,16 @@ export default function PanelEventosPage() {
     fetchEventos()
   }, [])
 
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0]
+    if (f) {
+      setImageFile(f)
+      setImageUrl('')
+      setImagePreview(URL.createObjectURL(f))
+    }
+    e.target.value = ''
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!supabase) {
@@ -62,7 +77,7 @@ export default function PanelEventosPage() {
       return
     }
     if (!link.trim()) {
-      setStatus({ type: 'error', message: 'El enlace es obligatorio.' })
+      setStatus({ type: 'error', message: 'El enlace de registro es obligatorio.' })
       return
     }
 
@@ -79,7 +94,7 @@ export default function PanelEventosPage() {
       if (uploadError) {
         setStatus({
           type: 'error',
-          message: `No se pudo subir la imagen. Crea el bucket "eventos" en Supabase Storage (público) o usa una URL de imagen: ${uploadError.message}`,
+          message: `No se pudo subir la imagen: ${uploadError.message}`,
         })
         setSaving(false)
         return
@@ -89,7 +104,7 @@ export default function PanelEventosPage() {
     }
 
     if (!finalImageUrl) {
-      setStatus({ type: 'error', message: 'Sube una imagen o pega la URL de la imagen.' })
+      setStatus({ type: 'error', message: 'Sube una imagen o pega la URL.' })
       setSaving(false)
       return
     }
@@ -101,18 +116,21 @@ export default function PanelEventosPage() {
       image_url: finalImageUrl,
       link: link.trim(),
       fecha: fecha.trim() || null,
+      ciudad: ciudad.trim() || null,
       orden,
     })
 
     if (error) {
       setStatus({ type: 'error', message: error.message })
     } else {
-      setStatus({ type: 'success', message: 'Evento agregado. Se verá en la página /eventos.' })
+      setStatus({ type: 'success', message: 'Evento creado correctamente.' })
       setTitulo('')
       setLink('')
       setImageUrl('')
       setFecha('')
+      setCiudad('')
       setImageFile(null)
+      setImagePreview(null)
       setOrden(eventos.length)
       fetchEventos()
     }
@@ -130,127 +148,208 @@ export default function PanelEventosPage() {
     }
   }
 
+  const displayImage = imagePreview || imageUrl || null
+
   return (
     <div className="p-4 lg:p-6">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex flex-col w-full max-w-4xl mx-auto"
+        className="flex flex-col w-full max-w-5xl mx-auto"
       >
-        <div className="w-full mb-6">
-          <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
-            EVENTOS
-          </p>
-          <h1 className="text-2xl sm:text-3xl font-hero text-black">Eventos</h1>
-          <p className="mt-2 text-zinc-500">
-            Gestiona los eventos que se muestran en la página <strong>/eventos</strong>. Sube una
-            imagen y el enlace de registro (ej. Luma); se mostrará como tarjeta clicable.
-          </p>
-        </div>
+        <h1 className="text-2xl font-semibold text-zinc-900 mb-6">Crear evento</h1>
 
-        <Card className="w-full mb-6 overflow-hidden shadow-sm border border-zinc-200">
-          <CardContent className="p-6 sm:p-8">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">Título (opcional)</label>
-                <Input
-                  value={titulo}
-                  onChange={(e) => setTitulo(e.target.value)}
-                  placeholder="Ej. Reunión de Networking CTG"
-                  className="max-w-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Enlace de registro <span className="text-red-500">*</span>
-                </label>
-                <Input
-                  value={link}
-                  onChange={(e) => setLink(e.target.value)}
-                  placeholder="https://luma.com/niaonzz6"
-                  type="url"
-                  required
-                  className="max-w-md"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Imagen de portada
-                </label>
-                <div className="flex flex-col gap-2 max-w-md">
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const f = e.target.files?.[0]
-                        if (f) {
-                          setImageFile(f)
-                          setImageUrl('')
-                        }
-                        e.target.value = ''
-                      }}
-                      className="file:mr-2 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-zinc-100 file:text-zinc-700"
-                    />
-                    <span className="text-xs text-zinc-500 flex items-center gap-1">
-                      <ImagePlus className="w-4 h-4" /> Subir a Storage
-                    </span>
-                  </div>
-                  <span className="text-xs text-zinc-500">o pega la URL de la imagen:</span>
-                  <Input
-                    value={imageUrl}
-                    onChange={(e) => {
-                      setImageUrl(e.target.value)
-                      if (imageFile) setImageFile(null)
-                    }}
-                    placeholder="https://... o /images/eventos/portada.jpg"
-                    type="text"
-                    disabled={!!imageFile}
+        <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8">
+          {/* Columna izquierda: imagen + tema */}
+          <div className="lg:w-80 flex-shrink-0 space-y-4">
+            <div className="relative aspect-square rounded-xl overflow-hidden bg-zinc-100 group">
+              {displayImage ? (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={displayImage}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
                   />
-                  {imageFile && (
-                    <p className="text-xs text-green-600">
-                      Se subirá: {imageFile.name}
-                    </p>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center text-white opacity-90 hover:opacity-100 transition-opacity"
+                  >
+                    <Camera className="w-5 h-5" />
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-zinc-400 hover:text-zinc-600 transition-colors"
+                >
+                  <div className="w-14 h-14 rounded-full bg-zinc-200 flex items-center justify-center">
+                    <Camera className="w-7 h-7" />
+                  </div>
+                  <span className="text-sm">Agregar imagen</span>
+                </button>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+            </div>
+
+            <div className="lg:hidden">
+              <label className="block text-xs text-zinc-500 mb-1">o pega URL de imagen</label>
+              <Input
+                value={imageUrl}
+                onChange={(e) => {
+                  setImageUrl(e.target.value)
+                  if (imageFile) {
+                    setImageFile(null)
+                    setImagePreview(null)
+                  }
+                }}
+                placeholder="https://..."
+                className="rounded-xl bg-zinc-50 border-zinc-200"
+              />
+            </div>
+          </div>
+
+          {/* Columna derecha: formulario */}
+          <div className="flex-1 min-w-0 space-y-5">
+            {/* Nombre del evento */}
+            <div>
+              <Input
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                placeholder="Nombre del evento"
+                className="text-lg font-medium rounded-xl bg-zinc-50 border-zinc-200 placeholder:text-zinc-400 h-12"
+              />
+            </div>
+
+            {/* Fecha y hora */}
+            <div className="flex flex-wrap gap-4 items-start">
+              <div className="flex gap-3">
+                <div className="flex flex-col items-center pt-1">
+                  <div className="w-3 h-3 rounded-full border-2 border-zinc-300" />
+                  <div className="w-px flex-1 min-h-[60px] border-l-2 border-dashed border-zinc-200" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xs text-zinc-500">Inicio</p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="date"
+                      value={fecha}
+                      onChange={(e) => setFecha(e.target.value)}
+                      className="rounded-xl bg-zinc-50 border-zinc-200 w-36"
+                    />
+                    <Input
+                      type="time"
+                      value={horaInicio}
+                      onChange={(e) => setHoraInicio(e.target.value)}
+                      className="rounded-xl bg-zinc-50 border-zinc-200 w-28"
+                    />
+                  </div>
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Fecha del evento (opcional)
-                </label>
-                <Input
-                  type="date"
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                  className="max-w-[200px]"
-                />
-                <p className="text-xs text-zinc-500 mt-1">
-                  Si la fecha ya pasó, el evento aparecerá en la pestaña &quot;Eventos pasados&quot;.
-                </p>
+              <div className="flex gap-3">
+                <div className="flex flex-col items-center pt-1">
+                  <div className="w-3 h-3 rounded-full border-2 border-zinc-300 border-dashed" />
+                </div>
+                <div className="space-y-2">
+                  <p className="text-xs text-zinc-500">Fin</p>
+                  <div className="flex gap-2">
+                    <Input
+                      type="date"
+                      value={fecha}
+                      onChange={(e) => setFecha(e.target.value)}
+                      className="rounded-xl bg-zinc-50 border-zinc-200 w-36"
+                    />
+                    <Input
+                      type="time"
+                      value={horaFin}
+                      onChange={(e) => setHoraFin(e.target.value)}
+                      className="rounded-xl bg-zinc-50 border-zinc-200 w-28"
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">Orden</label>
-                <Input
-                  type="number"
-                  min={0}
-                  value={orden}
-                  onChange={(e) => setOrden(Number(e.target.value) || 0)}
-                  className="max-w-[120px]"
-                />
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-100 text-zinc-600 text-sm">
+                <Globe className="w-4 h-4" />
+                <span>GMT-05:00</span>
+                <span>Bogotá</span>
               </div>
-              <Button
-                type="submit"
-                disabled={saving}
-                className="bg-pure-dark hover:bg-zinc-800 text-white gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
-                {saving ? 'Guardando...' : 'Agregar evento'}
-              </Button>
-            </form>
+            </div>
+
+            {/* Ubicación */}
+            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+              <div className="flex items-center gap-2 text-zinc-600 mb-1">
+                <MapPin className="w-4 h-4" />
+                <span className="text-sm font-medium">Agregar ubicación del evento</span>
+              </div>
+              <Input
+                value={ciudad}
+                onChange={(e) => setCiudad(e.target.value)}
+                placeholder="Ubicación física o enlace virtual"
+                className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0"
+              />
+            </div>
+
+            {/* Enlace / Descripción */}
+            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+              <div className="flex items-center gap-2 text-zinc-600 mb-1">
+                <FileText className="w-4 h-4" />
+                <span className="text-sm font-medium">Enlace de registro</span>
+              </div>
+              <Input
+                value={link}
+                onChange={(e) => setLink(e.target.value)}
+                placeholder="https://luma.com/..."
+                type="url"
+                required
+                className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0"
+              />
+            </div>
+
+            {/** En desktop: URL de imagen */}
+            <div className="hidden lg:block rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+              <div className="flex items-center gap-2 text-zinc-600 mb-1">
+                <FileText className="w-4 h-4" />
+                <span className="text-sm font-medium">URL de imagen</span>
+              </div>
+              <Input
+                value={imageUrl}
+                onChange={(e) => {
+                  setImageUrl(e.target.value)
+                  if (imageFile) {
+                    setImageFile(null)
+                    setImagePreview(null)
+                  }
+                }}
+                placeholder="https://... o sube archivo a la izquierda"
+                className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0"
+              />
+            </div>
+
+            {/* Botón crear */}
+            <Button
+              type="submit"
+              disabled={saving}
+              className="w-full sm:w-auto px-8 py-6 rounded-xl bg-white border-2 border-zinc-900 text-zinc-900 hover:bg-zinc-50 font-semibold text-base"
+            >
+              {saving ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                'Crear evento'
+              )}
+            </Button>
+
             {status.type && (
               <div
-                className={`mt-4 flex items-center gap-2 p-3 rounded-lg text-sm ${
+                className={`flex items-center gap-2 p-3 rounded-xl text-sm ${
                   status.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
                 }`}
               >
@@ -262,77 +361,75 @@ export default function PanelEventosPage() {
                 {status.message}
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </form>
 
-        <Card className="w-full overflow-hidden shadow-sm">
-          <CardContent className="p-6 sm:p-8">
-            <h2 className="text-lg font-semibold text-zinc-900 mb-4">Eventos en la página</h2>
-            {loading ? (
-              <div className="flex items-center gap-2 text-zinc-500 py-8">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Cargando...
-              </div>
-            ) : eventos.length === 0 ? (
-              <p className="text-zinc-500 py-8">No hay eventos. Agrega uno arriba.</p>
-            ) : (
-              <ul className="space-y-4">
-                {eventos.map((ev) => (
-                  <li
-                    key={ev.id}
-                    className="flex flex-col sm:flex-row gap-4 p-4 rounded-lg border border-zinc-200 bg-zinc-50/50"
-                  >
-                    <div className="relative w-full sm:w-40 h-24 rounded-md overflow-hidden bg-zinc-200 flex-shrink-0">
-                      {ev.image_url.startsWith('/') ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={ev.image_url}
-                          alt={ev.titulo ?? ''}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                      ) : (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={ev.image_url}
-                          alt={ev.titulo ?? ''}
-                          className="absolute inset-0 w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium text-zinc-900 truncate">
-                        {ev.titulo || 'Sin título'}
-                      </p>
-                      <a
-                        href={ev.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
-                      >
-                        {ev.link}
-                        <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                      </a>
-                      <p className="text-xs text-zinc-500 mt-1">
-                        {ev.fecha ? `Fecha: ${ev.fecha}` : 'Sin fecha'} · Orden: {ev.orden}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        className="text-red-600 border-red-200 hover:bg-red-50"
-                        onClick={() => handleDelete(ev.id)}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </CardContent>
-        </Card>
+        {/* Lista de eventos */}
+        <div className="mt-12">
+          <h2 className="text-lg font-semibold text-zinc-900 mb-4">Eventos en la página</h2>
+          {loading ? (
+            <div className="flex gap-2 text-zinc-500 py-8">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Cargando...
+            </div>
+          ) : eventos.length === 0 ? (
+            <p className="text-zinc-500 py-8">No hay eventos. Crea uno arriba.</p>
+          ) : (
+            <ul className="space-y-4">
+              {eventos.map((ev) => (
+                <li
+                  key={ev.id}
+                  className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-zinc-200 bg-zinc-50/50"
+                >
+                  <div className="relative w-full sm:w-40 h-24 rounded-lg overflow-hidden bg-zinc-200 flex-shrink-0">
+                    {ev.image_url.startsWith('/') ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={ev.image_url}
+                        alt={ev.titulo ?? ''}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={ev.image_url}
+                        alt={ev.titulo ?? ''}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-zinc-900 truncate">{ev.titulo || 'Sin título'}</p>
+                    <a
+                      href={ev.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
+                    >
+                      {ev.link}
+                      <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                    </a>
+                    <p className="text-xs text-zinc-500 mt-1">
+                      {ev.fecha ? `Fecha: ${ev.fecha}` : 'Sin fecha'}
+                      {ev.ciudad ? ` · ${ev.ciudad}` : ''} · Orden: {ev.orden}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="text-red-600 border-red-200 hover:bg-red-50"
+                      onClick={() => handleDelete(ev.id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </motion.div>
     </div>
   )

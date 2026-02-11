@@ -120,6 +120,7 @@ export interface Database {
           link: string
           orden: number
           fecha: string | null
+          ciudad: string | null
           created_at: string
         }
         Insert: {
@@ -129,6 +130,7 @@ export interface Database {
           link: string
           orden?: number
           fecha?: string | null
+          ciudad?: string | null
           created_at?: string
         }
         Update: {
@@ -138,6 +140,7 @@ export interface Database {
           link?: string
           orden?: number
           fecha?: string | null
+          ciudad?: string | null
           created_at?: string
         }
         Relationships: []
