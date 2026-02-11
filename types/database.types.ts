@@ -119,6 +119,7 @@ export interface Database {
           image_url: string
           link: string
           orden: number
+          fecha: string | null
           created_at: string
         }
         Insert: {
@@ -127,6 +128,7 @@ export interface Database {
           image_url: string
           link: string
           orden?: number
+          fecha?: string | null
           created_at?: string
         }
         Update: {
@@ -135,6 +137,7 @@ export interface Database {
           image_url?: string
           link?: string
           orden?: number
+          fecha?: string | null
           created_at?: string
         }
         Relationships: []
@@ -153,6 +156,33 @@ export interface Database {
         Update: {
           id?: string
           email?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      contactos: {
+        Row: {
+          id: string
+          nombre: string | null
+          whatsapp: string | null
+          correo: string | null
+          mensaje: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nombre?: string | null
+          whatsapp?: string | null
+          correo?: string | null
+          mensaje: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nombre?: string | null
+          whatsapp?: string | null
+          correo?: string | null
+          mensaje?: string
           created_at?: string
         }
         Relationships: []
@@ -179,6 +209,7 @@ export type Question = Database['public']['Tables']['questions']['Row']
 export type Asistente = Database['public']['Tables']['asistentes']['Row']
 export type Evento = Database['public']['Tables']['eventos']['Row']
 export type Lead = Database['public']['Tables']['leads']['Row']
+export type Contacto = Database['public']['Tables']['contactos']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }

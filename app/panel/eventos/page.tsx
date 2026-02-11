@@ -32,6 +32,7 @@ export default function PanelEventosPage() {
   const [titulo, setTitulo] = useState('')
   const [link, setLink] = useState('')
   const [imageUrl, setImageUrl] = useState('')
+  const [fecha, setFecha] = useState('')
   const [orden, setOrden] = useState(0)
   const [imageFile, setImageFile] = useState<File | null>(null)
 
@@ -99,6 +100,7 @@ export default function PanelEventosPage() {
       titulo: titulo.trim() || null,
       image_url: finalImageUrl,
       link: link.trim(),
+      fecha: fecha.trim() || null,
       orden,
     })
 
@@ -109,6 +111,7 @@ export default function PanelEventosPage() {
       setTitulo('')
       setLink('')
       setImageUrl('')
+      setFecha('')
       setImageFile(null)
       setOrden(eventos.length)
       fetchEventos()
@@ -213,6 +216,20 @@ export default function PanelEventosPage() {
                 </div>
               </div>
               <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  Fecha del evento (opcional)
+                </label>
+                <Input
+                  type="date"
+                  value={fecha}
+                  onChange={(e) => setFecha(e.target.value)}
+                  className="max-w-[200px]"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  Si la fecha ya pasó, el evento aparecerá en la pestaña &quot;Eventos pasados&quot;.
+                </p>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-1">Orden</label>
                 <Input
                   type="number"
@@ -295,7 +312,9 @@ export default function PanelEventosPage() {
                         {ev.link}
                         <ExternalLink className="w-3 h-3 flex-shrink-0" />
                       </a>
-                      <p className="text-xs text-zinc-500 mt-1">Orden: {ev.orden}</p>
+                      <p className="text-xs text-zinc-500 mt-1">
+                        {ev.fecha ? `Fecha: ${ev.fecha}` : 'Sin fecha'} · Orden: {ev.orden}
+                      </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button
