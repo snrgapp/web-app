@@ -49,20 +49,21 @@ export default function ContactSection() {
   return (
     <section id="contacto" className="py-16 px-4 sm:px-6 lg:px-8 bg-[#f2f2f2]">
       <div className="max-w-xl mx-auto">
-        <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] lowercase mb-3">
-          Contáctanos:
-        </h2>
-        <p className="text-base text-gray-500 tracking-widest max-w-md lowercase mb-10">
-          Queremos saber de ti, dejanos un feedback o si te gustaría ser partner de nuestros
-          experiencias. Nos pondremos en contacto tan pronto sea posible.
-        </p>
-
-        {submitted ? (
-          <p className="text-lg font-medium text-[#1a1a1a] py-8 text-center lowercase">
-            Mensaje enviado
+        <div className="border border-[#1a1a1a]/15 rounded-xl bg-white p-6 sm:p-8 shadow-sm">
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#1a1a1a] lowercase mb-3">
+            Contáctanos:
+          </h2>
+          <p className="text-base text-gray-500 tracking-widest max-w-md lowercase mb-10">
+            Queremos saber de ti, dejanos un feedback o si te gustaría ser partner de nuestros
+            experiencias. Nos pondremos en contacto tan pronto sea posible.
           </p>
-        ) : (
-          <form onSubmit={handleSubmit} className="space-y-4">
+
+          {submitted ? (
+            <p className="text-lg font-medium text-[#1a1a1a] py-8 text-center lowercase">
+              Mensaje enviado
+            </p>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="contacto-nombre" className="block text-sm font-medium text-[#1a1a1a] mb-1 lowercase">
                 nombre
@@ -139,7 +140,8 @@ export default function ContactSection() {
               {loading ? 'enviando...' : 'enviar'}
             </button>
           </form>
-        )}
+          )}
+        </div>
       </div>
     </section>
   )

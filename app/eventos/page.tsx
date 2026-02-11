@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Navbar from '@/components/Navbar'
 import { supabase } from '@/utils/supabase/client'
 import type { Evento } from '@/types/database.types'
-import { Sparkles, MapPin, ChevronRight } from 'lucide-react'
+import { MapPin, ChevronRight } from 'lucide-react'
 
 function isLocalUrl(url: string) {
   return url.startsWith('/') && !url.startsWith('//')
@@ -85,11 +85,11 @@ export default function EventosPage() {
   return (
     <main className="min-h-screen bg-[#f2f2f2] text-[#1a1a1a] pb-12">
       <Navbar />
-      <div className="pt-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="pt-24 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header con título y tabs */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-[#1a1a1a]">Eventos</h1>
-          <div className="flex gap-1 p-1 rounded-full bg-[#1a1a1a]/10">
+          <div className="flex gap-1 p-1 rounded-full bg-[#1a1a1a]/10 w-fit">
             <button
               type="button"
               onClick={() => setTab('proximos')}
@@ -143,8 +143,8 @@ export default function EventosPage() {
                     )}
                   </div>
 
-                  {/* Columna derecha: tarjetas */}
-                  <div className="flex-1 min-w-0 space-y-4 pb-4">
+                  {/* Columna derecha: tarjetas — más estrecha en web */}
+                  <div className="flex-1 min-w-0 sm:max-w-md space-y-4 pb-4">
                     {items.map((evento) => (
                       <a
                         key={evento.id}
@@ -156,12 +156,9 @@ export default function EventosPage() {
                         <article className="flex gap-4 p-4 rounded-xl bg-white border border-[#1a1a1a]/8 shadow-sm hover:shadow-md hover:border-[#1a1a1a]/15 transition-all">
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-[#1a1a1a]/80 mb-2">19:00</p>
-                            <div className="flex items-center gap-2 mb-2">
-                              <Sparkles className="w-4 h-4 text-[#E5B318] flex-shrink-0" />
-                              <h2 className="font-semibold text-[#1a1a1a] line-clamp-2">
-                                {evento.titulo || 'Evento'}
-                              </h2>
-                            </div>
+                            <h2 className="font-semibold text-[#1a1a1a] text-sm sm:text-base mb-2 break-words">
+                              {evento.titulo || 'Evento'}
+                            </h2>
                             {evento.ciudad && (
                               <p className="flex items-center gap-2 text-sm text-[#1a1a1a]/60">
                                 <MapPin className="w-4 h-4 flex-shrink-0 text-[#1a1a1a]/50" />
