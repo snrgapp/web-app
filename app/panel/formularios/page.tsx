@@ -242,10 +242,8 @@ export default function PanelFormulariosPage() {
     setSaving(false)
   }
 
-  const inscripcionBase =
-    typeof window !== 'undefined'
-      ? `${window.location.origin.replace(/\/panel.*/, '')}/inscripcion`
-      : 'https://inscripcion.snrg.lat'
+  // URL canónica de inscripciones: https://inscripcion.snrg.lat/[slug]
+  const inscripcionBase = 'https://inscripcion.snrg.lat'
 
   return (
     <div className="p-4 lg:p-6">
