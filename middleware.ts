@@ -3,27 +3,38 @@ import type { NextRequest } from 'next/server'
 
 /**
  * Middleware para el subdominio inscripcion.snrg.lat.
- * Reescribe requests de inscripcion.snrg.lat/:path* a /inscripcion/:path*
- * para servir formularios dinámicos sin cambiar la URL visible.
+ * Fallback: si next.config rewrites no aplican, reescribe /:path → /inscripcion/:path.
+ * Soporta host, x-forwarded-host y variantes (www.).
  */
-const INSCRIPCION_HOST = 'inscripcion.snrg.lat'
-const INSCRIPCION_HOST_LOCAL = 'inscripcion.localhost'
+const INSCRIPCION_HOSTS = [
+  'inscripcion.snrg.lat',
+  'www.inscripcion.snrg.lat',
+  'inscripcion.localhost',
+]
+
+function isInscripcionSubdomain(req: NextRequest): boolean {
+  const host = req.headers.get('host') ?? ''
+  const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
+  const check = (h: string) =>
+    INSCRIPCION_HOSTS.some((ih) => h === ih || h.startsWith(`${ih}:`))
+  return check(host) || check(forwardedHost)
+}
 
 export function middleware(request: NextRequest) {
-  const host = request.headers.get('host') ?? ''
   const pathname = request.nextUrl.pathname
 
-  const isInscripcionSubdomain =
-    host === INSCRIPCION_HOST || host.startsWith(`${INSCRIPCION_HOST_LOCAL}:`)
-
-  if (isInscripcionSubdomain && !pathname.startsWith('/inscripcion')) {
-    const newPath = pathname === '/' ? '/inscripcion' : `/inscripcion${pathname}`
-    const url = request.nextUrl.clone()
-    url.pathname = newPath
-    return NextResponse.rewrite(url)
+  if (!isInscripcionSubdomain(request)) {
+    return NextResponse.next()
   }
 
-  return NextResponse.next()
+  if (pathname.startsWith('/inscripcion') || pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+    return NextResponse.next()
+  }
+
+  const newPath = pathname === '/' ? '/inscripcion' : `/inscripcion${pathname}`
+  const url = request.nextUrl.clone()
+  url.pathname = newPath
+  return NextResponse.rewrite(url)
 }
 
 export const config = {

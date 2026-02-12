@@ -1,22 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/inscripcion",
-      "has": [{ "type": "header", "key": "host", "value": "inscripcion.snrg.lat" }]
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "/api/:path*",
-      "has": [{ "type": "header", "key": "host", "value": "inscripcion.snrg.lat" }]
-    },
-    {
-      "source": "/:path+",
-      "destination": "/inscripcion/:path*",
-      "has": [{ "type": "header", "key": "host", "value": "inscripcion.snrg.lat" }]
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }
