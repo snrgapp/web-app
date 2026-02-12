@@ -242,8 +242,9 @@ export default function PanelFormulariosPage() {
     setSaving(false)
   }
 
-  // URL canónica de inscripciones: https://inscripcion.snrg.lat/[slug]
-  const inscripcionBase = 'https://inscripcion.snrg.lat'
+  // URL canónica de inscripciones. Usar NEXT_PUBLIC_INSCRIPCION_BASE_URL en Vercel si hace falta.
+  const inscripcionBase =
+    process.env.NEXT_PUBLIC_INSCRIPCION_BASE_URL ?? 'https://inscripcion.snrg.lat'
 
   return (
     <div className="p-4 lg:p-6">
