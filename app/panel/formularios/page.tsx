@@ -73,6 +73,7 @@ export default function PanelFormulariosPage() {
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [coverError, setCoverError] = useState<string | null>(null)
   const [campos, setCampos] = useState<FormFieldConfig[]>([])
+  const [brevoListId, setBrevoListId] = useState('')
   const [showCreator, setShowCreator] = useState(false)
   const iconInputRef = useRef<HTMLInputElement>(null)
   const coverInputRef = useRef<HTMLInputElement>(null)
@@ -215,6 +216,7 @@ export default function PanelFormulariosPage() {
             ? c.options
             : undefined,
       })),
+      brevo_list_id: brevoListId ? parseInt(brevoListId, 10) : null,
       activo: true,
     }
 
@@ -228,6 +230,7 @@ export default function PanelFormulariosPage() {
       setTitulo('')
       setSlug('')
       setDescripcion('')
+      setBrevoListId('')
       clearIcon()
       clearCover()
       setCampos([])
@@ -403,6 +406,20 @@ export default function PanelFormulariosPage() {
                   placeholder="Breve descripción del formulario. Los saltos de línea se respetarán."
                   className="flex min-h-[80px] w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  Brevo List ID (opcional)
+                </label>
+                <Input
+                  value={brevoListId}
+                  onChange={(e) => setBrevoListId(e.target.value.replace(/\D/g, ''))}
+                  placeholder="Ej: 3"
+                  className="rounded-xl bg-white border-zinc-200 font-mono text-sm w-32"
+                />
+                <p className="text-xs text-zinc-500 mt-1">
+                  ID numérico de la lista en Brevo. Los inscritos se añadirán automáticamente.
+                </p>
               </div>
 
               <div>

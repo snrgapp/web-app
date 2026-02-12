@@ -16,6 +16,7 @@ export type FormWithParsedFields = {
   icon_url: string | null
   cover_url: string | null
   campos: FormFieldConfig[]
+  brevo_list_id: number | null
   activo: boolean
   created_at: string
   updated_at: string
@@ -115,6 +116,7 @@ export type FormInsertInput = {
   icon_url?: string | null
   cover_url?: string | null
   campos: FormFieldConfig[]
+  brevo_list_id?: number | null
   activo?: boolean
 }
 
@@ -135,6 +137,7 @@ export async function createForm(
       icon_url: input.icon_url ?? null,
       cover_url: input.cover_url ?? null,
       campos: input.campos as unknown as Json,
+      brevo_list_id: input.brevo_list_id ?? null,
       activo: input.activo ?? true,
     })
     .select('id')
@@ -163,6 +166,7 @@ export async function updateForm(
   if (input.evento_id !== undefined) payload.evento_id = input.evento_id
   if (input.icon_url !== undefined) payload.icon_url = input.icon_url
   if (input.cover_url !== undefined) payload.cover_url = input.cover_url
+  if (input.brevo_list_id !== undefined) payload.brevo_list_id = input.brevo_list_id
 
   const { error } = await supabase.from('forms').update(payload).eq('id', id)
 

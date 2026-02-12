@@ -40,11 +40,14 @@ export default async function InscripcionFormPage({ params }: PageProps) {
         coverUrl={form.cover_url}
         campos={form.campos}
       />
-      <p className="mt-8 text-center text-sm text-zinc-500">
-        <Link href="https://snrg.lat" className="hover:text-zinc-700">
-          ← Volver a Synergy
+      <div className="mt-8 flex justify-center">
+        <Link
+          href="https://snrg.lat/eventos"
+          className="inline-block px-5 py-2.5 rounded-xl border border-zinc-200 text-sm text-zinc-500 hover:text-zinc-700 hover:border-zinc-300 transition-colors"
+        >
+          Volver a eventos
         </Link>
-      </p>
+      </div>
     </main>
   )
 }

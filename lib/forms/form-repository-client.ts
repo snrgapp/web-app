@@ -16,6 +16,7 @@ export type FormWithParsedFields = {
   icon_url: string | null
   cover_url: string | null
   campos: FormFieldConfig[]
+  brevo_list_id: number | null
   activo: boolean
   created_at: string
   updated_at: string
@@ -57,6 +58,7 @@ export type FormInsertInput = {
   icon_url?: string | null
   cover_url?: string | null
   campos: FormFieldConfig[]
+  brevo_list_id?: number | null
   activo?: boolean
 }
 
@@ -75,6 +77,7 @@ export async function createFormClient(
       icon_url: input.icon_url ?? null,
       cover_url: input.cover_url ?? null,
       campos: input.campos as unknown as Json,
+      brevo_list_id: input.brevo_list_id ?? null,
       activo: input.activo ?? true,
     })
     .select('id')
