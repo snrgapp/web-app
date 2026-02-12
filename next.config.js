@@ -2,22 +2,35 @@
 const nextConfig = {
   reactStrictMode: true,
   async rewrites() {
+    const inscripcionHas = [
+      { type: 'header', key: 'host', value: 'inscripcion.snrg.lat' },
+    ]
     return {
       beforeFiles: [
         {
           source: '/',
           destination: '/inscripcion',
-          has: [{ type: 'header', key: 'host', value: 'inscripcion.snrg.lat' }],
+          has: inscripcionHas,
         },
         {
           source: '/api/:path*',
           destination: '/api/:path*',
-          has: [{ type: 'header', key: 'host', value: 'inscripcion.snrg.lat' }],
+          has: inscripcionHas,
+        },
+        {
+          source: '/_next/:path*',
+          destination: '/_next/:path*',
+          has: inscripcionHas,
+        },
+        {
+          source: '/favicon.ico',
+          destination: '/favicon.ico',
+          has: inscripcionHas,
         },
         {
           source: '/:path+',
           destination: '/inscripcion/:path*',
-          has: [{ type: 'header', key: 'host', value: 'inscripcion.snrg.lat' }],
+          has: inscripcionHas,
         },
       ],
     }
