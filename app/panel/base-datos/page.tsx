@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Upload, Loader2, CheckCircle, AlertCircle } from 'lucide-react'
+import { Upload, Loader2, CheckCircle, AlertCircle, FileText, Download } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,8 +14,16 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { supabase } from '@/utils/supabase/client'
+import Papa from 'papaparse'
 import { parseCsvToAsistentes } from '@/lib/csv-parser'
+import {
+  getAllFormsClient,
+  getSubmissionsByFormIdClient,
+  type FormWithParsedFields,
+  type FormSubmissionWithForm,
+} from '@/lib/forms/form-repository-client'
 import type { Asistente } from '@/types/database.types'
+import type { FormFieldConfig } from '@/types/form.types'
 
 const headers = [
   'Nombre',
@@ -39,6 +47,12 @@ export default function BaseDatosPage() {
     message: string
   }>({ type: null, message: '' })
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Inscripciones de formularios
+  const [forms, setForms] = useState<FormWithParsedFields[]>([])
+  const [selectedFormId, setSelectedFormId] = useState<string>('')
+  const [submissions, setSubmissions] = useState<FormSubmissionWithForm[]>([])
+  const [submissionsLoading, setSubmissionsLoading] = useState(false)
 
   async function fetchAsistentes() {
     setLoading(true)
@@ -66,6 +80,22 @@ export default function BaseDatosPage() {
   useEffect(() => {
     fetchAsistentes()
   }, [])
+
+  useEffect(() => {
+    getAllFormsClient().then(setForms)
+  }, [])
+
+  useEffect(() => {
+    if (!selectedFormId) {
+      setSubmissions([])
+      return
+    }
+    setSubmissionsLoading(true)
+    getSubmissionsByFormIdClient(selectedFormId).then((data) => {
+      setSubmissions(data)
+      setSubmissionsLoading(false)
+    })
+  }, [selectedFormId])
 
   async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -275,7 +305,180 @@ export default function BaseDatosPage() {
             </div>
           </CardContent>
         </Card>
+
+        <InscripcionesSection
+          forms={forms}
+          selectedFormId={selectedFormId}
+          setSelectedFormId={setSelectedFormId}
+          submissions={submissions}
+          submissionsLoading={submissionsLoading}
+        />
       </motion.div>
+    </div>
+  )
+}
+
+function exportSubmissionsToCsv(
+  submissions: FormSubmissionWithForm[],
+  form: FormWithParsedFields
+) {
+  const headers = ['Fecha', ...form.campos.map((c) => c.label)]
+  const rows = submissions.map((sub) => {
+    const row: Record<string, string> = {
+      Fecha: new Date(sub.created_at).toLocaleString('es-CO', {
+        dateStyle: 'short',
+        timeStyle: 'short',
+      }),
+    }
+    form.campos.forEach((campo) => {
+      row[campo.label] = formatSubmissionValue(sub.datos[campo.key])
+    })
+    return row
+  })
+  const csv = Papa.unparse({ fields: headers, data: rows })
+  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `inscripciones-${form.slug}-${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
+function formatSubmissionValue(value: unknown): string {
+  if (value === null || value === undefined) return '-'
+  if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'boolean') return value ? 'Sí' : 'No'
+  return String(value)
+}
+
+function InscripcionesSection({
+  forms,
+  selectedFormId,
+  setSelectedFormId,
+  submissions,
+  submissionsLoading,
+}: {
+  forms: FormWithParsedFields[]
+  selectedFormId: string
+  setSelectedFormId: (id: string) => void
+  submissions: FormSubmissionWithForm[]
+  submissionsLoading: boolean
+}) {
+  const selectedForm = forms.find((f) => f.id === selectedFormId)
+  const colsCount = (selectedForm?.campos?.length ?? 0) + 1
+
+  return (
+    <div className="w-full mt-10">
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold text-zinc-900 flex items-center gap-2">
+          <FileText className="w-5 h-5" />
+          Inscripciones de formularios
+        </h2>
+        <p className="mt-1 text-sm text-zinc-500">
+          Respuestas enviadas desde los formularios de inscripción.
+        </p>
+      </div>
+
+      <Card className="w-full overflow-hidden shadow-sm">
+        <CardContent className="p-6 sm:p-8">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-zinc-700 mb-2">
+              Seleccionar formulario
+            </label>
+            <select
+              value={selectedFormId}
+              onChange={(e) => setSelectedFormId(e.target.value)}
+              className="w-full max-w-md h-10 rounded-lg border border-zinc-200 bg-white px-4 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900"
+            >
+              <option value="">-- Elegir formulario --</option>
+              {forms.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.titulo} ({f.slug})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedFormId && (
+            <div className="overflow-x-auto rounded-lg border border-zinc-200">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-zinc-50 hover:bg-zinc-50">
+                    <TableHead className="px-4 py-3 text-zinc-600 font-medium whitespace-nowrap">
+                      Fecha
+                    </TableHead>
+                    {(selectedForm?.campos ?? []).map((campo: FormFieldConfig) => (
+                      <TableHead
+                        key={campo.key}
+                        className="px-4 py-3 text-zinc-600 font-medium whitespace-nowrap"
+                      >
+                        {campo.label}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {submissionsLoading ? (
+                    <TableRow>
+                      <TableCell colSpan={colsCount} className="px-4 py-8 text-center text-zinc-500">
+                        <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2" />
+                        Cargando inscripciones...
+                      </TableCell>
+                    </TableRow>
+                  ) : submissions.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={colsCount} className="px-4 py-8 text-center text-zinc-500">
+                        No hay inscripciones en este formulario.
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    submissions.map((sub) => (
+                      <TableRow key={sub.id} className="hover:bg-zinc-50/50">
+                        <TableCell className="px-4 py-3 text-zinc-500 text-sm whitespace-nowrap">
+                          {new Date(sub.created_at).toLocaleString('es-CO', {
+                            dateStyle: 'short',
+                            timeStyle: 'short',
+                          })}
+                        </TableCell>
+                        {(selectedForm?.campos ?? []).map((campo: FormFieldConfig) => (
+                          <TableCell
+                            key={campo.key}
+                            className="px-4 py-3 text-zinc-900 max-w-[200px] truncate"
+                            title={formatSubmissionValue(sub.datos[campo.key])}
+                          >
+                            {formatSubmissionValue(sub.datos[campo.key]) ?? '-'}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {selectedFormId && !submissionsLoading && submissions.length > 0 && (
+            <div className="mt-4 flex flex-wrap items-center gap-4">
+              <p className="text-sm text-zinc-500">
+                Total: {submissions.length} inscripción(es)
+              </p>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  selectedForm && exportSubmissionsToCsv(submissions, selectedForm)
+                }
+                className="gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Exportar CSV
+              </Button>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   )
 }

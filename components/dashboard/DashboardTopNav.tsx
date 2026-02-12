@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Calendar, MessageCircle, Wallet, Database, Search, ChevronDown } from 'lucide-react'
+import { LayoutDashboard, Calendar, MessageCircle, Database, Search, ChevronDown, FileText } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 const navItems = [
   { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
   { href: '/panel/eventos', icon: Calendar, label: 'Eventos', exact: false },
-  { href: '/panel/finanzas', icon: Wallet, label: 'Finanzas', exact: false },
+  { href: '/panel/formularios', icon: FileText, label: 'Formularios', exact: false },
   { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
 ]

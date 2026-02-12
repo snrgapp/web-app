@@ -1,60 +1,77 @@
 'use client'
 
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
-import { segmentosData, segmentosTotal } from '@/lib/dashboard-mock-data'
+import { useState, useEffect } from 'react'
+import { getSubmissionsBySegment } from '@/lib/forms/form-repository-client'
+import { Loader2 } from 'lucide-react'
 
-// Proporciones basadas en users (530:100:70)
-const totalUsers = segmentosData.reduce((acc, s) => acc + s.users, 0)
-const chartData = segmentosData.map((s) => ({
-  name: s.name,
-  value: Math.round((s.users / totalUsers) * segmentosTotal),
-  color: s.color,
-}))
+const SEGMENTO_COLORS = ['#6d28d9', '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe']
 
 export function SegmentosChart() {
+  const [data, setData] = useState<{ segmento: string; count: number }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+    getSubmissionsBySegment().then((items) => {
+      setData(items)
+      setLoading(false)
+    })
+  }, [])
+
+  const total = data.reduce((acc, d) => acc + d.count, 0)
+  const maxCount = data.length ? Math.max(...data.map((d) => d.count), 1) : 1
+
+  if (loading) {
+    return (
+      <div className="min-h-[200px] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
+      </div>
+    )
+  }
+
+  if (data.length === 0) {
+    return (
+      <div className="min-h-[200px] flex flex-col items-center justify-center gap-2">
+        <p className="text-sm text-zinc-500 text-center">
+          No hay inscripciones con segmento.
+        </p>
+        <p className="text-xs text-zinc-400 text-center max-w-xs">
+          Añade un campo &quot;segmento&quot; (tipo select u opciones) en tus formularios para ver los totales por segmento.
+        </p>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-6 items-center">
-      <div className="relative w-48 h-48 min-h-[192px] flex-shrink-0">
-        <ResponsiveContainer width={192} height={192}>
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              paddingAngle={2}
-              dataKey="value"
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <span className="text-2xl font-hero text-black">
-            {segmentosTotal.toLocaleString()}
-          </span>
-          <span className="text-xs text-zinc-400">Label</span>
-        </div>
+    <div className="min-h-[200px] space-y-4">
+      <div className="flex justify-between items-baseline text-sm mb-2">
+        <span className="text-zinc-500">Total inscritos</span>
+        <span className="font-hero text-lg text-zinc-900">{total.toLocaleString()}</span>
       </div>
-
-      <div className="flex-1 space-y-3 min-w-0">
-        {segmentosData.map((segmento) => (
-          <div key={segmento.name} className="flex items-center gap-3">
-            <div
-              className="w-3 h-3 rounded-sm flex-shrink-0"
-              style={{ backgroundColor: segmento.color }}
-            />
-            <span className="text-sm text-zinc-600 truncate">{segmento.name}</span>
-            <span className="text-sm font-medium text-zinc-900 ml-auto">
-              {segmento.users} users
+      {data.map((item, idx) => (
+        <div key={item.segmento} className="space-y-1.5">
+          <div className="flex justify-between text-sm">
+            <span
+              className="font-medium text-zinc-900 truncate pr-2"
+              title={item.segmento}
+            >
+              {item.segmento}
+            </span>
+            <span className="text-zinc-500 flex-shrink-0">
+              {item.count} inscritos
             </span>
           </div>
-        ))}
-      </div>
+          <div className="h-3 rounded-full bg-zinc-200 overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500"
+              style={{
+                width: `${(item.count / maxCount) * 100}%`,
+                backgroundColor: SEGMENTO_COLORS[idx % SEGMENTO_COLORS.length],
+              }}
+            />
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

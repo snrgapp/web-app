@@ -21,17 +21,17 @@ export interface Patrocinador {
   iconColor: string
 }
 
-// Total Asistentes: 30 días de datos
+// Total Asistentes: 30 días de datos (valor = cantidad de personas)
 export const totalAsistentesData: AsistentesDataPoint[] = Array.from(
   { length: 30 },
   (_, i) => ({
     day: i + 1,
-    value: Math.floor(150 + Math.sin(i * 0.3) * 200 + Math.random() * 150),
+    value: Math.min(80, Math.max(5, Math.floor(20 + Math.sin(i * 0.4) * 25 + (i % 5) * 8))),
   })
 )
 
-// Punto destacado para tooltip (día 13, valor 350)
-export const asistentesHighlight = { day: 13, value: 350, month: "Mayo" }
+// Punto destacado para tooltip
+export const asistentesHighlight = { day: 15, value: 45, month: "Enero" }
 
 // Segmentos para el gráfico donut (users para lista, value para proporción del total)
 export const segmentosData: Segmento[] = [

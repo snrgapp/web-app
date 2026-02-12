@@ -190,6 +190,83 @@ export interface Database {
         }
         Relationships: []
       }
+      forms: {
+        Row: {
+          id: string
+          evento_id: string | null
+          slug: string
+          titulo: string
+          descripcion: string | null
+          icon_url: string | null
+          cover_url: string | null
+          campos: Json
+          activo: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          evento_id?: string | null
+          slug: string
+          titulo: string
+          descripcion?: string | null
+          icon_url?: string | null
+          cover_url?: string | null
+          campos?: Json
+          activo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          evento_id?: string | null
+          slug?: string
+          titulo?: string
+          descripcion?: string | null
+          icon_url?: string | null
+          cover_url?: string | null
+          campos?: Json
+          activo?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forms_evento_id_fkey"
+            columns: ["evento_id"]
+            referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      form_submissions: {
+        Row: {
+          id: string
+          form_id: string
+          datos: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          form_id: string
+          datos?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          form_id?: string
+          datos?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "form_submissions_form_id_fkey"
+            columns: ["form_id"]
+            referencedRelation: "forms"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -213,6 +290,8 @@ export type Asistente = Database['public']['Tables']['asistentes']['Row']
 export type Evento = Database['public']['Tables']['eventos']['Row']
 export type Lead = Database['public']['Tables']['leads']['Row']
 export type Contacto = Database['public']['Tables']['contactos']['Row']
+export type FormRow = Database['public']['Tables']['forms']['Row']
+export type FormSubmissionRow = Database['public']['Tables']['form_submissions']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }

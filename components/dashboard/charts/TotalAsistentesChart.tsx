@@ -1,74 +1,108 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
-  ReferenceDot,
 } from 'recharts'
-import { totalAsistentesData, asistentesHighlight } from '@/lib/dashboard-mock-data'
+import { getSubmissionsByDayForMonth } from '@/lib/forms/form-repository-client'
+import { Loader2 } from 'lucide-react'
 
-const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ value: number }> }) => {
+const Y_TICKS = [10, 20, 30, 40, 50, 60, 70, 80]
+
+const MONTHS_ES = [
+  'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+]
+
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  monthName,
+}: {
+  active?: boolean
+  payload?: Array<{ value: number }>
+  label?: number
+  monthName: string
+}) => {
   if (!active || !payload?.length) return null
   return (
     <div className="bg-white rounded-lg shadow-lg border border-zinc-200 p-3">
-      <p className="text-xs text-zinc-400 mb-1">Este Mes</p>
-      <p className="text-2xl font-hero text-black">{payload[0].value}</p>
-      <p className="text-xs text-zinc-400">{asistentesHighlight.month}</p>
+      <p className="text-xs text-zinc-400 mb-1">Día {label}</p>
+      <p className="text-2xl font-hero text-black">{payload[0].value} registros</p>
+      <p className="text-xs text-zinc-400">{monthName}</p>
     </div>
   )
 }
 
-export function TotalAsistentesChart() {
-  const highlightPoint = totalAsistentesData.find(
-    (d) => d.day === asistentesHighlight.day
-  )
+interface TotalAsistentesChartProps {
+  selectedMonth: string // "2026-01", "2026-02", ...
+}
+
+export function TotalAsistentesChart({ selectedMonth }: TotalAsistentesChartProps) {
+  const [year, month] = selectedMonth.split('-').map(Number)
+  const monthName = MONTHS_ES[month - 1] ?? ''
+  const [data, setData] = useState<{ day: number; value: number }[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    setLoading(true)
+    getSubmissionsByDayForMonth(year, month).then((result) => {
+      setData(result.sort((a, b) => a.day - b.day))
+      setLoading(false)
+    })
+  }, [year, month])
+
+  const maxVal = data.length ? Math.max(...data.map((d) => d.value)) : 0
+  const yDomain = Math.max(80, maxVal, 1)
+  const yTicks = [...Y_TICKS]
+  if (yDomain > 80 && !yTicks.includes(yDomain)) {
+    yTicks.push(yDomain)
+  }
+
+  if (loading) {
+    return (
+      <div className="h-[280px] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-zinc-400" />
+      </div>
+    )
+  }
 
   return (
     <div className="h-[280px] min-h-[280px] w-full min-w-0">
       <ResponsiveContainer width="100%" height={280}>
-        <LineChart data={totalAsistentesData} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
+        <BarChart data={data} margin={{ top: 5, right: 5, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
           <XAxis
             dataKey="day"
             tick={{ fontSize: 12, fill: '#a1a1aa' }}
             axisLine={false}
             tickLine={false}
-            domain={[1, 30]}
           />
           <YAxis
             tick={{ fontSize: 12, fill: '#a1a1aa' }}
             axisLine={false}
             tickLine={false}
-            domain={[100, 800]}
+            domain={[0, yDomain]}
+            ticks={yTicks}
             tickFormatter={(v) => v.toString()}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ stroke: '#a1a1aa', strokeDasharray: '4 4' }} />
-          <ReferenceLine
-            x={asistentesHighlight.day}
-            stroke="#a1a1aa"
-            strokeDasharray="4 4"
+          <Tooltip
+            content={<CustomTooltip monthName={`${monthName} ${year}`} />}
+            cursor={{ fill: '#f4f4f5' }}
           />
-          <ReferenceDot
-            x={asistentesHighlight.day}
-            y={highlightPoint?.value ?? asistentesHighlight.value}
-            r={4}
-            fill="#8b5cf6"
-          />
-          <Line
-            type="monotone"
+          <Bar
             dataKey="value"
-            stroke="#8b5cf6"
-            strokeWidth={2.5}
-            dot={false}
-            activeDot={{ r: 4, fill: '#8b5cf6' }}
+            fill="#8b5cf6"
+            radius={[4, 4, 0, 0]}
           />
-        </LineChart>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   )
