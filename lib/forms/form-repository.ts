@@ -51,6 +51,7 @@ export async function getFormBySlug(slug: string): Promise<FormWithParsedFields 
   return {
     ...data,
     campos: parseCampos(data.campos),
+    brevo_list_id: (data as Record<string, unknown>).brevo_list_id as number | null ?? null,
   }
 }
 
@@ -69,6 +70,7 @@ export async function getAllForms(): Promise<FormWithParsedFields[]> {
   return (data ?? []).map((row) => ({
     ...row,
     campos: parseCampos(row.campos),
+    brevo_list_id: (row as Record<string, unknown>).brevo_list_id as number | null ?? null,
   }))
 }
 
@@ -88,6 +90,7 @@ export async function getFormById(id: string): Promise<FormWithParsedFields | nu
   return {
     ...data,
     campos: parseCampos(data.campos),
+    brevo_list_id: (data as Record<string, unknown>).brevo_list_id as number | null ?? null,
   }
 }
 

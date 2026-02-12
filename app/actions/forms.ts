@@ -75,7 +75,7 @@ export async function submitFormAction(
   }
 
   // Enviar contacto a Brevo si el formulario tiene brevo_list_id
-  const brevoListId = (form as Record<string, unknown>).brevo_list_id as number | null
+  const brevoListId = form.brevo_list_id ?? null
   if (brevoListId) {
     const contact = extractContactData(data, fields)
     if (contact) {

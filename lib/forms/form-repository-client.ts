@@ -47,6 +47,7 @@ export async function getAllFormsClient(): Promise<FormWithParsedFields[]> {
   return (data ?? []).map((row) => ({
     ...row,
     campos: parseCampos(row.campos),
+    brevo_list_id: (row as Record<string, unknown>).brevo_list_id as number | null ?? null,
   }))
 }
 
