@@ -81,7 +81,7 @@ export default function PitchPage() {
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
               placeholder="Ej: 3001234567"
-              className="w-full h-12 px-4 rounded-xl border border-zinc-200 bg-white text-black placeholder:text-zinc-400 text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+              className="w-full h-12 px-4 rounded-xl border border-zinc-200 bg-white text-black placeholder:text-zinc-400 text-base focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
               autoFocus
             />
           </div>
