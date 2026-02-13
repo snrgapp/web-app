@@ -8,21 +8,7 @@ export default function Partners() {
   const duplicatedLogos = [...partnerLogos, ...partnerLogos]
 
   return (
-    <section className="py-8 lg:py-12">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 flex justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-30px' }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex px-5 py-2.5 rounded-xl border border-zinc-200/80"
-        >
-          <h2 className="text-xl font-light text-[#1a1a1a] lowercase tracking-tight">
-            aliados
-          </h2>
-        </motion.div>
-      </div>
-
+    <section className="-mt-6 lg:-mt-10 pb-8 lg:pb-12">
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
