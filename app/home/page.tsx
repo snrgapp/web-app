@@ -14,8 +14,8 @@ const dinamicas = [
   {
     label: 'Pitch',
     image: '/images/card-pitch.png',
-    href: '#',
-    enabled: false,
+    href: '/pitch',
+    enabled: true,
   },
 ]
 

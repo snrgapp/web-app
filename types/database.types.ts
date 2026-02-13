@@ -267,6 +267,103 @@ export interface Database {
           }
         ]
       }
+      founders: {
+        Row: {
+          id: string
+          nombre: string
+          startup_nombre: string
+          image_url: string | null
+          pitch_order: number
+          activo: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nombre: string
+          startup_nombre: string
+          image_url?: string | null
+          pitch_order?: number
+          activo?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nombre?: string
+          startup_nombre?: string
+          image_url?: string | null
+          pitch_order?: number
+          activo?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      votantes: {
+        Row: {
+          id: string
+          whatsapp: string
+          nombre: string | null
+          categoria: 'espectador' | 'jurado'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          whatsapp: string
+          nombre?: string | null
+          categoria?: 'espectador' | 'jurado'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          whatsapp?: string
+          nombre?: string | null
+          categoria?: 'espectador' | 'jurado'
+          created_at?: string
+        }
+        Relationships: []
+      }
+      votos: {
+        Row: {
+          id: string
+          votante_id: string
+          founder_id: string
+          score_innovacion: number
+          score_claridad: number
+          score_qa: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          votante_id: string
+          founder_id: string
+          score_innovacion: number
+          score_claridad: number
+          score_qa: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          votante_id?: string
+          founder_id?: string
+          score_innovacion?: number
+          score_claridad?: number
+          score_qa?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votos_votante_id_fkey"
+            columns: ["votante_id"]
+            referencedRelation: "votantes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votos_founder_id_fkey"
+            columns: ["founder_id"]
+            referencedRelation: "founders"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -292,6 +389,9 @@ export type Lead = Database['public']['Tables']['leads']['Row']
 export type Contacto = Database['public']['Tables']['contactos']['Row']
 export type FormRow = Database['public']['Tables']['forms']['Row']
 export type FormSubmissionRow = Database['public']['Tables']['form_submissions']['Row']
+export type Founder = Database['public']['Tables']['founders']['Row']
+export type Votante = Database['public']['Tables']['votantes']['Row']
+export type Voto = Database['public']['Tables']['votos']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }
