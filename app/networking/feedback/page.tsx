@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export default function FeedbackPage() {
+export default function NetworkingFeedbackPage() {
   const router = useRouter()
 
   return (
@@ -39,7 +39,7 @@ export default function FeedbackPage() {
         <div className="flex gap-6 mb-12">
           {/* Botón feliz */}
           <motion.button
-            onClick={() => router.push('/landing')}
+            onClick={() => router.push('/networking')}
             className="w-32 h-32 rounded-3xl shadow-lg flex items-center justify-center"
             style={{ backgroundColor: '#FFD700' }}
             whileHover={{ scale: 1.05 }}
@@ -52,7 +52,7 @@ export default function FeedbackPage() {
 
           {/* Botón triste */}
           <motion.button
-            onClick={() => router.push('/landing')}
+            onClick={() => router.push('/networking')}
             className="w-32 h-32 rounded-3xl shadow-lg flex items-center justify-center"
             style={{ backgroundColor: '#FF0000' }}
             whileHover={{ scale: 1.05 }}

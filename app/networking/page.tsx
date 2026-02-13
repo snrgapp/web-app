@@ -1,16 +1,27 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Lightbulb, Rocket, Zap, ArrowRight } from 'lucide-react'
+import { Lightbulb, Rocket, Zap, ArrowRight, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 
-export default function LandingPage() {
+export default function NetworkingLandingPage() {
   const router = useRouter()
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-between p-8 font-sans relative overflow-hidden">
       
+      {/* Flecha atrás al Home */}
+      <div className="w-full flex items-center justify-start z-30 absolute top-0 left-0 p-4 sm:p-6">
+        <button
+          onClick={() => router.push('/')}
+          className="text-black"
+          aria-label="Volver al inicio"
+        >
+          <ArrowLeft size={24} className="sm:w-6 sm:h-6" />
+        </button>
+      </div>
+
       {/* Contenedor de Tarjetas Apiladas */}
       <div className="relative w-full max-w-sm mt-8 sm:mt-12 h-[300px] flex justify-center z-10">
         
@@ -62,7 +73,7 @@ export default function LandingPage() {
         </motion.div>
       </div>
 
-      {/* Sección de Texto - más pegada a las tarjetas, separada del botón */}
+      {/* Sección de Texto */}
       <div className="flex flex-col items-start w-full max-w-sm -mt-6 sm:-mt-8 px-4 z-20">
         <motion.h1 
           initial={{ opacity: 0, x: -20 }}
@@ -85,7 +96,7 @@ export default function LandingPage() {
       {/* Botón Ingresar */}
       <div className="w-full max-w-sm px-4 mb-12 z-30">
         <motion.button
-          onClick={() => router.push('/categories')}
+          onClick={() => router.push('/networking/categories')}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}

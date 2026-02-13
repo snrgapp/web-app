@@ -1,9 +1,9 @@
-import { getRandomQuestions } from '../actions/questions'
+import { getRandomQuestions } from '../../actions/questions'
 import CardDeckContainer from '@/components/CardDeckContainer'
 
 type Props = { searchParams: Promise<{ category?: string }> }
 
-export default async function QuestionsPage({ searchParams }: Props) {
+export default async function NetworkingQuestionsPage({ searchParams }: Props) {
   const params = await searchParams
   const category = typeof params.category === 'string' ? params.category : params.category?.[0] ?? null
   const questions = await getRandomQuestions(10, category)

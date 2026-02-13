@@ -84,14 +84,14 @@ export default function CardDeckContainer({ questions, categorySlug }: CardDeckC
       {/* Header */}
       <div className="w-full p-4 sm:p-6 flex items-center justify-between z-30">
         <button
-          onClick={() => router.push('/categories')}
+          onClick={() => router.push('/networking/categories')}
           className={backgroundColor === 'yellow' ? 'text-black' : 'text-white'}
         >
           <ArrowLeft size={24} className="sm:w-6 sm:h-6" />
         </button>
         
         <button
-          onClick={() => router.push('/feedback')}
+          onClick={() => router.push('/networking/feedback')}
           className={`text-sm sm:text-base px-4 sm:px-6 py-2 rounded-full border shadow-sm hover:shadow-md transition-shadow ${
             backgroundColor === 'yellow' 
               ? 'text-black bg-white border-black/10' 

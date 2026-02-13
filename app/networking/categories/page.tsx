@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Coffee, Rocket, ChevronRight, CircleDot, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
+import { Coffee, Rocket, ChevronRight, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export default function CategorySelection() {
+export default function NetworkingCategorySelection() {
   const router = useRouter()
   const [isShuffling, setIsShuffling] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'company' | 'founder' | null>(null)
@@ -19,12 +19,10 @@ export default function CategorySelection() {
     if (!selectedCategory) return
     
     setIsShuffling(true)
-    // Lógica para el barajado de 3 segundos
     setTimeout(() => {
       setIsShuffling(false)
-      // Después del barajado, navegar a preguntas con la categoría seleccionada
       setTimeout(() => {
-        router.push(`/questions?category=${selectedCategory}`)
+        router.push(`/networking/questions?category=${selectedCategory}`)
       }, 500)
     }, 3000)
   }
@@ -32,10 +30,10 @@ export default function CategorySelection() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-between py-6 sm:py-10 px-4 sm:px-6 font-sans relative overflow-hidden">
       
-      {/* Flecha atrás - mismo estilo que en preguntas */}
+      {/* Flecha atrás */}
       <div className="w-full p-4 sm:p-6 flex items-center justify-start z-30 absolute top-0 left-0">
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/networking')}
           className="text-black"
           aria-label="Ir atrás"
         >
@@ -43,7 +41,7 @@ export default function CategorySelection() {
         </button>
       </div>
 
-      {/* Header: Iconos superiores y título */}
+      {/* Header */}
       <div className="w-full flex flex-col items-center gap-2 sm:gap-3 z-30 mb-2 sm:mb-3">
         <div className="flex justify-center gap-6 sm:gap-10 opacity-10">
           <Coffee size={28} className="sm:w-[42px] sm:h-[42px] text-black" />
@@ -59,7 +57,7 @@ export default function CategorySelection() {
         </div>
       </div>
 
-      {/* Contenedor de Tarjetas: Mobile first responsive */}
+      {/* Contenedor de Tarjetas */}
       <div className="relative w-full max-w-3xl mx-auto flex justify-center items-center h-[280px] sm:h-[320px] md:h-[400px] z-10 px-2 sm:px-6">
         
         {/* Tarjeta Amarilla (Izquierda) */}
@@ -90,12 +88,10 @@ export default function CategorySelection() {
             </p>
           </div>
 
-          {/* Logo centrado en la parte inferior, negro sobre amarillo */}
           <div className="flex justify-center w-full shrink-0 pt-2">
             <Image src="/logo.png" alt="" width={24} height={24} className="object-contain" />
           </div>
 
-          {/* Degradado blanco inferior de la tarjeta */}
           <div className="absolute bottom-0 left-0 w-full h-[35%] bg-gradient-to-t from-white/50 to-transparent pointer-events-none" />
         </motion.div>
 
@@ -127,17 +123,15 @@ export default function CategorySelection() {
             </p>
           </div>
 
-          {/* Logo centrado en la parte inferior, blanco sobre negro */}
           <div className="flex justify-center w-full shrink-0 pt-2">
             <Image src="/logo.png" alt="" width={24} height={24} className="object-contain brightness-0 invert" />
           </div>
 
-          {/* Degradado blanco inferior de la tarjeta (más intenso en la negra) */}
           <div className="absolute bottom-0 left-0 w-full h-[40%] bg-gradient-to-t from-white/30 via-white/10 to-transparent pointer-events-none" />
         </motion.div>
       </div>
 
-      {/* Footer y Botón: más pegados a las tarjetas */}
+      {/* Footer y Botón */}
       <div className="w-full max-w-[320px] flex flex-col items-center gap-3 sm:gap-4 -mt-8 sm:-mt-12 z-50 px-4">
         <p className="text-xl sm:text-2xl font-light text-gray-500 italic">ahora si</p>
         
@@ -158,7 +152,6 @@ export default function CategorySelection() {
         </button>
       </div>
 
-      {/* El degradado blanco global que sube sutilmente desde el fondo */}
       <div className="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none z-40" />
     </div>
   )
