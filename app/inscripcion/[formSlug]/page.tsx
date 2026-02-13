@@ -1,7 +1,10 @@
 /**
  * Página de formulario dinámico por slug.
  * Server Component: obtiene datos del form; FormRenderer es Client Component para interactividad.
+ * force-dynamic para que siempre obtenga datos frescos tras ediciones.
  */
+
+export const dynamic = 'force-dynamic'
 
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
