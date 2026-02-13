@@ -219,6 +219,29 @@ export async function getFormsWithSubmissionCount(): Promise<
   return result.sort((a, b) => b.count - a.count)
 }
 
+/** Actualiza un formulario existente */
+export async function updateFormClient(
+  id: string,
+  input: Partial<FormInsertInput>
+): Promise<{ success: boolean; error?: string }> {
+  if (!supabase) return { success: false, error: 'Supabase no configurado' }
+
+  const updateData: Record<string, unknown> = {}
+  if (input.titulo !== undefined) updateData.titulo = input.titulo
+  if (input.slug !== undefined) updateData.slug = input.slug
+  if (input.descripcion !== undefined) updateData.descripcion = input.descripcion
+  if (input.icon_url !== undefined) updateData.icon_url = input.icon_url
+  if (input.cover_url !== undefined) updateData.cover_url = input.cover_url
+  if (input.campos !== undefined) updateData.campos = input.campos as unknown as Json
+  if (input.brevo_list_id !== undefined) updateData.brevo_list_id = input.brevo_list_id
+  if (input.activo !== undefined) updateData.activo = input.activo
+
+  const { error } = await supabase.from('forms').update(updateData).eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+  return { success: true }
+}
+
 /** Elimina un formulario (y sus inscripciones por CASCADE) */
 export async function deleteFormClient(
   id: string

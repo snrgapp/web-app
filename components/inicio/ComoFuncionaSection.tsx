@@ -41,7 +41,7 @@ export default function ComoFuncionaSection() {
 
             <motion.div
               style={{ scale: cardScale, opacity: cardOpacity }}
-              className="relative w-[280px] xl:w-[340px] 2xl:w-[380px] h-[260px] xl:h-[320px] 2xl:h-[360px] flex-shrink-0 -mx-8 xl:-mx-12 z-10"
+              className="relative w-[360px] xl:w-[440px] 2xl:w-[500px] h-[340px] xl:h-[420px] 2xl:h-[470px] flex-shrink-0 -mx-10 xl:-mx-14 z-10"
             >
               <Image
                 src="/images/tarjetas-como-funciona.png"
@@ -72,7 +72,7 @@ export default function ComoFuncionaSection() {
 
             <motion.div
               style={{ scale: cardScale, opacity: cardOpacity }}
-              className="relative w-[260px] sm:w-[320px] md:w-[380px] h-[200px] sm:h-[250px] md:h-[300px] -my-4 z-10"
+              className="relative w-[300px] sm:w-[380px] md:w-[440px] h-[240px] sm:h-[300px] md:h-[350px] -my-4 z-10"
             >
               <Image
                 src="/images/tarjetas-como-funciona.png"

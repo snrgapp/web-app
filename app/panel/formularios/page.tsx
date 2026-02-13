@@ -13,6 +13,7 @@ import {
   Smile,
   ImageIcon,
   X,
+  Pencil,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +21,7 @@ import { supabase } from '@/utils/supabase/client'
 import {
   getAllFormsClient,
   createFormClient,
+  updateFormClient,
   getSubmissionCountClient,
   deleteFormClient,
   type FormWithParsedFields,
@@ -75,6 +77,7 @@ export default function PanelFormulariosPage() {
   const [campos, setCampos] = useState<FormFieldConfig[]>([])
   const [brevoListId, setBrevoListId] = useState('')
   const [showCreator, setShowCreator] = useState(false)
+  const [editingForm, setEditingForm] = useState<FormWithParsedFields | null>(null)
   const iconInputRef = useRef<HTMLInputElement>(null)
   const coverInputRef = useRef<HTMLInputElement>(null)
 
@@ -156,6 +159,35 @@ export default function PanelFormulariosPage() {
     setCampos(campos.filter((_, i) => i !== idx))
   }
 
+  function startEdit(form: FormWithParsedFields) {
+    setEditingForm(form)
+    setTitulo(form.titulo)
+    setSlug(form.slug)
+    setDescripcion(form.descripcion ?? '')
+    setCampos([...form.campos])
+    setBrevoListId(form.brevo_list_id?.toString() ?? '')
+    setIconPreview(form.icon_url)
+    setCoverPreview(form.cover_url)
+    setIconFile(null)
+    setCoverFile(null)
+    setCoverError(null)
+    setShowCreator(true)
+    setStatus({ type: null, message: '' })
+  }
+
+  function cancelEdit() {
+    setEditingForm(null)
+    setTitulo('')
+    setSlug('')
+    setDescripcion('')
+    setCampos([])
+    setBrevoListId('')
+    clearIcon()
+    clearCover()
+    setShowCreator(false)
+    setStatus({ type: null, message: '' })
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const slugErr = validateSlug(slug)
@@ -201,46 +233,75 @@ export default function PanelFormulariosPage() {
       }
     }
 
-    const input: FormInsertInput = {
-      slug: trimmedSlug,
-      titulo: titulo.trim(),
-      descripcion: descripcion.trim() || null,
-      icon_url: iconUrl,
-      cover_url: coverUrl,
-      campos: campos.map((c) => ({
-        ...c,
-        key: c.key.trim() || `field_${Math.random().toString(36).slice(2, 8)}`,
-        label: c.label.trim() || c.key,
-        options:
-          (c.type === 'select' || c.type === 'radio' || c.type === 'checkbox') && c.options?.length
-            ? c.options
-            : undefined,
-      })),
-      brevo_list_id: brevoListId ? parseInt(brevoListId, 10) : null,
-      activo: true,
-    }
+    const processedCampos = campos.map((c) => ({
+      ...c,
+      key: c.key.trim() || `field_${Math.random().toString(36).slice(2, 8)}`,
+      label: c.label.trim() || c.key,
+      options:
+        (c.type === 'select' || c.type === 'radio' || c.type === 'checkbox') && c.options?.length
+          ? c.options
+          : undefined,
+    }))
 
     setSaving(true)
     setStatus({ type: null, message: '' })
 
-    const result = await createFormClient(input)
+    if (editingForm) {
+      // Modo edición
+      const input: Partial<FormInsertInput> = {
+        slug: trimmedSlug,
+        titulo: titulo.trim(),
+        descripcion: descripcion.trim() || null,
+        icon_url: iconUrl ?? editingForm.icon_url,
+        cover_url: coverUrl ?? editingForm.cover_url,
+        campos: processedCampos,
+        brevo_list_id: brevoListId ? parseInt(brevoListId, 10) : null,
+      }
 
-    if (result.success) {
-      setStatus({ type: 'success', message: 'Formulario creado correctamente.' })
-      setTitulo('')
-      setSlug('')
-      setDescripcion('')
-      setBrevoListId('')
-      clearIcon()
-      clearCover()
-      setCampos([])
-      setShowCreator(false)
-      fetchForms()
+      const result = await updateFormClient(editingForm.id, input)
+
+      if (result.success) {
+        setStatus({ type: 'success', message: 'Formulario actualizado correctamente.' })
+        cancelEdit()
+        fetchForms()
+      } else {
+        setStatus({
+          type: 'error',
+          message: result.error ?? 'Error al actualizar el formulario',
+        })
+      }
     } else {
-      setStatus({
-        type: 'error',
-        message: result.error ?? 'Error al crear el formulario',
-      })
+      // Modo creación
+      const input: FormInsertInput = {
+        slug: trimmedSlug,
+        titulo: titulo.trim(),
+        descripcion: descripcion.trim() || null,
+        icon_url: iconUrl,
+        cover_url: coverUrl,
+        campos: processedCampos,
+        brevo_list_id: brevoListId ? parseInt(brevoListId, 10) : null,
+        activo: true,
+      }
+
+      const result = await createFormClient(input)
+
+      if (result.success) {
+        setStatus({ type: 'success', message: 'Formulario creado correctamente.' })
+        setTitulo('')
+        setSlug('')
+        setDescripcion('')
+        setBrevoListId('')
+        clearIcon()
+        clearCover()
+        setCampos([])
+        setShowCreator(false)
+        fetchForms()
+      } else {
+        setStatus({
+          type: 'error',
+          message: result.error ?? 'Error al crear el formulario',
+        })
+      }
     }
     setSaving(false)
   }
@@ -262,11 +323,26 @@ export default function PanelFormulariosPage() {
             Formularios de inscripción
           </h1>
           <Button
-            onClick={() => setShowCreator(!showCreator)}
+            onClick={() => {
+              if (showCreator) {
+                cancelEdit()
+              } else {
+                setShowCreator(true)
+              }
+            }}
             className="rounded-xl bg-zinc-900 text-white hover:bg-zinc-800"
           >
-            <Plus className="w-4 h-4" />
-            {showCreator ? 'Cancelar' : 'Nuevo formulario'}
+            {showCreator ? (
+              <>
+                <X className="w-4 h-4" />
+                Cancelar
+              </>
+            ) : (
+              <>
+                <Plus className="w-4 h-4" />
+                Nuevo formulario
+              </>
+            )}
           </Button>
         </div>
 
@@ -276,7 +352,7 @@ export default function PanelFormulariosPage() {
             className="mb-10 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6"
           >
             <h2 className="text-lg font-medium text-zinc-900 mb-4">
-              Crear formulario
+              {editingForm ? 'Editar formulario' : 'Crear formulario'}
             </h2>
             <div className="space-y-4">
               <div>
@@ -538,6 +614,8 @@ export default function PanelFormulariosPage() {
               >
                 {saving ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
+                ) : editingForm ? (
+                  'Guardar cambios'
                 ) : (
                   'Crear formulario'
                 )}
@@ -583,6 +661,7 @@ export default function PanelFormulariosPage() {
                 form={form}
                 inscripcionBase={inscripcionBase}
                 onRefresh={fetchForms}
+                onEdit={startEdit}
               />
             ))}
           </ul>
@@ -596,10 +675,12 @@ function FormListItem({
   form,
   inscripcionBase,
   onRefresh,
+  onEdit,
 }: {
   form: FormWithParsedFields
   inscripcionBase: string
   onRefresh: () => void
+  onEdit: (form: FormWithParsedFields) => void
 }) {
   const [count, setCount] = useState<number | null>(null)
   const [copied, setCopied] = useState(false)
@@ -640,6 +721,17 @@ function FormListItem({
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onEdit(form)}
+            className="rounded-lg"
+            title="Editar formulario"
+          >
+            <Pencil className="w-4 h-4" />
+            Editar
+          </Button>
           <Button
             type="button"
             variant="outline"
