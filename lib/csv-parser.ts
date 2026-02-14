@@ -20,6 +20,9 @@ const COLUMN_MAP: Record<string, keyof Omit<AsistenteInsert, 'id' | 'created_at'
   codigo_mesa: 'codigo_mesa',
   'codigo de mesa': 'codigo_mesa',
   'código de mesa': 'codigo_mesa',
+  mesa_ronda2: 'mesa_ronda2',
+  'mesa ronda 2': 'mesa_ronda2',
+  'mesa ronda2': 'mesa_ronda2',
 }
 
 function normalizeHeader(header: string): string {

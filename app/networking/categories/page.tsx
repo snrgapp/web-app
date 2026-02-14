@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Coffee, Rocket, ChevronRight, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
@@ -11,6 +11,14 @@ export default function NetworkingCategorySelection() {
   const [isShuffling, setIsShuffling] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'company' | 'founder' | null>(null)
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const asistenteId = localStorage.getItem('asistente_id')
+    if (!asistenteId) {
+      router.replace('/networking/verify')
+    }
+  }, [router])
+
   const handleCardClick = (category: 'company' | 'founder') => {
     setSelectedCategory(category)
   }
@@ -19,10 +27,11 @@ export default function NetworkingCategorySelection() {
     if (!selectedCategory) return
     
     setIsShuffling(true)
+    const ronda = typeof window !== 'undefined' ? localStorage.getItem('networking_ronda_actual') || '1' : '1'
     setTimeout(() => {
       setIsShuffling(false)
       setTimeout(() => {
-        router.push(`/networking/questions?category=${selectedCategory}`)
+        router.push(`/networking/questions?category=${selectedCategory}&ronda=${ronda}`)
       }, 500)
     }, 3000)
   }
@@ -33,7 +42,10 @@ export default function NetworkingCategorySelection() {
       {/* Flecha atrás */}
       <div className="w-full p-4 sm:p-6 flex items-center justify-start z-30 absolute top-0 left-0">
         <button
-          onClick={() => router.push('/networking')}
+          onClick={() => {
+            const ronda = typeof window !== 'undefined' ? localStorage.getItem('networking_ronda_actual') || '1' : '1'
+            router.push(`/networking/mesa?ronda=${ronda}`)
+          }}
           className="text-black"
           aria-label="Ir atrás"
         >

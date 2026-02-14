@@ -36,6 +36,7 @@ const headers = [
   'Desafíos',
   'Mesa',
   'Código de mesa',
+  'Mesa ronda 2',
 ]
 
 export default function BaseDatosPage() {
@@ -206,7 +207,7 @@ export default function BaseDatosPage() {
                 {uploading ? 'Importando...' : 'Subir archivo CSV'}
               </Button>
               <p className="text-sm text-zinc-500">
-                El CSV debe tener columnas: Nombre, Apellido, Teléfono, Correo, Empresa, Sector, Soluciones, Desafíos, Mesa, Código de mesa
+                El CSV debe tener columnas: Nombre, Apellido, Teléfono, Correo, Empresa, Sector, Soluciones, Desafíos, Mesa, Código de mesa, Mesa ronda 2 (opcional)
               </p>
             </div>
             {uploadStatus.type && (
@@ -296,6 +297,9 @@ export default function BaseDatosPage() {
                         </TableCell>
                         <TableCell className="px-4 py-3 text-zinc-600 font-mono text-sm">
                           {asistente.codigo_mesa ?? '-'}
+                        </TableCell>
+                        <TableCell className="px-4 py-3 text-zinc-600">
+                          {asistente.mesa_ronda2 ?? '-'}
                         </TableCell>
                       </TableRow>
                     ))

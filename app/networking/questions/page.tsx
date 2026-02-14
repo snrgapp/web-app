@@ -1,11 +1,12 @@
 import { getRandomQuestions } from '../../actions/questions'
 import CardDeckContainer from '@/components/CardDeckContainer'
 
-type Props = { searchParams: Promise<{ category?: string }> }
+type Props = { searchParams: Promise<{ category?: string; ronda?: string }> }
 
 export default async function NetworkingQuestionsPage({ searchParams }: Props) {
   const params = await searchParams
   const category = typeof params.category === 'string' ? params.category : params.category?.[0] ?? null
+  const ronda = params.ronda === '2' ? 2 : 1
   const questions = await getRandomQuestions(10, category)
   
   if (questions.length === 0) {
@@ -22,5 +23,5 @@ export default async function NetworkingQuestionsPage({ searchParams }: Props) {
   }
   
   const categorySlug = category ?? questions[0]?.category?.slug ?? undefined
-  return <CardDeckContainer questions={questions} categorySlug={categorySlug} />
+  return <CardDeckContainer questions={questions} categorySlug={categorySlug} ronda={ronda} />
 }

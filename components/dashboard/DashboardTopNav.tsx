@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Calendar, MessageCircle, Database, Search, ChevronDown, FileText, Trophy } from 'lucide-react'
+import { LayoutDashboard, Calendar, MessageCircle, Database, Search, ChevronDown, FileText, Trophy, Star } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -14,6 +14,7 @@ const navItems = [
   { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
   { href: '/panel/spotlight', icon: Trophy, label: 'Spotlight', exact: false },
+  { href: '/panel/networking-feedback', icon: Star, label: 'Feedback Networking', exact: false },
 ]
 
 export function DashboardTopNav() {

@@ -12,10 +12,32 @@ import { Coffee, Rocket, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
 interface CardDeckContainerProps {
   questions: QuestionWithCategory[]
   categorySlug?: string
+  ronda?: 1 | 2
 }
 
-export default function CardDeckContainer({ questions, categorySlug }: CardDeckContainerProps) {
+export default function CardDeckContainer({ questions, categorySlug, ronda = 1 }: CardDeckContainerProps) {
   const router = useRouter()
+
+  useEffect(() => {
+    if (ronda === 1 || ronda === 2) {
+      const asistenteId = typeof window !== 'undefined' ? localStorage.getItem('asistente_id') : null
+      if (!asistenteId) {
+        router.replace('/networking/verify')
+      }
+    }
+  }, [router, ronda])
+
+  const handleFinalizar = () => {
+    if (ronda === 1) {
+      router.push('/networking/mesa?ronda=2')
+    } else {
+      router.push('/networking/feedback')
+    }
+  }
+
+  const handleVolver = () => {
+    router.push('/networking/categories')
+  }
   const [countdown, setCountdown] = useState<number | null>(null)
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null)
   const [backgroundColor, setBackgroundColor] = useState<'yellow' | 'dark'>('yellow')
@@ -84,14 +106,14 @@ export default function CardDeckContainer({ questions, categorySlug }: CardDeckC
       {/* Header */}
       <div className="w-full p-4 sm:p-6 flex items-center justify-between z-30">
         <button
-          onClick={() => router.push('/networking/categories')}
+          onClick={handleVolver}
           className={backgroundColor === 'yellow' ? 'text-black' : 'text-white'}
         >
           <ArrowLeft size={24} className="sm:w-6 sm:h-6" />
         </button>
         
         <button
-          onClick={() => router.push('/networking/feedback')}
+          onClick={handleFinalizar}
           className={`text-sm sm:text-base px-4 sm:px-6 py-2 rounded-full border shadow-sm hover:shadow-md transition-shadow ${
             backgroundColor === 'yellow' 
               ? 'text-black bg-white border-black/10' 

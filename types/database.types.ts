@@ -80,6 +80,7 @@ export interface Database {
           desafios: string | null
           mesa: string | null
           codigo_mesa: string | null
+          mesa_ronda2: string | null
           created_at: string
         }
         Insert: {
@@ -94,6 +95,7 @@ export interface Database {
           desafios?: string | null
           mesa?: string | null
           codigo_mesa?: string | null
+          mesa_ronda2?: string | null
           created_at?: string
         }
         Update: {
@@ -108,9 +110,38 @@ export interface Database {
           desafios?: string | null
           mesa?: string | null
           codigo_mesa?: string | null
+          mesa_ronda2?: string | null
           created_at?: string
         }
         Relationships: []
+      }
+      feedback_networking: {
+        Row: {
+          id: string
+          asistente_id: string
+          rating: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          asistente_id: string
+          rating: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          asistente_id?: string
+          rating?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'feedback_networking_asistente_id_fkey'
+            columns: ['asistente_id']
+            referencedRelation: 'asistentes'
+            referencedColumns: ['id']
+          }
+        ]
       }
       eventos: {
         Row: {
@@ -392,6 +423,7 @@ export type FormSubmissionRow = Database['public']['Tables']['form_submissions']
 export type Founder = Database['public']['Tables']['founders']['Row']
 export type Votante = Database['public']['Tables']['votantes']['Row']
 export type Voto = Database['public']['Tables']['votos']['Row']
+export type FeedbackNetworking = Database['public']['Tables']['feedback_networking']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }

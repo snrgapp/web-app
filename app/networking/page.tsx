@@ -96,7 +96,7 @@ export default function NetworkingLandingPage() {
       {/* Botón Ingresar */}
       <div className="w-full max-w-sm px-4 mb-12 z-30">
         <motion.button
-          onClick={() => router.push('/networking/categories')}
+          onClick={() => router.push('/networking/verify')}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
