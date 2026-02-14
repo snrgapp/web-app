@@ -202,7 +202,7 @@ export default function SpotlightDashboardPage() {
                           padding: '8px 12px',
                           backgroundColor: 'white',
                         }}
-                        formatter={(value: number) => [value.toFixed(2), 'Puntaje']}
+                        formatter={(value) => [value != null ? Number(value).toFixed(2) : '-', 'Puntaje']}
                       />
                       <Bar
                         dataKey="Puntaje Total"
