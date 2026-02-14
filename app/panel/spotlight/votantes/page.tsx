@@ -173,7 +173,7 @@ export default function VotantesAdminPage() {
           </Link>
           <div>
             <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider">SPOTLIGHT</p>
-            <h1 className="text-2xl font-black text-black">Votantes</h1>
+            <h1 className="text-2xl font-light text-black tracking-tight">Votantes</h1>
           </div>
         </div>
         <div className="flex gap-2">

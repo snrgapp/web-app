@@ -319,7 +319,7 @@ export default function PanelFormulariosPage() {
         className="flex flex-col w-full max-w-6xl mx-auto"
       >
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-zinc-900">
+          <h1 className="text-2xl font-light text-black tracking-tight">
             Formularios de inscripción
           </h1>
           <Button
@@ -641,7 +641,7 @@ export default function PanelFormulariosPage() {
           </div>
         )}
 
-        <h2 className="text-lg font-semibold text-zinc-900 mb-4">
+        <h2 className="text-lg font-light text-black tracking-tight mb-4">
           Formularios creados
         </h2>
         {loading ? (

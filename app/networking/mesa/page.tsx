@@ -101,10 +101,10 @@ function MesaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-md space-y-5"
+          className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
         >
           {compañeros.length === 0 ? (
-            <p className="text-center text-zinc-500 py-8">
+            <p className="col-span-2 md:col-span-3 text-center text-zinc-500 py-8">
               No hay asistentes asignados a esta mesa aún.
             </p>
           ) : (

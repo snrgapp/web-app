@@ -158,7 +158,7 @@ export default function PanelEventosPage() {
         transition={{ duration: 0.3 }}
         className="flex flex-col w-full max-w-5xl mx-auto"
       >
-        <h1 className="text-2xl font-semibold text-zinc-900 mb-6">Crear evento</h1>
+        <h1 className="text-2xl font-light text-black tracking-tight mb-6">Crear evento</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-8">
           {/* Columna izquierda: imagen + tema */}
@@ -366,7 +366,7 @@ export default function PanelEventosPage() {
 
         {/* Lista de eventos */}
         <div className="mt-12">
-          <h2 className="text-lg font-semibold text-zinc-900 mb-4">Eventos en la página</h2>
+          <h2 className="text-lg font-light text-black tracking-tight mb-4">Eventos en la página</h2>
           {loading ? (
             <div className="flex gap-2 text-zinc-500 py-8">
               <Loader2 className="w-5 h-5 animate-spin" />

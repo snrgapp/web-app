@@ -157,7 +157,7 @@ export default function FoundersAdminPage() {
           </Link>
           <div>
             <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider">SPOTLIGHT</p>
-            <h1 className="text-2xl font-black text-black">Founders</h1>
+            <h1 className="text-2xl font-light text-black tracking-tight">Founders</h1>
           </div>
         </div>
         <Button onClick={openCreate} className="gap-2 bg-black text-white hover:bg-zinc-800">

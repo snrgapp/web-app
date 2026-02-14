@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { TotalAsistentesChart } from './charts/TotalAsistentesChart'
 import { SegmentosChart } from './charts/SegmentosChart'
 import { RegistroPorEventosChart } from './charts/RegistroPorEventosChart'
+import { StatsOverviewCard } from './StatsOverviewCard'
 
 const MONTHS_2026 = [
   { value: '2026-01', label: 'Enero 2026' },
@@ -40,7 +41,7 @@ export function DashboardContent() {
             DASHBOARD
           </p>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-hero text-black">
+            <h1 className="text-2xl sm:text-3xl font-light text-black tracking-tight">
               Asistentes
             </h1>
             <Button
@@ -54,42 +55,54 @@ export function DashboardContent() {
         </div>
       </motion.div>
 
-      {/* Total Asistentes */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      >
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm font-medium text-zinc-600">
-                Total Asistentes
-              </h3>
-              <button
-                className="text-zinc-400 hover:text-zinc-600 transition-colors"
-                aria-label="Información"
+      {/* Total Asistentes + Stats Overview - lado a lado (en mobile stats primero) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="order-2 lg:order-1"
+        >
+          <Card className="h-full">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-medium text-zinc-600">
+                  Total Asistentes
+                </h3>
+                <button
+                  className="text-zinc-400 hover:text-zinc-600 transition-colors"
+                  aria-label="Información"
+                >
+                  <Info className="w-4 h-4" />
+                </button>
+              </div>
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                className="h-8 rounded-lg border border-zinc-200 bg-white px-3 text-xs text-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-400"
               >
-                <Info className="w-4 h-4" />
-              </button>
-            </div>
-            <select
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="h-8 rounded-lg border border-zinc-200 bg-white px-3 text-xs text-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-400"
-            >
-              {MONTHS_2026.map((m) => (
-                <option key={m.value} value={m.value}>
-                  {m.label}
-                </option>
-              ))}
-            </select>
-          </CardHeader>
-          <CardContent>
-            <TotalAsistentesChart selectedMonth={selectedMonth} />
-          </CardContent>
-        </Card>
-      </motion.div>
+                {MONTHS_2026.map((m) => (
+                  <option key={m.value} value={m.value}>
+                    {m.label}
+                  </option>
+                ))}
+              </select>
+            </CardHeader>
+            <CardContent>
+              <TotalAsistentesChart selectedMonth={selectedMonth} />
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+          className="order-1 lg:order-2"
+        >
+          <StatsOverviewCard />
+        </motion.div>
+      </div>
 
       {/* Segmentos y Registro por eventos - mismas dimensiones */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-[1fr]">

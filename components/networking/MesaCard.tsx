@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Bookmark } from 'lucide-react'
+import { User, Building2, Phone, CheckCircle } from 'lucide-react'
 import type { Asistente } from '@/types/database.types'
 
 interface MesaCardProps {
@@ -9,41 +9,56 @@ interface MesaCardProps {
   index?: number
 }
 
-function getInitials(nombre: string | null, apellido: string | null): string {
-  const n = (nombre ?? '').trim().charAt(0)
-  const a = (apellido ?? '').trim().charAt(0)
-  if (n && a) return `${n}${a}`.toUpperCase()
-  if (n) return n.toUpperCase()
-  if (a) return a.toUpperCase()
-  return '?'
-}
-
 export function MesaCard({ asistente, index = 0 }: MesaCardProps) {
-  const nombreCompleto = [asistente.nombre, asistente.apellido].filter(Boolean).join(' ') || 'Sin nombre'
+  const nombreCompleto =
+    [asistente.nombre, asistente.apellido].filter(Boolean).join(' ') || 'Sin nombre'
   const empresa = asistente.empresa || 'Sin empresa'
-  const initials = getInitials(asistente.nombre, asistente.apellido)
+  const telefono = asistente.telefono || null
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.08 * index }}
-      className="flex w-full items-center gap-4 rounded-[24px] border border-zinc-300/80 bg-black px-4 py-3.5 shadow-md"
+      className="relative rounded-[24px] border border-[#E0E0E0] bg-[#F8F7F5] px-4 py-3 shadow-none"
     >
-      {/* Avatar - círculo blanco con iniciales negras */}
-      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-base font-bold text-black">
-        {initials}
+      {/* Icono verificado - esquina superior derecha */}
+      <div className="absolute right-3 top-3">
+        <CheckCircle className="h-5 w-5 text-[#262626]" strokeWidth={1.5} fill="none" />
       </div>
 
-      {/* Texto - nombre amarillo, empresa blanco */}
-      <div className="min-w-0 flex-1">
-        <p className="truncate font-bold text-[#FFE100]">{nombreCompleto}</p>
-        <p className="mt-0.5 truncate text-sm font-normal text-white">{empresa}</p>
-      </div>
+      {/* Contenido principal */}
+      <div className="space-y-2 pr-6">
+        {/* Nombre con icono */}
+        <div className="flex items-start gap-2">
+          <User className="mt-0.5 h-4 w-4 shrink-0 text-[#262626]" strokeWidth={1.5} />
+          <div className="min-w-0 flex-1">
+            <p className="font-bold text-[#262626] text-sm md:text-base leading-tight truncate">
+              {nombreCompleto}
+            </p>
+            <div className="mt-1 h-px w-2/3 bg-[#A0A0A0]" />
+          </div>
+        </div>
 
-      {/* Icono guardar - círculo blanco con icono negro */}
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white">
-        <Bookmark className="h-5 w-5 text-black" strokeWidth={2} fill="none" />
+        {/* Empresa con icono */}
+        <div className="flex items-center gap-2">
+          <Building2 className="h-4 w-4 shrink-0 text-[#262626]" strokeWidth={1.5} />
+          <p className="text-[#262626] text-xs md:text-sm truncate">{empresa}</p>
+        </div>
+
+        {/* Teléfono con icono - visible y destacado */}
+        {telefono && (
+          <div className="flex items-center gap-2">
+            <Phone className="h-4 w-4 shrink-0 text-[#262626]" strokeWidth={1.5} />
+            <a
+              href={`tel:${telefono}`}
+              className="text-[#262626] text-xs md:text-sm hover:underline truncate"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {telefono}
+            </a>
+          </div>
+        )}
       </div>
     </motion.div>
   )

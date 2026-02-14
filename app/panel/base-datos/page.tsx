@@ -176,7 +176,7 @@ export default function BaseDatosPage() {
           <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
             BASE DE DATOS
           </p>
-          <h1 className="text-2xl sm:text-3xl font-hero text-black">
+          <h1 className="text-2xl sm:text-3xl font-light text-black tracking-tight">
             Base de Datos
           </h1>
           <p className="mt-2 text-zinc-500">
@@ -375,7 +375,7 @@ function InscripcionesSection({
   return (
     <div className="w-full mt-10">
       <div className="mb-4">
-        <h2 className="text-xl font-semibold text-zinc-900 flex items-center gap-2">
+        <h2 className="text-xl font-light text-black tracking-tight flex items-center gap-2">
           <FileText className="w-5 h-5" />
           Inscripciones de formularios
         </h2>

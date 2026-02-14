@@ -76,7 +76,7 @@ export default function SpotlightDashboardPage() {
           <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
             SPOTLIGHT
           </p>
-          <h1 className="text-2xl sm:text-3xl font-black text-black">
+          <h1 className="text-2xl sm:text-3xl font-light text-black tracking-tight">
             Resultados en Vivo
           </h1>
         </div>

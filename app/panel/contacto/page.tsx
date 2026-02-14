@@ -54,7 +54,7 @@ export default function PanelContactoPage() {
           <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
             CONTACTO
           </p>
-          <h1 className="text-2xl sm:text-3xl font-hero text-black">Mensajes de contacto</h1>
+          <h1 className="text-2xl sm:text-3xl font-light text-black tracking-tight">Mensajes de contacto</h1>
           <p className="mt-2 text-zinc-500">
             Mensajes enviados desde el formulario &quot;Contáctanos&quot; en la página de inicio.
           </p>
