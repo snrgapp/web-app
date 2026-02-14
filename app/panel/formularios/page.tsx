@@ -316,7 +316,7 @@ export default function PanelFormulariosPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex flex-col w-full max-w-5xl mx-auto"
+        className="flex flex-col w-full max-w-6xl mx-auto"
       >
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold text-zinc-900">
@@ -654,7 +654,7 @@ export default function PanelFormulariosPage() {
             No hay formularios. Crea uno para empezar.
           </p>
         ) : (
-          <ul className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-4xl">
             {forms.map((form) => (
               <FormListItem
                 key={form.id}
@@ -664,7 +664,7 @@ export default function PanelFormulariosPage() {
                 onEdit={startEdit}
               />
             ))}
-          </ul>
+          </div>
         )}
       </motion.div>
     </div>
@@ -710,26 +710,41 @@ function FormListItem({
   }
 
   return (
-    <li className="flex items-center gap-3">
-      <div className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-zinc-200 bg-zinc-50/50 flex-1 min-w-0">
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-zinc-900">{form.titulo}</p>
-          <p className="text-sm text-zinc-500 font-mono mt-0.5">{form.slug}</p>
-          <p className="text-xs text-zinc-400 mt-1">
-            {form.campos.length} campo(s)
-            {count !== null && ` · ${count} inscripción(es)`}
-          </p>
+    <div className="flex flex-col rounded-xl border border-[#FFE100]/30 bg-[#FFFBEB] overflow-hidden">
+      <div className="p-4 flex-1 min-w-0">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            <p className="font-medium text-zinc-900 truncate">{form.titulo}</p>
+            <p className="text-sm text-zinc-500 font-mono mt-0.5 truncate">{form.slug}</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="flex-shrink-0 p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+            title="Eliminar formulario"
+          >
+            {deleting ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
+          </button>
         </div>
-        <div className="flex items-center gap-2">
+        <p className="text-xs text-zinc-400 mt-2">
+          {form.campos.length} campo(s)
+          {count !== null && ` · ${count} inscripción(es)`}
+        </p>
+        <div className="flex flex-wrap gap-2 mt-3">
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={() => onEdit(form)}
-            className="rounded-lg"
+            className="rounded-lg text-xs h-8"
             title="Editar formulario"
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="w-3.5 h-3.5" />
             Editar
           </Button>
           <Button
@@ -737,12 +752,12 @@ function FormListItem({
             variant="outline"
             size="sm"
             onClick={copyUrl}
-            className="rounded-lg"
+            className="rounded-lg text-xs h-8"
           >
             {copied ? (
-              <CheckCircle className="w-4 h-4 text-green-600" />
+              <CheckCircle className="w-3.5 h-3.5 text-green-600" />
             ) : (
-              <Copy className="w-4 h-4" />
+              <Copy className="w-3.5 h-3.5" />
             )}
             Copiar
           </Button>
@@ -750,26 +765,13 @@ function FormListItem({
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline"
+            className="inline-flex items-center gap-1 text-xs text-blue-600 hover:underline h-8 px-2"
           >
-            <ExternalLink className="w-4 h-4" />
+            <ExternalLink className="w-3.5 h-3.5" />
             Abrir
           </a>
         </div>
       </div>
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={deleting}
-        className="flex items-center justify-center w-11 h-11 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50 flex-shrink-0"
-        title="Eliminar formulario"
-      >
-        {deleting ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : (
-          <Trash2 className="w-5 h-5" />
-        )}
-      </button>
-    </li>
+    </div>
   )
 }

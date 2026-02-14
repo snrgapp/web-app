@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Users, UserCheck, BarChart3, Loader2 } from 'lucide-react'
+import { Users, UserCheck, Loader2 } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,6 +43,11 @@ export default function SpotlightDashboardPage() {
     const interval = setInterval(loadData, 10000)
     return () => clearInterval(interval)
   }, [loadData])
+
+  const maxPuntaje =
+    resultados.length > 0
+      ? Math.ceil(Math.max(...resultados.map((r) => r.total_ponderado)) * 1.15) || 5
+      : 5
 
   const chartData = resultados.map((r) => ({
     name: r.nombre,
@@ -97,110 +102,173 @@ export default function SpotlightDashboardPage() {
         </div>
       ) : (
         <>
-          {/* Participación */}
+          {/* Participación - diseño tipo gauge con balance */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
           >
-            <Card>
-              <CardContent className="py-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-zinc-600" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-zinc-600">Participación</p>
-                      <p className="text-2xl font-black text-black">
-                        {participacion.votaron}{' '}
-                        <span className="text-sm font-medium text-zinc-400">/ {participacion.total} votantes</span>
-                      </p>
+            <div className="rounded-2xl bg-[#FFFBEB] border border-[#FFE100]/30 shadow-lg overflow-hidden">
+              <div className="flex flex-col sm:flex-row items-stretch min-h-[200px]">
+                {/* Lado izquierdo - Balance */}
+                <div className="flex-1 p-6 flex flex-col justify-center">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-black mb-4">
+                    Balance
+                  </h3>
+                  <ul className="space-y-3">
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-black shrink-0" />
+                      <span className="text-sm font-medium text-black">
+                        Quienes votaron - {porcentajeParticipacion}%
+                      </span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-zinc-400 shrink-0" />
+                      <span className="text-sm font-medium text-zinc-500">
+                        Inscritos (no votaron) - {participacion.total > 0 ? 100 - porcentajeParticipacion : 0}%
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Centro - Gauge semi-circular */}
+                <div className="flex-1 flex items-center justify-center p-6 relative">
+                  <div className="relative w-[180px] h-[100px]">
+                    <svg viewBox="0 0 200 110" className="w-full h-full">
+                      {/* Arco base (fondo gris) */}
+                      <path
+                        d="M 20 95 A 80 80 0 0 1 180 95"
+                        fill="none"
+                        stroke="#e4e4e7"
+                        strokeWidth="12"
+                        strokeLinecap="round"
+                      />
+                      {/* Arco de progreso (amarillo) */}
+                      <path
+                        d="M 20 95 A 80 80 0 0 1 180 95"
+                        fill="none"
+                        stroke="#FFE100"
+                        strokeWidth="12"
+                        strokeLinecap="round"
+                        style={{
+                          strokeDasharray: `${(porcentajeParticipacion / 100) * 251.2} 999`,
+                          transition: 'stroke-dasharray 0.7s ease-out',
+                        }}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pt-2">
+                      <span className="text-2xl font-black text-black">{porcentajeParticipacion}%</span>
+                      <span className="text-xs font-medium text-black/70 mt-0.5">progreso</span>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-3xl font-black text-black">{porcentajeParticipacion}%</p>
-                  </div>
                 </div>
-                {/* Progress bar */}
-                <div className="mt-3 h-2 bg-zinc-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-black rounded-full transition-all duration-500"
-                    style={{ width: `${porcentajeParticipacion}%` }}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </motion.div>
 
-          {/* Gráfico de barras - Puntaje total */}
+          {/* Gráficos lado a lado - Puntaje total y Promedios por criterio */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.2 }}
+            className="grid grid-cols-1 lg:grid-cols-2 gap-4"
           >
-            <Card>
-              <CardHeader className="pb-2">
-                <h3 className="text-sm font-medium text-zinc-600">
+            <Card className="overflow-hidden bg-[#FFFBEB]/50">
+              <CardHeader className="pb-1 pt-4 px-4">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-600">
                   Puntaje Total Ponderado por Founder
                 </h3>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-4 pb-4 pt-0">
                 {resultados.length === 0 ? (
-                  <p className="text-sm text-zinc-400 py-8 text-center">No hay datos aún</p>
+                  <p className="text-sm text-zinc-400 py-12 text-center">No hay datos aún</p>
                 ) : (
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                      <YAxis tick={{ fontSize: 12 }} />
+                  <ResponsiveContainer width="100%" height={220}>
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 8, right: 12, bottom: 4, left: -8 }}
+                      barCategoryGap="1%"
+                      barGap={2}
+                      barSize={24}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: '#e4e4e7' }} interval={0} />
+                      <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} width={28} domain={[0, maxPuntaje]} />
                       <Tooltip
                         contentStyle={{
                           borderRadius: '8px',
                           border: '1px solid #e4e4e7',
-                          fontSize: '12px',
+                          fontSize: '11px',
+                          padding: '8px 12px',
+                          backgroundColor: 'white',
                         }}
+                        formatter={(value: number) => [value.toFixed(2), 'Puntaje']}
                       />
-                      <Bar dataKey="Puntaje Total" fill="#18181b" radius={[4, 4, 0, 0]} />
+                      <Bar
+                        dataKey="Puntaje Total"
+                        fill="#18181b"
+                        radius={[8, 8, 8, 8]}
+                        name="Puntaje"
+                        background={{ fill: '#e4e4e7' }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 )}
               </CardContent>
             </Card>
-          </motion.div>
 
-          {/* Promedios por categoría */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
-          >
-            <Card>
-              <CardHeader className="pb-2">
-                <h3 className="text-sm font-medium text-zinc-600">
+            <Card className="overflow-hidden bg-[#FFFBEB]/50">
+              <CardHeader className="pb-1 pt-4 px-4">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-600">
                   Promedios por Criterio
                 </h3>
               </CardHeader>
-              <CardContent>
+              <CardContent className="px-4 pb-4 pt-0">
                 {resultados.length === 0 ? (
-                  <p className="text-sm text-zinc-400 py-8 text-center">No hay datos aún</p>
+                  <p className="text-sm text-zinc-400 py-12 text-center">No hay datos aún</p>
                 ) : (
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                      <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                      <YAxis tick={{ fontSize: 12 }} domain={[0, 5]} />
+                  <ResponsiveContainer width="100%" height={220}>
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 8, right: 12, bottom: 4, left: -8 }}
+                      barCategoryGap="4%"
+                      barGap={2}
+                      barSize={24}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f4f4f5" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fontSize: 10 }} tickLine={false} axisLine={{ stroke: '#e4e4e7' }} />
+                      <YAxis tick={{ fontSize: 10 }} tickLine={false} axisLine={false} width={28} domain={[0, 5]} />
                       <Tooltip
                         contentStyle={{
                           borderRadius: '8px',
                           border: '1px solid #e4e4e7',
-                          fontSize: '12px',
+                          fontSize: '11px',
+                          padding: '8px 12px',
+                          backgroundColor: 'white',
                         }}
                       />
-                      <Legend />
-                      <Bar dataKey="Innovación" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="Claridad" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                      <Bar dataKey="Q&A" fill="#10b981" radius={[4, 4, 0, 0]} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} iconType="circle" iconSize={6} />
+                      <Bar
+                        dataKey="Innovación"
+                        fill="#FFE100"
+                        radius={[8, 8, 8, 8]}
+                        name="Innovación"
+                        background={{ fill: '#e4e4e7' }}
+                      />
+                      <Bar
+                        dataKey="Claridad"
+                        fill="#3b82f6"
+                        radius={[8, 8, 8, 8]}
+                        name="Claridad"
+                        background={{ fill: '#e4e4e7' }}
+                      />
+                      <Bar
+                        dataKey="Q&A"
+                        fill="#10b981"
+                        radius={[8, 8, 8, 8]}
+                        name="Q&A"
+                        background={{ fill: '#e4e4e7' }}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 )}

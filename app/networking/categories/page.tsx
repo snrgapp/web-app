@@ -6,10 +6,22 @@ import { motion } from 'framer-motion'
 import { Coffee, Rocket, ChevronRight, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
+const CARD_OFFSET_MOBILE = 100
+const CARD_OFFSET_DESKTOP = 150
+
 export default function NetworkingCategorySelection() {
   const router = useRouter()
   const [isShuffling, setIsShuffling] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<'company' | 'founder' | null>(null)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    setIsDesktop(mq.matches)
+    const fn = (e: MediaQueryListEvent) => setIsDesktop(e.matches)
+    mq.addEventListener('change', fn)
+    return () => mq.removeEventListener('change', fn)
+  }, [])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -69,7 +81,7 @@ export default function NetworkingCategorySelection() {
         </div>
       </div>
 
-      {/* Contenedor de Tarjetas */}
+      {/* Contenedor de Tarjetas - más separadas en web (md+) */}
       <div className="relative w-full max-w-3xl mx-auto flex justify-center items-center h-[280px] sm:h-[320px] md:h-[400px] z-10 px-2 sm:px-6">
         
         {/* Tarjeta Amarilla (Izquierda) */}
@@ -77,10 +89,10 @@ export default function NetworkingCategorySelection() {
           onClick={() => handleCardClick('company')}
           animate={isShuffling ? { 
             rotate: [ -5, 5, -5], 
-            x: ['calc(-50% - 100px)', 'calc(-50% - 95px)', 'calc(-50% - 100px)'] 
+            x: [`calc(-50% - ${(isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE)}px)`, `calc(-50% - ${(isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE) - 5}px)`, `calc(-50% - ${(isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE)}px)`]
           } : { 
             rotate: selectedCategory === 'company' ? 0 : -5, 
-            x: 'calc(-50% - 100px)',
+            x: `calc(-50% - ${isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE}px)`,
             scale: selectedCategory === 'company' ? 1.1 : 1,
             y: selectedCategory === 'company' ? -10 : 0
           }}
@@ -112,10 +124,10 @@ export default function NetworkingCategorySelection() {
           onClick={() => handleCardClick('founder')}
           animate={isShuffling ? { 
             rotate: [ 5, -5, 5], 
-            x: ['calc(-50% + 100px)', 'calc(-50% + 95px)', 'calc(-50% + 100px)'] 
+            x: [`calc(-50% + ${(isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE)}px)`, `calc(-50% + ${(isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE) - 5}px)`, `calc(-50% + ${(isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE)}px)`]
           } : { 
             rotate: selectedCategory === 'founder' ? 0 : 5, 
-            x: 'calc(-50% + 100px)',
+            x: `calc(-50% + ${isDesktop ? CARD_OFFSET_DESKTOP : CARD_OFFSET_MOBILE}px)`,
             scale: selectedCategory === 'founder' ? 1.1 : 1,
             y: selectedCategory === 'founder' ? -10 : 0
           }}
@@ -143,8 +155,8 @@ export default function NetworkingCategorySelection() {
         </motion.div>
       </div>
 
-      {/* Footer y Botón */}
-      <div className="w-full max-w-[320px] flex flex-col items-center gap-3 sm:gap-4 -mt-8 sm:-mt-12 z-50 px-4">
+      {/* Footer y Botón - más abajo en web (md+) */}
+      <div className="w-full max-w-[320px] flex flex-col items-center gap-3 sm:gap-4 -mt-8 sm:-mt-12 md:mt-4 z-50 px-4">
         <p className="text-xl sm:text-2xl font-light text-gray-500 italic">ahora si</p>
         
         <button 

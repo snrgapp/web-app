@@ -4,8 +4,9 @@ import { Suspense, useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { ArrowLeft, Loader2, Users } from 'lucide-react'
+import { ArrowLeft, Loader2 } from 'lucide-react'
 import { getAsistenteById, getAsistentesPorMesa } from '@/app/actions/networking'
+import { MesaCard } from '@/components/networking/MesaCard'
 import type { Asistente } from '@/types/database.types'
 
 function MesaContent() {
@@ -79,7 +80,7 @@ function MesaContent() {
         </button>
       </div>
 
-      <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-8">
+      <div className="flex-1 flex flex-col items-center bg-[#f2f2f2] px-4 sm:px-6 py-8">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -88,22 +89,19 @@ function MesaContent() {
           <div className="flex items-center gap-2">
             <Image src="/logo.png" alt="" width={24} height={24} />
             <span className="text-zinc-500 text-sm">
-              {ronda === 1 ? 'Ronda 1' : 'Ronda 2'}
+              {ronda === 1 ? 'Primera Ronda' : 'Segunda Ronda'}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-black tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-light text-black tracking-tight">
             La mesa {mesaLabel}
           </h1>
-          <p className="text-zinc-500 text-sm">
-            Emprendedores en tu mesa ({compañeros.length} máximo 5)
-          </p>
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-md space-y-4"
+          className="w-full max-w-md space-y-5"
         >
           {compañeros.length === 0 ? (
             <p className="text-center text-zinc-500 py-8">
@@ -111,25 +109,7 @@ function MesaContent() {
             </p>
           ) : (
             compañeros.map((a, i) => (
-              <motion.div
-                key={a.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * i }}
-                className="flex items-center gap-4 p-4 rounded-2xl bg-[#FFE100] border border-black/5 shadow-sm"
-              >
-                <div className="w-12 h-12 rounded-full bg-black/10 flex items-center justify-center shrink-0">
-                  <Users className="w-6 h-6 text-black/60" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-black truncate">
-                    {[a.nombre, a.apellido].filter(Boolean).join(' ') || 'Sin nombre'}
-                  </p>
-                  <p className="text-sm text-black/70 truncate">
-                    {a.empresa || 'Sin empresa'}
-                  </p>
-                </div>
-              </motion.div>
+              <MesaCard key={a.id} asistente={a} index={i} />
             ))
           )}
         </motion.div>
@@ -138,11 +118,11 @@ function MesaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-10 w-full max-w-md"
+          className="mt-10"
         >
           <button
             onClick={handleComenzar}
-            className="w-full bg-black text-white rounded-full py-4 px-6 font-medium text-lg hover:bg-zinc-800 transition-colors active:scale-[0.98]"
+            className="bg-black text-white rounded-full py-3.5 px-10 font-medium text-lg hover:bg-zinc-800 transition-colors active:scale-[0.98]"
           >
             Comenzar
           </button>

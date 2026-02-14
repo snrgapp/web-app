@@ -173,9 +173,9 @@ export default function CardDeckContainer({ questions, categorySlug, ronda = 1 }
           ) : null}
         </div>
 
-        {/* "tienes 3 min", timer y girar: más pegados a la tarjeta */}
+        {/* "tienes 3 min", timer y girar - más espacio en mobile entre tarjeta y timer */}
         {selectedCardIndex !== null && (
-          <div className="-mt-8 sm:-mt-12 w-full max-w-xl mx-auto px-4 flex flex-col items-center">
+          <div className="mt-8 sm:mt-0 sm:-mt-12 w-full max-w-xl mx-auto px-4 flex flex-col items-center">
             <div className={`flex items-center justify-center gap-2 mb-2 sm:mb-3 font-timer-label ${backgroundColor === 'dark' ? 'text-white' : 'text-black'}`}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
                 <circle cx="12" cy="12" r="10"/>
