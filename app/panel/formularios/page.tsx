@@ -418,6 +418,9 @@ export default function PanelFormulariosPage() {
                 <p className="text-xs text-zinc-500 mt-1">
                   Vincula este formulario a un evento. Aparecerá como opción &quot;Registrarse&quot; en la página del evento.
                 </p>
+                <p className="text-xs text-zinc-500 mt-1">
+                  <strong>Flujo:</strong> Crea primero el evento (pestaña Eventos) sin enlace; luego crea este formulario y selecciónalo aquí.
+                </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6">

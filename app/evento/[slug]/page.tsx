@@ -59,7 +59,7 @@ export default async function EventoSlugPage({ params }: PageProps) {
     ? `/checkin?event=${encodeURIComponent(evento.checkin_slug)}`
     : null
 
-  const isExternalLink = evento.link.startsWith('http')
+  const isExternalLink = evento.link != null && evento.link.trim() !== '' && evento.link.startsWith('http')
 
   return (
     <main className="min-h-screen bg-[#f2f2f2] text-[#1a1a1a]">

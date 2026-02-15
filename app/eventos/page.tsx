@@ -148,7 +148,7 @@ export default function EventosPage() {
                     {items.map((evento) => {
                       const eventHref = evento.checkin_slug
                         ? `/evento/${evento.checkin_slug}`
-                        : evento.link
+                        : (evento.link || '#')
                       const isInternal = evento.checkin_slug != null
                       return (
                       <a

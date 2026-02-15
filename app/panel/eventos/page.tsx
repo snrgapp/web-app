@@ -83,10 +83,7 @@ export default function PanelEventosPage() {
       setStatus({ type: 'error', message: 'Supabase no configurado.' })
       return
     }
-    if (!link.trim()) {
-      setStatus({ type: 'error', message: 'El enlace de registro es obligatorio.' })
-      return
-    }
+    // Link es opcional: si usas formulario propio, créalo en Formularios y vincúlalo al evento
     const slug = checkinSlug.trim().toLowerCase().replace(/\s+/g, '-')
     if (!slug) {
       setStatus({ type: 'error', message: 'El slug de check-in es obligatorio para el QR (ej: ctg-feb15).' })
@@ -141,7 +138,7 @@ export default function PanelEventosPage() {
       titulo: titulo.trim() || null,
       checkin_slug: slug,
       image_url: finalImageUrl,
-      link: link.trim(),
+      link: link.trim() || null,
       fecha: fecha.trim() || null,
       ciudad: ciudad.trim() || null,
       orden,
@@ -363,20 +360,22 @@ export default function PanelEventosPage() {
               />
             </div>
 
-            {/* Enlace / Descripción */}
+            {/* Enlace de registro (opcional si usas formulario propio) */}
             <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
               <div className="flex items-center gap-2 text-zinc-600 mb-1">
                 <FileText className="w-4 h-4" />
-                <span className="text-sm font-medium">Enlace de registro</span>
+                <span className="text-sm font-medium">Enlace de registro (opcional)</span>
               </div>
               <Input
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
-                placeholder="https://luma.com/..."
+                placeholder="https://luma.com/... o https://inscripcion.snrg.lat/fh-2025"
                 type="url"
-                required
                 className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0"
               />
+              <p className="text-xs text-zinc-500 mt-1">
+                Enlace externo (Luma, etc.) o URL de formulario. Si creas un form en la pestaña Formularios y lo vinculas a este evento, déjalo vacío.
+              </p>
             </div>
 
             {/** En desktop: URL de imagen */}
@@ -465,15 +464,21 @@ export default function PanelEventosPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-zinc-900 truncate">{ev.titulo || 'Sin título'}</p>
-                    <a
-                      href={ev.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
-                    >
-                      {ev.link}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                    </a>
+                    {ev.link ? (
+                      <a
+                        href={ev.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
+                      >
+                        {ev.link}
+                        <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                      </a>
+                    ) : (
+                      <p className="text-sm text-zinc-500 mt-1">
+                        Registro mediante formulario vinculado en Formularios
+                      </p>
+                    )}
                     <p className="text-xs text-zinc-500 mt-1">
                       {ev.fecha ? `Fecha: ${ev.fecha}` : 'Sin fecha'}
                       {ev.ciudad ? ` · ${ev.ciudad}` : ''} · Orden: {ev.orden}
