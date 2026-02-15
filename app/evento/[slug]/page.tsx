@@ -141,7 +141,7 @@ export default async function EventoSlugPage({ params }: PageProps) {
                         Solicitar unirse
                         <ArrowRight className="w-4 h-4" />
                       </Link>
-                    ) : isExternalLink ? (
+                    ) : isExternalLink && evento.link ? (
                       <a
                         href={evento.link}
                         target="_blank"
