@@ -143,7 +143,7 @@ export default async function EventoSlugPage({ params }: PageProps) {
                       </Link>
                     ) : isExternalLink && evento.link ? (
                       <a
-                        href={evento.link}
+                        href={evento.link ?? undefined}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
