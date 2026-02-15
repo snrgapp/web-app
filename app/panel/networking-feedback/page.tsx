@@ -124,7 +124,7 @@ export default function NetworkingFeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-100 p-4 lg:p-8">
+    <div className="min-h-screen bg-zinc-100 pt-4 pr-4 pb-4 pl-2 lg:pt-8 lg:pr-8 lg:pb-8 lg:pl-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

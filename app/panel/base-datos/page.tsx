@@ -22,10 +22,11 @@ import {
   type FormWithParsedFields,
   type FormSubmissionWithForm,
 } from '@/lib/forms/form-repository-client'
-import type { Asistente } from '@/types/database.types'
+import type { Asistente, Evento } from '@/types/database.types'
 import type { FormFieldConfig } from '@/types/form.types'
 
 const headers = [
+  'Evento',
   'Nombre',
   'Apellido',
   'Teléfono',
@@ -39,8 +40,13 @@ const headers = [
   'Mesa ronda 2',
 ]
 
+type AsistenteConEvento = Asistente & { eventos?: { titulo: string | null; checkin_slug: string | null } | null }
+
 export default function BaseDatosPage() {
-  const [asistentes, setAsistentes] = useState<Asistente[]>([])
+  const [eventos, setEventos] = useState<Evento[]>([])
+  const [selectedEventoId, setSelectedEventoId] = useState<string>('')
+  const [filterEventoId, setFilterEventoId] = useState<string>('')
+  const [asistentes, setAsistentes] = useState<AsistenteConEvento[]>([])
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<{
@@ -55,6 +61,16 @@ export default function BaseDatosPage() {
   const [submissions, setSubmissions] = useState<FormSubmissionWithForm[]>([])
   const [submissionsLoading, setSubmissionsLoading] = useState(false)
 
+  async function fetchEventos() {
+    if (!supabase) return
+    const { data } = await supabase
+      .from('eventos')
+      .select('*')
+      .order('orden', { ascending: true })
+      .order('created_at', { ascending: false })
+    setEventos(data ?? [])
+  }
+
   async function fetchAsistentes() {
     setLoading(true)
     if (!supabase) {
@@ -63,20 +79,40 @@ export default function BaseDatosPage() {
       setLoading(false)
       return
     }
-    const { data, error } = await supabase
+    const { data: asistentesData, error: asistentesError } = await supabase
       .from('asistentes')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (error) {
-      setUploadStatus({ type: 'error', message: error.message })
+    if (asistentesError) {
+      setUploadStatus({ type: 'error', message: asistentesError.message })
       setAsistentes([])
-    } else {
-      setAsistentes(data ?? [])
-      setUploadStatus({ type: null, message: '' })
+      setLoading(false)
+      return
     }
+
+    const { data: eventosData } = await supabase
+      .from('eventos')
+      .select('id, titulo, checkin_slug')
+
+    const eventosMap = new Map(
+      (eventosData ?? []).map((e) => [e.id, { titulo: e.titulo, checkin_slug: e.checkin_slug }])
+    )
+
+    const asistentesConEvento: AsistenteConEvento[] = (asistentesData ?? []).map((a) => ({
+      ...a,
+      eventos: a.evento_id ? (eventosMap.get(a.evento_id) ?? null) : null,
+    }))
+
+    setAsistentes(asistentesConEvento)
+    setUploadStatus({ type: null, message: '' })
     setLoading(false)
   }
+
+
+  useEffect(() => {
+    fetchEventos()
+  }, [])
 
   useEffect(() => {
     fetchAsistentes()
@@ -102,6 +138,11 @@ export default function BaseDatosPage() {
     const file = e.target.files?.[0]
     if (!file) return
 
+    if (!selectedEventoId) {
+      setUploadStatus({ type: 'error', message: 'Selecciona un evento antes de importar' })
+      return
+    }
+
     if (!file.name.endsWith('.csv')) {
       setUploadStatus({ type: 'error', message: 'Solo se permiten archivos CSV' })
       return
@@ -124,12 +165,23 @@ export default function BaseDatosPage() {
         throw new Error('Supabase no está configurado. Revisa las variables de entorno.')
       }
 
+      const { error: deleteError } = await supabase
+        .from('asistentes')
+        .delete()
+        .eq('evento_id', selectedEventoId)
+
+      if (deleteError) {
+        console.warn('No se pudieron eliminar asistentes previos:', deleteError)
+      }
+
       const BATCH_SIZE = 100
       let inserted = 0
       let failed = 0
 
-      for (let i = 0; i < rows.length; i += BATCH_SIZE) {
-        const batch = rows.slice(i, i + BATCH_SIZE)
+      const rowsWithEvento = rows.map((row) => ({ ...row, evento_id: selectedEventoId }))
+
+      for (let i = 0; i < rowsWithEvento.length; i += BATCH_SIZE) {
+        const batch = rowsWithEvento.slice(i, i + BATCH_SIZE)
         const { error } = await supabase.from('asistentes').insert(batch)
 
         if (error) {
@@ -148,7 +200,7 @@ export default function BaseDatosPage() {
       } else {
         setUploadStatus({
           type: 'success',
-          message: `Se importaron ${inserted} asistentes correctamente.`,
+          message: `Se importaron ${inserted} asistentes correctamente al evento seleccionado.`,
         })
       }
 
@@ -164,13 +216,45 @@ export default function BaseDatosPage() {
     }
   }
 
+  const filteredAsistentes = filterEventoId
+    ? asistentes.filter((a) => a.evento_id === filterEventoId)
+    : asistentes
+
+  function exportAsistentesCsv() {
+    const ev = filterEventoId ? eventos.find((e) => e.id === filterEventoId) : null
+    const toExport = filteredAsistentes
+    const csvHeaders = ['Evento', ...headers.slice(1)]
+    const csvRows = toExport.map((a) => ({
+      Evento: (a.eventos as { titulo?: string } | null)?.titulo ?? a.evento_id ?? '-',
+      Nombre: a.nombre ?? '',
+      Apellido: a.apellido ?? '',
+      Teléfono: a.telefono ?? '',
+      Correo: a.correo ?? '',
+      Empresa: a.empresa ?? '',
+      Sector: a.sector ?? '',
+      Soluciones: a.soluciones ?? '',
+      Desafíos: a.desafios ?? '',
+      Mesa: a.mesa ?? '',
+      'Código de mesa': a.codigo_mesa ?? '',
+      'Mesa ronda 2': a.mesa_ronda2 ?? '',
+    }))
+    const csv = Papa.unparse({ fields: csvHeaders, data: csvRows })
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `asistentes${ev ? `-${ev.checkin_slug ?? ev.titulo ?? ev.id}` : ''}-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
-    <div className="p-4 lg:p-6">
+    <div className="pt-4 pr-4 pb-4 pl-2 lg:pt-6 lg:pr-6 lg:pb-6 lg:pl-2 min-w-0 overflow-x-hidden">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex flex-col items-center w-full max-w-7xl mx-auto"
+        className="flex flex-col items-center w-full max-w-7xl mx-auto min-w-0"
       >
         <div className="w-full mb-6">
           <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
@@ -184,8 +268,8 @@ export default function BaseDatosPage() {
           </p>
         </div>
 
-        <Card className="w-full mb-6 overflow-hidden shadow-sm border-2 border-dashed border-zinc-200 hover:border-neon-lime/50 transition-colors">
-          <CardContent className="p-6 sm:p-8">
+        <Card className="w-full min-w-0 mb-6 overflow-hidden shadow-sm border-2 border-dashed border-zinc-200 hover:border-neon-lime/50 transition-colors">
+          <CardContent className="p-6 sm:p-8 min-w-0 overflow-hidden">
             <input
               ref={fileInputRef}
               type="file"
@@ -193,22 +277,44 @@ export default function BaseDatosPage() {
               onChange={handleFileSelect}
               className="hidden"
             />
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              <Button
-                onClick={() => fileInputRef.current?.click()}
-                disabled={uploading}
-                className="bg-pure-dark hover:bg-zinc-800 text-white gap-2"
-              >
-                {uploading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Upload className="w-4 h-4" />
-                )}
-                {uploading ? 'Importando...' : 'Subir archivo CSV'}
-              </Button>
-              <p className="text-sm text-zinc-500">
-                El CSV debe tener columnas: Nombre, Apellido, Teléfono, Correo, Empresa, Sector, Soluciones, Desafíos, Mesa, Código de mesa, Mesa ronda 2 (opcional)
-              </p>
+            <div className="flex flex-col gap-4">
+              <div className="min-w-0 w-full overflow-hidden">
+                <label className="block text-sm font-medium text-zinc-700 mb-2">
+                  Evento destino (obligatorio para importar)
+                </label>
+                <select
+                  value={selectedEventoId}
+                  onChange={(e) => setSelectedEventoId(e.target.value)}
+                  className="w-full max-w-full sm:max-w-md h-9 sm:h-10 rounded-lg border border-zinc-200 bg-white px-3 sm:px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 min-w-0 box-border"
+                >
+                  <option value="">-- Seleccionar evento --</option>
+                  {eventos.map((ev) => (
+                    <option key={ev.id} value={ev.id}>
+                      {ev.titulo ?? 'Sin título'} {ev.checkin_slug ? `(${ev.checkin_slug})` : ''}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-zinc-500">
+                  Los asistentes existentes del evento serán reemplazados por el CSV
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <Button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading || !selectedEventoId}
+                  className="bg-pure-dark hover:bg-zinc-800 text-white gap-2"
+                >
+                  {uploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  {uploading ? 'Importando...' : 'Subir archivo CSV'}
+                </Button>
+                <p className="text-sm text-zinc-500">
+                  Columnas: Nombre, Apellido, Teléfono, Correo, Empresa, Sector, Soluciones, Desafíos, Mesa, Código de mesa, Mesa ronda 2 (opcional)
+                </p>
+              </div>
             </div>
             {uploadStatus.type && (
               <div
@@ -229,8 +335,37 @@ export default function BaseDatosPage() {
           </CardContent>
         </Card>
 
-        <Card className="w-full overflow-hidden shadow-sm">
-          <CardContent className="p-6 sm:p-8">
+        <Card className="w-full min-w-0 overflow-hidden shadow-sm">
+          <CardContent className="p-6 sm:p-8 min-w-0 overflow-hidden">
+            <div className="mb-4 flex flex-wrap items-center gap-4">
+              <div className="min-w-0 flex-1 sm:flex-initial sm:min-w-[200px] overflow-hidden">
+                <label className="block text-sm font-medium text-zinc-700 mb-1">Filtrar por evento</label>
+                <select
+                  value={filterEventoId}
+                  onChange={(e) => setFilterEventoId(e.target.value)}
+                  className="w-full sm:w-auto sm:min-w-[200px] h-9 sm:h-10 rounded-lg border border-zinc-200 bg-white px-3 sm:px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 min-w-0"
+                >
+                  <option value="">Todos los eventos</option>
+                  {eventos.map((ev) => (
+                    <option key={ev.id} value={ev.id}>
+                      {ev.titulo ?? ev.checkin_slug ?? ev.id}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {filteredAsistentes.length > 0 && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={exportAsistentesCsv}
+                  className="gap-2 self-end"
+                >
+                  <Download className="w-4 h-4" />
+                  Exportar CSV
+                </Button>
+              )}
+            </div>
             <div className="overflow-x-auto rounded-lg border border-zinc-200">
               <Table>
                 <TableHeader>
@@ -256,18 +391,23 @@ export default function BaseDatosPage() {
                         Cargando...
                       </TableCell>
                     </TableRow>
-                  ) : asistentes.length === 0 ? (
+                  ) : filteredAsistentes.length === 0 ? (
                     <TableRow>
                       <TableCell
                         colSpan={headers.length}
                         className="px-4 py-8 text-center text-zinc-500"
                       >
-                        No hay asistentes. Sube un archivo CSV para importar datos.
+                        {filterEventoId
+                          ? 'No hay asistentes en este evento.'
+                          : 'No hay asistentes. Selecciona un evento y sube un archivo CSV.'}
                       </TableCell>
                     </TableRow>
                   ) : (
-                    asistentes.map((asistente) => (
+                    filteredAsistentes.map((asistente) => (
                       <TableRow key={asistente.id} className="hover:bg-zinc-50/50">
+                        <TableCell className="px-4 py-3 text-zinc-600 text-sm">
+                          {(asistente.eventos as { titulo?: string } | null)?.titulo ?? asistente.evento_id ?? '-'}
+                        </TableCell>
                         <TableCell className="px-4 py-3 text-zinc-900">
                           {asistente.nombre ?? '-'}
                         </TableCell>
@@ -384,16 +524,16 @@ function InscripcionesSection({
         </p>
       </div>
 
-      <Card className="w-full overflow-hidden shadow-sm">
-        <CardContent className="p-6 sm:p-8">
-          <div className="mb-4">
+      <Card className="w-full min-w-0 overflow-hidden shadow-sm">
+        <CardContent className="p-6 sm:p-8 min-w-0 overflow-hidden">
+          <div className="mb-4 min-w-0 overflow-hidden">
             <label className="block text-sm font-medium text-zinc-700 mb-2">
               Seleccionar formulario
             </label>
             <select
               value={selectedFormId}
               onChange={(e) => setSelectedFormId(e.target.value)}
-              className="w-full max-w-md h-10 rounded-lg border border-zinc-200 bg-white px-4 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900"
+              className="w-full max-w-full sm:max-w-md h-9 sm:h-10 rounded-lg border border-zinc-200 bg-white px-3 sm:px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-zinc-900 min-w-0"
             >
               <option value="">-- Elegir formulario --</option>
               {forms.map((f) => (

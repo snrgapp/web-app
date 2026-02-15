@@ -12,13 +12,19 @@ import {
   AlertCircle,
   Trash2,
   ExternalLink,
+  QrCode,
+  Lock,
+  Unlock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { supabase } from '@/utils/supabase/client'
 import type { Evento } from '@/types/database.types'
+import { CheckinQRCard } from '@/components/panel/CheckinQRCard'
 
 const BUCKET = 'eventos'
+
+const CHECKIN_SLUG_REGEX = /^[a-z0-9-]+$/i
 
 export default function PanelEventosPage() {
   const [eventos, setEventos] = useState<Evento[]>([])
@@ -30,6 +36,7 @@ export default function PanelEventosPage() {
   })
 
   const [titulo, setTitulo] = useState('')
+  const [checkinSlug, setCheckinSlug] = useState('')
   const [link, setLink] = useState('')
   const [imageUrl, setImageUrl] = useState('')
   const [fecha, setFecha] = useState('')
@@ -80,6 +87,25 @@ export default function PanelEventosPage() {
       setStatus({ type: 'error', message: 'El enlace de registro es obligatorio.' })
       return
     }
+    const slug = checkinSlug.trim().toLowerCase().replace(/\s+/g, '-')
+    if (!slug) {
+      setStatus({ type: 'error', message: 'El slug de check-in es obligatorio para el QR (ej: ctg-feb15).' })
+      return
+    }
+    if (!CHECKIN_SLUG_REGEX.test(slug)) {
+      setStatus({ type: 'error', message: 'El slug solo puede tener letras, números y guiones.' })
+      return
+    }
+
+    const existing = await supabase
+      .from('eventos')
+      .select('id')
+      .eq('checkin_slug', slug)
+      .maybeSingle()
+    if (existing.data) {
+      setStatus({ type: 'error', message: 'Ya existe un evento con ese slug. Usa otro.' })
+      return
+    }
 
     let finalImageUrl = imageUrl.trim()
     if (imageFile) {
@@ -113,6 +139,7 @@ export default function PanelEventosPage() {
     setStatus({ type: null, message: '' })
     const { error } = await supabase.from('eventos').insert({
       titulo: titulo.trim() || null,
+      checkin_slug: slug,
       image_url: finalImageUrl,
       link: link.trim(),
       fecha: fecha.trim() || null,
@@ -125,6 +152,7 @@ export default function PanelEventosPage() {
     } else {
       setStatus({ type: 'success', message: 'Evento creado correctamente.' })
       setTitulo('')
+      setCheckinSlug('')
       setLink('')
       setImageUrl('')
       setFecha('')
@@ -148,10 +176,30 @@ export default function PanelEventosPage() {
     }
   }
 
+  async function handleToggleInscripcion(ev: Evento) {
+    if (!supabase) return
+    const nuevoEstado = !(ev.inscripcion_abierta ?? true)
+    const { error } = await supabase
+      .from('eventos')
+      .update({ inscripcion_abierta: nuevoEstado })
+      .eq('id', ev.id)
+    if (!error) {
+      setEventos((prev) =>
+        prev.map((e) => (e.id === ev.id ? { ...e, inscripcion_abierta: nuevoEstado } : e))
+      )
+      setStatus({
+        type: 'success',
+        message: nuevoEstado ? 'Inscripción habilitada.' : 'Inscripción cerrada.',
+      })
+    } else {
+      setStatus({ type: 'error', message: error.message })
+    }
+  }
+
   const displayImage = imagePreview || imageUrl || null
 
   return (
-    <div className="p-4 lg:p-6">
+    <div className="pt-4 pr-4 pb-4 pl-2 lg:pt-6 lg:pr-6 lg:pb-6 lg:pl-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -228,6 +276,23 @@ export default function PanelEventosPage() {
                 placeholder="Nombre del evento"
                 className="text-lg font-medium rounded-xl bg-zinc-50 border-zinc-200 placeholder:text-zinc-400 h-12"
               />
+            </div>
+
+            {/* Slug de check-in para QR */}
+            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+              <div className="flex items-center gap-2 text-zinc-600 mb-1">
+                <QrCode className="w-4 h-4" />
+                <span className="text-sm font-medium">Slug de check-in (para QR)</span>
+              </div>
+              <Input
+                value={checkinSlug}
+                onChange={(e) => setCheckinSlug(e.target.value)}
+                placeholder="Ej: ctg-feb15, med-mar02"
+                className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0 font-mono text-sm"
+              />
+              <p className="text-xs text-zinc-500 mt-1">
+                Solo letras, números y guiones. Se usará en snrg.lat/checkin?event=...
+              </p>
             </div>
 
             {/* Fecha y hora */}
@@ -412,8 +477,54 @@ export default function PanelEventosPage() {
                     <p className="text-xs text-zinc-500 mt-1">
                       {ev.fecha ? `Fecha: ${ev.fecha}` : 'Sin fecha'}
                       {ev.ciudad ? ` · ${ev.ciudad}` : ''} · Orden: {ev.orden}
+                      {ev.checkin_slug ? ` · Check-in: ${ev.checkin_slug}` : ''}
+                      {ev.inscripcion_abierta === false ? ' · Inscripción cerrada' : ''}
                     </p>
+                    {ev.checkin_slug && (
+                      <a
+                        href={`/evento/${ev.checkin_slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 hover:underline mt-1 inline-block"
+                      >
+                        Ver página del evento →
+                      </a>
+                    )}
                   </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleToggleInscripcion(ev)}
+                      className={
+                        ev.inscripcion_abierta === false
+                          ? 'border-green-200 text-green-700 hover:bg-green-50'
+                          : 'border-amber-200 text-amber-700 hover:bg-amber-50'
+                      }
+                    >
+                      {ev.inscripcion_abierta === false ? (
+                        <>
+                          <Unlock className="w-4 h-4 mr-1" />
+                          Habilitar inscripción
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4 mr-1" />
+                          Cerrar inscripción
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  {ev.checkin_slug && (
+                    <div className="flex-shrink-0">
+                      <CheckinQRCard
+                        checkinSlug={ev.checkin_slug}
+                        eventoNombre={ev.titulo ?? undefined}
+                        size={140}
+                      />
+                    </div>
+                  )}
                   <div className="flex items-center gap-2">
                     <Button
                       type="button"

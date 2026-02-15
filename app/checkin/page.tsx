@@ -6,9 +6,9 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { verificarAsistente } from '@/app/actions/networking'
+import { getEventoByCheckinSlug, verificarAsistente } from '@/app/actions/networking'
 
-function VerifyContent() {
+function CheckinContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const eventSlug = searchParams.get('event')
@@ -16,21 +16,38 @@ function VerifyContent() {
   const [telefono, setTelefono] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [eventoError, setEventoError] = useState<string | null>(null)
+  const [eventoNombre, setEventoNombre] = useState<string | null>(null)
 
   useEffect(() => {
-    if (eventSlug) {
-      router.replace(`/checkin?event=${eventSlug}`)
+    if (!eventSlug) {
+      setEventoError('Falta el identificador del evento. Escanea el QR correcto.')
+      return
     }
-  }, [eventSlug, router])
+
+    getEventoByCheckinSlug(eventSlug).then((evento) => {
+      if (!evento) {
+        setEventoError('Evento no encontrado. Verifica el enlace.')
+        return
+      }
+      setEventoNombre(evento.titulo ?? 'Evento')
+    })
+  }, [eventSlug])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!telefono.trim()) return
+    if (!telefono.trim() || !eventSlug) return
+
+    const evento = await getEventoByCheckinSlug(eventSlug)
+    if (!evento) {
+      setError('Evento no encontrado.')
+      return
+    }
 
     setLoading(true)
     setError('')
 
-    const result = await verificarAsistente(telefono.trim(), null)
+    const result = await verificarAsistente(telefono.trim(), evento.id)
 
     if (!result.ok) {
       setError(result.error)
@@ -46,19 +63,43 @@ function VerifyContent() {
       sessionStorage.setItem('asistente_id', result.asistente.id)
       sessionStorage.setItem('asistente_telefono', result.asistente.telefono ?? '')
       sessionStorage.setItem('asistente_nombre', nombreCompleto)
-      if (result.asistente.evento_id) {
-        sessionStorage.setItem('evento_id', result.asistente.evento_id)
-      }
+      sessionStorage.setItem('evento_id', evento.id)
       sessionStorage.setItem('networking_ronda_actual', '1')
     }
 
     router.push('/networking/mesa?ronda=1')
   }
 
-  if (eventSlug) {
+  if (eventSlug && !eventoError && !eventoNombre) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-black" />
+      </div>
+    )
+  }
+
+  if (eventoError || !eventSlug) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-5 py-10 font-sans">
+        <div className="w-full max-w-sm absolute top-0 left-0 p-4">
+          <button
+            onClick={() => router.push('/networking')}
+            className="text-black"
+            aria-label="Volver"
+          >
+            <ArrowLeft size={24} />
+          </button>
+        </div>
+        <div className="text-center max-w-sm space-y-4">
+          <p className="text-red-600">{eventoError}</p>
+          <Button
+            onClick={() => router.push('/networking')}
+            variant="outline"
+            className="rounded-xl"
+          >
+            Ir a networking
+          </Button>
+        </div>
       </div>
     )
   }
@@ -98,8 +139,11 @@ function VerifyContent() {
       >
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-black text-black tracking-tight">
-            networking
+            Check-in
           </h1>
+          <p className="text-sm text-zinc-500">
+            {eventoNombre}
+          </p>
           <p className="text-sm text-zinc-500">
             Ingresa tu número de teléfono para acceder a tu mesa
           </p>
@@ -151,7 +195,7 @@ function VerifyContent() {
   )
 }
 
-export default function NetworkingVerifyPage() {
+export default function CheckinPage() {
   return (
     <Suspense
       fallback={
@@ -160,7 +204,7 @@ export default function NetworkingVerifyPage() {
         </div>
       }
     >
-      <VerifyContent />
+      <CheckinContent />
     </Suspense>
   )
 }

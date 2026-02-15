@@ -43,7 +43,7 @@ export default function PanelContactoPage() {
   }, [])
 
   return (
-    <div className="p-4 lg:p-6">
+    <div className="pt-4 pr-4 pb-4 pl-2 lg:pt-6 lg:pr-6 lg:pb-6 lg:pl-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

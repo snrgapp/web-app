@@ -18,7 +18,10 @@ function MesaContent() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const asistenteId = typeof window !== 'undefined' ? localStorage.getItem('asistente_id') : null
+    const storage = typeof window !== 'undefined' ? window : null
+    const asistenteId = storage
+      ? (sessionStorage.getItem('asistente_id') ?? localStorage.getItem('asistente_id'))
+      : null
     if (!asistenteId) {
       router.replace('/networking/verify')
       return
@@ -37,7 +40,7 @@ function MesaContent() {
         setLoading(false)
         return
       }
-      const list = await getAsistentesPorMesa(mesa, ronda)
+      const list = await getAsistentesPorMesa(mesa, ronda, a.evento_id)
       setCompañeros(list)
       setLoading(false)
     }
@@ -47,6 +50,7 @@ function MesaContent() {
 
   function handleComenzar() {
     if (typeof window !== 'undefined') {
+      sessionStorage.setItem('networking_ronda_actual', String(ronda))
       localStorage.setItem('networking_ronda_actual', String(ronda))
     }
     router.push('/networking/categories')

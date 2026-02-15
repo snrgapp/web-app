@@ -28,6 +28,7 @@ import {
   type FormInsertInput,
 } from '@/lib/forms/form-repository-client'
 import type { FormFieldConfig } from '@/types/form.types'
+import type { Evento } from '@/types/database.types'
 
 const BUCKET = 'formularios'
 const SLUG_MAX_LENGTH = 20
@@ -59,6 +60,7 @@ function validateSlug(slug: string): string | null {
 
 export default function PanelFormulariosPage() {
   const [forms, setForms] = useState<FormWithParsedFields[]>([])
+  const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState<{
@@ -76,6 +78,7 @@ export default function PanelFormulariosPage() {
   const [coverError, setCoverError] = useState<string | null>(null)
   const [campos, setCampos] = useState<FormFieldConfig[]>([])
   const [brevoListId, setBrevoListId] = useState('')
+  const [selectedEventoId, setSelectedEventoId] = useState<string>('')
   const [showCreator, setShowCreator] = useState(false)
   const [editingForm, setEditingForm] = useState<FormWithParsedFields | null>(null)
   const iconInputRef = useRef<HTMLInputElement>(null)
@@ -90,6 +93,16 @@ export default function PanelFormulariosPage() {
 
   useEffect(() => {
     fetchForms()
+  }, [])
+
+  useEffect(() => {
+    if (!supabase) return
+    supabase
+      .from('eventos')
+      .select('*')
+      .order('orden', { ascending: true })
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setEventos(data ?? []))
   }, [])
 
   function handleIconChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -166,6 +179,7 @@ export default function PanelFormulariosPage() {
     setDescripcion(form.descripcion ?? '')
     setCampos([...form.campos])
     setBrevoListId(form.brevo_list_id?.toString() ?? '')
+    setSelectedEventoId(form.evento_id ?? '')
     setIconPreview(form.icon_url)
     setCoverPreview(form.cover_url)
     setIconFile(null)
@@ -182,6 +196,7 @@ export default function PanelFormulariosPage() {
     setDescripcion('')
     setCampos([])
     setBrevoListId('')
+    setSelectedEventoId('')
     clearIcon()
     clearCover()
     setShowCreator(false)
@@ -251,6 +266,7 @@ export default function PanelFormulariosPage() {
       const input: Partial<FormInsertInput> = {
         slug: trimmedSlug,
         titulo: titulo.trim(),
+        evento_id: selectedEventoId || null,
         descripcion: descripcion.trim() || null,
         icon_url: iconUrl ?? editingForm.icon_url,
         cover_url: coverUrl ?? editingForm.cover_url,
@@ -275,6 +291,7 @@ export default function PanelFormulariosPage() {
       const input: FormInsertInput = {
         slug: trimmedSlug,
         titulo: titulo.trim(),
+        evento_id: selectedEventoId || null,
         descripcion: descripcion.trim() || null,
         icon_url: iconUrl,
         cover_url: coverUrl,
@@ -291,6 +308,7 @@ export default function PanelFormulariosPage() {
         setSlug('')
         setDescripcion('')
         setBrevoListId('')
+        setSelectedEventoId('')
         clearIcon()
         clearCover()
         setCampos([])
@@ -311,7 +329,7 @@ export default function PanelFormulariosPage() {
     process.env.NEXT_PUBLIC_INSCRIPCION_BASE_URL ?? 'https://inscripcion.snrg.lat'
 
   return (
-    <div className="p-4 lg:p-6">
+    <div className="pt-4 pr-4 pb-4 pl-2 lg:pt-6 lg:pr-6 lg:pb-6 lg:pl-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -379,6 +397,26 @@ export default function PanelFormulariosPage() {
                 />
                 <p className="text-xs text-zinc-500 mt-1">
                   Máx. {SLUG_MAX_LENGTH} caracteres. Ej: fh-2025, ev-mar24 · URL: {inscripcionBase}/{slug || '[slug]'}
+                </p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-zinc-700 mb-1">
+                  Evento vinculado (opcional)
+                </label>
+                <select
+                  value={selectedEventoId}
+                  onChange={(e) => setSelectedEventoId(e.target.value)}
+                  className="w-full max-w-md h-10 rounded-xl border border-zinc-200 bg-white px-4 text-sm"
+                >
+                  <option value="">Ninguno</option>
+                  {eventos.map((ev) => (
+                    <option key={ev.id} value={ev.id}>
+                      {ev.titulo ?? 'Sin título'} {ev.checkin_slug ? `(${ev.checkin_slug})` : ''}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-zinc-500 mt-1">
+                  Vincula este formulario a un evento. Aparecerá como opción &quot;Registrarse&quot; en la página del evento.
                 </p>
               </div>
 
@@ -659,6 +697,7 @@ export default function PanelFormulariosPage() {
               <FormListItem
                 key={form.id}
                 form={form}
+                eventos={eventos}
                 inscripcionBase={inscripcionBase}
                 onRefresh={fetchForms}
                 onEdit={startEdit}
@@ -673,11 +712,13 @@ export default function PanelFormulariosPage() {
 
 function FormListItem({
   form,
+  eventos,
   inscripcionBase,
   onRefresh,
   onEdit,
 }: {
   form: FormWithParsedFields
+  eventos: Evento[]
   inscripcionBase: string
   onRefresh: () => void
   onEdit: (form: FormWithParsedFields) => void
@@ -734,6 +775,12 @@ function FormListItem({
         <p className="text-xs text-zinc-400 mt-2">
           {form.campos.length} campo(s)
           {count !== null && ` · ${count} inscripción(es)`}
+          {form.evento_id && (
+            <>
+              {' · '}
+              {eventos.find((e) => e.id === form.evento_id)?.titulo ?? eventos.find((e) => e.id === form.evento_id)?.checkin_slug ?? 'Evento'}
+            </>
+          )}
         </p>
         <div className="flex flex-wrap gap-2 mt-3">
           <Button

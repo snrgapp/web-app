@@ -5,6 +5,7 @@ import { useFormStatus } from 'react-dom'
 import { Mail, Lock, AlertTriangle } from 'lucide-react'
 import { login, type LoginState } from '../actions/auth'
 import Image from 'next/image'
+import { motion } from 'framer-motion'
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -25,9 +26,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-zinc-100 flex items-center justify-center p-4 sm:p-6">
       <div className="w-full max-w-4xl bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col lg:flex-row">
-        {/* Panel izquierdo: imagen */}
-        <div className="relative lg:w-[45%] bg-zinc-50 flex items-center justify-center p-4 lg:p-12">
-          <div className="relative w-full max-w-[160px] lg:max-w-[320px] aspect-square">
+        {/* Panel izquierdo: imagen con flotación suave */}
+        <div className="relative lg:w-[45%] bg-zinc-50 flex items-center justify-center p-4 lg:p-12 overflow-hidden">
+          <motion.div
+            className="relative w-full max-w-[160px] lg:max-w-[320px] aspect-square"
+            animate={{ y: [0, -10, 0] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
             <Image
               src="/images/coffee-login.png"
               alt="Coffee cup"
@@ -35,7 +44,7 @@ export default function LoginPage() {
               className="object-contain"
               priority
             />
-          </div>
+          </motion.div>
         </div>
 
         {/* Panel derecho: formulario */}

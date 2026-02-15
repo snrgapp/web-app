@@ -14,7 +14,7 @@ export default function NetworkingFeedbackPage() {
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const asistenteId = localStorage.getItem('asistente_id')
+    const asistenteId = sessionStorage.getItem('asistente_id') ?? localStorage.getItem('asistente_id')
     if (!asistenteId) {
       router.replace('/networking/verify')
     }
@@ -23,7 +23,7 @@ export default function NetworkingFeedbackPage() {
   async function handleEnviar() {
     if (rating < 1 || rating > 5) return
 
-    const asistenteId = typeof window !== 'undefined' ? localStorage.getItem('asistente_id') : null
+    const asistenteId = typeof window !== 'undefined' ? (sessionStorage.getItem('asistente_id') ?? localStorage.getItem('asistente_id')) : null
     if (!asistenteId) {
       router.replace('/networking/verify')
       return
@@ -37,6 +37,11 @@ export default function NetworkingFeedbackPage() {
       return
     }
     if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('asistente_id')
+      sessionStorage.removeItem('asistente_telefono')
+      sessionStorage.removeItem('asistente_nombre')
+      sessionStorage.removeItem('evento_id')
+      sessionStorage.removeItem('networking_ronda_actual')
       localStorage.removeItem('asistente_id')
       localStorage.removeItem('asistente_telefono')
       localStorage.removeItem('asistente_nombre')

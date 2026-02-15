@@ -20,7 +20,10 @@ export default function CardDeckContainer({ questions, categorySlug, ronda = 1 }
 
   useEffect(() => {
     if (ronda === 1 || ronda === 2) {
-      const asistenteId = typeof window !== 'undefined' ? localStorage.getItem('asistente_id') : null
+      const storage = typeof window !== 'undefined' ? window : null
+      const asistenteId = storage
+        ? (sessionStorage.getItem('asistente_id') ?? localStorage.getItem('asistente_id'))
+        : null
       if (!asistenteId) {
         router.replace('/networking/verify')
       }

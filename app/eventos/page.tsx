@@ -145,12 +145,16 @@ export default function EventosPage() {
 
                   {/* Columna derecha: tarjetas — más estrecha en web */}
                   <div className="flex-1 min-w-0 sm:max-w-md space-y-4 pb-4">
-                    {items.map((evento) => (
+                    {items.map((evento) => {
+                      const eventHref = evento.checkin_slug
+                        ? `/evento/${evento.checkin_slug}`
+                        : evento.link
+                      const isInternal = evento.checkin_slug != null
+                      return (
                       <a
                         key={evento.id}
-                        href={evento.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        href={eventHref}
+                        {...(isInternal ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
                         className="block group"
                       >
                         <article className="flex gap-4 p-4 rounded-xl bg-white border border-[#1a1a1a]/8 shadow-sm hover:shadow-md hover:border-[#1a1a1a]/15 transition-all">
@@ -190,7 +194,8 @@ export default function EventosPage() {
                           </div>
                         </article>
                       </a>
-                    ))}
+                    )
+                    })}
                   </div>
                 </div>
               )

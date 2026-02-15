@@ -25,7 +25,7 @@ export default function NetworkingCategorySelection() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return
-    const asistenteId = localStorage.getItem('asistente_id')
+    const asistenteId = sessionStorage.getItem('asistente_id') ?? localStorage.getItem('asistente_id')
     if (!asistenteId) {
       router.replace('/networking/verify')
     }
@@ -39,7 +39,7 @@ export default function NetworkingCategorySelection() {
     if (!selectedCategory) return
     
     setIsShuffling(true)
-    const ronda = typeof window !== 'undefined' ? localStorage.getItem('networking_ronda_actual') || '1' : '1'
+    const ronda = typeof window !== 'undefined' ? (sessionStorage.getItem('networking_ronda_actual') ?? localStorage.getItem('networking_ronda_actual')) || '1' : '1'
     setTimeout(() => {
       setIsShuffling(false)
       setTimeout(() => {
@@ -55,7 +55,7 @@ export default function NetworkingCategorySelection() {
       <div className="w-full p-4 sm:p-6 flex items-center justify-start z-30 absolute top-0 left-0">
         <button
           onClick={() => {
-            const ronda = typeof window !== 'undefined' ? localStorage.getItem('networking_ronda_actual') || '1' : '1'
+            const ronda = typeof window !== 'undefined' ? (sessionStorage.getItem('networking_ronda_actual') ?? localStorage.getItem('networking_ronda_actual')) || '1' : '1'
             router.push(`/networking/mesa?ronda=${ronda}`)
           }}
           className="text-black"

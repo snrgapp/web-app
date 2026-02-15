@@ -229,6 +229,7 @@ export async function updateFormClient(
   const updateData: Record<string, unknown> = {}
   if (input.titulo !== undefined) updateData.titulo = input.titulo
   if (input.slug !== undefined) updateData.slug = input.slug
+  if (input.evento_id !== undefined) updateData.evento_id = input.evento_id
   if (input.descripcion !== undefined) updateData.descripcion = input.descripcion
   if (input.icon_url !== undefined) updateData.icon_url = input.icon_url
   if (input.cover_url !== undefined) updateData.cover_url = input.cover_url

@@ -1,7 +1,6 @@
 import { Inter } from 'next/font/google'
 import { redirect } from 'next/navigation'
-import { DashboardTopNav } from '@/components/dashboard/DashboardTopNav'
-import { DashboardContentWrapper } from '@/components/dashboard/DashboardContentWrapper'
+import { PanelSidebar } from '@/components/dashboard/PanelSidebar'
 import { isAuthenticated } from '@/app/actions/auth'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-dashboard' })
@@ -21,11 +20,13 @@ export default async function PanelLayout({
       className={`min-h-screen bg-white ${inter.variable} font-sans`}
       style={{ fontFamily: 'var(--font-dashboard), Inter, system-ui, sans-serif' }}
     >
-      <div className="flex min-h-screen flex-col">
-        <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-          <DashboardTopNav />
-          <DashboardContentWrapper>{children}</DashboardContentWrapper>
-        </div>
+      <div className="flex flex-col lg:flex-row min-h-screen">
+        <PanelSidebar />
+        <main className="flex-1 min-w-0 overflow-auto flex flex-col items-center w-full">
+          <div className="w-full max-w-7xl mx-auto min-w-0 overflow-x-hidden">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   )

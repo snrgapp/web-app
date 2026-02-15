@@ -70,6 +70,7 @@ export interface Database {
       asistentes: {
         Row: {
           id: string
+          evento_id: string | null
           nombre: string | null
           apellido: string | null
           telefono: string | null
@@ -85,6 +86,7 @@ export interface Database {
         }
         Insert: {
           id?: string
+          evento_id?: string | null
           nombre?: string | null
           apellido?: string | null
           telefono?: string | null
@@ -100,6 +102,7 @@ export interface Database {
         }
         Update: {
           id?: string
+          evento_id?: string | null
           nombre?: string | null
           apellido?: string | null
           telefono?: string | null
@@ -113,7 +116,14 @@ export interface Database {
           mesa_ronda2?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'asistentes_evento_id_fkey'
+            columns: ['evento_id']
+            referencedRelation: 'eventos'
+            referencedColumns: ['id']
+          }
+        ]
       }
       feedback_networking: {
         Row: {
@@ -152,6 +162,8 @@ export interface Database {
           orden: number
           fecha: string | null
           ciudad: string | null
+          checkin_slug: string | null
+          inscripcion_abierta: boolean
           created_at: string
         }
         Insert: {
@@ -162,6 +174,8 @@ export interface Database {
           orden?: number
           fecha?: string | null
           ciudad?: string | null
+          checkin_slug?: string | null
+          inscripcion_abierta?: boolean
           created_at?: string
         }
         Update: {
@@ -172,6 +186,8 @@ export interface Database {
           orden?: number
           fecha?: string | null
           ciudad?: string | null
+          checkin_slug?: string | null
+          inscripcion_abierta?: boolean
           created_at?: string
         }
         Relationships: []
