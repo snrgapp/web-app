@@ -135,32 +135,43 @@ export default async function EventoSlugPage({ params }: PageProps) {
               <div className="rounded-xl border border-zinc-200 bg-white p-6">
                 <h2 className="text-sm font-semibold text-[#1a1a1a] mb-4">Inscripción</h2>
 
-                {inscripcionAbierta && (form || hasLink) ? (
+                {(form || hasLink) ? (
                   <div className="space-y-4">
                     <p className="text-sm text-zinc-600">
-                      ¡Bienvenido! Para unirte al evento, por favor solicita tu inscripción.
+                      {inscripcionAbierta
+                        ? '¡Bienvenido! Para unirte al evento, por favor solicita tu inscripción.'
+                        : 'Inscripciones cerradas'}
                     </p>
-                    {form ? (
-                      <a
-                        href={getInscripcionFormUrl(form.slug)}
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
+                    {inscripcionAbierta ? (
+                      form ? (
+                        <a
+                          href={getInscripcionFormUrl(form.slug)}
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
+                        >
+                          <User className="w-4 h-4" />
+                          Solicitar unirse
+                          <ArrowRight className="w-4 h-4" />
+                        </a>
+                      ) : normalizedLink ? (
+                        <a
+                          href={normalizedLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
+                        >
+                          <User className="w-4 h-4" />
+                          Solicitar unirse
+                          <ArrowRight className="w-4 h-4" />
+                        </a>
+                      ) : null
+                    ) : (
+                      <span
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-200 text-zinc-500 rounded-xl font-medium cursor-not-allowed"
+                        aria-disabled
                       >
-                        <User className="w-4 h-4" />
-                        Solicitar unirse
-                        <ArrowRight className="w-4 h-4" />
-                      </a>
-                    ) : normalizedLink ? (
-                      <a
-                        href={normalizedLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
-                      >
-                        <User className="w-4 h-4" />
-                        Solicitar unirse
-                        <ArrowRight className="w-4 h-4" />
-                      </a>
-                    ) : null}
+                        Inscripciones cerradas
+                      </span>
+                    )}
                   </div>
                 ) : (
                   <p className="text-sm text-zinc-500">
