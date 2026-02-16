@@ -1,5 +1,7 @@
 export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
+import { unstable_noStore } from 'next/cache'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -46,6 +48,7 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function EventoSlugPage({ params }: PageProps) {
+  unstable_noStore()
   const { slug } = await params
   const data = await getEventoConFormularioBySlug(slug)
 
