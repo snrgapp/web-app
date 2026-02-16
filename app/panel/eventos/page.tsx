@@ -44,6 +44,7 @@ export default function PanelEventosPage() {
   const [horaInicio, setHoraInicio] = useState('17:00')
   const [horaFin, setHoraFin] = useState('18:00')
   const [ciudad, setCiudad] = useState('')
+  const [acercaDelEvento, setAcercaDelEvento] = useState('')
   const [orden, setOrden] = useState(0)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -144,6 +145,7 @@ export default function PanelEventosPage() {
       link: link.trim() || null,
       fecha: fecha.trim() || null,
       ciudad: ciudad.trim() || null,
+      acerca_del_evento: acercaDelEvento.trim() || null,
       orden,
     })
 
@@ -157,6 +159,7 @@ export default function PanelEventosPage() {
       setImageUrl('')
       setFecha('')
       setCiudad('')
+      setAcercaDelEvento('')
       setImageFile(null)
       setImagePreview(null)
       setOrden(eventos.length)
@@ -391,6 +394,21 @@ export default function PanelEventosPage() {
                 onChange={(e) => setCiudad(e.target.value)}
                 placeholder="Ubicación física o enlace virtual"
                 className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0"
+              />
+            </div>
+
+            {/* Acerca del Evento */}
+            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+              <div className="flex items-center gap-2 text-zinc-600 mb-1">
+                <FileText className="w-4 h-4" />
+                <span className="text-sm font-medium">Acerca del evento</span>
+              </div>
+              <textarea
+                value={acercaDelEvento}
+                onChange={(e) => setAcercaDelEvento(e.target.value)}
+                placeholder="Descripción del evento. Se mostrará en la página del evento."
+                rows={4}
+                className="w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm placeholder:text-zinc-400 focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 resize-none"
               />
             </div>
 

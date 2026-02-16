@@ -10,7 +10,6 @@ import {
   MapPin,
   User,
   ArrowRight,
-  LogIn,
 } from 'lucide-react'
 import { getEventoConFormularioBySlug } from '@/app/actions/eventos'
 import { getInscripcionFormUrl } from '@/lib/config'
@@ -59,10 +58,6 @@ export default async function EventoSlugPage({ params }: PageProps) {
   const { evento, form } = data
   const inscripcionAbierta = evento.inscripcion_abierta !== false
   const fechaFormateada = formatFecha(evento.fecha)
-  const checkinUrl = evento.checkin_slug
-    ? `/checkin?event=${encodeURIComponent(evento.checkin_slug)}`
-    : null
-
   // Link válido: con protocolo o sin él (ej: inscripcion.snrg.lat/fh-2025)
   const rawLink = evento.link?.trim() ?? ''
   const hasLink = rawLink.length > 0
@@ -182,30 +177,19 @@ export default async function EventoSlugPage({ params }: PageProps) {
                   </p>
                 )}
 
-                {checkinUrl && (
-                  <div className="mt-6 pt-6 border-t border-zinc-100">
-                    <p className="text-sm text-zinc-600 mb-3">
-                      ¿Ya estás inscrito? Entra a la sala para ver tu mesa asignada.
-                    </p>
-                    <Link
-                      href={checkinUrl}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#FFE100] text-[#1a1a1a] rounded-xl font-medium hover:bg-[#FFD600] transition-colors"
-                    >
-                      <LogIn className="w-4 h-4" />
-                      Entrar a la sala
-                    </Link>
-                  </div>
-                )}
               </div>
 
               {/* Acerca del evento */}
-              <div className="rounded-xl border border-zinc-200 bg-white p-6">
-                <h2 className="text-sm font-semibold text-[#1a1a1a] mb-3">Acerca del evento</h2>
-                <p className="text-sm text-zinc-600 leading-relaxed">
-                  Una reunión diseñada para emprendedores que están construyendo en serio. Será un
-                  espacio para conexiones, conversaciones y oportunidades reales de colaboración.
-                </p>
-              </div>
+              {(evento.acerca_del_evento?.trim() ?? '') && (
+                <div className="rounded-xl border border-zinc-200 bg-white p-6">
+                  <h2 className="text-sm font-semibold text-[#1a1a1a] mb-3">Acerca del evento</h2>
+                  <p
+                    className="text-sm text-zinc-600 leading-relaxed whitespace-pre-line"
+                  >
+                    {evento.acerca_del_evento}
+                  </p>
+                </div>
+              )}
 
               {/* Presentado por */}
               <div className="rounded-xl border border-zinc-200 bg-white p-6 space-y-4">

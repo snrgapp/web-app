@@ -71,7 +71,6 @@ export default function PanelFormulariosPage() {
 
   const [titulo, setTitulo] = useState('')
   const [slug, setSlug] = useState('')
-  const [descripcion, setDescripcion] = useState('')
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [iconPreview, setIconPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
@@ -177,7 +176,6 @@ export default function PanelFormulariosPage() {
     setEditingForm(form)
     setTitulo(form.titulo)
     setSlug(form.slug)
-    setDescripcion(form.descripcion ?? '')
     setCampos([...form.campos])
     setBrevoListId(form.brevo_list_id?.toString() ?? '')
     setSelectedEventoId(form.evento_id ?? '')
@@ -194,7 +192,6 @@ export default function PanelFormulariosPage() {
     setEditingForm(null)
     setTitulo('')
     setSlug('')
-    setDescripcion('')
     setCampos([])
     setBrevoListId('')
     setSelectedEventoId('')
@@ -268,7 +265,7 @@ export default function PanelFormulariosPage() {
         slug: trimmedSlug,
         titulo: titulo.trim(),
         evento_id: selectedEventoId || null,
-        descripcion: descripcion.trim() || null,
+        descripcion: null,
         icon_url: iconUrl ?? editingForm.icon_url,
         cover_url: coverUrl ?? editingForm.cover_url,
         campos: processedCampos,
@@ -293,7 +290,7 @@ export default function PanelFormulariosPage() {
         slug: trimmedSlug,
         titulo: titulo.trim(),
         evento_id: selectedEventoId || null,
-        descripcion: descripcion.trim() || null,
+        descripcion: null,
         icon_url: iconUrl,
         cover_url: coverUrl,
         campos: processedCampos,
@@ -307,7 +304,6 @@ export default function PanelFormulariosPage() {
         setStatus({ type: 'success', message: 'Formulario creado correctamente.' })
         setTitulo('')
         setSlug('')
-        setDescripcion('')
         setBrevoListId('')
         setSelectedEventoId('')
         clearIcon()
@@ -511,17 +507,6 @@ export default function PanelFormulariosPage() {
                     )}
                   </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-zinc-700 mb-1">
-                  Descripción (opcional)
-                </label>
-                <textarea
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                  placeholder="Breve descripción del formulario. Los saltos de línea se respetarán."
-                  className="flex min-h-[80px] w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm"
-                />
               </div>
               <div>
                 <label className="block text-sm font-medium text-zinc-700 mb-1">

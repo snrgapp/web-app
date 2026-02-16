@@ -164,6 +164,7 @@ export interface Database {
           ciudad: string | null
           checkin_slug: string | null
           inscripcion_abierta: boolean
+          acerca_del_evento: string | null
           created_at: string
         }
         Insert: {
@@ -176,6 +177,7 @@ export interface Database {
           ciudad?: string | null
           checkin_slug?: string | null
           inscripcion_abierta?: boolean
+          acerca_del_evento?: string | null
           created_at?: string
         }
         Update: {
@@ -188,6 +190,7 @@ export interface Database {
           ciudad?: string | null
           checkin_slug?: string | null
           inscripcion_abierta?: boolean
+          acerca_del_evento?: string | null
           created_at?: string
         }
         Relationships: []
