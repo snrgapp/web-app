@@ -15,6 +15,7 @@ import {
   QrCode,
   Lock,
   Unlock,
+  Pencil,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -46,6 +47,8 @@ export default function PanelEventosPage() {
   const [orden, setOrden] = useState(0)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null)
+  const [editingLinkValue, setEditingLinkValue] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function fetchEventos() {
@@ -171,6 +174,37 @@ export default function PanelEventosPage() {
     } else {
       setStatus({ type: 'error', message: error.message })
     }
+  }
+
+  function startEditLink(ev: Evento) {
+    setEditingLinkId(ev.id)
+    setEditingLinkValue(ev.link ?? '')
+  }
+  function cancelEditLink() {
+    setEditingLinkId(null)
+    setEditingLinkValue('')
+  }
+  async function saveEditLink() {
+    if (!supabase || !editingLinkId) return
+    setSaving(true)
+    setStatus({ type: null, message: '' })
+    const newLink = editingLinkValue.trim() || null
+    const { error } = await supabase
+      .from('eventos')
+      .update({ link: newLink })
+      .eq('id', editingLinkId)
+    if (!error) {
+      setEventos((prev) =>
+        prev.map((e) =>
+          e.id === editingLinkId ? { ...e, link: editingLinkValue.trim() || null } : e
+        )
+      )
+      setStatus({ type: 'success', message: 'Enlace actualizado.' })
+      cancelEditLink()
+    } else {
+      setStatus({ type: 'error', message: error.message })
+    }
+    setSaving(false)
   }
 
   async function handleToggleInscripcion(ev: Evento) {
@@ -369,8 +403,8 @@ export default function PanelEventosPage() {
               <Input
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
-                placeholder="https://luma.com/... o https://inscripcion.snrg.lat/fh-2025"
-                type="url"
+                placeholder="https://inscripcion.snrg.lat/fh-2025 o inscripcion.snrg.lat/fh-2025"
+                type="text"
                 className="border-0 bg-transparent p-0 h-auto placeholder:text-zinc-400 focus-visible:ring-0"
               />
               <p className="text-xs text-zinc-500 mt-1">
@@ -464,20 +498,53 @@ export default function PanelEventosPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-zinc-900 truncate">{ev.titulo || 'Sin título'}</p>
-                    {ev.link ? (
-                      <a
-                        href={ev.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
-                      >
-                        {ev.link}
-                        <ExternalLink className="w-3 h-3 flex-shrink-0" />
-                      </a>
+                    {editingLinkId === ev.id ? (
+                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <Input
+                          value={editingLinkValue}
+                          onChange={(e) => setEditingLinkValue(e.target.value)}
+                          placeholder="https://inscripcion.snrg.lat/fh-2025"
+                          className="flex-1 min-w-0 h-8 text-sm"
+                        />
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={saveEditLink}
+                          disabled={saving}
+                          className="h-8"
+                        >
+                          {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Guardar'}
+                        </Button>
+                        <Button type="button" variant="outline" size="sm" onClick={cancelEditLink} className="h-8">
+                          Cancelar
+                        </Button>
+                      </div>
                     ) : (
-                      <p className="text-sm text-zinc-500 mt-1">
-                        Registro mediante formulario vinculado en Formularios
-                      </p>
+                      <>
+                        {ev.link ? (
+                          <a
+                            href={ev.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
+                          >
+                            {ev.link}
+                            <ExternalLink className="w-3 h-3 flex-shrink-0" />
+                          </a>
+                        ) : (
+                          <p className="text-sm text-zinc-500 mt-1">
+                            Registro mediante formulario vinculado en Formularios
+                          </p>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => startEditLink(ev)}
+                          className="text-xs text-zinc-500 hover:text-zinc-700 mt-1 flex items-center gap-1"
+                        >
+                          <Pencil className="w-3 h-3" />
+                          {ev.link ? 'Editar enlace' : 'Añadir enlace'}
+                        </button>
+                      </>
                     )}
                     <p className="text-xs text-zinc-500 mt-1">
                       {ev.fecha ? `Fecha: ${ev.fecha}` : 'Sin fecha'}

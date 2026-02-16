@@ -182,7 +182,7 @@ export interface Database {
           id?: string
           titulo?: string | null
           image_url?: string
-          link?: string
+          link?: string | null
           orden?: number
           fecha?: string | null
           ciudad?: string | null

@@ -60,7 +60,14 @@ export default async function EventoSlugPage({ params }: PageProps) {
     ? `/checkin?event=${encodeURIComponent(evento.checkin_slug)}`
     : null
 
-  const isExternalLink = evento.link != null && evento.link.trim() !== '' && evento.link.startsWith('http')
+  // Link válido: con protocolo o sin él (ej: inscripcion.snrg.lat/fh-2025)
+  const rawLink = evento.link?.trim() ?? ''
+  const hasLink = rawLink.length > 0
+  const normalizedLink = hasLink
+    ? rawLink.startsWith('http://') || rawLink.startsWith('https://')
+      ? rawLink
+      : `https://${rawLink}`
+    : null
 
   return (
     <main className="min-h-screen bg-[#f2f2f2] text-[#1a1a1a]">
@@ -128,7 +135,7 @@ export default async function EventoSlugPage({ params }: PageProps) {
               <div className="rounded-xl border border-zinc-200 bg-white p-6">
                 <h2 className="text-sm font-semibold text-[#1a1a1a] mb-4">Inscripción</h2>
 
-                {inscripcionAbierta && (form || evento.link) ? (
+                {inscripcionAbierta && (form || hasLink) ? (
                   <div className="space-y-4">
                     <p className="text-sm text-zinc-600">
                       ¡Bienvenido! Para unirte al evento, por favor solicita tu inscripción.
@@ -142,9 +149,9 @@ export default async function EventoSlugPage({ params }: PageProps) {
                         Solicitar unirse
                         <ArrowRight className="w-4 h-4" />
                       </a>
-                    ) : isExternalLink && evento.link ? (
+                    ) : normalizedLink ? (
                       <a
-                        href={evento.link ?? undefined}
+                        href={normalizedLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
