@@ -11,6 +11,7 @@ import {
   LogIn,
 } from 'lucide-react'
 import { getEventoConFormularioBySlug } from '@/app/actions/eventos'
+import { getInscripcionFormUrl } from '@/lib/config'
 import Navbar from '@/components/Navbar'
 
 const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
@@ -133,14 +134,14 @@ export default async function EventoSlugPage({ params }: PageProps) {
                       ¡Bienvenido! Para unirte al evento, por favor solicita tu inscripción.
                     </p>
                     {form ? (
-                      <Link
-                        href={`/inscripcion/${form.slug}`}
+                      <a
+                        href={getInscripcionFormUrl(form.slug)}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
                       >
                         <User className="w-4 h-4" />
                         Solicitar unirse
                         <ArrowRight className="w-4 h-4" />
-                      </Link>
+                      </a>
                     ) : isExternalLink && evento.link ? (
                       <a
                         href={evento.link ?? undefined}

@@ -27,6 +27,7 @@ import {
   type FormWithParsedFields,
   type FormInsertInput,
 } from '@/lib/forms/form-repository-client'
+import { INSCRIPCION_BASE_URL } from '@/lib/config'
 import type { FormFieldConfig } from '@/types/form.types'
 import type { Evento } from '@/types/database.types'
 
@@ -324,9 +325,7 @@ export default function PanelFormulariosPage() {
     setSaving(false)
   }
 
-  // URL canónica de inscripciones. Usar NEXT_PUBLIC_INSCRIPCION_BASE_URL en Vercel si hace falta.
-  const inscripcionBase =
-    process.env.NEXT_PUBLIC_INSCRIPCION_BASE_URL ?? 'https://inscripcion.snrg.lat'
+  const inscripcionBase = INSCRIPCION_BASE_URL
 
   return (
     <div className="pt-4 pr-4 pb-4 pl-2 lg:pt-6 lg:pr-6 lg:pb-6 lg:pl-2">
