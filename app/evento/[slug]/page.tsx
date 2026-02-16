@@ -74,35 +74,62 @@ export default async function EventoSlugPage({ params }: PageProps) {
       <div className="pt-24 pb-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Columna izquierda: poster (cuadrado, más compacto) y organización */}
-            <div className="lg:col-span-1 space-y-6">
-              <div className="relative aspect-square w-full max-w-[min(400px,95vw)] sm:max-w-[380px] lg:max-w-[420px] mx-auto lg:mx-0 rounded-2xl overflow-hidden bg-zinc-200 shadow-lg">
-                {evento.image_url ? (
-                  evento.image_url.startsWith('/') ? (
-                    <Image
-                      src={evento.image_url}
-                      alt={evento.titulo ?? 'Evento'}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 640px) min(400px, 95vw), (max-width: 1024px) 380px, 420px"
-                    />
+            {/* Columna izquierda: poster y organización */}
+            <div className="lg:col-span-1 flex flex-col items-stretch">
+              <div className="w-full max-w-[min(400px,95vw)] sm:max-w-[380px] lg:max-w-[420px] mx-auto lg:mx-0 space-y-5">
+                <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-200 shadow-lg">
+                  {evento.image_url ? (
+                    evento.image_url.startsWith('/') ? (
+                      <Image
+                        src={evento.image_url}
+                        alt={evento.titulo ?? 'Evento'}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) min(400px, 95vw), (max-width: 1024px) 380px, 420px"
+                      />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={evento.image_url}
+                        alt={evento.titulo ?? 'Evento'}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    )
                   ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={evento.image_url}
-                      alt={evento.titulo ?? 'Evento'}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  )
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-zinc-400">
-                    Sin imagen
+                    <div className="absolute inset-0 flex items-center justify-center text-zinc-400">
+                      Sin imagen
+                    </div>
+                  )}
+                </div>
+
+                {/* Presentado por / Organizado por */}
+                <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm space-y-4">
+                  <div>
+                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+                      Presentado por
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Image src="/logo.png" alt="" width={24} height={24} className="rounded-full" />
+                      <span className="font-medium text-[#1a1a1a]">Synergy</span>
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1">
+                      Founders and Makers Community
+                    </p>
                   </div>
-                )}
+                  <div>
+                    <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
+                      Organizado por
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Image src="/logo.png" alt="" width={20} height={20} className="rounded-full" />
+                      <span className="font-medium text-[#1a1a1a]">Synergy</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Columna derecha: título, fecha, ubicación, botón, acerca de, presentado por */}
+            {/* Columna derecha: título, fecha, ubicación, botón, acerca de */}
             <div className="lg:col-span-2 space-y-6">
               <div>
                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-[#FFE100]/30 text-[#1a1a1a] mb-3">
@@ -190,31 +217,6 @@ export default async function EventoSlugPage({ params }: PageProps) {
                   </p>
                 </div>
               )}
-
-              {/* Presentado por */}
-              <div className="rounded-xl border border-zinc-200 bg-white p-6 space-y-4">
-                <div>
-                  <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
-                    Presentado por
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Image src="/logo.png" alt="" width={24} height={24} className="rounded-full" />
-                    <span className="font-medium text-[#1a1a1a]">Synergy</span>
-                  </div>
-                  <p className="text-xs text-zinc-500 mt-1">
-                    Conectamos a los Founders que construyen el futuro en Latam.
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-1">
-                    Organizado por
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <Image src="/logo.png" alt="" width={20} height={20} className="rounded-full" />
-                    <span className="font-medium text-[#1a1a1a]">Synergy</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Ubicación */}
               {evento.ciudad && (
