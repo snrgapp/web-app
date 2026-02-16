@@ -29,6 +29,16 @@ function matchesHosts(req: NextRequest, hosts: string[]): boolean {
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
+  // Proteger rutas del panel: requieren cookie de autenticación
+  if (pathname.startsWith('/panel')) {
+    const auth = request.cookies.get('panel-auth')
+    if (auth?.value !== 'authenticated') {
+      const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('from', pathname)
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
   // Subdominio inscripcion.snrg.lat
   if (matchesHosts(request, INSCRIPCION_HOSTS)) {
     if (pathname.startsWith('/inscripcion') || pathname.startsWith('/api') || pathname.startsWith('/_next')) {

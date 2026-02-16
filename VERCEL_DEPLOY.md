@@ -7,17 +7,21 @@
 3. En **"Import Git Repository"** selecciona **snrgapp/web-app** (o conéctalo si no aparece).
 4. Clic en **Import**.
 
-## 2. Variables de entorno (Supabase)
+## 2. Variables de entorno
 
-Antes de desplegar, añade las variables:
+Antes de desplegar, añade las variables en **Environment Variables**:
 
-1. En la pantalla del proyecto, en **"Environment Variables"**:
-   - **Name:** `NEXT_PUBLIC_SUPABASE_URL`  
-     **Value:** tu URL de Supabase (ej: `https://xxxxx.supabase.co`)
-   - **Name:** `NEXT_PUBLIC_SUPABASE_ANON_KEY`  
-     **Value:** tu Anon Key de Supabase (desde Supabase → Project Settings → API)
+**Supabase:**
+- `NEXT_PUBLIC_SUPABASE_URL` — tu URL de Supabase (ej: `https://xxxxx.supabase.co`)
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Anon Key (Supabase → Project Settings → API)
 
-2. Asegúrate de marcar **Production**, **Preview** y **Development** si quieres que apliquen en todos los entornos.
+**Panel de administración (requerido para /panel y /login):**
+- `LOGIN_EMAIL` — correo para acceder al panel
+- `LOGIN_PASSWORD` — contraseña (usa una segura; nunca la subas al repositorio)
+
+Otras opcionales: `BREVO_API_KEY`, `NEXT_PUBLIC_INSCRIPCION_BASE_URL`
+
+Asegúrate de marcar **Production**, **Preview** y **Development** según necesites.
 
 ## 3. Deploy
 
