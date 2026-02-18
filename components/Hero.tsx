@@ -20,12 +20,12 @@ export default function Hero() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [foundersCount, setFoundersCount] = useState(0)
 
   const heroSectionRef = useRef<HTMLElement>(null)
   const titlePart1Ref = useRef<HTMLSpanElement>(null)
   const titlePart2Ref = useRef<HTMLSpanElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
-  const foundersCountRef = useRef<HTMLSpanElement>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -95,21 +95,19 @@ export default function Hero() {
 
         gsap.set(subtitleRef.current, { opacity: 0, y: 36 })
 
-        if (foundersCountRef.current) {
+        if (heroSectionRef.current) {
           const obj = { val: 0 }
           gsap.to(obj, {
             val: 630,
             duration: 2,
             ease: 'power2.out',
             scrollTrigger: {
-              trigger: foundersCountRef.current,
+              trigger: heroSectionRef.current,
               start: 'top 85%',
               toggleActions: 'play none none none',
             },
             onUpdate: () => {
-              if (foundersCountRef.current) {
-                foundersCountRef.current.textContent = Math.round(obj.val).toString()
-              }
+              setFoundersCount(Math.round(obj.val))
             },
           })
         }
@@ -118,7 +116,7 @@ export default function Hero() {
 
       return () => ctx.revert()
     },
-    { dependencies: [] }
+    { dependencies: [setFoundersCount] }
   )
 
   const col1Images = heroImages.filter((_, i) => i % 2 === 0)
@@ -154,8 +152,9 @@ export default function Hero() {
               </p>
             </motion.div>
 
-            <div className="max-w-xl min-h-[52px] flex items-center">
-              <AnimatePresence mode="wait">
+            <div className="flex flex-col sm:flex-row sm:items-start gap-3 max-w-xl">
+              <div className="min-h-[52px] flex items-center flex-1 w-full sm:w-auto">
+                <AnimatePresence mode="wait">
                 {submitted ? (
                   <motion.div
                     key="success"
@@ -200,19 +199,59 @@ export default function Hero() {
                       className="w-full pl-12 pr-5 py-3.5 rounded-2xl border border-gray-300 bg-white text-[#1a1a1a] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black/20 transition-all"
                     />
                   </div>
-                  <motion.button
-                    type="submit"
-                    disabled={loading}
-                    whileHover={loading ? undefined : { scale: 1.03 }}
-                    whileTap={loading ? undefined : { scale: 0.98 }}
-                    className="ml-auto shrink-0 px-6 py-3 rounded-2xl bg-black text-white text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-black/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {loading ? 'enviando...' : 'regístrame'}
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </motion.button>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:contents">
+                    {/* Mobile: línea 1 - rating izquierda, botón derecha */}
+                    <div className="flex sm:hidden justify-between items-center w-full">
+                      <div className="flex items-center gap-1.5 text-[10px] text-[#1a1a1a]">
+                        <span className="font-medium">4,9</span>
+                        <div className="flex items-center">
+                          {[1, 2, 3, 4].map((i) => (
+                            <Star key={i} className="w-2.5 h-2.5 text-[#E5B318] fill-[#E5B318]" />
+                          ))}
+                          <div className="w-1.5 h-2.5 overflow-hidden flex-shrink-0">
+                            <Star className="w-2.5 h-2.5 text-[#E5B318] fill-[#E5B318]" />
+                          </div>
+                        </div>
+                        <span className="font-light text-gray-600">
+                          en + <span>{foundersCount}</span> founders
+                        </span>
+                      </div>
+                      <motion.button
+                        type="submit"
+                        disabled={loading}
+                        whileHover={loading ? undefined : { scale: 1.03 }}
+                        whileTap={loading ? undefined : { scale: 0.98 }}
+                        className="shrink-0 px-6 py-3 rounded-2xl bg-black text-white text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-black/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                      >
+                        {loading ? 'enviando...' : 'regístrame'}
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </motion.button>
+                    </div>
+                    {/* Mobile: línea 2 - iconos más grandes */}
+                    <div className="flex sm:hidden items-center gap-3">
+                      <a href="https://www.instagram.com/_____synergy?igsh=MjhocGI0eWp3dDJr&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors" aria-label="Instagram">
+                        <Instagram className="w-5 h-5" />
+                      </a>
+                      <a href="https://www.linkedin.com/company/synergy-founders-makers" target="_blank" rel="noopener noreferrer" className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors" aria-label="LinkedIn">
+                        <Linkedin className="w-5 h-5" />
+                      </a>
+                    </div>
+                    {/* Desktop: solo el botón */}
+                    <motion.button
+                      type="submit"
+                      disabled={loading}
+                      whileHover={loading ? undefined : { scale: 1.03 }}
+                      whileTap={loading ? undefined : { scale: 0.98 }}
+                      className="hidden sm:flex shrink-0 px-6 py-3 rounded-2xl bg-black text-white text-sm font-medium items-center justify-center gap-1.5 hover:bg-black/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed sm:ml-auto"
+                    >
+                      {loading ? 'enviando...' : 'regístrame'}
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </motion.button>
+                  </div>
                 </motion.form>
                 )}
               </AnimatePresence>
+              </div>
             </div>
 
             {error && (
@@ -221,7 +260,7 @@ export default function Hero() {
               </p>
             )}
 
-            <div className="flex flex-col gap-4 max-w-md">
+            <div className="hidden sm:flex flex-col sm:flex-row sm:flex-wrap gap-4 max-w-md">
               <div className="flex items-center gap-1.5 text-sm text-[#1a1a1a]">
                 <span className="font-medium">4,9</span>
                 <div className="flex items-center">
@@ -233,7 +272,7 @@ export default function Hero() {
                   </div>
                 </div>
                 <span className="font-light text-gray-600">
-                  en + <span ref={foundersCountRef}>0</span> founders
+                  en + <span>{foundersCount}</span> founders
                 </span>
               </div>
               <div className="flex items-center gap-3">
