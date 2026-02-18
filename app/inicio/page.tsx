@@ -6,6 +6,7 @@ import Hero from '@/components/Hero'
 import Partners from '@/components/Partners'
 import ConectarSection from '@/components/inicio/ConectarSection'
 import ComoFuncionaSection from '@/components/inicio/ComoFuncionaSection'
+import QueSigueSection from '@/components/inicio/QueSigueSection'
 import Footer from '@/components/Footer'
 
 export default function InicioPage() {
@@ -16,6 +17,7 @@ export default function InicioPage() {
       <Partners />
       <ConectarSection />
       <ComoFuncionaSection />
+      <QueSigueSection />
       {/* <TarjetasSection /> */}
       <Footer />
     </main>

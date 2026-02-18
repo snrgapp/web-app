@@ -101,7 +101,7 @@ export default function ConectarSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex-1 text-center lg:text-left"
           >
-            <h2 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold text-[#1a1a1a] lowercase tracking-tight leading-[0.95] lg:leading-[1.1]">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#1a1a1a] lowercase tracking-tight leading-[0.85] lg:leading-[0.9]">
               todo lo que necesitas para conectar y escalar.
             </h2>
             <p className="mt-8 text-base sm:text-lg text-zinc-500 leading-relaxed max-w-lg mx-auto lg:mx-0 lowercase tracking-wide">
