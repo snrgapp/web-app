@@ -5,10 +5,13 @@
  */
 
 export const heroImages = [
-  '/images/hero/hero-1.jpeg',
-  '/images/hero/hero-2.jpeg',
-  '/images/hero/hero-3.jpeg',
-  '/images/hero/hero-4.jpeg',
+  '/images/foto1.png',
+  '/images/foto2.png',
+  '/images/foto3.png',
+  '/images/hero/foto4.png',
+  '/images/hero/foto5.png',
+  '/images/hero/foto6.png',
+  '/images/hero/foto7.png',
 ] as const
 
 /** Rotaciones leves por índice para efecto orgánico (grados) */

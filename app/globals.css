@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes carousel-down {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes carousel-up {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-carousel-down {
+  animation: carousel-down linear infinite;
+}
+
+.animate-carousel-up {
+  animation: carousel-up linear infinite;
+}
+
 :root {
   /* Colores según diseño - networking pero facil */
   --color-primary: #000000;
