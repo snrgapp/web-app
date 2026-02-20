@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
     }
 
-    let memberId: string
     const { data: existing } = await supabase
       .from('members')
       .select('id')
