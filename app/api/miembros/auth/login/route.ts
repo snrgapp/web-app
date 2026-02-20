@@ -19,18 +19,7 @@ export async function POST(request: NextRequest) {
 
     const supabase = createAdminClient()
     if (!supabase) {
-      const missing = []
-      if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missing.push('NEXT_PUBLIC_SUPABASE_URL')
-      if (!process.env.SUPABASE_SERVICE_ROLE_KEY) missing.push('SUPABASE_SERVICE_ROLE_KEY')
-      return Response.json(
-        {
-          error: 'Error de configuración',
-          hint: missing.length
-            ? `Faltan en .env.local: ${missing.join(', ')}`
-            : 'Revisa NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY en .env.local',
-        },
-        { status: 500 }
-      )
+      return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
     }
 
     let memberId: string
@@ -40,49 +29,32 @@ export async function POST(request: NextRequest) {
       .eq('phone', normalizedPhone)
       .maybeSingle()
 
-    if (existing) {
-      memberId = existing.id
-    } else {
-      const { data: created, error } = await supabase
-        .from('members')
-        .insert({ phone: normalizedPhone })
-        .select('id')
-        .single()
-      if (error) {
-        const isDev = process.env.NODE_ENV !== 'production'
-        const hint = isDev
-          ? `Supabase: ${error.message}${error.hint ? ` (${error.hint})` : ''}`
-          : '¿Ejecutaste la migración 025_members_schema.sql en Supabase?'
-        return Response.json(
-          { error: 'Error al crear miembro', hint },
-          { status: 500 }
-        )
-      }
-      memberId = created.id
+    if (!existing) {
+      return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
     }
+    const memberId = existing.id
 
     const token = await setMemberSession(memberId, normalizedPhone)
     if (!token) {
-      const secret = process.env.MEMBER_SESSION_SECRET
-      const hint = !secret
-        ? 'Falta MEMBER_SESSION_SECRET en las variables de entorno'
-        : secret.length < 32
-          ? `MEMBER_SESSION_SECRET debe tener al menos 32 caracteres (tienes ${secret.length})`
-          : 'Revisa MEMBER_SESSION_SECRET en Vercel/.env.local'
-      return Response.json(
-        { error: 'MEMBER_SESSION_SECRET no configurado', hint },
-        { status: 500 }
-      )
+      return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
     }
 
     const url = new URL(request.url)
-    const from = url.searchParams.get('from') || '/miembros'
-    const base = `${url.protocol}//${url.host}`
-    const redirectUrl = from.startsWith('/') ? `${base}${from}` : `${base}/miembros`
+    const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? url.host).replace(/:.*$/, '')
+    const from = url.searchParams.get('from') || ''
+    // Si el login fue desde snrg.lat (dominio principal), redirigir al subdominio miembros
+    const mainHosts = ['snrg.lat', 'www.snrg.lat']
+    const isLocalhost = host === 'localhost' || host.endsWith('.localhost')
+    const membersOrigin = process.env.NEXT_PUBLIC_MIEMBROS_URL
+      ?? (isLocalhost ? `${url.protocol}//miembros.${host.includes('.') ? host : 'localhost'}${url.port ? `:${url.port}` : ''}` : 'https://miembros.snrg.lat')
+    const shouldRedirectToSubdomain = mainHosts.some((h) => host === h) || isLocalhost
+    const redirectUrl = shouldRedirectToSubdomain
+      ? `${membersOrigin}${from.startsWith('/') ? from : ''}`
+      : `${url.protocol}//${url.host}${from.startsWith('/') ? from : '/miembros'}`
 
     return Response.json({ ok: true, redirect: redirectUrl })
   } catch (e) {
     console.error('Login error:', e)
-    return Response.json({ error: 'Error interno' }, { status: 500 })
+    return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
   }
 }

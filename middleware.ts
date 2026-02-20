@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next({ request: { headers: requestHeaders } })
     }
     const isLoginPath = pathname === '/login' || pathname === '/miembros/login'
-    const protectedPaths = ['/', '/inicio', '/red-contactos', '/eventos', '/recursos', '/configuracion']
+    const protectedPaths = ['/', '/inicio', '/red-contactos', '/eventos', '/recursos', '/asesorias', '/beneficios', '/notificaciones', '/configuracion']
     const isProtectedPath =
       pathname === '/' ||
       protectedPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ||
@@ -88,6 +88,9 @@ export async function middleware(request: NextRequest) {
         '/red-contactos': '/miembros/red-contactos',
         '/eventos': '/miembros/eventos',
         '/recursos': '/miembros/recursos',
+        '/asesorias': '/miembros/asesorias',
+        '/beneficios': '/miembros/beneficios',
+        '/notificaciones': '/miembros/notificaciones',
         '/configuracion': '/miembros/configuracion',
       }
       newPath =

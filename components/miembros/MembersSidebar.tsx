@@ -7,6 +7,8 @@ import {
   Users,
   Calendar,
   FolderOpen,
+  Lightbulb,
+  Gift,
   Settings,
   HelpCircle,
   LogOut,
@@ -20,9 +22,11 @@ import Image from 'next/image'
 
 const navItems = [
   { href: '/', icon: LayoutDashboard, label: 'Dashboard', exact: true },
-  { href: '/red-contactos', icon: Users, label: 'Red de contactos', exact: false },
+  { href: '/red-contactos', icon: Users, label: 'Red', exact: false },
   { href: '/eventos', icon: Calendar, label: 'Eventos', exact: false },
   { href: '/recursos', icon: FolderOpen, label: 'Recursos', exact: false },
+  { href: '/asesorias', icon: Lightbulb, label: 'Asesorías', exact: false },
+  { href: '/beneficios', icon: Gift, label: 'Beneficios', exact: false },
 ]
 
 const footerItems = [
@@ -82,7 +86,8 @@ export function MembersSidebar() {
       .catch(() => setMember(null))
   }, [])
 
-  const displayName = member?.nombre || 'miembro'
+  const fullName = member?.nombre || 'miembro'
+  const firstName = fullName.split(/\s+/)[0] || 'miembro'
 
   return (
     <>
@@ -164,11 +169,11 @@ export function MembersSidebar() {
         <div className="flex flex-col min-h-0 flex-1">
           <div className="p-4 border-b border-zinc-200">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-600 font-medium">
-                {displayName.charAt(0).toUpperCase()}
+              <div className="w-10 h-10 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-600 font-medium text-sm">
+                {firstName.charAt(0).toUpperCase()}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-black text-sm truncate">Hola, {displayName}</p>
+                <p className="text-xs font-light text-black">Hola, {firstName}</p>
                 <button
                   type="button"
                   className="text-xs text-zinc-500 hover:text-zinc-700 flex items-center gap-0.5"

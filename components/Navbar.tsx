@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Ticket, Mail } from 'lucide-react'
+import { Menu, X, Ticket, Mail, UserCircle } from 'lucide-react'
 
 const navLinks = [
   { href: '/eventos', label: 'eventos', icon: Ticket },
   { href: '/contacto', label: 'contacto', icon: Mail },
+  { href: '/miembros/login', label: 'miembros', icon: UserCircle },
 ]
 
 export default function Navbar() {

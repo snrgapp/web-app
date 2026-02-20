@@ -109,11 +109,11 @@ export function ConnectionRecommendations() {
                         <Button
                           size="sm"
                           variant="secondary"
-                          className="bg-amber-100 hover:bg-amber-200 text-amber-900"
+                          className="bg-amber-100 hover:bg-amber-200 text-amber-900 md:inline-flex"
                           onClick={() => setInviteTarget(r)}
                         >
-                          <Coffee className="w-4 h-4 mr-1" />
-                          Invitar un café
+                          <Coffee className="w-4 h-4 md:mr-1" />
+                          <span className="hidden md:inline">Invitar un café</span>
                         </Button>
                       </td>
                     </tr>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react'
 import { LatestConnections } from '@/components/miembros/LatestConnections'
 import { ConnectionRecommendations } from '@/components/miembros/ConnectionRecommendations'
 import { MiniCalendar } from '@/components/miembros/MiniCalendar'
@@ -29,6 +29,15 @@ export default function MiembrosDashboardPage() {
       .then((data) => setEvents(data.events || []))
       .catch(() => {})
   }, [])
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4 p-8">
+        <Loader2 className="w-10 h-10 text-amber-500 animate-spin" />
+        <p className="text-sm font-light text-zinc-600">lo bueno toma tiempo</p>
+      </div>
+    )
+  }
 
   return (
     <div className="p-4 lg:p-6 pt-2 lg:pt-4 max-w-7xl mx-auto">
@@ -64,11 +73,7 @@ export default function MiembrosDashboardPage() {
 
         {/* Últimas conexiones */}
         <div>
-          {loading ? (
-            <div className="h-48 rounded-xl border border-zinc-200 bg-white animate-pulse" />
-          ) : (
-            <LatestConnections connections={latestConnections} />
-          )}
+          <LatestConnections connections={latestConnections} />
         </div>
       </div>
     </div>
