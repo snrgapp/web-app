@@ -2,14 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { RankingCard } from '@/components/miembros/RankingCard'
 import { LatestConnections } from '@/components/miembros/LatestConnections'
 import { ConnectionRecommendations } from '@/components/miembros/ConnectionRecommendations'
 import { MiniCalendar } from '@/components/miembros/MiniCalendar'
 
 export default function MiembrosDashboardPage() {
-  const [connectionRanking, setConnectionRanking] = useState<{ id: string; nombre: string; count: number }[]>([])
-  const [referralRanking, setReferralRanking] = useState<{ id: string; nombre: string; count: number }[]>([])
   const [latestConnections, setLatestConnections] = useState<
     { id: string; nombre: string; empresa: string; email?: string; phone?: string }[]
   >([])
@@ -20,8 +17,6 @@ export default function MiembrosDashboardPage() {
     fetch('/api/miembros/connections')
       .then((r) => r.json())
       .then((data) => {
-        setConnectionRanking(data.connectionRanking || [])
-        setReferralRanking(data.referralRanking || [])
         setLatestConnections(data.latestConnections || [])
       })
       .catch(() => {})
@@ -36,17 +31,8 @@ export default function MiembrosDashboardPage() {
   }, [])
 
   return (
-    <div className="p-4 lg:p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
-        <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
-          Dashboard
-        </p>
-        <h1 className="text-2xl font-light text-black tracking-tight">
-          Bienvenido al panel de miembros
-        </h1>
-      </div>
-
-      {/* Fila superior: carrusel + calendario (calendario subido arriba) */}
+    <div className="p-4 lg:p-6 pt-2 lg:pt-4 max-w-7xl mx-auto">
+      {/* Fila superior: carrusel + calendario */}
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
         <div className="flex-1 min-w-0 rounded-xl border border-zinc-200 bg-white p-6 flex items-center justify-between min-h-[120px]">
           <button
@@ -71,32 +57,12 @@ export default function MiembrosDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Columna izquierda: rankings y recomendaciones */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {loading ? (
-              <>
-                <div className="h-40 rounded-xl border border-zinc-200 bg-white animate-pulse" />
-                <div className="h-40 rounded-xl border border-zinc-200 bg-white animate-pulse" />
-              </>
-            ) : (
-              <>
-                <RankingCard
-                  title="Ranking de conexiones"
-                  entries={connectionRanking.map((r) => ({ id: r.id, nombre: r.nombre, count: r.count }))}
-                />
-                <RankingCard
-                  title="Ranking de referidos"
-                  entries={referralRanking.map((r) => ({ id: r.id, nombre: r.nombre, count: r.count }))}
-                />
-              </>
-            )}
-          </div>
-
+        {/* Recomendaciones de conexión (elevada, más espacio) */}
+        <div className="lg:col-span-2">
           <ConnectionRecommendations />
         </div>
 
-        {/* Columna derecha: últimas conexiones */}
+        {/* Últimas conexiones */}
         <div>
           {loading ? (
             <div className="h-48 rounded-xl border border-zinc-200 bg-white animate-pulse" />

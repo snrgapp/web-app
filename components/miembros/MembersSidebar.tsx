@@ -51,7 +51,7 @@ function NavLink({
       href={href}
       onClick={onClick}
       className={cn(
-        'flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg text-sm font-medium transition-colors',
+        'flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg text-xs font-light transition-colors',
         isActive
           ? 'bg-amber-100 text-amber-900'
           : 'text-zinc-600 hover:text-black hover:bg-zinc-50'
@@ -111,7 +111,7 @@ export function MembersSidebar() {
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <aside className="lg:hidden fixed inset-y-0 left-0 z-50 w-[280px] bg-white border-r border-zinc-200 flex flex-col shadow-xl">
+          <aside className="lg:hidden fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-zinc-200 flex flex-col shadow-xl">
             <div className="flex items-center justify-between p-4 border-b border-zinc-200">
               <div className="flex items-center gap-2">
                 <Image src="/logo.png" alt="" width={28} height={28} />
@@ -140,7 +140,7 @@ export function MembersSidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-zinc-600 hover:text-black hover:bg-zinc-50"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
                 >
                   <item.icon className="w-4 h-4" />
                   {item.label}
@@ -149,7 +149,7 @@ export function MembersSidebar() {
               <button
                 type="button"
                 onClick={() => { doLogout(); setMobileOpen(false) }}
-                className="flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-zinc-600 hover:text-black hover:bg-zinc-50"
+                className="flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
               >
                 <LogOut className="w-4 h-4" />
                 Cerrar sesión
@@ -160,7 +160,7 @@ export function MembersSidebar() {
       )}
 
       {/* Desktop: Sidebar fijo */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-56 lg:flex-shrink-0 lg:border-r lg:border-zinc-200 lg:bg-white">
+      <aside className="hidden lg:flex lg:flex-col lg:w-44 lg:flex-shrink-0 lg:border-r lg:border-zinc-200 lg:bg-white">
         <div className="flex flex-col min-h-0 flex-1">
           <div className="p-4 border-b border-zinc-200">
             <div className="flex items-center gap-2">
@@ -191,7 +191,7 @@ export function MembersSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-zinc-600 hover:text-black hover:bg-zinc-50"
+                className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
               >
                 <item.icon className="w-4 h-4" />
                 {item.label}
@@ -200,7 +200,7 @@ export function MembersSidebar() {
             <button
               type="button"
               onClick={doLogout}
-              className="flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-zinc-600 hover:text-black hover:bg-zinc-50"
+              className="flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
             >
               <LogOut className="w-4 h-4" />
               Cerrar sesión
