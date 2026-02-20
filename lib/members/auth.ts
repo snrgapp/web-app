@@ -14,26 +14,56 @@ export interface Member {
   updated_at: string
 }
 
-/** Obtiene el miembro actual desde la cookie de sesión en la request */
-export async function getMemberFromRequest(request: NextRequest): Promise<Member | null> {
-  const cookieHeader = request.cookies.get('member_session')?.value
-  if (!cookieHeader) return null
+const DEV_PHONE = 'dev'
 
-  const payload = parseSessionToken(cookieHeader)
-  if (!payload) return null
-
+/** Obtiene o crea el miembro "dev" para desarrollo local (solo NODE_ENV=development) */
+async function getOrCreateDevMember(): Promise<Member | null> {
+  if (process.env.NODE_ENV !== 'development') return null
   const supabase = createAdminClient()
   if (!supabase) return null
 
-  const { data, error } = await supabase
+  const { data: existing } = await supabase
     .from('members')
     .select('id, phone, nombre, email, empresa, avatar_url, referido_por_id, created_at, updated_at')
-    .eq('id', payload.memberId)
-    .eq('phone', payload.phone)
+    .eq('phone', DEV_PHONE)
     .maybeSingle()
 
-  if (error || !data) return null
-  return data as Member
+  if (existing) return existing as Member
+
+  const { data: created, error } = await supabase
+    .from('members')
+    .insert({ phone: DEV_PHONE, nombre: 'Dev (local)' })
+    .select('id, phone, nombre, email, empresa, avatar_url, referido_por_id, created_at, updated_at')
+    .single()
+
+  if (error) return null
+  return created as Member
+}
+
+/** Obtiene el miembro actual desde la cookie de sesión en la request */
+export async function getMemberFromRequest(request: NextRequest): Promise<Member | null> {
+  const cookieHeader = request.cookies.get('member_session')?.value
+  if (cookieHeader) {
+    const payload = parseSessionToken(cookieHeader)
+    if (payload) {
+      const supabase = createAdminClient()
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('members')
+          .select('id, phone, nombre, email, empresa, avatar_url, referido_por_id, created_at, updated_at')
+          .eq('id', payload.memberId)
+          .eq('phone', payload.phone)
+          .maybeSingle()
+        if (!error && data) return data as Member
+      }
+    }
+  }
+
+  // En desarrollo local sin sesión: usar miembro dev para poder ver el dashboard
+  if (process.env.NODE_ENV === 'development') {
+    return getOrCreateDevMember()
+  }
+  return null
 }
 
 /** Verifica sesión y devuelve miembro o lanza 401 */

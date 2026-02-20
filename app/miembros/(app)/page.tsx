@@ -13,6 +13,7 @@ export default function MiembrosDashboardPage() {
   const [latestConnections, setLatestConnections] = useState<
     { id: string; nombre: string; empresa: string; email?: string; phone?: string }[]
   >([])
+  const [events, setEvents] = useState<{ fecha_inicio?: string | null }[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -27,9 +28,16 @@ export default function MiembrosDashboardPage() {
       .finally(() => setLoading(false))
   }, [])
 
+  useEffect(() => {
+    fetch('/api/miembros/events')
+      .then((r) => r.json())
+      .then((data) => setEvents(data.events || []))
+      .catch(() => {})
+  }, [])
+
   return (
-    <div className="p-4 lg:p-6 space-y-6 max-w-7xl mx-auto">
-      <div>
+    <div className="p-4 lg:p-6 max-w-7xl mx-auto">
+      <div className="mb-6">
         <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
           Dashboard
         </p>
@@ -38,23 +46,28 @@ export default function MiembrosDashboardPage() {
         </h1>
       </div>
 
-      {/* Área superior: carrusel placeholder */}
-      <div className="rounded-xl border border-zinc-200 bg-white p-8 flex items-center justify-between min-h-[120px]">
-        <button
-          type="button"
-          className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <div className="flex-1 text-center text-zinc-400 text-sm">
-          Contenido destacado
+      {/* Fila superior: carrusel + calendario (calendario subido arriba) */}
+      <div className="flex flex-col lg:flex-row gap-6 mb-6">
+        <div className="flex-1 min-w-0 rounded-xl border border-zinc-200 bg-white p-6 flex items-center justify-between min-h-[120px]">
+          <button
+            type="button"
+            className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex-1 text-center text-zinc-400 text-sm">
+            Contenido destacado
+          </div>
+          <button
+            type="button"
+            className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
-        <button
-          type="button"
-          className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+        <div className="lg:w-80 flex-shrink-0">
+          <MiniCalendar events={events} />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -83,9 +96,8 @@ export default function MiembrosDashboardPage() {
           <ConnectionRecommendations />
         </div>
 
-        {/* Columna derecha: calendario y últimas conexiones */}
-        <div className="space-y-6">
-          <MiniCalendar />
+        {/* Columna derecha: últimas conexiones */}
+        <div>
           {loading ? (
             <div className="h-48 rounded-xl border border-zinc-200 bg-white animate-pulse" />
           ) : (

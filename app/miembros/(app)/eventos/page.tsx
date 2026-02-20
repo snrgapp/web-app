@@ -60,7 +60,7 @@ export default function EventosPage() {
         </div>
 
         <div className="lg:w-64 flex-shrink-0">
-          <MiniCalendar />
+          <MiniCalendar events={events} />
         </div>
       </div>
     </div>

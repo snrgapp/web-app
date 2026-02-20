@@ -69,7 +69,7 @@ export function ConnectionRecommendations() {
         {recommendations.length === 0 ? (
           <p className="text-sm text-zinc-400">No hay recomendaciones por ahora</p>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-[280px] overflow-y-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-zinc-200">

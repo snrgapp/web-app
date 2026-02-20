@@ -62,7 +62,13 @@ export async function middleware(request: NextRequest) {
       pathname === '/' ||
       protectedPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ||
       (pathname.startsWith('/miembros') && !isLoginPath)
-    if (isProtectedPath && !isLoginPath) {
+    // Bypass auth solo en desarrollo local (NODE_ENV=development + host localhost)
+    const devHost =
+      (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '').replace(/:.*$/, '')
+    const isLocalDev =
+      process.env.NODE_ENV === 'development' && devHost.includes('localhost')
+
+    if (isProtectedPath && !isLoginPath && !isLocalDev) {
       const cookieName = getCookieName()
       const token = request.cookies.get(cookieName)?.value
       if (!token || !hasValidSessionFormat(token)) {

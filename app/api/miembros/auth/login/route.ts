@@ -49,15 +49,28 @@ export async function POST(request: NextRequest) {
         .select('id')
         .single()
       if (error) {
-        return Response.json({ error: 'Error al crear miembro' }, { status: 500 })
+        const isDev = process.env.NODE_ENV !== 'production'
+        const hint = isDev
+          ? `Supabase: ${error.message}${error.hint ? ` (${error.hint})` : ''}`
+          : '¿Ejecutaste la migración 025_members_schema.sql en Supabase?'
+        return Response.json(
+          { error: 'Error al crear miembro', hint },
+          { status: 500 }
+        )
       }
       memberId = created.id
     }
 
     const token = await setMemberSession(memberId, normalizedPhone)
     if (!token) {
+      const secret = process.env.MEMBER_SESSION_SECRET
+      const hint = !secret
+        ? 'Falta MEMBER_SESSION_SECRET en las variables de entorno'
+        : secret.length < 32
+          ? `MEMBER_SESSION_SECRET debe tener al menos 32 caracteres (tienes ${secret.length})`
+          : 'Revisa MEMBER_SESSION_SECRET en Vercel/.env.local'
       return Response.json(
-        { error: 'MEMBER_SESSION_SECRET no configurado' },
+        { error: 'MEMBER_SESSION_SECRET no configurado', hint },
         { status: 500 }
       )
     }
