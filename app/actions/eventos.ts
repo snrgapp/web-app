@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { getDefaultOrgId, getOrgIdBySlug } from '@/lib/org-resolver'
 import type { Evento } from '@/types/database.types'
 import type { FormWithParsedFields } from '@/lib/forms'
 import type { FormFieldConfig } from '@/types/form.types'
@@ -23,15 +24,20 @@ function parseCampos(campos: unknown): FormFieldConfig[] {
 }
 
 export async function getEventoConFormularioBySlug(
-  slug: string
+  slug: string,
+  orgSlug?: string | null
 ): Promise<EventoConFormulario | null> {
   const supabase = createServerClient()
   if (!supabase) return null
+
+  const orgId = orgSlug ? await getOrgIdBySlug(orgSlug) : await getDefaultOrgId()
+  if (!orgId) return null
 
   const { data: evento, error: evError } = await supabase
     .from('eventos')
     .select('*')
     .eq('checkin_slug', slug)
+    .eq('organizacion_id', orgId)
     .single()
 
   if (evError || !evento) return null
@@ -56,4 +62,23 @@ export async function getEventoConFormularioBySlug(
     evento: evento as Evento,
     form: formParsed,
   }
+}
+
+/** Lista eventos para la página pública /eventos. Filtra por org actual. */
+export async function getEventosParaListado(): Promise<Evento[]> {
+  const supabase = createServerClient()
+  if (!supabase) return []
+
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
+  const { data, error } = await supabase
+    .from('eventos')
+    .select('*')
+    .eq('organizacion_id', orgId)
+    .order('orden', { ascending: true })
+    .order('created_at', { ascending: false })
+
+  if (error) return []
+  return (data ?? []) as Evento[]
 }

@@ -8,7 +8,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { heroImages } from '@/lib/inicio-data'
-import { supabase } from '@/utils/supabase/client'
+import { createLeadAction } from '@/app/actions/leads'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -31,17 +31,9 @@ export default function Hero() {
     e.preventDefault()
     setError(null)
     setLoading(true)
-    if (!supabase) {
-      setError('No se pudo conectar. Intenta más tarde.')
-      setLoading(false)
-      return
-    }
-    const { error: insertError } = await supabase.from('leads').insert({
-      email: email.trim().toLowerCase(),
-      ciudad: ciudad.trim() || null,
-    })
-    if (insertError) {
-      setError(insertError.code === '23505' ? 'Este correo ya está registrado.' : 'No se pudo guardar. Intenta de nuevo.')
+    const result = await createLeadAction(email, ciudad || null)
+    if (!result.success) {
+      setError(result.error ?? 'No se pudo guardar. Intenta de nuevo.')
       setLoading(false)
       return
     }

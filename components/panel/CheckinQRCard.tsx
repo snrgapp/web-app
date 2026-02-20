@@ -39,7 +39,7 @@ export function CheckinQRCard({
 
   if (!dataUrl) {
     return (
-      <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 inline-flex items-center justify-center">
+      <div className="rounded-xl border border-zinc-200 bg-white p-4 inline-flex items-center justify-center">
         <span className="text-zinc-500 text-sm">Generando QR...</span>
       </div>
     )

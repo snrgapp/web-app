@@ -173,7 +173,7 @@ export default function SpotlightDashboardPage() {
             transition={{ duration: 0.3, delay: 0.2 }}
             className="grid grid-cols-1 lg:grid-cols-2 gap-4"
           >
-            <Card className="overflow-hidden bg-[#FFFBEB]/50">
+            <Card className="overflow-hidden bg-white">
               <CardHeader className="pb-1 pt-4 px-4">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-600">
                   Puntaje Total Ponderado por Founder
@@ -217,7 +217,7 @@ export default function SpotlightDashboardPage() {
               </CardContent>
             </Card>
 
-            <Card className="overflow-hidden bg-[#FFFBEB]/50">
+            <Card className="overflow-hidden bg-white">
               <CardHeader className="pb-1 pt-4 px-4">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-600">
                   Promedios por Criterio

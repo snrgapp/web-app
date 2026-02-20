@@ -9,6 +9,70 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      organizaciones: {
+        Row: {
+          id: string
+          nombre: string
+          slug: string
+          dominio_custom: string | null
+          plan: 'free' | 'pro' | 'enterprise'
+          settings: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          nombre: string
+          slug: string
+          dominio_custom?: string | null
+          plan?: 'free' | 'pro' | 'enterprise'
+          settings?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          nombre?: string
+          slug?: string
+          dominio_custom?: string | null
+          plan?: 'free' | 'pro' | 'enterprise'
+          settings?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      organizacion_miembros: {
+        Row: {
+          id: string
+          organizacion_id: string
+          user_id: string
+          rol: 'admin' | 'member' | 'viewer'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          organizacion_id: string
+          user_id: string
+          rol?: 'admin' | 'member' | 'viewer'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          organizacion_id?: string
+          user_id?: string
+          rol?: 'admin' | 'member' | 'viewer'
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'organizacion_miembros_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       categories: {
         Row: {
           id: string
@@ -16,6 +80,7 @@ export interface Database {
           slug: string | null
           color_hex: string
           icon_slug: string
+          organizacion_id: string | null
           created_at: string
         }
         Insert: {
@@ -24,6 +89,7 @@ export interface Database {
           slug?: string | null
           color_hex: string
           icon_slug: string
+          organizacion_id?: string | null
           created_at?: string
         }
         Update: {
@@ -32,9 +98,17 @@ export interface Database {
           slug?: string | null
           color_hex?: string
           icon_slug?: string
+          organizacion_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'categories_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
       }
       questions: {
         Row: {
@@ -165,6 +239,7 @@ export interface Database {
           checkin_slug: string | null
           inscripcion_abierta: boolean
           acerca_del_evento: string | null
+          organizacion_id: string | null
           created_at: string
         }
         Insert: {
@@ -178,6 +253,7 @@ export interface Database {
           checkin_slug?: string | null
           inscripcion_abierta?: boolean
           acerca_del_evento?: string | null
+          organizacion_id?: string | null
           created_at?: string
         }
         Update: {
@@ -191,30 +267,48 @@ export interface Database {
           checkin_slug?: string | null
           inscripcion_abierta?: boolean
           acerca_del_evento?: string | null
+          organizacion_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'eventos_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
       }
       leads: {
         Row: {
           id: string
           email: string
           ciudad: string | null
+          organizacion_id: string | null
           created_at: string
         }
         Insert: {
           id?: string
           email: string
           ciudad?: string | null
+          organizacion_id?: string | null
           created_at?: string
         }
         Update: {
           id?: string
           email?: string
           ciudad?: string | null
+          organizacion_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'leads_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
       }
       contactos: {
         Row: {
@@ -223,6 +317,7 @@ export interface Database {
           whatsapp: string | null
           correo: string | null
           mensaje: string
+          organizacion_id: string | null
           created_at: string
         }
         Insert: {
@@ -231,6 +326,7 @@ export interface Database {
           whatsapp?: string | null
           correo?: string | null
           mensaje: string
+          organizacion_id?: string | null
           created_at?: string
         }
         Update: {
@@ -239,14 +335,23 @@ export interface Database {
           whatsapp?: string | null
           correo?: string | null
           mensaje?: string
+          organizacion_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'contactos_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
       }
       forms: {
         Row: {
           id: string
           evento_id: string | null
+          organizacion_id: string | null
           slug: string
           titulo: string
           descripcion: string | null
@@ -254,12 +359,14 @@ export interface Database {
           cover_url: string | null
           campos: Json
           activo: boolean
+          brevo_list_id: number | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           evento_id?: string | null
+          organizacion_id?: string | null
           slug: string
           titulo: string
           descripcion?: string | null
@@ -267,12 +374,14 @@ export interface Database {
           cover_url?: string | null
           campos?: Json
           activo?: boolean
+          brevo_list_id?: number | null
           created_at?: string
           updated_at?: string
         }
         Update: {
           id?: string
           evento_id?: string | null
+          organizacion_id?: string | null
           slug?: string
           titulo?: string
           descripcion?: string | null
@@ -280,6 +389,7 @@ export interface Database {
           cover_url?: string | null
           campos?: Json
           activo?: boolean
+          brevo_list_id?: number | null
           created_at?: string
           updated_at?: string
         }
@@ -288,6 +398,12 @@ export interface Database {
             foreignKeyName: "forms_evento_id_fkey"
             columns: ["evento_id"]
             referencedRelation: "eventos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forms_organizacion_id_fkey"
+            columns: ["organizacion_id"]
+            referencedRelation: "organizaciones"
             referencedColumns: ["id"]
           }
         ]
@@ -328,6 +444,7 @@ export interface Database {
           image_url: string | null
           pitch_order: number
           activo: boolean
+          organizacion_id: string | null
           created_at: string
         }
         Insert: {
@@ -337,6 +454,7 @@ export interface Database {
           image_url?: string | null
           pitch_order?: number
           activo?: boolean
+          organizacion_id?: string | null
           created_at?: string
         }
         Update: {
@@ -346,9 +464,17 @@ export interface Database {
           image_url?: string | null
           pitch_order?: number
           activo?: boolean
+          organizacion_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'founders_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
       }
       votantes: {
         Row: {
@@ -356,6 +482,7 @@ export interface Database {
           whatsapp: string
           nombre: string | null
           categoria: 'espectador' | 'jurado'
+          organizacion_id: string | null
           created_at: string
         }
         Insert: {
@@ -363,6 +490,7 @@ export interface Database {
           whatsapp: string
           nombre?: string | null
           categoria?: 'espectador' | 'jurado'
+          organizacion_id?: string | null
           created_at?: string
         }
         Update: {
@@ -370,9 +498,17 @@ export interface Database {
           whatsapp?: string
           nombre?: string | null
           categoria?: 'espectador' | 'jurado'
+          organizacion_id?: string | null
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'votantes_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
       }
       votos: {
         Row: {
@@ -434,6 +570,8 @@ export interface Database {
 }
 
 // Tipos auxiliares para uso en la aplicación
+export type Organizacion = Database['public']['Tables']['organizaciones']['Row']
+export type OrganizacionMiembro = Database['public']['Tables']['organizacion_miembros']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']
 export type Asistente = Database['public']['Tables']['asistentes']['Row']

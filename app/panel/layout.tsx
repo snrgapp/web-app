@@ -2,6 +2,8 @@ import { Inter } from 'next/font/google'
 import { redirect } from 'next/navigation'
 import { PanelSidebar } from '@/components/dashboard/PanelSidebar'
 import { isAuthenticated } from '@/app/actions/auth'
+import { OrgProvider } from '@/components/panel/OrgProvider'
+import { getDefaultOrgId } from '@/lib/org-resolver'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-dashboard' })
 
@@ -15,7 +17,10 @@ export default async function PanelLayout({
     redirect('/login')
   }
 
+  const initialOrgId = await getDefaultOrgId()
+
   return (
+    <OrgProvider initialOrgId={initialOrgId}>
     <div
       className={`min-h-screen bg-white ${inter.variable} font-sans`}
       style={{ fontFamily: 'var(--font-dashboard), Inter, system-ui, sans-serif' }}
@@ -29,5 +34,6 @@ export default async function PanelLayout({
         </main>
       </div>
     </div>
+    </OrgProvider>
   )
 }

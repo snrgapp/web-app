@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/utils/supabase/client'
+import { createContactoAction } from '@/app/actions/contactos'
 import { cn } from '@/lib/utils'
 
 export default function ContactSection() {
@@ -17,24 +17,14 @@ export default function ContactSection() {
     e.preventDefault()
     setError(null)
     setLoading(true)
-    if (!supabase) {
-      setError('No se pudo conectar. Intenta más tarde.')
-      setLoading(false)
-      return
-    }
-    if (!mensaje.trim()) {
-      setError('El mensaje es obligatorio.')
-      setLoading(false)
-      return
-    }
-    const { error: insertError } = await supabase.from('contactos').insert({
+    const result = await createContactoAction({
       nombre: nombre.trim() || null,
       whatsapp: whatsapp.trim() || null,
       correo: correo.trim() || null,
       mensaje: mensaje.trim(),
     })
-    if (insertError) {
-      setError('No se pudo enviar. Intenta de nuevo.')
+    if (!result.success) {
+      setError(result.error ?? 'No se pudo enviar. Intenta de nuevo.')
       setLoading(false)
       return
     }

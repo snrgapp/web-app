@@ -6,6 +6,7 @@ import { Loader2, Mail, User, MessageSquare, Phone } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { supabase } from '@/utils/supabase/client'
 import type { Contacto } from '@/types/database.types'
+import { useOrgId } from '@/components/panel/OrgProvider'
 
 function formatDate(iso: string) {
   try {
@@ -23,24 +24,26 @@ function formatDate(iso: string) {
 }
 
 export default function PanelContactoPage() {
+  const orgId = useOrgId()
   const [contactos, setContactos] = useState<Contacto[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchContactos() {
-      if (!supabase) {
+      if (!supabase || !orgId) {
         setLoading(false)
         return
       }
       const { data, error } = await supabase
         .from('contactos')
         .select('*')
+        .eq('organizacion_id', orgId)
         .order('created_at', { ascending: false })
       if (!error) setContactos(data ?? [])
       setLoading(false)
     }
     fetchContactos()
-  }, [])
+  }, [orgId])
 
   return (
     <div className="pt-4 pr-4 pb-4 pl-2 lg:pt-6 lg:pr-6 lg:pb-6 lg:pl-2">

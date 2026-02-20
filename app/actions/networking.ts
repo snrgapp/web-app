@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { getDefaultOrgId } from '@/lib/org-resolver'
 import type { Asistente, Evento } from '@/types/database.types'
 
 // ─── Eventos ──────────────────────────────────────────────────
@@ -9,10 +10,14 @@ export async function getEventoByCheckinSlug(slug: string): Promise<Evento | nul
   const supabase = createServerClient()
   if (!supabase) return null
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return null
+
   const { data } = await supabase
     .from('eventos')
     .select('*')
     .eq('checkin_slug', slug)
+    .eq('organizacion_id', orgId)
     .single()
 
   return data as Evento | null
@@ -36,9 +41,13 @@ export async function getEventosConCountAsistentes(): Promise<EventoConCount[]> 
   const supabase = createServerClient()
   if (!supabase) return []
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
   const { data: eventos } = await supabase
     .from('eventos')
     .select('id, titulo, image_url, checkin_slug')
+    .eq('organizacion_id', orgId)
     .order('orden', { ascending: true })
     .order('created_at', { ascending: false })
 
@@ -183,6 +192,31 @@ export async function getFeedbackNetworking(): Promise<FeedbackConAsistente[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
+  const { data: eventosData } = await supabase
+    .from('eventos')
+    .select('id')
+    .eq('organizacion_id', orgId)
+  const eventoIds = (eventosData ?? []).map((e) => e.id)
+  if (eventoIds.length === 0) return []
+
+  const { data: asistentesData } = await supabase
+    .from('asistentes')
+    .select('id')
+    .in('evento_id', eventoIds)
+  const asistenteIds = (asistentesData ?? []).map((a) => a.id)
+  const legacyAsistentes = await supabase
+    .from('asistentes')
+    .select('id')
+    .is('evento_id', null)
+  const allAsistenteIds = [
+    ...asistenteIds,
+    ...((legacyAsistentes.data ?? []).map((a) => a.id)),
+  ].filter(Boolean)
+  if (allAsistenteIds.length === 0) return []
+
   const { data } = await supabase
     .from('feedback_networking')
     .select(`
@@ -197,6 +231,7 @@ export async function getFeedbackNetworking(): Promise<FeedbackConAsistente[]> {
         telefono
       )
     `)
+    .in('asistente_id', allAsistenteIds)
     .order('created_at', { ascending: false })
 
   return (data ?? []) as unknown as FeedbackConAsistente[]

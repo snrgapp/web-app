@@ -6,6 +6,7 @@
 import type { FormFieldConfig } from '@/types/form.types'
 import type { Json } from '@/types/database.types'
 import { createServerClient } from '@/utils/supabase/server'
+import { getDefaultOrgId } from '@/lib/org-resolver'
 
 export type FormWithParsedFields = {
   id: string
@@ -34,15 +35,19 @@ function parseCampos(campos: unknown): FormFieldConfig[] {
   )
 }
 
-/** Obtiene un formulario por slug (solo activos) */
+/** Obtiene un formulario por slug (solo activos). Filtra por org actual. */
 export async function getFormBySlug(slug: string): Promise<FormWithParsedFields | null> {
   const supabase = createServerClient()
   if (!supabase) return null
+
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return null
 
   const { data, error } = await supabase
     .from('forms')
     .select('*')
     .eq('slug', slug)
+    .eq('organizacion_id', orgId)
     .eq('activo', true)
     .single()
 
@@ -55,14 +60,18 @@ export async function getFormBySlug(slug: string): Promise<FormWithParsedFields 
   }
 }
 
-/** Lista todos los formularios (para admin) */
+/** Lista todos los formularios (para admin). Filtra por org actual. */
 export async function getAllForms(): Promise<FormWithParsedFields[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
   const { data, error } = await supabase
     .from('forms')
     .select('*')
+    .eq('organizacion_id', orgId)
     .order('created_at', { ascending: false })
 
   if (error) return []
@@ -113,6 +122,7 @@ export async function createFormSubmission(
 
 export type FormInsertInput = {
   evento_id?: string | null
+  organizacion_id?: string | null
   slug: string
   titulo: string
   descripcion?: string | null
@@ -130,10 +140,14 @@ export async function createForm(
   const supabase = createServerClient()
   if (!supabase) return { success: false, error: 'Supabase no configurado' }
 
+  const orgId = input.organizacion_id ?? (await getDefaultOrgId())
+  if (!orgId) return { success: false, error: 'Organización no configurada' }
+
   const { data, error } = await supabase
     .from('forms')
     .insert({
       evento_id: input.evento_id ?? null,
+      organizacion_id: orgId,
       slug: input.slug,
       titulo: input.titulo,
       descripcion: input.descripcion ?? null,

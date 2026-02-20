@@ -22,12 +22,14 @@ import { Input } from '@/components/ui/input'
 import { supabase } from '@/utils/supabase/client'
 import type { Evento } from '@/types/database.types'
 import { CheckinQRCard } from '@/components/panel/CheckinQRCard'
+import { useOrgId } from '@/components/panel/OrgProvider'
 
 const BUCKET = 'eventos'
 
 const CHECKIN_SLUG_REGEX = /^[a-z0-9-]+$/i
 
 export default function PanelEventosPage() {
+  const orgId = useOrgId()
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -53,7 +55,7 @@ export default function PanelEventosPage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   async function fetchEventos() {
-    if (!supabase) {
+    if (!supabase || !orgId) {
       setLoading(false)
       return
     }
@@ -61,6 +63,7 @@ export default function PanelEventosPage() {
     const { data, error } = await supabase
       .from('eventos')
       .select('*')
+      .eq('organizacion_id', orgId)
       .order('orden', { ascending: true })
       .order('created_at', { ascending: false })
     if (!error) setEventos(data ?? [])
@@ -69,7 +72,7 @@ export default function PanelEventosPage() {
 
   useEffect(() => {
     fetchEventos()
-  }, [])
+  }, [orgId])
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]
@@ -98,9 +101,14 @@ export default function PanelEventosPage() {
       return
     }
 
+    if (!orgId) {
+      setStatus({ type: 'error', message: 'Organización no disponible. Recarga la página.' })
+      return
+    }
     const existing = await supabase
       .from('eventos')
       .select('id')
+      .eq('organizacion_id', orgId)
       .eq('checkin_slug', slug)
       .maybeSingle()
     if (existing.data) {
@@ -139,6 +147,7 @@ export default function PanelEventosPage() {
     setSaving(true)
     setStatus({ type: null, message: '' })
     const { error } = await supabase.from('eventos').insert({
+      organizacion_id: orgId,
       titulo: titulo.trim() || null,
       checkin_slug: slug,
       image_url: finalImageUrl,
@@ -295,7 +304,7 @@ export default function PanelEventosPage() {
                   }
                 }}
                 placeholder="https://..."
-                className="rounded-xl bg-zinc-50 border-zinc-200"
+                className="rounded-xl bg-white border-zinc-200"
               />
             </div>
           </div>
@@ -308,12 +317,12 @@ export default function PanelEventosPage() {
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 placeholder="Nombre del evento"
-                className="text-lg font-medium rounded-xl bg-zinc-50 border-zinc-200 placeholder:text-zinc-400 h-12"
+                className="text-lg font-medium rounded-xl bg-white border-zinc-200 placeholder:text-zinc-400 h-12"
               />
             </div>
 
             {/* Slug de check-in para QR */}
-            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+            <div className="rounded-xl bg-white border border-zinc-200 px-4 py-3">
               <div className="flex items-center gap-2 text-zinc-600 mb-1">
                 <QrCode className="w-4 h-4" />
                 <span className="text-sm font-medium">Slug de check-in (para QR)</span>
@@ -343,13 +352,13 @@ export default function PanelEventosPage() {
                       type="date"
                       value={fecha}
                       onChange={(e) => setFecha(e.target.value)}
-                      className="rounded-xl bg-zinc-50 border-zinc-200 w-36"
+                      className="rounded-xl bg-white border-zinc-200 w-36"
                     />
                     <Input
                       type="time"
                       value={horaInicio}
                       onChange={(e) => setHoraInicio(e.target.value)}
-                      className="rounded-xl bg-zinc-50 border-zinc-200 w-28"
+                      className="rounded-xl bg-white border-zinc-200 w-28"
                     />
                   </div>
                 </div>
@@ -365,13 +374,13 @@ export default function PanelEventosPage() {
                       type="date"
                       value={fecha}
                       onChange={(e) => setFecha(e.target.value)}
-                      className="rounded-xl bg-zinc-50 border-zinc-200 w-36"
+                      className="rounded-xl bg-white border-zinc-200 w-36"
                     />
                     <Input
                       type="time"
                       value={horaFin}
                       onChange={(e) => setHoraFin(e.target.value)}
-                      className="rounded-xl bg-zinc-50 border-zinc-200 w-28"
+                      className="rounded-xl bg-white border-zinc-200 w-28"
                     />
                   </div>
                 </div>
@@ -384,7 +393,7 @@ export default function PanelEventosPage() {
             </div>
 
             {/* Ubicación */}
-            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+            <div className="rounded-xl bg-white border border-zinc-200 px-4 py-3">
               <div className="flex items-center gap-2 text-zinc-600 mb-1">
                 <MapPin className="w-4 h-4" />
                 <span className="text-sm font-medium">Agregar ubicación del evento</span>
@@ -398,7 +407,7 @@ export default function PanelEventosPage() {
             </div>
 
             {/* Acerca del Evento */}
-            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+            <div className="rounded-xl bg-white border border-zinc-200 px-4 py-3">
               <div className="flex items-center gap-2 text-zinc-600 mb-1">
                 <FileText className="w-4 h-4" />
                 <span className="text-sm font-medium">Acerca del evento</span>
@@ -413,7 +422,7 @@ export default function PanelEventosPage() {
             </div>
 
             {/* Enlace de registro (opcional si usas formulario propio) */}
-            <div className="rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+            <div className="rounded-xl bg-white border border-zinc-200 px-4 py-3">
               <div className="flex items-center gap-2 text-zinc-600 mb-1">
                 <FileText className="w-4 h-4" />
                 <span className="text-sm font-medium">Enlace de registro (opcional)</span>
@@ -431,7 +440,7 @@ export default function PanelEventosPage() {
             </div>
 
             {/** En desktop: URL de imagen */}
-            <div className="hidden lg:block rounded-xl bg-zinc-50 border border-zinc-200 px-4 py-3">
+            <div className="hidden lg:block rounded-xl bg-white border border-zinc-200 px-4 py-3">
               <div className="flex items-center gap-2 text-zinc-600 mb-1">
                 <FileText className="w-4 h-4" />
                 <span className="text-sm font-medium">URL de imagen</span>
@@ -495,7 +504,7 @@ export default function PanelEventosPage() {
               {eventos.map((ev) => (
                 <li
                   key={ev.id}
-                  className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-zinc-200 bg-zinc-50/50"
+                  className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-zinc-200 bg-white"
                 >
                   <div className="relative w-full sm:w-40 h-24 rounded-lg overflow-hidden bg-zinc-200 flex-shrink-0">
                     {ev.image_url.startsWith('/') ? (

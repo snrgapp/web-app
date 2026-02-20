@@ -2,21 +2,24 @@
 
 import { useState, useEffect } from 'react'
 import { getSubmissionsBySegment } from '@/lib/forms/form-repository-client'
+import { useOrgId } from '@/components/panel/OrgProvider'
 import { Loader2 } from 'lucide-react'
 
 const SEGMENTO_COLORS = ['#6d28d9', '#8b5cf6', '#a78bfa', '#c4b5fd', '#ddd6fe']
 
 export function SegmentosChart() {
+  const orgId = useOrgId()
   const [data, setData] = useState<{ segmento: string; count: number }[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!orgId) return
     setLoading(true)
-    getSubmissionsBySegment().then((items) => {
+    getSubmissionsBySegment(orgId).then((items) => {
       setData(items)
       setLoading(false)
     })
-  }, [])
+  }, [orgId])
 
   const total = data.reduce((acc, d) => acc + d.count, 0)
   const maxCount = data.length ? Math.max(...data.map((d) => d.count), 1) : 1

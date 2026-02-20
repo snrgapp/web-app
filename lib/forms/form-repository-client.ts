@@ -34,12 +34,14 @@ function parseCampos(campos: unknown): FormFieldConfig[] {
   )
 }
 
-export async function getAllFormsClient(): Promise<FormWithParsedFields[]> {
+export async function getAllFormsClient(orgId?: string | null): Promise<FormWithParsedFields[]> {
   if (!supabase) return []
+  if (!orgId) return []
 
   const { data, error } = await supabase
     .from('forms')
     .select('*')
+    .eq('organizacion_id', orgId)
     .order('created_at', { ascending: false })
 
   if (error) return []
@@ -64,14 +66,17 @@ export type FormInsertInput = {
 }
 
 export async function createFormClient(
-  input: FormInsertInput
+  input: FormInsertInput,
+  orgId: string | null
 ): Promise<{ success: boolean; id?: string; error?: string }> {
   if (!supabase) return { success: false, error: 'Supabase no configurado' }
+  if (!orgId) return { success: false, error: 'Organización no configurada' }
 
   const { data, error } = await supabase
     .from('forms')
     .insert({
       evento_id: input.evento_id ?? null,
+      organizacion_id: orgId,
       slug: input.slug,
       titulo: input.titulo,
       descripcion: input.descripcion ?? null,
@@ -128,9 +133,15 @@ export async function getSubmissionsByFormIdClient(
 /** Registros por día del mes (para gráfico Total Asistentes) */
 export async function getSubmissionsByDayForMonth(
   year: number,
-  month: number
+  month: number,
+  orgId?: string | null
 ): Promise<{ day: number; value: number }[]> {
   if (!supabase) return []
+  if (!orgId) return []
+
+  const forms = await getAllFormsClient(orgId)
+  const formIds = forms.map((f) => f.id)
+  if (formIds.length === 0) return []
 
   const startDate = new Date(year, month - 1, 1)
   const endDate = new Date(year, month, 0)
@@ -140,6 +151,7 @@ export async function getSubmissionsByDayForMonth(
   const { data, error } = await supabase
     .from('form_submissions')
     .select('created_at')
+    .in('form_id', formIds)
     .gte('created_at', startStr)
     .lte('created_at', endStr + 'T23:59:59.999Z')
 
@@ -163,10 +175,11 @@ export async function getSubmissionsByDayForMonth(
 /** Inscritos por segmento: agrupa submissions donde el form tiene un campo "segmento" (select/radio) */
 export type SegmentoCount = { segmento: string; count: number }
 
-export async function getSubmissionsBySegment(): Promise<SegmentoCount[]> {
+export async function getSubmissionsBySegment(orgId?: string | null): Promise<SegmentoCount[]> {
   if (!supabase) return []
+  if (!orgId) return []
 
-  const forms = await getAllFormsClient()
+  const forms = await getAllFormsClient(orgId)
   const formIdsWithSegmento = forms
     .filter(
       (f) =>
@@ -203,12 +216,13 @@ export async function getSubmissionsBySegment(): Promise<SegmentoCount[]> {
 }
 
 /** Formularios con su cantidad de inscripciones (para Registro por eventos) */
-export async function getFormsWithSubmissionCount(): Promise<
+export async function getFormsWithSubmissionCount(orgId?: string | null): Promise<
   { id: string; titulo: string; count: number }[]
 > {
   if (!supabase) return []
+  if (!orgId) return []
 
-  const forms = await getAllFormsClient()
+  const forms = await getAllFormsClient(orgId)
   const result: { id: string; titulo: string; count: number }[] = []
 
   for (const form of forms) {

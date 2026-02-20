@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { getDefaultOrgId } from '@/lib/org-resolver'
 import { Founder, Votante, Voto } from '@/types/database.types'
 
 // ─── Votantes ───────────────────────────────────────────────
@@ -9,13 +10,16 @@ export async function verificarVotante(whatsapp: string): Promise<{ ok: true; vo
   const supabase = createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
-  // Normalizar: quitar espacios y guiones
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return { ok: false, error: 'Configuración no disponible.' }
+
   const normalizado = whatsapp.replace(/[\s\-]/g, '')
 
   const { data, error } = await supabase
     .from('votantes')
     .select('*')
     .eq('whatsapp', normalizado)
+    .eq('organizacion_id', orgId)
     .single()
 
   if (error || !data) {
@@ -29,9 +33,13 @@ export async function getVotantes(): Promise<Votante[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
   const { data } = await supabase
     .from('votantes')
     .select('*')
+    .eq('organizacion_id', orgId)
     .order('created_at', { ascending: false })
 
   return data ?? []
@@ -41,11 +49,14 @@ export async function crearVotante(votante: { whatsapp: string; nombre?: string;
   const supabase = createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return { ok: false, error: 'Organización no configurada.' }
+
   const normalizado = votante.whatsapp.replace(/[\s\-]/g, '')
 
   const { error } = await supabase
     .from('votantes')
-    .insert({ ...votante, whatsapp: normalizado })
+    .insert({ ...votante, whatsapp: normalizado, organizacion_id: orgId })
 
   if (error) {
     if (error.code === '23505') return { ok: false, error: 'Este WhatsApp ya está registrado.' }
@@ -91,9 +102,13 @@ export async function getFoundersActivos(): Promise<Founder[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
   const { data } = await supabase
     .from('founders')
     .select('*')
+    .eq('organizacion_id', orgId)
     .eq('activo', true)
     .order('pitch_order', { ascending: true })
 
@@ -104,9 +119,13 @@ export async function getAllFounders(): Promise<Founder[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
   const { data } = await supabase
     .from('founders')
     .select('*')
+    .eq('organizacion_id', orgId)
     .order('pitch_order', { ascending: true })
 
   return data ?? []
@@ -121,7 +140,10 @@ export async function crearFounder(founder: {
   const supabase = createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
-  const { error } = await supabase.from('founders').insert(founder)
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return { ok: false, error: 'Organización no configurada.' }
+
+  const { error } = await supabase.from('founders').insert({ ...founder, organizacion_id: orgId })
 
   if (error) return { ok: false, error: error.message }
   return { ok: true }
@@ -213,10 +235,13 @@ export async function getResultadosSpotlight(): Promise<FounderResultado[]> {
   const supabase = createServerClient()
   if (!supabase) return []
 
-  // Obtener todos los founders activos
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
+
   const { data: founders } = await supabase
     .from('founders')
     .select('*')
+    .eq('organizacion_id', orgId)
     .eq('activo', true)
     .order('pitch_order', { ascending: true })
 
@@ -297,13 +322,26 @@ export async function getParticipacion(): Promise<{ votaron: number; total: numb
   const supabase = createServerClient()
   if (!supabase) return { votaron: 0, total: 0 }
 
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return { votaron: 0, total: 0 }
+
   const { count: total } = await supabase
     .from('votantes')
     .select('*', { count: 'exact', head: true })
+    .eq('organizacion_id', orgId)
+
+  const { data: votantesIds } = await supabase
+    .from('votantes')
+    .select('id')
+    .eq('organizacion_id', orgId)
+
+  const ids = (votantesIds ?? []).map((v) => v.id)
+  if (ids.length === 0) return { votaron: 0, total: 0 }
 
   const { data: votantesConVoto } = await supabase
     .from('votos')
     .select('votante_id')
+    .in('votante_id', ids)
 
   const uniqueVotantes = new Set(votantesConVoto?.map((v) => v.votante_id) ?? [])
 

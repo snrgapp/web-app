@@ -1,11 +1,15 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { getDefaultOrgId } from '@/lib/org-resolver'
 import { QuestionWithCategory } from '@/types/database.types'
 
 export async function getRandomQuestions(limit: number = 10, categorySlug?: string | null): Promise<QuestionWithCategory[]> {
   const supabase = createServerClient()
   if (!supabase) return []
+
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return []
 
   try {
     let query = supabase
@@ -14,6 +18,7 @@ export async function getRandomQuestions(limit: number = 10, categorySlug?: stri
         *,
         categories!inner(*)
       `)
+      .eq('categories.organizacion_id', orgId)
 
     if (categorySlug) {
       query = query.eq('categories.slug', categorySlug)

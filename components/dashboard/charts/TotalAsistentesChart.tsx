@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { getSubmissionsByDayForMonth } from '@/lib/forms/form-repository-client'
+import { useOrgId } from '@/components/panel/OrgProvider'
 import { Loader2 } from 'lucide-react'
 
 const Y_TICKS = [10, 20, 30, 40, 50, 60, 70, 80]
@@ -46,18 +47,20 @@ interface TotalAsistentesChartProps {
 }
 
 export function TotalAsistentesChart({ selectedMonth }: TotalAsistentesChartProps) {
+  const orgId = useOrgId()
   const [year, month] = selectedMonth.split('-').map(Number)
   const monthName = MONTHS_ES[month - 1] ?? ''
   const [data, setData] = useState<{ day: number; value: number }[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!orgId) return
     setLoading(true)
-    getSubmissionsByDayForMonth(year, month).then((result) => {
+    getSubmissionsByDayForMonth(year, month, orgId).then((result) => {
       setData(result.sort((a, b) => a.day - b.day))
       setLoading(false)
     })
-  }, [year, month])
+  }, [orgId, year, month])
 
   const maxVal = data.length ? Math.max(...data.map((d) => d.value)) : 0
   const yDomain = Math.max(80, maxVal, 1)

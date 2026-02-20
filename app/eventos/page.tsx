@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import Navbar from '@/components/Navbar'
-import { supabase } from '@/utils/supabase/client'
+import { getEventosParaListado } from '@/app/actions/eventos'
 import type { Evento } from '@/types/database.types'
 import { MapPin, ChevronRight } from 'lucide-react'
 
@@ -45,21 +45,10 @@ export default function EventosPage() {
   const [tab, setTab] = useState<'proximos' | 'pasados'>('proximos')
 
   useEffect(() => {
-    async function fetchEventos() {
-      if (!supabase) {
-        setLoading(false)
-        return
-      }
-      const { data, error } = await supabase
-        .from('eventos')
-        .select('*')
-        .order('orden', { ascending: true })
-        .order('created_at', { ascending: false })
-
-      if (!error) setEventos(data ?? [])
+    getEventosParaListado().then((data) => {
+      setEventos(data)
       setLoading(false)
-    }
-    fetchEventos()
+    })
   }, [])
 
   const today = getTodayISO()

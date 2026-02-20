@@ -124,14 +124,14 @@ export default function NetworkingFeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-100 pt-4 pr-4 pb-4 pl-2 lg:pt-8 lg:pr-8 lg:pb-8 lg:pl-2">
+    <div className="min-h-screen bg-white pt-4 pr-4 pb-4 pl-2 lg:pt-8 lg:pr-8 lg:pb-8 lg:pl-2">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         className="flex flex-col items-center w-full max-w-3xl mx-auto"
       >
-        <div className="w-full overflow-hidden shadow-xl rounded-2xl bg-white border border-zinc-100">
+        <div className="w-full overflow-hidden rounded-2xl bg-white border border-zinc-200">
           <div className="bg-white p-5">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">

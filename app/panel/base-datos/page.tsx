@@ -24,6 +24,7 @@ import {
 } from '@/lib/forms/form-repository-client'
 import type { Asistente, Evento } from '@/types/database.types'
 import type { FormFieldConfig } from '@/types/form.types'
+import { useOrgId } from '@/components/panel/OrgProvider'
 
 const headers = [
   'Evento',
@@ -43,6 +44,7 @@ const headers = [
 type AsistenteConEvento = Asistente & { eventos?: { titulo: string | null; checkin_slug: string | null } | null }
 
 export default function BaseDatosPage() {
+  const orgId = useOrgId()
   const [eventos, setEventos] = useState<Evento[]>([])
   const [selectedEventoId, setSelectedEventoId] = useState<string>('')
   const [filterEventoId, setFilterEventoId] = useState<string>('')
@@ -62,10 +64,11 @@ export default function BaseDatosPage() {
   const [submissionsLoading, setSubmissionsLoading] = useState(false)
 
   async function fetchEventos() {
-    if (!supabase) return
+    if (!supabase || !orgId) return
     const { data } = await supabase
       .from('eventos')
       .select('*')
+      .eq('organizacion_id', orgId)
       .order('orden', { ascending: true })
       .order('created_at', { ascending: false })
     setEventos(data ?? [])
@@ -73,16 +76,19 @@ export default function BaseDatosPage() {
 
   async function fetchAsistentes() {
     setLoading(true)
-    if (!supabase) {
+    if (!supabase || !orgId) {
       setUploadStatus({ type: 'error', message: 'Supabase no configurado. Añade NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en .env.local' })
       setAsistentes([])
       setLoading(false)
       return
     }
-    const { data: asistentesData, error: asistentesError } = await supabase
-      .from('asistentes')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { data: eventosData } = await supabase.from('eventos').select('id').eq('organizacion_id', orgId)
+    const eventoIds = (eventosData ?? []).map((e) => e.id)
+    let asistentesQuery = supabase.from('asistentes').select('*').order('created_at', { ascending: false })
+    if (eventoIds.length > 0) {
+      asistentesQuery = asistentesQuery.or(`evento_id.in.(${eventoIds.join(',')}),evento_id.is.null`)
+    }
+    const { data: asistentesRows, error: asistentesError } = await asistentesQuery
 
     if (asistentesError) {
       setUploadStatus({ type: 'error', message: asistentesError.message })
@@ -91,15 +97,16 @@ export default function BaseDatosPage() {
       return
     }
 
-    const { data: eventosData } = await supabase
+    const { data: eventosForMap } = await supabase
       .from('eventos')
       .select('id, titulo, checkin_slug')
+      .eq('organizacion_id', orgId)
 
     const eventosMap = new Map(
-      (eventosData ?? []).map((e) => [e.id, { titulo: e.titulo, checkin_slug: e.checkin_slug }])
+      (eventosForMap ?? []).map((e) => [e.id, { titulo: e.titulo, checkin_slug: e.checkin_slug }])
     )
 
-    const asistentesConEvento: AsistenteConEvento[] = (asistentesData ?? []).map((a) => ({
+    const asistentesConEvento: AsistenteConEvento[] = (asistentesRows ?? []).map((a: AsistenteConEvento) => ({
       ...a,
       eventos: a.evento_id ? (eventosMap.get(a.evento_id) ?? null) : null,
     }))
@@ -112,15 +119,16 @@ export default function BaseDatosPage() {
 
   useEffect(() => {
     fetchEventos()
-  }, [])
+  }, [orgId])
 
   useEffect(() => {
     fetchAsistentes()
-  }, [])
+  }, [orgId])
 
   useEffect(() => {
-    getAllFormsClient().then(setForms)
-  }, [])
+    if (!orgId) return
+    getAllFormsClient(orgId).then(setForms)
+  }, [orgId])
 
   useEffect(() => {
     if (!selectedFormId) {

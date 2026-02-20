@@ -20,7 +20,7 @@ export function MesaCard({ asistente, index = 0 }: MesaCardProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.08 * index }}
-      className="relative rounded-[24px] border border-[#E0E0E0] bg-[#F8F7F5] px-4 py-3 shadow-none"
+      className="relative rounded-[24px] border border-zinc-200 bg-white px-4 py-3 shadow-none"
     >
       {/* Icono verificado - esquina superior derecha */}
       <div className="absolute right-3 top-3">

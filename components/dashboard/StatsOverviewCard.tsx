@@ -92,7 +92,7 @@ function StatSection({
 
 export function StatsOverviewCard() {
   return (
-    <div className="flex w-full flex-col rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+    <div className="flex w-full flex-col rounded-xl border border-zinc-200 bg-white overflow-hidden">
       {/* Mobile: 3 filas apiladas | Desktop: 3 columnas */}
       <div className="grid grid-cols-1 md:grid-cols-3">
         <StatSection

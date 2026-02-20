@@ -30,6 +30,7 @@ import {
 import { INSCRIPCION_BASE_URL } from '@/lib/config'
 import type { FormFieldConfig } from '@/types/form.types'
 import type { Evento } from '@/types/database.types'
+import { useOrgId } from '@/components/panel/OrgProvider'
 
 const BUCKET = 'formularios'
 const SLUG_MAX_LENGTH = 20
@@ -60,6 +61,7 @@ function validateSlug(slug: string): string | null {
 }
 
 export default function PanelFormulariosPage() {
+  const orgId = useOrgId()
   const [forms, setForms] = useState<FormWithParsedFields[]>([])
   const [eventos, setEventos] = useState<Evento[]>([])
   const [loading, setLoading] = useState(true)
@@ -85,25 +87,27 @@ export default function PanelFormulariosPage() {
   const coverInputRef = useRef<HTMLInputElement>(null)
 
   async function fetchForms() {
+    if (!orgId) return
     setLoading(true)
-    const data = await getAllFormsClient()
+    const data = await getAllFormsClient(orgId)
     setForms(data)
     setLoading(false)
   }
 
   useEffect(() => {
     fetchForms()
-  }, [])
+  }, [orgId])
 
   useEffect(() => {
-    if (!supabase) return
+    if (!supabase || !orgId) return
     supabase
       .from('eventos')
       .select('*')
+      .eq('organizacion_id', orgId)
       .order('orden', { ascending: true })
       .order('created_at', { ascending: false })
       .then(({ data }) => setEventos(data ?? []))
-  }, [])
+  }, [orgId])
 
   function handleIconChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]
@@ -203,6 +207,10 @@ export default function PanelFormulariosPage() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!orgId) {
+      setStatus({ type: 'error', message: 'Organización no disponible. Recarga la página.' })
+      return
+    }
     const slugErr = validateSlug(slug)
     if (slugErr || !titulo.trim()) {
       setStatus({
@@ -298,7 +306,7 @@ export default function PanelFormulariosPage() {
         activo: true,
       }
 
-      const result = await createFormClient(input)
+      const result = await createFormClient(input, orgId)
 
       if (result.success) {
         setStatus({ type: 'success', message: 'Formulario creado correctamente.' })
@@ -362,7 +370,7 @@ export default function PanelFormulariosPage() {
         {showCreator && (
           <form
             onSubmit={handleSubmit}
-            className="mb-10 rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6"
+            className="mb-10 rounded-2xl border border-zinc-200 bg-white p-6"
           >
             <h2 className="text-lg font-medium text-zinc-900 mb-4">
               {editingForm ? 'Editar formulario' : 'Crear formulario'}
