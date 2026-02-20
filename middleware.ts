@@ -22,11 +22,13 @@ const MIEMBROS_HOSTS = [
 ]
 
 function matchesHosts(req: NextRequest, hosts: string[]): boolean {
-  const host = req.headers.get('host') ?? ''
+  // En Vercel/proxy: x-forwarded-host tiene el host original del usuario
   const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
-  const check = (h: string) =>
-    hosts.some((ih) => h === ih || h.startsWith(`${ih}:`))
-  return check(host) || check(forwardedHost)
+  const host = req.headers.get('host') ?? ''
+  const effectiveHost = (forwardedHost || host).replace(/:.*$/, '')
+  return hosts.some(
+    (h) => effectiveHost === h || effectiveHost.startsWith(h + ':')
+  )
 }
 
 /** Extrae slug de org desde host (para header x-org-slug) */
@@ -42,42 +44,20 @@ function getOrgSlugFromHost(req: NextRequest): string {
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-
   const orgSlug = getOrgSlugFromHost(request)
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-org-slug', orgSlug)
 
-  // Proteger /panel: requiere sesión Supabase Auth (solo cuando NO es subdominio miembros)
   const isMiembrosHost = matchesHosts(request, MIEMBROS_HOSTS)
-  if (
-    pathname.startsWith('/panel') &&
-    !isMiembrosHost &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL
-  ) {
-    try {
-      const reqWithOrg = new NextRequest(request.url, { headers: requestHeaders })
-      const { supabase, response } = await createMiddlewareClient(reqWithOrg)
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) {
-        const loginUrl = new URL('/login', request.url)
-        loginUrl.searchParams.set('from', pathname)
-        return NextResponse.redirect(loginUrl)
-      }
-      return response
-    } catch {
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-  }
 
-  // Subdominio miembros.snrg.lat
+  // Subdominio miembros.snrg.lat: PRIMERO, aislar completamente del resto de la app
+  // Todo en miembros.* solo sirve el panel de miembros, nunca el login del admin ni snrg.lat
   if (isMiembrosHost) {
     if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
       return NextResponse.next({ request: { headers: requestHeaders } })
     }
     const isLoginPath = pathname === '/login' || pathname === '/miembros/login'
-    const protectedPaths = ['/', '/red-contactos', '/eventos', '/recursos', '/configuracion']
+    const protectedPaths = ['/', '/inicio', '/red-contactos', '/eventos', '/recursos', '/configuracion']
     const isProtectedPath =
       pathname === '/' ||
       protectedPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ||
@@ -98,16 +78,41 @@ export async function middleware(request: NextRequest) {
       const rewriteMap: Record<string, string> = {
         '/': '/miembros',
         '/login': '/miembros/login',
+        '/inicio': '/miembros',
         '/red-contactos': '/miembros/red-contactos',
         '/eventos': '/miembros/eventos',
         '/recursos': '/miembros/recursos',
         '/configuracion': '/miembros/configuracion',
       }
-      newPath = rewriteMap[pathname] ?? (pathname === '/' ? '/miembros' : `/miembros${pathname}`)
+      newPath =
+        rewriteMap[pathname] ??
+        (pathname === '/' ? '/miembros' : `/miembros${pathname}`)
     }
     const url = request.nextUrl.clone()
     url.pathname = newPath
     return NextResponse.rewrite(url)
+  }
+
+  // Proteger /panel: requiere sesión Supabase Auth (solo cuando NO es subdominio miembros)
+  if (
+    pathname.startsWith('/panel') &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL
+  ) {
+    try {
+      const reqWithOrg = new NextRequest(request.url, { headers: requestHeaders })
+      const { supabase, response } = await createMiddlewareClient(reqWithOrg)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) {
+        const loginUrl = new URL('/login', request.url)
+        loginUrl.searchParams.set('from', pathname)
+        return NextResponse.redirect(loginUrl)
+      }
+      return response
+    } catch {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
   }
 
   // Subdominio inscripcion.snrg.lat
