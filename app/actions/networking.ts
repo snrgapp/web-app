@@ -7,7 +7,7 @@ import type { Asistente, Evento } from '@/types/database.types'
 // ─── Eventos ──────────────────────────────────────────────────
 
 export async function getEventoByCheckinSlug(slug: string): Promise<Evento | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return null
 
   const orgId = await getDefaultOrgId()
@@ -38,7 +38,7 @@ export interface EventoConCount {
 }
 
 export async function getEventosConCountAsistentes(): Promise<EventoConCount[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()
@@ -80,7 +80,7 @@ export async function verificarAsistente(
   telefono: string,
   eventoId: string | null = null
 ): Promise<{ ok: true; asistente: Asistente } | { ok: false; error: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const normalizado = telefono.replace(/[\s\-]/g, '')
@@ -109,7 +109,7 @@ export async function verificarAsistente(
 }
 
 export async function getAsistenteById(id: string): Promise<Asistente | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return null
 
   const { data } = await supabase
@@ -128,7 +128,7 @@ export async function getAsistentesPorMesa(
   ronda: 1 | 2,
   eventoId?: string | null
 ): Promise<Asistente[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const column = ronda === 1 ? 'mesa' : 'mesa_ronda2'
@@ -159,7 +159,7 @@ export async function guardarFeedbackNetworking(
   asistenteId: string,
   rating: number
 ): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   if (rating < 1 || rating > 5) {
@@ -189,7 +189,7 @@ export interface FeedbackConAsistente {
 }
 
 export async function getFeedbackNetworking(): Promise<FeedbackConAsistente[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()

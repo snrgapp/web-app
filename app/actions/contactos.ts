@@ -9,7 +9,7 @@ export async function createContactoAction(datos: {
   correo?: string | null
   mensaje: string
 }): Promise<{ success: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { success: false, error: 'No se pudo conectar.' }
 
   if (!datos.mensaje?.trim()) {

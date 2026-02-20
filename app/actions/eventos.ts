@@ -27,7 +27,7 @@ export async function getEventoConFormularioBySlug(
   slug: string,
   orgSlug?: string | null
 ): Promise<EventoConFormulario | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return null
 
   const orgId = orgSlug ? await getOrgIdBySlug(orgSlug) : await getDefaultOrgId()
@@ -66,7 +66,7 @@ export async function getEventoConFormularioBySlug(
 
 /** Lista eventos para la página pública /eventos. Filtra por org actual. */
 export async function getEventosParaListado(): Promise<Evento[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()

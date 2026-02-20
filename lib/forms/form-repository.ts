@@ -37,7 +37,7 @@ function parseCampos(campos: unknown): FormFieldConfig[] {
 
 /** Obtiene un formulario por slug (solo activos). Filtra por org actual. */
 export async function getFormBySlug(slug: string): Promise<FormWithParsedFields | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return null
 
   const orgId = await getDefaultOrgId()
@@ -62,7 +62,7 @@ export async function getFormBySlug(slug: string): Promise<FormWithParsedFields 
 
 /** Lista todos los formularios (para admin). Filtra por org actual. */
 export async function getAllForms(): Promise<FormWithParsedFields[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()
@@ -85,7 +85,7 @@ export async function getAllForms(): Promise<FormWithParsedFields[]> {
 
 /** Obtiene un formulario por ID (para admin) */
 export async function getFormById(id: string): Promise<FormWithParsedFields | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return null
 
   const { data, error } = await supabase
@@ -108,7 +108,7 @@ export async function createFormSubmission(
   formId: string,
   datos: Record<string, unknown>
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { success: false, error: 'Supabase no configurado' }
 
   const { error } = await supabase.from('form_submissions').insert({
@@ -137,7 +137,7 @@ export type FormInsertInput = {
 export async function createForm(
   input: FormInsertInput
 ): Promise<{ success: boolean; id?: string; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { success: false, error: 'Supabase no configurado' }
 
   const orgId = input.organizacion_id ?? (await getDefaultOrgId())
@@ -169,7 +169,7 @@ export async function updateForm(
   id: string,
   input: Partial<FormInsertInput>
 ): Promise<{ success: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { success: false, error: 'Supabase no configurado' }
 
   const payload: Record<string, unknown> = {
@@ -193,7 +193,7 @@ export async function updateForm(
 
 /** Elimina un formulario */
 export async function deleteForm(id: string): Promise<{ success: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { success: false, error: 'Supabase no configurado' }
 
   const { error } = await supabase.from('forms').delete().eq('id', id)
@@ -204,7 +204,7 @@ export async function deleteForm(id: string): Promise<{ success: boolean; error?
 
 /** Cuenta inscripciones por formulario */
 export async function getSubmissionCount(formId: string): Promise<number> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return 0
 
   const { count, error } = await supabase

@@ -67,16 +67,14 @@ Este documento describe el esquema de organizaciones y las políticas RLS implem
 is_org_member(p_user_id, p_org_id)  → boolean
 is_org_admin(p_user_id, p_org_id)   → boolean
 can_read_org(p_user_id, p_org_id)   → boolean  -- anon O miembro
-can_write_org(p_user_id, p_org_id)  → boolean  -- anon durante transición O admin
+can_write_org(p_user_id, p_org_id)  → boolean  -- solo admin (desde migración 024)
 ```
 
-### Comportamiento durante la transición (sin Supabase Auth)
+### Comportamiento sin sesión (post-migración 024)
 
-- `auth.uid()` es `null` para todas las peticiones (cliente anon).
-- `can_read_org(null, org_id)` → `true` (permite anon)
-- `can_write_org(null, org_id)` → `true` (permite anon)
-
-**Resultado**: La app sigue funcionando igual que antes. Panel y web usan anon key sin cambios.
+- `auth.uid()` es `null` para peticiones anónimas.
+- `can_read_org(null, org_id)` → `true` (anon puede leer formularios públicos, etc.)
+- `can_write_org(null, org_id)` → `false` (anon no puede escribir; requiere login)
 
 ### Comportamiento con Supabase Auth activo
 
@@ -205,13 +203,13 @@ await supabase.from('form_submissions').insert({
 });
 ```
 
-## Próximos pasos recomendados
+## Estado actual (completado)
 
-1. **Supabase Auth**: Migrar el login del panel a Supabase Auth.
-2. **organizacion_miembros**: Crear el primer admin en `organizacion_miembros` vinculado al usuario Auth.
-3. **Resolver org en middleware**: Añadir `x-org-id` o similar según el dominio.
-4. **Actualizar panel**: Todas las páginas del panel deben filtrar por `organizacion_id`.
-5. **Eliminar fallback anon**: Cuando Auth esté activo, quitar `user_id IS NULL` de `can_write_org` para bloquear escritura anónima.
+1. ~~**Supabase Auth**~~: Login migrado a Supabase Auth.
+2. ~~**organizacion_miembros**~~: Bootstrap del primer admin al iniciar sesión.
+3. ~~**Resolver org en middleware**~~: Middleware establece `x-org-slug` según el host; `lib/org-resolver.ts` resuelve org desde headers Host o `x-org-slug` (app.acme.snrg.lat → acme).
+4. ~~**Panel**~~: Todas las páginas del panel filtran por `organizacion_id` (via `getDefaultOrgId` / `useOrgId`).
+5. ~~**Eliminar fallback anon**~~: Migración 024; `can_write_org` ya no permite escritura anónima.
 
 ## Referencia de migraciones
 
@@ -220,3 +218,6 @@ await supabase.from('form_submissions').insert({
 | 021      | Tabla organizaciones, organizacion_miembros  |
 | 022      | organizacion_id en tablas, backfill, uniques|
 | 023      | Funciones RLS y políticas por tabla         |
+| 024      | can_write_org estricto (sin fallback anon)  |
+
+Véase también [SETUP_AUTH.md](./SETUP_AUTH.md) para habilitar Email Auth y variables.

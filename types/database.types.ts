@@ -553,6 +553,156 @@ export interface Database {
           }
         ]
       }
+      members: {
+        Row: {
+          id: string
+          phone: string
+          nombre: string | null
+          email: string | null
+          empresa: string | null
+          avatar_url: string | null
+          referido_por_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          phone: string
+          nombre?: string | null
+          email?: string | null
+          empresa?: string | null
+          avatar_url?: string | null
+          referido_por_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          phone?: string
+          nombre?: string | null
+          email?: string | null
+          empresa?: string | null
+          avatar_url?: string | null
+          referido_por_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'members_referido_por_id_fkey'
+            columns: ['referido_por_id']
+            referencedRelation: 'members'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      connections: {
+        Row: {
+          id: string
+          member_id: string
+          connected_member_id: string
+          tipo: 'connection' | 'cafe_invitado' | 'cafe_aceptado'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          member_id: string
+          connected_member_id: string
+          tipo?: 'connection' | 'cafe_invitado' | 'cafe_aceptado'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          member_id?: string
+          connected_member_id?: string
+          tipo?: 'connection' | 'cafe_invitado' | 'cafe_aceptado'
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'connections_member_id_fkey'
+            columns: ['member_id']
+            referencedRelation: 'members'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'connections_connected_member_id_fkey'
+            columns: ['connected_member_id']
+            referencedRelation: 'members'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      member_events: {
+        Row: {
+          id: string
+          titulo: string
+          descripcion: string | null
+          fecha_inicio: string | null
+          fecha_fin: string | null
+          lugar: string | null
+          image_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          titulo: string
+          descripcion?: string | null
+          fecha_inicio?: string | null
+          fecha_fin?: string | null
+          lugar?: string | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          titulo?: string
+          descripcion?: string | null
+          fecha_inicio?: string | null
+          fecha_fin?: string | null
+          lugar?: string | null
+          image_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      event_attendance: {
+        Row: {
+          id: string
+          event_id: string
+          member_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          member_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          member_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'event_attendance_event_id_fkey'
+            columns: ['event_id']
+            referencedRelation: 'member_events'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'event_attendance_member_id_fkey'
+            columns: ['member_id']
+            referencedRelation: 'members'
+            referencedColumns: ['id']
+          }
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -584,6 +734,10 @@ export type Founder = Database['public']['Tables']['founders']['Row']
 export type Votante = Database['public']['Tables']['votantes']['Row']
 export type Voto = Database['public']['Tables']['votos']['Row']
 export type FeedbackNetworking = Database['public']['Tables']['feedback_networking']['Row']
+export type Member = Database['public']['Tables']['members']['Row']
+export type Connection = Database['public']['Tables']['connections']['Row']
+export type MemberEvent = Database['public']['Tables']['member_events']['Row']
+export type EventAttendance = Database['public']['Tables']['event_attendance']['Row']
 export type QuestionWithCategory = Question & {
   category: Category
 }

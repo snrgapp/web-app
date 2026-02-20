@@ -4,7 +4,7 @@ import { createServerClient } from '@/utils/supabase/server'
 import { getDefaultOrgId } from '@/lib/org-resolver'
 
 export async function createLeadAction(email: string, ciudad?: string | null): Promise<{ success: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { success: false, error: 'No se pudo conectar.' }
 
   const orgId = await getDefaultOrgId()

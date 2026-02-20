@@ -1,11 +1,8 @@
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest } from 'next/server'
+import { createMiddlewareClient } from '@/utils/supabase/middleware'
+import { getCookieName, hasValidSessionFormat } from '@/lib/members/session-edge'
 
-/**
- * Middleware para subdominios:
- * - inscripcion.snrg.lat → /inscripcion/:path
- * - app.snrg.lat → /home/:path (networking, etc.)
- */
 const INSCRIPCION_HOSTS = [
   'inscripcion.snrg.lat',
   'www.inscripcion.snrg.lat',
@@ -18,6 +15,12 @@ const APP_HOSTS = [
   'app.localhost',
 ]
 
+const MIEMBROS_HOSTS = [
+  'miembros.snrg.lat',
+  'www.miembros.snrg.lat',
+  'miembros.localhost',
+]
+
 function matchesHosts(req: NextRequest, hosts: string[]): boolean {
   const host = req.headers.get('host') ?? ''
   const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
@@ -26,22 +29,94 @@ function matchesHosts(req: NextRequest, hosts: string[]): boolean {
   return check(host) || check(forwardedHost)
 }
 
-export function middleware(request: NextRequest) {
+/** Extrae slug de org desde host (para header x-org-slug) */
+function getOrgSlugFromHost(req: NextRequest): string {
+  const host = req.headers.get('host') ?? req.headers.get('x-forwarded-host') ?? ''
+  const bare = host.replace(/:.*/, '')
+  const parts = bare.split('.')
+  if (parts.includes('localhost')) return 'snrg'
+  if (parts[0] === 'app' && parts.length >= 2) return parts[1]
+  if (parts[0] === 'inscripcion' && parts.length >= 2) return parts[1]
+  return parts[0] ?? 'snrg'
+}
+
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  // Proteger rutas del panel: requieren cookie de autenticación
-  if (pathname.startsWith('/panel')) {
-    const auth = request.cookies.get('panel-auth')
-    if (auth?.value !== 'authenticated') {
-      const loginUrl = new URL('/login', request.url)
-      loginUrl.searchParams.set('from', pathname)
-      return NextResponse.redirect(loginUrl)
+  const orgSlug = getOrgSlugFromHost(request)
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-org-slug', orgSlug)
+
+  // Proteger /panel: requiere sesión Supabase Auth (solo cuando NO es subdominio miembros)
+  const isMiembrosHost = matchesHosts(request, MIEMBROS_HOSTS)
+  if (
+    pathname.startsWith('/panel') &&
+    !isMiembrosHost &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL
+  ) {
+    try {
+      const reqWithOrg = new NextRequest(request.url, { headers: requestHeaders })
+      const { supabase, response } = await createMiddlewareClient(reqWithOrg)
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) {
+        const loginUrl = new URL('/login', request.url)
+        loginUrl.searchParams.set('from', pathname)
+        return NextResponse.redirect(loginUrl)
+      }
+      return response
+    } catch {
+      return NextResponse.redirect(new URL('/login', request.url))
     }
+  }
+
+  // Subdominio miembros.snrg.lat
+  if (isMiembrosHost) {
+    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+      return NextResponse.next({ request: { headers: requestHeaders } })
+    }
+    const isLoginPath = pathname === '/login' || pathname === '/miembros/login'
+    const protectedPaths = ['/', '/red-contactos', '/eventos', '/recursos', '/configuracion']
+    const isProtectedPath =
+      pathname === '/' ||
+      protectedPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ||
+      (pathname.startsWith('/miembros') && !isLoginPath)
+    if (isProtectedPath && !isLoginPath) {
+      const cookieName = getCookieName()
+      const token = request.cookies.get(cookieName)?.value
+      if (!token || !hasValidSessionFormat(token)) {
+        const loginUrl = new URL('/login', request.url)
+        loginUrl.searchParams.set('from', pathname === '/' ? '' : pathname)
+        return NextResponse.redirect(loginUrl)
+      }
+    }
+    let newPath: string
+    if (pathname.startsWith('/miembros')) {
+      newPath = pathname
+    } else {
+      const rewriteMap: Record<string, string> = {
+        '/': '/miembros',
+        '/login': '/miembros/login',
+        '/red-contactos': '/miembros/red-contactos',
+        '/eventos': '/miembros/eventos',
+        '/recursos': '/miembros/recursos',
+        '/configuracion': '/miembros/configuracion',
+      }
+      newPath = rewriteMap[pathname] ?? (pathname === '/' ? '/miembros' : `/miembros${pathname}`)
+    }
+    const url = request.nextUrl.clone()
+    url.pathname = newPath
+    return NextResponse.rewrite(url)
   }
 
   // Subdominio inscripcion.snrg.lat
   if (matchesHosts(request, INSCRIPCION_HOSTS)) {
-    if (pathname.startsWith('/inscripcion') || pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+    if (
+      pathname.startsWith('/inscripcion') ||
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/_next')
+    ) {
       return NextResponse.next()
     }
     const newPath = pathname === '/' ? '/inscripcion' : `/inscripcion${pathname}`
@@ -52,10 +127,14 @@ export function middleware(request: NextRequest) {
 
   // Subdominio app.snrg.lat
   if (matchesHosts(request, APP_HOSTS)) {
-    if (pathname.startsWith('/home') || pathname.startsWith('/networking') || pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+    if (
+      pathname.startsWith('/home') ||
+      pathname.startsWith('/networking') ||
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/_next')
+    ) {
       return NextResponse.next()
     }
-    // Raíz del subdominio app → /home
     if (pathname === '/') {
       const url = request.nextUrl.clone()
       url.pathname = '/home'
@@ -64,18 +143,22 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  return NextResponse.next()
+  // Refrescar sesión Supabase Auth para el resto de rutas (importante para RLS)
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    try {
+      const reqWithOrg = new NextRequest(request.url, { headers: requestHeaders })
+      const { response } = await createMiddlewareClient(reqWithOrg)
+      return response
+    } catch {
+      // Ignorar si falla (ej. sin Redis/cookies)
+    }
+  }
+
+  return NextResponse.next({ request: { headers: requestHeaders } })
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico
-     * - public folder
-     */
     '/((?!_next/static|_next/image|favicon.ico|images|logo.png).*)',
   ],
 }

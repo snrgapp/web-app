@@ -7,7 +7,7 @@ import { Founder, Votante, Voto } from '@/types/database.types'
 // ─── Votantes ───────────────────────────────────────────────
 
 export async function verificarVotante(whatsapp: string): Promise<{ ok: true; votante: Votante } | { ok: false; error: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const orgId = await getDefaultOrgId()
@@ -30,7 +30,7 @@ export async function verificarVotante(whatsapp: string): Promise<{ ok: true; vo
 }
 
 export async function getVotantes(): Promise<Votante[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()
@@ -46,7 +46,7 @@ export async function getVotantes(): Promise<Votante[]> {
 }
 
 export async function crearVotante(votante: { whatsapp: string; nombre?: string; categoria: 'espectador' | 'jurado' }): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const orgId = await getDefaultOrgId()
@@ -67,7 +67,7 @@ export async function crearVotante(votante: { whatsapp: string; nombre?: string;
 }
 
 export async function actualizarVotante(id: string, datos: { nombre?: string; categoria?: 'espectador' | 'jurado'; whatsapp?: string }): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   if (datos.whatsapp) {
@@ -84,7 +84,7 @@ export async function actualizarVotante(id: string, datos: { nombre?: string; ca
 }
 
 export async function eliminarVotante(id: string): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const { error } = await supabase
@@ -99,7 +99,7 @@ export async function eliminarVotante(id: string): Promise<{ ok: boolean; error?
 // ─── Founders ───────────────────────────────────────────────
 
 export async function getFoundersActivos(): Promise<Founder[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()
@@ -116,7 +116,7 @@ export async function getFoundersActivos(): Promise<Founder[]> {
 }
 
 export async function getAllFounders(): Promise<Founder[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()
@@ -137,7 +137,7 @@ export async function crearFounder(founder: {
   image_url?: string
   pitch_order: number
 }): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const orgId = await getDefaultOrgId()
@@ -156,7 +156,7 @@ export async function actualizarFounder(id: string, datos: {
   pitch_order?: number
   activo?: boolean
 }): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const { error } = await supabase
@@ -169,7 +169,7 @@ export async function actualizarFounder(id: string, datos: {
 }
 
 export async function eliminarFounder(id: string): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const { error } = await supabase
@@ -184,7 +184,7 @@ export async function eliminarFounder(id: string): Promise<{ ok: boolean; error?
 // ─── Votos ──────────────────────────────────────────────────
 
 export async function getVotosDeVotante(votanteId: string): Promise<Voto[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const { data } = await supabase
@@ -200,7 +200,7 @@ export async function guardarVoto(
   founderId: string,
   scores: { score_innovacion: number; score_claridad: number; score_qa: number }
 ): Promise<{ ok: boolean; error?: string }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const { error } = await supabase.from('votos').insert({
@@ -232,7 +232,7 @@ export interface FounderResultado {
 }
 
 export async function getResultadosSpotlight(): Promise<FounderResultado[]> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return []
 
   const orgId = await getDefaultOrgId()
@@ -319,7 +319,7 @@ export async function getResultadosSpotlight(): Promise<FounderResultado[]> {
 }
 
 export async function getParticipacion(): Promise<{ votaron: number; total: number }> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   if (!supabase) return { votaron: 0, total: 0 }
 
   const orgId = await getDefaultOrgId()
