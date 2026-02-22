@@ -3,14 +3,13 @@
 import { useState, useEffect } from 'react'
 import { Coffee, CalendarClock, ArrowUpRight, ArrowDownLeft } from 'lucide-react'
 
-interface MemberEvent {
+interface UpcomingOrgEvent {
   id: string
-  titulo: string
-  descripcion?: string | null
-  fecha_inicio?: string | null
-  fecha_fin?: string | null
-  lugar?: string | null
-  image_url?: string | null
+  titulo?: string | null
+  fecha?: string | null
+  ciudad?: string | null
+  checkin_slug?: string | null
+  link?: string | null
 }
 
 interface CafeInvitation {
@@ -30,38 +29,40 @@ function formatDate(value?: string | null) {
   })
 }
 
+function formatEventDate(value?: string | null) {
+  if (!value) return 'Sin fecha'
+  const d = new Date(`${value}T12:00:00`)
+  return d.toLocaleDateString('es-CO', {
+    weekday: 'short',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
 export default function EventosPage() {
-  const [events, setEvents] = useState<MemberEvent[]>([])
+  const [upcomingOrgEvents, setUpcomingOrgEvents] = useState<UpcomingOrgEvent[]>([])
   const [invitations, setInvitations] = useState<CafeInvitation[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/miembros/events').then((r) => r.json()),
+      fetch('/api/miembros/upcoming-eventos').then((r) => r.json()),
       fetch('/api/miembros/cafe-invitations').then((r) => r.json()),
     ])
-      .then(([eventsData, invitationsData]) => {
-        setEvents(eventsData.events || [])
+      .then(([upcomingEventsData, invitationsData]) => {
+        setUpcomingOrgEvents(upcomingEventsData.events || [])
         setInvitations(invitationsData.invitations || [])
       })
       .catch(() => {
-        setEvents([])
+        setUpcomingOrgEvents([])
         setInvitations([])
       })
       .finally(() => setLoading(false))
   }, [])
 
-  const now = new Date()
-  const upcomingEvents = events
-    .filter((e) => !e.fecha_inicio || new Date(e.fecha_inicio) >= now)
-    .sort((a, b) => {
-      const da = a.fecha_inicio ? new Date(a.fecha_inicio).getTime() : Number.MAX_SAFE_INTEGER
-      const db = b.fecha_inicio ? new Date(b.fecha_inicio).getTime() : Number.MAX_SAFE_INTEGER
-      return da - db
-    })
-
   const shouldScrollInvitations = invitations.length > 3
-  const shouldScrollEvents = upcomingEvents.length > 3
+  const shouldScrollEvents = upcomingOrgEvents.length > 3
 
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto">
@@ -135,19 +136,26 @@ export default function EventosPage() {
                 <div key={i} className="h-20 rounded-lg bg-zinc-100 animate-pulse" />
               ))}
             </div>
-          ) : upcomingEvents.length === 0 ? (
+          ) : upcomingOrgEvents.length === 0 ? (
             <p className="p-4 text-zinc-500">No hay eventos programados</p>
           ) : (
             <div className={`p-4 space-y-3 ${shouldScrollEvents ? 'max-h-[330px] overflow-y-auto' : ''}`}>
-              {upcomingEvents.map((event) => (
+              {upcomingOrgEvents.map((event) => (
                 <div key={event.id} className="rounded-lg border border-zinc-200 p-3">
-                  <p className="text-sm font-medium text-zinc-800">{event.titulo}</p>
+                  <p className="text-sm font-medium text-zinc-800">{event.titulo || 'Evento'}</p>
                   <p className="text-xs text-zinc-500 mt-1">
-                    {formatDate(event.fecha_inicio)}
-                    {event.lugar ? ` • ${event.lugar}` : ''}
+                    {formatEventDate(event.fecha)}
+                    {event.ciudad ? ` • ${event.ciudad}` : ''}
                   </p>
-                  {event.descripcion && (
-                    <p className="text-xs text-zinc-500 mt-2 line-clamp-2">{event.descripcion}</p>
+                  {(event.checkin_slug || event.link) && (
+                    <a
+                      href={event.checkin_slug ? `/evento/${event.checkin_slug}` : (event.link || '#')}
+                      target={event.checkin_slug ? '_self' : '_blank'}
+                      rel={event.checkin_slug ? undefined : 'noopener noreferrer'}
+                      className="mt-2 inline-block text-xs text-zinc-700 underline hover:text-black"
+                    >
+                      Ver evento
+                    </a>
                   )}
                 </div>
               ))}
