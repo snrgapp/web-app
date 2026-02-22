@@ -66,13 +66,10 @@ export default function EventosPage() {
 
   return (
     <div className="p-4 lg:p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
+      <div className="mb-3">
         <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">
           Eventos
         </p>
-        <h1 className="text-2xl font-light text-black tracking-tight">
-          Tu actividad
-        </h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

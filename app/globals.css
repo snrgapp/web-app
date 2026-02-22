@@ -20,6 +20,33 @@
   animation: carousel-up linear infinite;
 }
 
+@keyframes members-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.members-fade-in {
+  animation: members-fade-in 420ms ease-out both;
+}
+
+.members-fade-in-delay-1 {
+  animation-delay: 80ms;
+}
+
+.members-fade-in-delay-2 {
+  animation-delay: 140ms;
+}
+
+.members-fade-in-delay-3 {
+  animation-delay: 200ms;
+}
+
 :root {
   /* Colores según diseño - networking pero facil */
   --color-primary: #000000;

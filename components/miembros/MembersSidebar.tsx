@@ -17,7 +17,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 
 const navItems = [
@@ -39,12 +39,14 @@ function NavLink({
   icon: Icon,
   label,
   exact,
+  collapsed,
   onClick,
 }: {
   href: string
   icon: React.ElementType
   label: string
   exact: boolean
+  collapsed?: boolean
   onClick?: () => void
 }) {
   const pathname = usePathname()
@@ -54,18 +56,20 @@ function NavLink({
     <Link
       href={href}
       onClick={onClick}
+      title={collapsed ? label : undefined}
       className={cn(
-        'flex items-center justify-between gap-2 px-2.5 py-2 rounded-lg text-xs font-light transition-colors',
+        'flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-light transition-colors',
+        collapsed ? 'justify-center px-2' : 'justify-between',
         isActive
           ? 'bg-amber-100 text-amber-900'
           : 'text-zinc-600 hover:text-black hover:bg-zinc-50'
       )}
     >
-      <div className="flex items-center gap-2.5">
+      <div className={cn('flex items-center gap-2.5', collapsed && 'justify-center')}>
         <Icon className="w-4 h-4 flex-shrink-0" />
-        {label}
+        {!collapsed && label}
       </div>
-      {isActive && <ChevronRight className="w-4 h-4" />}
+      {!collapsed && isActive && <ChevronRight className="w-4 h-4" />}
     </Link>
   )
 }
@@ -78,6 +82,8 @@ async function doLogout() {
 export function MembersSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [member, setMember] = useState<{ nombre?: string | null; phone?: string } | null>(null)
+  const [collapsed, setCollapsed] = useState(false)
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     fetch('/api/miembros/auth/session')
@@ -88,6 +94,25 @@ export function MembersSidebar() {
 
   const fullName = member?.nombre || 'miembro'
   const firstName = fullName.split(/\s+/)[0] || 'miembro'
+
+  function clearCollapseTimer() {
+    if (collapseTimerRef.current) {
+      clearTimeout(collapseTimerRef.current)
+      collapseTimerRef.current = null
+    }
+  }
+
+  function scheduleCollapse() {
+    clearCollapseTimer()
+    collapseTimerRef.current = setTimeout(() => {
+      setCollapsed(true)
+    }, 3000)
+  }
+
+  useEffect(() => {
+    scheduleCollapse()
+    return () => clearCollapseTimer()
+  }, [])
 
   return (
     <>
@@ -164,30 +189,44 @@ export function MembersSidebar() {
         </>
       )}
 
-      {/* Desktop: Sidebar fijo */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-44 lg:flex-shrink-0 lg:border-r lg:border-zinc-200 lg:bg-white">
-        <div className="flex flex-col min-h-0 flex-1">
-          <div className="p-4 border-b border-zinc-200">
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-600 font-medium text-sm">
+      {/* Desktop: Sidebar tarjeta única */}
+      <aside
+        className={cn(
+          'hidden lg:flex lg:flex-col lg:flex-shrink-0 lg:bg-transparent lg:p-3 transition-[width] duration-300 ease-out',
+          collapsed ? 'lg:w-24' : 'lg:w-52'
+        )}
+        onMouseEnter={() => {
+          clearCollapseTimer()
+          setCollapsed(false)
+        }}
+        onMouseLeave={() => {
+          scheduleCollapse()
+        }}
+      >
+        <div className="flex flex-col min-h-0 flex-1 rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 ease-out">
+          <div className="p-4">
+            <div className={cn('flex items-center gap-2', collapsed && 'justify-center')}>
+              <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-600 font-medium text-xs">
                 {firstName.charAt(0).toUpperCase()}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-light text-black">Hola, {firstName}</p>
-                <button
-                  type="button"
-                  className="text-xs text-zinc-500 hover:text-zinc-700 flex items-center gap-0.5"
-                  aria-label="Editar perfil"
-                >
-                  Editar
-                </button>
-              </div>
+              {!collapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-light text-black">Hola, {firstName}</p>
+                  <button
+                    type="button"
+                    className="text-xs text-zinc-500 hover:text-zinc-700 flex items-center gap-0.5"
+                    aria-label="Editar perfil"
+                  >
+                    Editar
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <nav className="flex-1 p-3 pt-0 space-y-0.5 overflow-y-auto">
             {navItems.map((item) => (
-              <NavLink key={item.href} {...item} />
+              <NavLink key={item.href} {...item} collapsed={collapsed} />
             ))}
           </nav>
 
@@ -196,19 +235,27 @@ export function MembersSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
+                title={collapsed ? item.label : undefined}
+                className={cn(
+                  'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50',
+                  collapsed && 'justify-center px-2'
+                )}
               >
                 <item.icon className="w-4 h-4" />
-                {item.label}
+                {!collapsed && item.label}
               </Link>
             ))}
             <button
               type="button"
               onClick={doLogout}
-              className="flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
+              title={collapsed ? 'Cerrar sesión' : undefined}
+              className={cn(
+                'flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50',
+                collapsed && 'justify-center px-2'
+              )}
             >
               <LogOut className="w-4 h-4" />
-              Cerrar sesión
+              {!collapsed && 'Cerrar sesión'}
             </button>
           </div>
         </div>

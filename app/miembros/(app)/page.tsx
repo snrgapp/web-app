@@ -43,7 +43,7 @@ export default function MiembrosDashboardPage() {
     <div className="p-4 lg:p-6 pt-2 lg:pt-4 max-w-7xl mx-auto">
       {/* Fila superior: carrusel + calendario */}
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
-        <div className="flex-1 min-w-0 rounded-xl border border-zinc-200 bg-white p-6 flex items-center justify-between min-h-[120px]">
+        <div className="members-fade-in flex-1 min-w-0 rounded-xl border border-zinc-200 bg-white p-6 flex items-center justify-between min-h-[120px] transition-all duration-300 ease-out">
           <button
             type="button"
             className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100"
@@ -60,19 +60,19 @@ export default function MiembrosDashboardPage() {
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
-        <div className="lg:w-80 flex-shrink-0">
+        <div className="members-fade-in members-fade-in-delay-1 lg:w-80 flex-shrink-0 transition-all duration-300 ease-out">
           <MiniCalendar events={events} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recomendaciones de conexión (elevada, más espacio) */}
-        <div className="lg:col-span-2">
+        <div className="members-fade-in members-fade-in-delay-2 lg:col-span-2 transition-all duration-300 ease-out">
           <ConnectionRecommendations />
         </div>
 
         {/* Últimas conexiones */}
-        <div>
+        <div className="members-fade-in members-fade-in-delay-3 transition-all duration-300 ease-out">
           <LatestConnections connections={latestConnections} />
         </div>
       </div>
