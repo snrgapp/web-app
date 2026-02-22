@@ -7,8 +7,8 @@ function resolveOrgSlugFromHost(request: NextRequest): string {
   const bare = host.replace(/:.*/, '')
   const normalized = bare.startsWith('www.') ? bare.slice(4) : bare
 
-  // miembros.snrg.lat -> snrg
-  if (normalized.startsWith('miembros.')) {
+  // miembros.snrg.lat o member.snrg.lat -> snrg
+  if (normalized.startsWith('miembros.') || normalized.startsWith('member.')) {
     const parts = normalized.split('.')
     return parts[1] || 'snrg'
   }

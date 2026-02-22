@@ -15,18 +15,22 @@ export default function MiembrosDashboardPage() {
 
   useEffect(() => {
     fetch('/api/miembros/connections')
-      .then((r) => r.json())
-      .then((data) => {
-        setLatestConnections(data.latestConnections || [])
+      .then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
       })
+      .then((data) => setLatestConnections(data?.latestConnections || []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
     fetch('/api/miembros/events')
-      .then((r) => r.json())
-      .then((data) => setEvents(data.events || []))
+      .then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
+      })
+      .then((data) => setEvents(data?.events || []))
       .catch(() => {})
   }, [])
 

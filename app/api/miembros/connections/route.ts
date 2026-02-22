@@ -17,11 +17,13 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false })
       .limit(20)
 
-    const connectedIds = [...new Set((connections || []).map((c) => c.connected_member_id))]
-    const { data: connectedMembers } = await supabase
-      .from('members')
-      .select('id, nombre, empresa, email, phone')
-      .in('id', connectedIds)
+    const connectedIds = [...new Set((connections || []).map((c) => c.connected_member_id).filter(Boolean))]
+    const { data: connectedMembers } = connectedIds.length
+      ? await supabase
+          .from('members')
+          .select('id, nombre, empresa, email, phone')
+          .in('id', connectedIds)
+      : { data: [] as Array<{ id: string; nombre: string | null; empresa: string | null; email: string | null; phone: string | null }> }
 
     const memberMap = new Map((connectedMembers || []).map((m) => [m.id, m]))
 

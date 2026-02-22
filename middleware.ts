@@ -18,6 +18,8 @@ const APP_HOSTS = [
 const MIEMBROS_HOSTS = [
   'miembros.snrg.lat',
   'www.miembros.snrg.lat',
+  'member.snrg.lat',
+  'www.member.snrg.lat',
   'miembros.localhost',
 ]
 
@@ -41,6 +43,8 @@ function getOrgSlugFromHost(req: NextRequest): string {
   if (bare.endsWith('vercel.app') || bare.endsWith('netlify.app')) return 'snrg'
   if (parts[0] === 'app' && parts.length >= 2) return parts[1]
   if (parts[0] === 'inscripcion' && parts.length >= 2) return parts[1]
+  if (parts[0] === 'miembros' && parts.length >= 2) return parts[1]
+  if (parts[0] === 'member' && parts.length >= 2) return parts[1]
   return parts[0] ?? 'snrg'
 }
 

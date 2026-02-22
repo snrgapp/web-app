@@ -47,12 +47,18 @@ export default function EventosPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/api/miembros/upcoming-eventos').then((r) => r.json()),
-      fetch('/api/miembros/cafe-invitations').then((r) => r.json()),
+      fetch('/api/miembros/upcoming-eventos').then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
+      }),
+      fetch('/api/miembros/cafe-invitations').then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
+      }),
     ])
       .then(([upcomingEventsData, invitationsData]) => {
-        setUpcomingOrgEvents(upcomingEventsData.events || [])
-        setInvitations(invitationsData.invitations || [])
+        setUpcomingOrgEvents(upcomingEventsData?.events || [])
+        setInvitations(invitationsData?.invitations || [])
       })
       .catch(() => {
         setUpcomingOrgEvents([])

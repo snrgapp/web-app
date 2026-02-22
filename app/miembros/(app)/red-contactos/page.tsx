@@ -23,16 +23,22 @@ export default function RedContactosPage() {
 
   useEffect(() => {
     fetch('/api/miembros/connections')
-      .then((r) => r.json())
-      .then((data) => setLatestConnections(data.latestConnections || []))
+      .then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
+      })
+      .then((data) => setLatestConnections(data?.latestConnections || []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
     fetch('/api/miembros/members')
-      .then((r) => r.json())
-      .then((data) => setMembers(data.members || []))
+      .then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
+      })
+      .then((data) => setMembers(data?.members || []))
       .catch(() => setMembers([]))
       .finally(() => setLoadingMembers(false))
   }, [])
@@ -57,8 +63,6 @@ export default function RedContactosPage() {
             <div className="px-4 pb-4">
               {loadingMembers ? (
                 <div className="h-40 rounded-lg bg-zinc-100 animate-pulse" />
-              ) : members.length === 0 ? (
-                <p className="text-xs text-zinc-400 pt-4">No hay miembros para mostrar</p>
               ) : (
                 <div className="overflow-x-auto max-h-[360px] overflow-y-auto">
                   <table className="w-full text-xs">
@@ -72,7 +76,13 @@ export default function RedContactosPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {members.map((m) => (
+                      {members.length === 0 ? (
+                        <tr>
+                          <td colSpan={5} className="px-2 py-8 text-center text-zinc-400">
+                            No hay miembros para mostrar
+                          </td>
+                        </tr>
+                      ) : members.map((m) => (
                         <tr key={m.id} className="border-b border-zinc-100 last:border-0">
                           <td className="px-2 py-2 text-zinc-800">{m.nombre}</td>
                           <td className="px-2 py-2 text-zinc-600">{m.empresa || '-'}</td>

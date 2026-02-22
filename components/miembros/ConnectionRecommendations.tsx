@@ -29,8 +29,11 @@ export function ConnectionRecommendations() {
 
   useEffect(() => {
     fetch('/api/miembros/recommendations')
-      .then((r) => r.json())
-      .then((data) => setRecommendations(data.recommendations || []))
+      .then((r) => {
+        if (r.status === 401) window.location.href = '/login'
+        return r.json()
+      })
+      .then((data) => setRecommendations(data?.recommendations || []))
       .catch(() => setRecommendations([]))
       .finally(() => setLoading(false))
   }, [])
