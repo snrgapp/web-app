@@ -69,7 +69,15 @@ export async function getEventosParaListado(): Promise<Evento[]> {
   const supabase = await createServerClient()
   if (!supabase) return []
 
-  const orgId = await getDefaultOrgId()
+  let orgId = await getDefaultOrgId()
+  if (!orgId) {
+    const { data: firstOrg } = await supabase
+      .from('organizaciones')
+      .select('id')
+      .limit(1)
+      .maybeSingle()
+    orgId = firstOrg?.id ?? null
+  }
   if (!orgId) return []
 
   const { data, error } = await supabase

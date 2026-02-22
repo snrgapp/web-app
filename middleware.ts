@@ -37,6 +37,8 @@ function getOrgSlugFromHost(req: NextRequest): string {
   const bare = host.replace(/:.*/, '')
   const parts = bare.split('.')
   if (parts.includes('localhost')) return 'snrg'
+  if (parts[0] === 'www' && parts.length >= 2) return parts[1]
+  if (bare.endsWith('vercel.app') || bare.endsWith('netlify.app')) return 'snrg'
   if (parts[0] === 'app' && parts.length >= 2) return parts[1]
   if (parts[0] === 'inscripcion' && parts.length >= 2) return parts[1]
   return parts[0] ?? 'snrg'

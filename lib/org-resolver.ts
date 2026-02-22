@@ -13,6 +13,10 @@ export function getOrgSlugFromHost(host: string): string {
   const bare = host.replace(/:.*/, '')
   const parts = bare.split('.')
   if (parts.includes('localhost')) return DEFAULT_ORG_SLUG
+  // www.snrg.lat → snrg (evitar slug "www" que no existe)
+  if (parts[0] === 'www' && parts.length >= 2) return parts[1]
+  // Vercel/Netlify: usar org por defecto
+  if (bare.endsWith('vercel.app') || bare.endsWith('netlify.app')) return DEFAULT_ORG_SLUG
   // app.acme.snrg.lat → acme | app.snrg.lat → snrg
   if (parts[0] === 'app' && parts.length >= 2) return parts[1]
   // inscripcion.acme.snrg.lat → acme | inscripcion.snrg.lat → snrg
