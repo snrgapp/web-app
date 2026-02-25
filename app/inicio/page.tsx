@@ -16,7 +16,7 @@ export default function InicioPage() {
   useCinematicScroll(mainRef)
 
   return (
-    <main ref={mainRef} className="min-h-screen bg-[#f2f2f2] text-[#1a1a1a]">
+    <main ref={mainRef} className="min-h-screen bg-[#f2f2f2] text-[#1a1a1a] overflow-x-hidden">
       <Navbar />
       <Hero />
       <Partners />
