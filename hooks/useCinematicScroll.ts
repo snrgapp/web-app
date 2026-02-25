@@ -15,7 +15,7 @@ export function useCinematicScroll(containerRef: RefObject<HTMLElement | null>) 
     const container = containerRef.current
     if (!container) return
 
-    const sections = Array.from(container.querySelectorAll('section, footer'))
+    const sections = Array.from(container.querySelectorAll('section'))
     const triggers: ScrollTrigger[] = []
 
     sections.forEach((section) => {
