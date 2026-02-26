@@ -47,7 +47,7 @@ export default function MiembrosDashboardPage() {
     <div className="p-4 lg:p-6 pt-2 lg:pt-4 max-w-7xl mx-auto">
       {/* Fila superior: carrusel + calendario */}
       <div className="flex flex-col lg:flex-row gap-6 mb-6">
-        <div className="members-fade-in flex-1 min-w-0 rounded-xl border border-zinc-200 bg-white p-6 flex items-center justify-between min-h-[120px] transition-all duration-300 ease-out">
+        <div className="members-fade-in flex-1 min-w-0 rounded-xl border border-zinc-200 bg-white p-6 flex items-center justify-between min-h-[360px] transition-all duration-300 ease-out">
           <button
             type="button"
             className="p-2 rounded-lg text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100"
