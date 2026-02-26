@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { Upload, Loader2, CheckCircle, AlertCircle, FileText, Download } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
@@ -63,7 +63,7 @@ export default function BaseDatosPage() {
   const [submissions, setSubmissions] = useState<FormSubmissionWithForm[]>([])
   const [submissionsLoading, setSubmissionsLoading] = useState(false)
 
-  async function fetchEventos() {
+  const fetchEventos = useCallback(async () => {
     if (!supabase || !orgId) return
     const { data } = await supabase
       .from('eventos')
@@ -72,9 +72,9 @@ export default function BaseDatosPage() {
       .order('orden', { ascending: true })
       .order('created_at', { ascending: false })
     setEventos(data ?? [])
-  }
+  }, [orgId])
 
-  async function fetchAsistentes() {
+  const fetchAsistentes = useCallback(async () => {
     setLoading(true)
     if (!supabase || !orgId) {
       setUploadStatus({ type: 'error', message: 'Supabase no configurado. Añade NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY en .env.local' })
@@ -114,16 +114,15 @@ export default function BaseDatosPage() {
     setAsistentes(asistentesConEvento)
     setUploadStatus({ type: null, message: '' })
     setLoading(false)
-  }
-
+  }, [orgId])
 
   useEffect(() => {
     fetchEventos()
-  }, [orgId])
+  }, [fetchEventos])
 
   useEffect(() => {
     fetchAsistentes()
-  }, [orgId])
+  }, [fetchAsistentes])
 
   useEffect(() => {
     if (!orgId) return

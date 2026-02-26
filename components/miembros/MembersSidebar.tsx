@@ -17,7 +17,7 @@ import {
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 
 const navItems = [
@@ -102,17 +102,23 @@ export function MembersSidebar() {
     }
   }
 
-  function scheduleCollapse() {
-    clearCollapseTimer()
-    collapseTimerRef.current = setTimeout(() => {
-      setCollapsed(true)
-    }, 3000)
-  }
+  const scheduleCollapse = useCallback(() => {
+    if (collapseTimerRef.current) {
+      clearTimeout(collapseTimerRef.current)
+      collapseTimerRef.current = null
+    }
+    collapseTimerRef.current = setTimeout(() => setCollapsed(true), 3000)
+  }, [])
 
   useEffect(() => {
     scheduleCollapse()
-    return () => clearCollapseTimer()
-  }, [])
+    return () => {
+      if (collapseTimerRef.current) {
+        clearTimeout(collapseTimerRef.current)
+        collapseTimerRef.current = null
+      }
+    }
+  }, [scheduleCollapse])
 
   return (
     <>

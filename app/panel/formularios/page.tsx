@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   Loader2,
@@ -86,17 +86,17 @@ export default function PanelFormulariosPage() {
   const iconInputRef = useRef<HTMLInputElement>(null)
   const coverInputRef = useRef<HTMLInputElement>(null)
 
-  async function fetchForms() {
+  const fetchForms = useCallback(async () => {
     if (!orgId) return
     setLoading(true)
     const data = await getAllFormsClient(orgId)
     setForms(data)
     setLoading(false)
-  }
+  }, [orgId])
 
   useEffect(() => {
     fetchForms()
-  }, [orgId])
+  }, [fetchForms])
 
   useEffect(() => {
     if (!supabase || !orgId) return

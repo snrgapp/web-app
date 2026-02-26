@@ -7,6 +7,8 @@ async function getMemberCiudad(
   supabase: ReturnType<typeof import('@/utils/supabase/admin').createAdminClient>,
   member: { id: string; phone?: string | null; ciudad?: string | null }
 ): Promise<string | null> {
+  if (!supabase) return null
+  const db = supabase
   if (member.ciudad?.trim()) return member.ciudad.trim()
 
   if (!member.phone?.trim()) return null
@@ -18,7 +20,7 @@ async function getMemberCiudad(
   const uniquePhones = [...new Set(phoneVariants)]
   if (uniquePhones.length === 0) return null
 
-  const { data: asistentes } = await supabase
+  const { data: asistentes } = await db
     .from('asistentes')
     .select('evento_id')
     .in('telefono', uniquePhones)
@@ -29,7 +31,7 @@ async function getMemberCiudad(
   const asistente = asistentes?.[0]
   if (!asistente?.evento_id) return null
 
-  const { data: evento } = await supabase
+  const { data: evento } = await db
     .from('eventos')
     .select('ciudad')
     .eq('id', asistente.evento_id)
@@ -37,7 +39,7 @@ async function getMemberCiudad(
 
   const ciudad = evento?.ciudad?.trim() || null
   if (ciudad) {
-    await supabase.from('members').update({ ciudad, updated_at: new Date().toISOString() }).eq('id', member.id)
+    await db.from('members').update({ ciudad, updated_at: new Date().toISOString() }).eq('id', member.id)
   }
   return ciudad
 }
@@ -56,8 +58,12 @@ export async function GET(request: NextRequest) {
       .eq('id', member.id)
       .single()
 
-    const memberWithCiudad = memberRow || member
-    const ciudad = await getMemberCiudad(supabase, memberWithCiudad)
+    const memberForCiudad = {
+      id: member.id,
+      phone: memberRow?.phone ?? member.phone,
+      ciudad: memberRow?.ciudad ?? (member as { ciudad?: string | null }).ciudad ?? null,
+    }
+    const ciudad = await getMemberCiudad(supabase, memberForCiudad)
 
     const { data: connections } = await supabase
       .from('connections')

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import {
   Loader2,
@@ -54,7 +54,7 @@ export default function PanelEventosPage() {
   const [editingLinkValue, setEditingLinkValue] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  async function fetchEventos() {
+  const fetchEventos = useCallback(async () => {
     if (!supabase || !orgId) {
       setLoading(false)
       return
@@ -68,11 +68,11 @@ export default function PanelEventosPage() {
       .order('created_at', { ascending: false })
     if (!error) setEventos(data ?? [])
     setLoading(false)
-  }
+  }, [orgId])
 
   useEffect(() => {
     fetchEventos()
-  }, [orgId])
+  }, [fetchEventos])
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const f = e.target.files?.[0]
