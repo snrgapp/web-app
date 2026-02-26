@@ -106,14 +106,14 @@ export default function QueSigueSection() {
             transition={{ duration: 0.6 }}
             className="w-full lg:w-auto flex flex-col items-center lg:items-start mt-12 lg:mt-0"
           >
-            <div className="w-[200px] sm:w-[220px] flex flex-col gap-0 items-center lg:items-stretch">
+            <div className="w-[260px] sm:w-[300px] flex flex-col gap-0 items-center lg:items-stretch">
               {imagenItems.map(({ src, rotacion, zigzag }, i) => (
                 <div
                   key={i}
                   className={`flex ${zigzag === 'start' ? 'justify-start' : 'justify-end'}`}
                   style={i > 0 ? { marginTop: '-0.4rem' } : undefined}
                 >
-                  <div className={`relative w-[170px] sm:w-[190px] ${rotacion}`}>
+                  <div className={`relative w-[220px] sm:w-[260px] ${rotacion}`}>
                     <div
                       className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#1a1a1a]/5"
                       style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
@@ -123,7 +123,7 @@ export default function QueSigueSection() {
                         alt=""
                         fill
                         className="object-cover"
-                        sizes="(max-width: 640px) 170px, 190px"
+                        sizes="(max-width: 640px) 220px, 260px"
                       />
                     </div>
                   </div>
