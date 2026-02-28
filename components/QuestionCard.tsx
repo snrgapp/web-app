@@ -66,7 +66,7 @@ export default function QuestionCard({
         <IconComponent 
           size={20} 
           className="sm:w-6 sm:h-6 md:w-8 md:h-8 mb-4 sm:mb-6 md:mb-8" 
-          strokeWidth={2.5} 
+          strokeWidth={1.5} 
         />
       </div>
 

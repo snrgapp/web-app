@@ -93,13 +93,13 @@
   letter-spacing: -1px;
 }
 
-/* Preguntas: menor tamaño y grosor para evitar palabras partidas en la tarjeta */
+/* Preguntas: Playfair Display, elegante serif para las tarjetas */
 .font-question {
-  font-family: var(--font-sans);
+  font-family: var(--font-playfair-display), Georgia, serif;
   font-size: 14px;
   line-height: 18px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 * {

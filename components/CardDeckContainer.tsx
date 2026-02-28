@@ -7,7 +7,7 @@ import { QuestionWithCategory } from '@/types/database.types'
 import QuestionCard from './QuestionCard'
 import Timer from './Timer'
 import TimeUpNotification from './TimeUpNotification'
-import { Coffee, Rocket, Zap, Lightbulb, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
 interface CardDeckContainerProps {
   questions: QuestionWithCategory[]
@@ -128,23 +128,6 @@ export default function CardDeckContainer({ questions, categorySlug, ronda = 1 }
       </div>
 
       <div className="relative w-full flex-1 flex flex-col min-h-0 px-4 sm:px-6 pb-20 sm:pb-28">
-        {/* Header: iconos y frase más pegados a las tarjetas */}
-        <div className="w-full flex-shrink-0 flex flex-col items-center gap-1 sm:gap-2 z-30 pt-2 sm:pt-3">
-          <div className="flex justify-center gap-6 sm:gap-10 opacity-10">
-            <Coffee size={28} className={`sm:w-[42px] sm:h-[42px] ${backgroundColor === 'yellow' ? 'text-black' : 'text-white'}`} />
-            <Rocket size={28} className={`sm:w-[42px] sm:h-[42px] ${backgroundColor === 'yellow' ? 'text-black' : 'text-white'}`} />
-            <Zap size={28} className={`sm:w-[42px] sm:h-[42px] ${backgroundColor === 'yellow' ? 'text-black' : 'text-white'}`} />
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Lightbulb size={20} className={`sm:w-6 sm:h-6 ${backgroundColor === 'yellow' ? 'text-black' : 'text-white'}`} />
-            <span className={`text-lg sm:text-2xl font-normal tracking-tight ${
-              backgroundColor === 'yellow' ? 'text-gray-900' : 'text-white'
-            }`}>
-              {selectedCardIndex !== null ? 'responde la pregunta' : 'estamos escogiendo la pregunta'}
-            </span>
-          </div>
-        </div>
-
         {/* Contador regresivo o tarjeta: centrado en el resto de la pantalla */}
         <div className="relative w-full flex-1 flex justify-center items-center min-h-0 z-10 px-2 sm:px-6 py-2">
           {countdown !== null ? (

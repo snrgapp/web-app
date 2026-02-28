@@ -1,9 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair-display",
+});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -23,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${inter.className} antialiased`}>
+      <body className={`${inter.className} ${playfair.variable} antialiased`}>
         {children}
         <Analytics />
       </body>
