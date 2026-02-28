@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { setMemberSession } from '@/lib/members/session'
+import { verifyOtp } from '@/lib/members/otp'
 import { loginSchema } from '@/lib/members/schemas'
 
 export async function POST(request: NextRequest) {
@@ -8,13 +9,18 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const parsed = loginSchema.safeParse(body)
     if (!parsed.success) {
-      return Response.json({ error: 'Teléfono inválido' }, { status: 400 })
+      return Response.json({ error: 'Teléfono o código inválido' }, { status: 400 })
     }
 
-    const { phone } = parsed.data
+    const { phone, code } = parsed.data
     const normalizedPhone = phone.replace(/\D/g, '').trim()
     if (normalizedPhone.length < 8) {
       return Response.json({ error: 'Teléfono inválido' }, { status: 400 })
+    }
+
+    const validOtp = await verifyOtp(normalizedPhone, code)
+    if (!validOtp) {
+      return Response.json({ error: 'Código incorrecto o expirado' }, { status: 401 })
     }
 
     const supabase = createAdminClient()
@@ -22,10 +28,12 @@ export async function POST(request: NextRequest) {
       return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
     }
 
+    const countryCode = process.env.DEFAULT_SMS_COUNTRY_CODE || '57'
+    const withPrefix = `+${countryCode}${normalizedPhone}`
     const { data: existing } = await supabase
       .from('members')
       .select('id')
-      .eq('phone', normalizedPhone)
+      .in('phone', [normalizedPhone, withPrefix])
       .maybeSingle()
 
     if (!existing) {
