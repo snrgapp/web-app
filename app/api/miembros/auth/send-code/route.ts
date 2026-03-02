@@ -2,7 +2,39 @@ import { NextRequest } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { checkLoginRateLimit } from '@/lib/rate-limit'
 import { generateOtp, setOtp } from '@/lib/members/otp'
-import { sendSms } from '@/lib/brevo-sms'
+
+const BREVO_ENDPOINT = 'https://api.brevo.com/v3/transactionalSMS/sms'
+
+async function sendOtpViaBrevo(recipient: string, code: string) {
+  const msg = `Código de verificación de synergy: ${code}`
+  const headers = {
+    accept: 'application/json',
+    'content-type': 'application/json',
+    'api-key': process.env.BREVO ?? '',
+  }
+
+  const body = {
+    type: 'transactional',
+    unicodeEnabled: true,
+    sender: 'synergy',
+    recipient,
+    content: msg,
+    tag: 't1',
+    organisationPrefix: 'synergy',
+  }
+
+  const res = await fetch(BREVO_ENDPOINT, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  })
+
+  const data = await res.json().catch(() => null)
+  if (!res.ok) {
+    return { code: res.status, message: 'Hubo un lío al enviar el código de ingreso', data }
+  }
+  return { code: 200, message: 'Código de ingreso enviado', data }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,18 +72,25 @@ export async function POST(request: NextRequest) {
 
     const code = generateOtp()
     const stored = await setOtp(normalizedPhone, code)
-    if (!stored) {
-      return Response.json({ error: 'No se pudo generar el código. Intenta más tarde.' }, { status: 503 })
+    if (!stored.ok) {
+      const isDev = process.env.NODE_ENV === 'development'
+      return Response.json({
+        error: isDev && stored.error
+          ? stored.error
+          : 'No se pudo generar el código. Intenta más tarde.',
+      }, { status: 503 })
     }
 
-    const content = `Tu código de acceso a Synergy es: ${code}. Válido por 5 minutos.`
-    const smsResult = await sendSms(normalizedPhone, content)
+    const recipient = `${countryCode}${normalizedPhone}`
+    const result = await sendOtpViaBrevo(recipient, code)
 
-    if (!smsResult.ok) {
-      return Response.json({ error: smsResult.error || 'Error al enviar SMS' }, { status: 500 })
+    if (result.code !== 200) {
+      return Response.json({
+        error: result.message,
+      }, { status: 500 })
     }
 
-    return Response.json({ ok: true, message: 'Código enviado' })
+    return Response.json({ ok: true, message: result.message })
   } catch (e) {
     console.error('Send code error:', e)
     return Response.json({ error: 'Error al enviar código' }, { status: 500 })
