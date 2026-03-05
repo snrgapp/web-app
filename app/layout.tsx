@@ -18,6 +18,12 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Synergy | Founders & Makers",
   description: "Networking, pero fácil. Conecta founders y makers.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+  },
 };
 
 export default function RootLayout({
