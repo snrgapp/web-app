@@ -563,6 +563,7 @@ export interface Database {
           avatar_url: string | null
           ciudad: string | null
           referido_por_id: string | null
+          password_hash: string | null
           created_at: string
           updated_at: string
         }
@@ -575,6 +576,7 @@ export interface Database {
           avatar_url?: string | null
           ciudad?: string | null
           referido_por_id?: string | null
+          password_hash?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -587,6 +589,7 @@ export interface Database {
           avatar_url?: string | null
           ciudad?: string | null
           referido_por_id?: string | null
+          password_hash?: string | null
           created_at?: string
           updated_at?: string
         }

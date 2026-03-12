@@ -1,26 +1,29 @@
 import { NextRequest } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { setMemberSession } from '@/lib/members/session'
-import { verifyOtp } from '@/lib/members/otp'
+import { verifyPassword } from '@/lib/members/password'
 import { loginSchema } from '@/lib/members/schemas'
+import { checkLoginRateLimit } from '@/lib/rate-limit'
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const parsed = loginSchema.safeParse(body)
     if (!parsed.success) {
-      return Response.json({ error: 'Teléfono o código inválido' }, { status: 400 })
+      return Response.json({ error: 'Teléfono o contraseña inválido' }, { status: 400 })
     }
 
-    const { phone, code } = parsed.data
+    const { phone, password } = parsed.data
     const normalizedPhone = phone.replace(/\D/g, '').trim()
     if (normalizedPhone.length < 8) {
       return Response.json({ error: 'Teléfono inválido' }, { status: 400 })
     }
 
-    const validOtp = await verifyOtp(normalizedPhone, code)
-    if (!validOtp) {
-      return Response.json({ error: 'Código incorrecto o expirado' }, { status: 401 })
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      ?? request.headers.get('x-real-ip')
+      ?? 'unknown'
+    if (await checkLoginRateLimit(ip)) {
+      return Response.json({ error: 'Demasiados intentos. Intenta más tarde.' }, { status: 429 })
     }
 
     const supabase = createAdminClient()
@@ -30,17 +33,22 @@ export async function POST(request: NextRequest) {
 
     const countryCode = process.env.DEFAULT_SMS_COUNTRY_CODE || '57'
     const withPrefix = `+${countryCode}${normalizedPhone}`
-    const { data: existing } = await supabase
+    const { data: existing, error: fetchError } = await supabase
       .from('members')
-      .select('id')
+      .select('id, password_hash')
       .in('phone', [normalizedPhone, withPrefix])
       .maybeSingle()
 
-    if (!existing) {
-      return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
+    if (fetchError || !existing) {
+      return Response.json({ error: 'Teléfono o contraseña incorrectos' }, { status: 401 })
     }
-    const memberId = existing.id
 
+    const valid = await verifyPassword(password, existing.password_hash)
+    if (!valid) {
+      return Response.json({ error: 'Teléfono o contraseña incorrectos' }, { status: 401 })
+    }
+
+    const memberId = existing.id
     const token = await setMemberSession(memberId, normalizedPhone)
     if (!token) {
       return Response.json({ error: 'Usuario no registrado' }, { status: 401 })
@@ -49,7 +57,6 @@ export async function POST(request: NextRequest) {
     const url = new URL(request.url)
     const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? url.host).replace(/:.*$/, '')
     const from = url.searchParams.get('from') || ''
-    // Si el login fue desde snrg.lat (dominio principal), redirigir al subdominio miembros
     const mainHosts = ['snrg.lat', 'www.snrg.lat']
     const isLocalhost = host === 'localhost' || host.endsWith('.localhost')
     const membersOrigin = process.env.NEXT_PUBLIC_MIEMBROS_URL

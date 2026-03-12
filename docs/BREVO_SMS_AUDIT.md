@@ -1,8 +1,10 @@
-# Auditoría: Integración Brevo SMS para OTP
+# Auditoría: Integración Brevo SMS (deprecado para login de miembros)
 
 ## Resumen
 
-El envío de códigos OTP por SMS usa la **API REST de Brevo** (`/v3/transactionalSMS/send`). La misma clave `BREVO_API_KEY` sirve para email (formularios) y SMS.
+**Nota:** El login de miembros ya no usa OTP por SMS. Ahora se autentica con **teléfono + contraseña**.
+
+El envío de SMS (si se usara para otros fines) usa la **API REST de Brevo** (`/v3/transactionalSMS/send`). La misma clave `BREVO_API_KEY` sirve para email (formularios) y SMS.
 
 ---
 
@@ -32,16 +34,17 @@ No uses credenciales SMTP (usuario/contraseña) para la API. La API usa solo el 
 
 ---
 
-## Flujo actual
+## Flujo de login de miembros (actual)
 
 ```
-POST /api/miembros/auth/send-code
+POST /api/miembros/auth/login
+  → phone + password
   → Rate limit (Upstash)
-  → Validar teléfono y miembro en Supabase
-  → Generar OTP y guardar en Redis (setOtp)  ← Falla si Redis no configurado
-  → Enviar SMS vía Brevo (sendSms)
-  → Respuesta
+  → Validar miembro en Supabase (phone + password_hash)
+  → Crear sesión y redirect
 ```
+
+El endpoint `/api/miembros/auth/send-code` fue eliminado. Ya no se usa OTP ni SMS para login.
 
 ---
 
