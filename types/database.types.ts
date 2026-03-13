@@ -735,6 +735,100 @@ export interface Database {
         }
         Relationships: []
       }
+      ia_call_profiles: {
+        Row: {
+          id: string
+          lead_id: string
+          vapi_call_id: string
+          ciudad_principal: string | null
+          nombre_negocio: string | null
+          descripcion_negocio: string | null
+          tipo_negocio: string | null
+          momento_negocio: string | null
+          antiguedad_negocio: string | null
+          cliente_objetivo: string | null
+          busca_primario: string | null
+          busca_detalle: string | null
+          busca_secundario: string | null
+          ofrece: string | null
+          logro_notable: string | null
+          preferencia_conexion: string | null
+          referido_por: string | null
+          notas_personalidad: string | null
+          score_urgencia: string | null
+          perfil_completo: boolean | null
+          follow_up_pendiente: boolean | null
+          ended_reason: string | null
+          started_at: string | null
+          ended_at: string | null
+          cost: number | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          lead_id: string
+          vapi_call_id: string
+          ciudad_principal?: string | null
+          nombre_negocio?: string | null
+          descripcion_negocio?: string | null
+          tipo_negocio?: string | null
+          momento_negocio?: string | null
+          antiguedad_negocio?: string | null
+          cliente_objetivo?: string | null
+          busca_primario?: string | null
+          busca_detalle?: string | null
+          busca_secundario?: string | null
+          ofrece?: string | null
+          logro_notable?: string | null
+          preferencia_conexion?: string | null
+          referido_por?: string | null
+          notas_personalidad?: string | null
+          score_urgencia?: string | null
+          perfil_completo?: boolean | null
+          follow_up_pendiente?: boolean | null
+          ended_reason?: string | null
+          started_at?: string | null
+          ended_at?: string | null
+          cost?: number | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          lead_id?: string
+          vapi_call_id?: string
+          ciudad_principal?: string | null
+          nombre_negocio?: string | null
+          descripcion_negocio?: string | null
+          tipo_negocio?: string | null
+          momento_negocio?: string | null
+          antiguedad_negocio?: string | null
+          cliente_objetivo?: string | null
+          busca_primario?: string | null
+          busca_detalle?: string | null
+          busca_secundario?: string | null
+          ofrece?: string | null
+          logro_notable?: string | null
+          preferencia_conexion?: string | null
+          referido_por?: string | null
+          notas_personalidad?: string | null
+          score_urgencia?: string | null
+          perfil_completo?: boolean | null
+          follow_up_pendiente?: boolean | null
+          ended_reason?: string | null
+          started_at?: string | null
+          ended_at?: string | null
+          cost?: number | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ia_call_profiles_lead_id_fkey'
+            columns: ['lead_id']
+            referencedRelation: 'ia_form_submissions'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       event_attendance: {
         Row: {
           id: string

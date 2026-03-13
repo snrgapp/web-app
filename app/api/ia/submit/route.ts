@@ -53,23 +53,27 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const { error } = await supabase.from('ia_form_submissions').insert({
-      rol: str(body.rol),
-      nombre_completo: nombre,
-      nombre_empresa: str(body.nombre_empresa),
-      url_sitio_web: str(body.url_sitio_web),
-      que_vende: str(body.que_vende),
-      telefono: phoneE164,
-      email_empresa: str(body.email_empresa),
-      linkedin: str(body.linkedin),
-      como_vende: str(body.como_vende),
-      desafios_puntos_dolor: str(body.desafios_puntos_dolor),
-      cliente_objetivo: str(body.cliente_objetivo),
-      tamano_equipo: str(body.tamano_equipo),
-      presupuesto_ventas: str(body.presupuesto_ventas),
-      como_enteraste_synergy: str(body.como_enteraste_synergy),
-      acepta_terminos: !!body.acepta_terminos,
-    })
+    const { data: submission, error } = await supabase
+      .from('ia_form_submissions')
+      .insert({
+        rol: str(body.rol),
+        nombre_completo: nombre,
+        nombre_empresa: str(body.nombre_empresa),
+        url_sitio_web: str(body.url_sitio_web),
+        que_vende: str(body.que_vende),
+        telefono: phoneE164,
+        email_empresa: str(body.email_empresa),
+        linkedin: str(body.linkedin),
+        como_vende: str(body.como_vende),
+        desafios_puntos_dolor: str(body.desafios_puntos_dolor),
+        cliente_objetivo: str(body.cliente_objetivo),
+        tamano_equipo: str(body.tamano_equipo),
+        presupuesto_ventas: str(body.presupuesto_ventas),
+        como_enteraste_synergy: str(body.como_enteraste_synergy),
+        acepta_terminos: !!body.acepta_terminos,
+      })
+      .select('id')
+      .single()
 
     if (error) {
       console.error('ia_form_submissions insert error:', error)
@@ -79,7 +83,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const callResult = await scheduleOutboundCall(phoneE164)
+    const callResult = await scheduleOutboundCall({
+      to: phoneE164,
+      customerName: nombre,
+      leadId: submission?.id,
+    })
 
     if (!callResult.ok) {
       console.error('Vapi call failed:', callResult.error, callResult.details)

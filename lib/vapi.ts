@@ -1,10 +1,20 @@
+type ScheduleCallOptions = {
+  to: string
+  customerName?: string
+  /** UUID de ia_form_submissions - viaja en variableValues para el webhook */
+  leadId?: string
+}
+
 /**
  * Dispara una llamada saliente via Vapi.ai (programada 25 s después).
  * Número en formato E.164 (ej: +573001234567).
- *
- * Endpoints: /call (genérico) o /call/phone (teléfono). Vapi acepta ambos.
+ * customerName se pasa al asistente vía variableValues.customerName.
  */
-export async function scheduleOutboundCall(to: string): Promise<{ ok: boolean; error?: string; details?: unknown }> {
+export async function scheduleOutboundCall(toOrOptions: string | ScheduleCallOptions): Promise<{ ok: boolean; error?: string; details?: unknown }> {
+  const to = typeof toOrOptions === 'string' ? toOrOptions : toOrOptions.to
+  const customerName = typeof toOrOptions === 'string' ? undefined : toOrOptions.customerName
+  const leadId = typeof toOrOptions === 'string' ? undefined : toOrOptions.leadId
+
   const apiKey = process.env.VAPI_PRIVATE_KEY ?? process.env.VAPI_API_KEY
   const assistantId = process.env.VAPI_ASSISTANT_ID
   const phoneNumberId = process.env.VAPI_PHONE_NUMBER_ID
@@ -21,6 +31,16 @@ export async function scheduleOutboundCall(to: string): Promise<{ ok: boolean; e
     assistantId,
     phoneNumberId,
     customer: { number: to },
+  }
+  const variableValues: Record<string, string> = {}
+  if (leadId) variableValues.lead_id = leadId
+  if (customerName?.trim()) {
+    const firstName = customerName.trim().split(/\s+/)[0] ?? customerName.trim()
+    variableValues.first_name = firstName
+    variableValues.customerName = firstName
+  }
+  if (Object.keys(variableValues).length > 0) {
+    payload.assistantOverrides = { variableValues }
   }
   if (!useImmediate) {
     payload.schedulePlan = {

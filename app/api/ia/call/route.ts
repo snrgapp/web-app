@@ -11,7 +11,9 @@ import { NextResponse } from 'next/server'
  */
 export async function POST(req: Request) {
   try {
-    const { to } = await req.json()
+    const { to: toParam, number, name } = (await req.json()) as { to?: string; number?: string; name?: string }
+    const to = toParam ?? number
+    const customerName = typeof name === 'string' ? name.trim() : undefined
 
     if (!to || typeof to !== 'string') {
       return NextResponse.json(
@@ -38,13 +40,19 @@ export async function POST(req: Request) {
       )
     }
 
-    const body: Record<string, unknown> = {
+    const reqBody: Record<string, unknown> = {
       assistantId,
       phoneNumberId,
       customer: { number: to },
       schedulePlan: {
         earliestAt: new Date(Date.now() + 25 * 1000).toISOString(),
       },
+    }
+    if (customerName) {
+      const firstName = customerName.split(/\s+/)[0] ?? customerName
+      reqBody.assistantOverrides = {
+        variableValues: { customerName: firstName },
+      }
     }
 
     const vapiRes = await fetch('https://api.vapi.ai/call/phone', {
@@ -53,7 +61,7 @@ export async function POST(req: Request) {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(reqBody),
     })
 
     const data = await vapiRes.json().catch(() => ({}))
