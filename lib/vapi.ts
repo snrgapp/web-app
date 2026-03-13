@@ -3,6 +3,8 @@ type ScheduleCallOptions = {
   customerName?: string
   /** UUID de ia_form_submissions - viaja en variableValues para el webhook */
   leadId?: string
+  /** Si true, llama inmediatamente sin schedulePlan */
+  immediate?: boolean
 }
 
 /**
@@ -14,6 +16,7 @@ export async function scheduleOutboundCall(toOrOptions: string | ScheduleCallOpt
   const to = typeof toOrOptions === 'string' ? toOrOptions : toOrOptions.to
   const customerName = typeof toOrOptions === 'string' ? undefined : toOrOptions.customerName
   const leadId = typeof toOrOptions === 'string' ? undefined : toOrOptions.leadId
+  const immediate = typeof toOrOptions === 'string' ? false : toOrOptions.immediate ?? false
 
   const apiKey = process.env.VAPI_PRIVATE_KEY ?? process.env.VAPI_API_KEY
   const assistantId = process.env.VAPI_ASSISTANT_ID
@@ -23,9 +26,9 @@ export async function scheduleOutboundCall(toOrOptions: string | ScheduleCallOpt
     return { ok: false, error: 'Vapi no configurado' }
   }
 
-  const useImmediate = process.env.VAPI_IMMEDIATE_CALL === 'true'
+  const useSchedule = !immediate && process.env.VAPI_IMMEDIATE_CALL !== 'true'
   const earliestAt = new Date(Date.now() + 25 * 1000)
-  const latestAt = new Date(earliestAt.getTime() + 30 * 1000) // ventana de 30s (antes 2 min)
+  const latestAt = new Date(earliestAt.getTime() + 30 * 1000)
 
   const payload: Record<string, unknown> = {
     assistantId,
@@ -42,7 +45,7 @@ export async function scheduleOutboundCall(toOrOptions: string | ScheduleCallOpt
   if (Object.keys(variableValues).length > 0) {
     payload.assistantOverrides = { variableValues }
   }
-  if (!useImmediate) {
+  if (useSchedule) {
     payload.schedulePlan = {
       earliestAt: earliestAt.toISOString(),
       latestAt: latestAt.toISOString(),

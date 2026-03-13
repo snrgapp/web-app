@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { scheduleOutboundCall } from '@/lib/vapi'
 
+export const maxDuration = 60
+
 /**
  * Normaliza teléfono a formato E.164.
  * Ej: "300 123 4567" + país 57 -> "+573001234567"
@@ -83,10 +85,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    await new Promise((r) => setTimeout(r, 25 * 1000))
+
     const callResult = await scheduleOutboundCall({
       to: phoneE164,
       customerName: nombre,
       leadId: submission?.id,
+      immediate: true,
     })
 
     if (!callResult.ok) {
