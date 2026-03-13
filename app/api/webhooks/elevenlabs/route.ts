@@ -47,36 +47,71 @@ function verifyElevenLabsSignature(
   }
   return { ok: true }
 }
+function asStr(v: unknown): string | null {
+  if (typeof v === 'string' && v.trim()) return v.trim()
+  if (typeof v === 'number' && !Number.isNaN(v)) return String(v)
+  return null
+}
+
 function pickLeadId(payload: Record<string, unknown>): string | null {
   const data = (payload.data ?? payload) as Record<string, unknown>
   const dyn = (data.dynamic_variables ??
+    (data.conversation_initiation_client_data as Record<string, unknown>)
+      ?.dynamic_variables ??
     data.conversation_initiation_client_data ??
+    payload.dynamic_variables ??
     {}) as Record<string, unknown>
-  if (typeof dyn.lead_id === 'string' && dyn.lead_id) return dyn.lead_id
+  const fromDyn = asStr(dyn.lead_id)
+  if (fromDyn) return fromDyn
   const analysis = (data.analysis ?? payload.analysis) as Record<string, unknown> | undefined
   const structured = (analysis?.structured_data ??
-    analysis?.structuredData) as Record<string, unknown> | undefined
-  if (structured && typeof structured.lead_id === 'string') return structured.lead_id
-  return null
+    analysis?.structuredData ??
+    analysis?.data_collection_results) as Record<string, unknown> | undefined
+  if (structured) {
+    const id = asStr(structured.lead_id)
+    if (id) return id
+  }
+  return asStr(payload.lead_id)
 }
 
 function pickConversationId(payload: Record<string, unknown>): string | null {
   const data = (payload.data ?? payload) as Record<string, unknown>
-  const id =
-    data.conversation_id ??
-    data.conversationId ??
-    payload.conversation_id ??
-    payload.conversationId
-  return typeof id === 'string' && id ? id : null
+  const meta = (data.metadata ?? payload.metadata) as Record<string, unknown> | undefined
+  const candidates = [
+    data.conversation_id,
+    data.conversationId,
+    payload.conversation_id,
+    payload.conversationId,
+    meta?.conversation_id,
+    meta?.conversationId,
+    (data.conversation as Record<string, unknown>)?.conversation_id,
+  ]
+  for (const c of candidates) {
+    const s = asStr(c)
+    if (s) return s
+  }
+  return null
 }
 
+/** Data collection / análisis: varias rutas según versión ElevenLabs */
 function pickStructured(payload: Record<string, unknown>): Record<string, unknown> {
   const data = (payload.data ?? payload) as Record<string, unknown>
   const analysis = (data.analysis ?? payload.analysis) as Record<string, unknown> | undefined
-  return (analysis?.structured_data ??
-    analysis?.structuredData ??
-    data.collection ??
-    {}) as Record<string, unknown>
+  const blocks: Record<string, unknown>[] = [
+    (analysis?.structured_data as Record<string, unknown>) ?? {},
+    (analysis?.structuredData as Record<string, unknown>) ?? {},
+    (analysis?.data_collection_results as Record<string, unknown>) ?? {},
+    (analysis?.data_collection as Record<string, unknown>) ?? {},
+    (data.collection as Record<string, unknown>) ?? {},
+    (data.data_collection as Record<string, unknown>) ?? {},
+    (payload.collection as Record<string, unknown>) ?? {},
+  ]
+  const out: Record<string, unknown> = {}
+  for (const b of blocks) {
+    if (b && typeof b === 'object')
+      for (const [k, v] of Object.entries(b)) if (v !== undefined && v !== '') out[k] = v
+  }
+  return out
 }
 
 export async function POST(req: Request) {
@@ -112,6 +147,15 @@ export async function POST(req: Request) {
     }
 
     const s = pickStructured(payload)
+    const col = (key: string): string | null => {
+      const v = s[key]
+      if (v === null || v === undefined) return null
+      if (typeof v === 'boolean') return null
+      return asStr(v)
+    }
+    const colBool = (key: string): boolean | null =>
+      typeof s[key] === 'boolean' ? (s[key] as boolean) : null
+
     const supabase = createAdminClient()
     if (!supabase) {
       console.error('ElevenLabs webhook: Supabase no configurado')
@@ -125,24 +169,24 @@ export async function POST(req: Request) {
         lead_id: leadId,
         vapi_call_id: conversationId,
 
-        ciudad_principal: (s.ciudad_principal as string) ?? null,
-        nombre_negocio: (s.nombre_negocio as string) ?? null,
-        descripcion_negocio: (s.descripcion_negocio as string) ?? null,
-        tipo_negocio: (s.tipo_negocio as string) ?? null,
-        momento_negocio: (s.momento_negocio as string) ?? null,
-        antiguedad_negocio: (s.antiguedad_negocio as string) ?? null,
-        cliente_objetivo: (s.cliente_objetivo as string) ?? null,
-        busca_primario: (s.busca_primario as string) ?? null,
-        busca_detalle: (s.busca_detalle as string) ?? null,
-        busca_secundario: (s.busca_secundario as string) ?? null,
-        ofrece: (s.ofrece as string) ?? null,
-        logro_notable: (s.logro_notable as string) ?? null,
-        preferencia_conexion: (s.preferencia_conexion as string) ?? null,
-        referido_por: (s.referido_por as string) ?? null,
-        notas_personalidad: (s.notas_personalidad as string) ?? null,
-        score_urgencia: (s.score_urgencia as string) ?? null,
-        perfil_completo: (s.perfil_completo as boolean) ?? null,
-        follow_up_pendiente: (s.follow_up_pendiente as boolean) ?? null,
+        ciudad_principal: col('ciudad_principal'),
+        nombre_negocio: col('nombre_negocio'),
+        descripcion_negocio: col('descripcion_negocio'),
+        tipo_negocio: col('tipo_negocio'),
+        momento_negocio: col('momento_negocio'),
+        antiguedad_negocio: col('antiguedad_negocio'),
+        cliente_objetivo: col('cliente_objetivo'),
+        busca_primario: col('busca_primario'),
+        busca_detalle: col('busca_detalle'),
+        busca_secundario: col('busca_secundario'),
+        ofrece: col('ofrece'),
+        logro_notable: col('logro_notable'),
+        preferencia_conexion: col('preferencia_conexion'),
+        referido_por: col('referido_por'),
+        notas_personalidad: col('notas_personalidad'),
+        score_urgencia: col('score_urgencia'),
+        perfil_completo: colBool('perfil_completo'),
+        follow_up_pendiente: colBool('follow_up_pendiente'),
 
         ended_reason: (data.call_successful != null
           ? String(data.call_successful)
