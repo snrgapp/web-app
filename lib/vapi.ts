@@ -50,7 +50,7 @@ export async function scheduleOutboundCall(toOrOptions: string | ScheduleCallOpt
   }
 
   try {
-    const res = await fetch('https://api.vapi.ai/call/phone', {
+    const res = await fetch('https://api.vapi.ai/call', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,

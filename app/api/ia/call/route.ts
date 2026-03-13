@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       }
     }
 
-    const vapiRes = await fetch('https://api.vapi.ai/call/phone', {
+    const vapiRes = await fetch('https://api.vapi.ai/call', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
