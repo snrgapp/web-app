@@ -675,6 +675,66 @@ export interface Database {
         }
         Relationships: []
       }
+      ia_form_submissions: {
+        Row: {
+          id: string
+          rol: string | null
+          nombre_completo: string
+          nombre_empresa: string | null
+          url_sitio_web: string | null
+          que_vende: string | null
+          telefono: string
+          email_empresa: string | null
+          linkedin: string | null
+          como_vende: string | null
+          desafios_puntos_dolor: string | null
+          cliente_objetivo: string | null
+          tamano_equipo: string | null
+          presupuesto_ventas: string | null
+          como_enteraste_synergy: string | null
+          acepta_terminos: boolean | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          rol?: string | null
+          nombre_completo: string
+          nombre_empresa?: string | null
+          url_sitio_web?: string | null
+          que_vende?: string | null
+          telefono: string
+          email_empresa?: string | null
+          linkedin?: string | null
+          como_vende?: string | null
+          desafios_puntos_dolor?: string | null
+          cliente_objetivo?: string | null
+          tamano_equipo?: string | null
+          presupuesto_ventas?: string | null
+          como_enteraste_synergy?: string | null
+          acepta_terminos?: boolean | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          rol?: string | null
+          nombre_completo?: string
+          nombre_empresa?: string | null
+          url_sitio_web?: string | null
+          que_vende?: string | null
+          telefono?: string
+          email_empresa?: string | null
+          linkedin?: string | null
+          como_vende?: string | null
+          desafios_puntos_dolor?: string | null
+          cliente_objetivo?: string | null
+          tamano_equipo?: string | null
+          presupuesto_ventas?: string | null
+          como_enteraste_synergy?: string | null
+          acepta_terminos?: boolean | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       event_attendance: {
         Row: {
           id: string
