@@ -43,11 +43,11 @@ export async function POST(req: Request) {
       phoneNumberId,
       customer: { number: to },
       schedulePlan: {
-        earliestAt: new Date(Date.now() + 50 * 1000).toISOString(),
+        earliestAt: new Date(Date.now() + 25 * 1000).toISOString(),
       },
     }
 
-    const vapiRes = await fetch('https://api.vapi.ai/call', {
+    const vapiRes = await fetch('https://api.vapi.ai/call/phone', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
