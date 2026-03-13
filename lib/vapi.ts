@@ -25,7 +25,7 @@ export async function scheduleOutboundCall(toOrOptions: string | ScheduleCallOpt
 
   const useImmediate = process.env.VAPI_IMMEDIATE_CALL === 'true'
   const earliestAt = new Date(Date.now() + 25 * 1000)
-  const latestAt = new Date(earliestAt.getTime() + 2 * 60 * 1000)
+  const latestAt = new Date(earliestAt.getTime() + 30 * 1000) // ventana de 30s (antes 2 min)
 
   const payload: Record<string, unknown> = {
     assistantId,
