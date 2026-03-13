@@ -94,6 +94,17 @@ export default function IAPage() {
         return
       }
       setStep('success')
+      setLoading(false)
+
+      if (data.submissionId) {
+        setTimeout(() => {
+          fetch('/api/ia/trigger-call', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ submissionId: data.submissionId }),
+          }).catch(() => {})
+        }, 25 * 1000)
+      }
     } catch {
       setError('Error de conexión')
     } finally {

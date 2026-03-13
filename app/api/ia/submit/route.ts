@@ -1,8 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
-import { scheduleOutboundCall } from '@/lib/vapi'
-
-export const maxDuration = 60
 
 /**
  * Normaliza teléfono a formato E.164.
@@ -85,33 +82,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    await new Promise((r) => setTimeout(r, 25 * 1000))
-
-    const callResult = await scheduleOutboundCall({
-      to: phoneE164,
-      customerName: nombre,
-      leadId: submission?.id,
-      immediate: true,
-    })
-
-    if (!callResult.ok) {
-      console.error('Vapi call failed:', callResult.error, callResult.details)
-      return NextResponse.json(
-        {
-          ok: true,
-          saved: true,
-          callScheduled: false,
-          message: 'Datos guardados. Hubo un problema al programar la llamada.',
-          debug: process.env.NODE_ENV === 'development' ? callResult : undefined,
-        },
-        { status: 200 }
-      )
-    }
-
     return NextResponse.json({
       ok: true,
       saved: true,
-      callScheduled: true,
+      submissionId: submission?.id,
       message: 'Te llamamos en un momento, mantén tu teléfono cerca.',
     })
   } catch (e) {

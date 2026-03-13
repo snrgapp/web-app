@@ -1,31 +1,31 @@
 import { NextResponse } from 'next/server'
 
 /**
- * Valida que la configuración de Vapi esté lista para llamadas.
- * No expone valores sensibles.
+ * Valida configuración ElevenLabs para llamadas salientes.
  */
 export async function GET() {
-  const apiKey = process.env.VAPI_PRIVATE_KEY ?? process.env.VAPI_API_KEY
-  const assistantId = process.env.VAPI_ASSISTANT_ID
-  const phoneNumberId = process.env.VAPI_PHONE_NUMBER_ID
+  const apiKey = process.env.ELEVENLABS_API_KEY
+  const agentId = process.env.ELEVENLABS_AGENT_ID
+  const phoneId = process.env.ELEVENLABS_AGENT_PHONE_NUMBER_ID
 
   const checks = {
-    VAPI_PRIVATE_KEY_or_VAPI_API_KEY: !!apiKey,
-    VAPI_ASSISTANT_ID: !!assistantId,
-    VAPI_PHONE_NUMBER_ID: !!phoneNumberId,
+    ELEVENLABS_API_KEY: !!apiKey,
+    ELEVENLABS_AGENT_ID: !!agentId,
+    ELEVENLABS_AGENT_PHONE_NUMBER_ID: !!phoneId,
   }
 
   const allOk = Object.values(checks).every(Boolean)
-
-  const vapiKeysFound = Object.keys(process.env).filter((k) => k.startsWith('VAPI_'))
+  const envKeys = Object.keys(process.env).filter(
+    (k) => k.startsWith('ELEVENLABS_')
+  )
 
   return NextResponse.json({
     ok: allOk,
     ready: allOk,
     checks,
-    envKeysPresent: vapiKeysFound,
+    envKeysPresent: envKeys,
     message: allOk
-      ? 'Configuración de Vapi lista para llamadas'
-      : 'Faltan variables. Revisa .env.local: VAPI_PRIVATE_KEY (o VAPI_API_KEY), VAPI_ASSISTANT_ID, VAPI_PHONE_NUMBER_ID',
+      ? 'ElevenLabs listo para llamadas salientes'
+      : 'Faltan variables: ELEVENLABS_API_KEY, ELEVENLABS_AGENT_ID, ELEVENLABS_AGENT_PHONE_NUMBER_ID',
   })
 }

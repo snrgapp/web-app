@@ -1,4 +1,4 @@
--- Perfiles de llamadas IA - datos recolectados durante la llamada Vapi
+-- Perfiles de llamadas IA (ConvAI; columna vapi_call_id = id de conversación proveedor)
 -- Relacionado con ia_form_submissions (lead_id) para múltiples llamadas/follow-up
 -- Evita pisar datos del formulario original
 
@@ -39,4 +39,4 @@ CREATE TABLE IF NOT EXISTS ia_call_profiles (
 CREATE INDEX IF NOT EXISTS idx_ia_call_profiles_lead_id ON ia_call_profiles(lead_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_ia_call_profiles_vapi_call_id ON ia_call_profiles(vapi_call_id);
 
-COMMENT ON TABLE ia_call_profiles IS 'Datos recolectados durante llamadas Vapi. Relacionado con ia_form_submissions. Soporta múltiples llamadas/follow-up por lead.';
+COMMENT ON TABLE ia_call_profiles IS 'Datos post-llamada ConvAI (ElevenLabs). vapi_call_id almacena conversation_id. Relacionado con ia_form_submissions.';
