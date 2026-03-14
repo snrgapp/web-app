@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from 'crypto'
 import { NextResponse } from 'next/server'
+import { generateProfileEmbeddings } from '@/services/embeddings'
 import { createAdminClient } from '@/utils/supabase/admin'
 
 
@@ -343,6 +344,68 @@ export async function POST(req: Request) {
     if (error) {
       console.error('ElevenLabs webhook ia_call_profiles upsert:', error)
       return NextResponse.json({ error: 'Upsert failed' }, { status: 500 })
+    }
+
+    // ── Embeddings: generar si el perfil tiene lo mínimo ──
+    const tieneMinimo =
+      col('descripcion_negocio') &&
+      col('busca_detalle') &&
+      col('ofrece')
+
+    if (tieneMinimo) {
+      try {
+        const { data: perfilGuardado } = await supabase
+          .from('ia_call_profiles')
+          .select('id')
+          .eq('vapi_call_id', conversationId)
+          .single()
+
+        if (perfilGuardado?.id) {
+          const perfilParaEmbedding = {
+            id: perfilGuardado.id,
+            contacto_nombre: col('contacto_nombre'),
+            nombre_negocio: col('nombre_negocio'),
+            descripcion_negocio: col('descripcion_negocio'),
+            sector: col('tipo_negocio'),
+            tipo_negocio: col('tipo_negocio'),
+            momento_negocio: col('momento_negocio'),
+            cliente_objetivo: col('cliente_objetivo'),
+            busca_primario: col('busca_primario'),
+            busca_detalle: col('busca_detalle'),
+            busca_secundario: col('busca_secundario'),
+            ofrece: col('ofrece'),
+            logro_notable: col('logro_notable'),
+            ciudad_principal: col('ciudad_principal'),
+          }
+
+          const { embedding_need, embedding_offer } =
+            await generateProfileEmbeddings(perfilParaEmbedding)
+
+          const { error: embeddingError } = await supabase
+            .from('ia_call_profiles')
+            .update({
+              embedding_need: JSON.stringify(embedding_need),
+              embedding_offer: JSON.stringify(embedding_offer),
+              listo_para_matching: true,
+            })
+            .eq('id', perfilGuardado.id)
+
+          if (embeddingError) {
+            console.error('Error guardando embeddings:', embeddingError)
+          } else {
+            console.log('✅ Embeddings generados para:', col('contacto_nombre') || perfilGuardado.id)
+          }
+        }
+      } catch (embErr) {
+        console.error('Error generando embeddings (no crítico):', embErr)
+      }
+    } else {
+      console.warn('Perfil incompleto — embeddings omitidos', {
+        conversationId,
+        tiene_descripcion: !!col('descripcion_negocio'),
+        tiene_busca: !!col('busca_detalle'),
+        tiene_ofrece: !!col('ofrece'),
+      })
     }
 
     return NextResponse.json({ ok: true })
