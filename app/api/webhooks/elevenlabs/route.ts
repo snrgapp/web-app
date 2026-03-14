@@ -1,4 +1,3 @@
-import { generateProfileEmbeddings } from '@/services/embeddings.mjs'
 import { createHmac, timingSafeEqual } from 'crypto'
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
