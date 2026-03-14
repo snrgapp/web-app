@@ -764,6 +764,9 @@ export interface Database {
           ended_at: string | null
           cost: number | null
           created_at: string
+          embedding_need: string | null
+          embedding_offer: string | null
+          listo_para_matching: boolean | null
         }
         Insert: {
           id?: string
@@ -793,6 +796,9 @@ export interface Database {
           ended_at?: string | null
           cost?: number | null
           created_at?: string
+          embedding_need?: string | null
+          embedding_offer?: string | null
+          listo_para_matching?: boolean | null
         }
         Update: {
           id?: string
@@ -822,6 +828,9 @@ export interface Database {
           ended_at?: string | null
           cost?: number | null
           created_at?: string
+          embedding_need?: string | null
+          embedding_offer?: string | null
+          listo_para_matching?: boolean | null
         }
         Relationships: [
           {
