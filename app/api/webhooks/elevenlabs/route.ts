@@ -209,3 +209,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Webhook error' }, { status: 500 })
   }
 }
+
+/** Navegador / validación de URL: evita 405 Method Not Allowed */
+export async function GET() {
+  return NextResponse.json({
+    ok: true,
+    service: 'elevenlabs-webhook',
+    hint: 'POST con cuerpo firmado (ElevenLabs-Signature) para guardar perfil',
+  })
+}
+
+export async function HEAD() {
+  return new NextResponse(null, { status: 200 })
+}
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      Allow: 'GET, HEAD, POST, OPTIONS',
+    },
+  })
+}
