@@ -10,8 +10,9 @@
 
 type OutboundOptions = {
   to: string
+  /** nombre_completo del formulario → solo 1.er nombre en first_name / customerName */
   customerName?: string
-  /** UUID ia_form_submissions → dynamic_variables.lead_id para el agente/webhook */
+  /** UUID ia_form_submissions */
   leadId?: string
 }
 
@@ -32,13 +33,11 @@ export async function scheduleOutboundCall(
 
   const dynamicVariables: Record<string, string | number | boolean> = {}
   if (leadId) dynamicVariables.lead_id = leadId
+  // Primer nombre desde el formulario (nombre_completo) — saludo en la llamada
   if (customerName?.trim()) {
-    const full = customerName.trim()
-    const first = full.split(/\s+/)[0] ?? full
+    const first = customerName.trim().split(/\s+/)[0] ?? customerName.trim()
     dynamicVariables.first_name = first
     dynamicVariables.customerName = first
-    /** Nombre completo del formulario (saludo personalizado en el agente) */
-    dynamicVariables.full_name = full
   }
 
   const body: Record<string, unknown> = {

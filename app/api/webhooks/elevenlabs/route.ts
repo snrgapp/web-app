@@ -93,24 +93,126 @@ function pickConversationId(payload: Record<string, unknown>): string | null {
   return null
 }
 
-/** Data collection / análisis: varias rutas según versión ElevenLabs */
+/**
+ * data_collection_results: array [{ id, value }] u objeto
+ * { nombre_negocio: { value, rationale }, ... }
+ */
+function flattenCollectionArray(arr: unknown): Record<string, unknown> {
+  const out: Record<string, unknown> = {}
+  if (!arr || typeof arr !== 'object') return out
+
+  if (!Array.isArray(arr)) {
+    const obj = arr as Record<string, unknown>
+    for (const [key, entry] of Object.entries(obj)) {
+      if (!entry || typeof entry !== 'object') continue
+      const e = entry as Record<string, unknown>
+      const val = e.value ?? e.val ?? e.answer
+      if (val !== undefined && val !== '') out[key] = val
+    }
+    return out
+  }
+
+  for (const item of arr) {
+    if (!item || typeof item !== 'object') continue
+    const o = item as Record<string, unknown>
+    const id = asStr(o.id ?? o.key ?? o.name)
+    const val = o.value ?? o.val ?? o.answer
+    if (id && val !== undefined && val !== '') out[id] = val
+  }
+  return out
+}
+
+/** Claves que deben salir solo de la llamada (data collection), no del formulario */
+const PROFILE_KEYS = new Set([
+  'lead_id',
+  'ciudad_principal',
+  'nombre_negocio',
+  'descripcion_negocio',
+  'tipo_negocio',
+  'momento_negocio',
+  'antiguedad_negocio',
+  'cliente_objetivo',
+  'busca_primario',
+  'busca_detalle',
+  'busca_secundario',
+  'ofrece',
+  'logro_notable',
+  'preferencia_conexion',
+  'referido_por',
+  'notas_personalidad',
+  'score_urgencia',
+  'perfil_completo',
+  'follow_up_pendiente',
+  'contacto_nombre',
+])
+
+/** Recorre todo el JSON: ElevenLabs a veces anida data collection a varios niveles */
+function deepCollectProfileFields(node: unknown, out: Record<string, unknown>): void {
+  if (node === null || node === undefined) return
+  if (typeof node !== 'object') return
+  if (Array.isArray(node)) {
+    for (const el of node) {
+      if (el && typeof el === 'object' && !Array.isArray(el)) {
+        const o = el as Record<string, unknown>
+        const id = asStr(o.id ?? o.key ?? o.name ?? o.field_id)
+        const val = o.value ?? o.val ?? o.answer ?? o.text ?? o.content
+        if (id && PROFILE_KEYS.has(id) && val !== undefined && val !== '')
+          out[id] = val
+      }
+      deepCollectProfileFields(el, out)
+    }
+    return
+  }
+  const obj = node as Record<string, unknown>
+  for (const [k, v] of Object.entries(obj)) {
+    if (PROFILE_KEYS.has(k) && v !== undefined && v !== '' && typeof v !== 'object')
+      out[k] = v
+    deepCollectProfileFields(v, out)
+  }
+}
+
+/** Data collection solo desde el payload del post-llamada (nada del formulario) */
 function pickStructured(payload: Record<string, unknown>): Record<string, unknown> {
   const data = (payload.data ?? payload) as Record<string, unknown>
   const analysis = (data.analysis ?? payload.analysis) as Record<string, unknown> | undefined
-  const blocks: Record<string, unknown>[] = [
-    (analysis?.structured_data as Record<string, unknown>) ?? {},
-    (analysis?.structuredData as Record<string, unknown>) ?? {},
-    (analysis?.data_collection_results as Record<string, unknown>) ?? {},
-    (analysis?.data_collection as Record<string, unknown>) ?? {},
-    (data.collection as Record<string, unknown>) ?? {},
-    (data.data_collection as Record<string, unknown>) ?? {},
-    (payload.collection as Record<string, unknown>) ?? {},
-  ]
+  const blocks: Record<string, unknown>[] = []
+
+  const push = (b: unknown) => {
+    if (b && typeof b === 'object' && !Array.isArray(b))
+      blocks.push(b as Record<string, unknown>)
+  }
+  push(analysis?.structured_data)
+  push(analysis?.structuredData)
+  push(analysis?.data_collection)
+  push(data.collection)
+  push(data.data_collection)
+  push(payload.collection)
+  push(flattenCollectionArray(analysis?.data_collection_results))
+  push(flattenCollectionArray(data.data_collection_results))
+  push(flattenCollectionArray(analysis?.evaluation_criteria_results))
+  push(flattenCollectionArray(data.evaluation_results))
+
+  const flatRoots = [payload, data] as const
+  for (const root of flatRoots) {
+    const skip = new Set(['type', 'event', 'data', 'analysis', 'metadata'])
+    for (const [k, v] of Object.entries(root)) {
+      if (skip.has(k) || v === null || v === '') continue
+      if (typeof v === 'object' && !Array.isArray(v)) continue
+      if (PROFILE_KEYS.has(k)) blocks.push({ [k]: v })
+    }
+  }
+
   const out: Record<string, unknown> = {}
   for (const b of blocks) {
-    if (b && typeof b === 'object')
-      for (const [k, v] of Object.entries(b)) if (v !== undefined && v !== '') out[k] = v
+    for (const [k, v] of Object.entries(b)) {
+      if (v !== undefined && v !== '') out[k] = v
+    }
   }
+  if (!out.nombre_negocio && out.nombreNegocio) out.nombre_negocio = out.nombreNegocio
+  if (!out.nombre_negocio && out.business_name) out.nombre_negocio = out.business_name
+  if (!out.contacto_nombre && out.nombre_contacto) out.contacto_nombre = out.nombre_contacto
+
+  deepCollectProfileFields(payload, out)
   return out
 }
 
@@ -135,6 +237,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'JSON inválido' }, { status: 400 })
     }
 
+    /** Diagnóstico: Vercel → Logs. Quitar ELEVENLABS_WEBHOOK_DEBUG después (datos sensibles). */
+    if (
+      process.env.ELEVENLABS_WEBHOOK_DEBUG === '1' ||
+      process.env.ELEVENLABS_WEBHOOK_DEBUG === 'true'
+    ) {
+      console.log('[elevenlabs webhook] rawBody.length', rawBody.length)
+      console.log('[elevenlabs webhook] payload JSON:\n', JSON.stringify(payload, null, 2))
+    }
+
     const leadId = pickLeadId(payload)
     const conversationId = pickConversationId(payload)
 
@@ -147,14 +258,32 @@ export async function POST(req: Request) {
     }
 
     const s = pickStructured(payload)
+    if (
+      process.env.ELEVENLABS_WEBHOOK_DEBUG === '1' ||
+      process.env.ELEVENLABS_WEBHOOK_DEBUG === 'true'
+    ) {
+      console.log(
+        '[elevenlabs webhook] pickStructured keys:',
+        Object.keys(s),
+        '\nleadId',
+        pickLeadId(payload),
+        'conversationId',
+        pickConversationId(payload)
+      )
+    }
+
     const col = (key: string): string | null => {
       const v = s[key]
       if (v === null || v === undefined) return null
       if (typeof v === 'boolean') return null
       return asStr(v)
     }
-    const colBool = (key: string): boolean | null =>
-      typeof s[key] === 'boolean' ? (s[key] as boolean) : null
+    const colBool = (key: string): boolean | null => {
+      const v = s[key]
+      if (typeof v === 'boolean') return v
+      if (v === 'true' || v === 'false') return v === 'true'
+      return null
+    }
 
     const supabase = createAdminClient()
     if (!supabase) {
@@ -163,12 +292,24 @@ export async function POST(req: Request) {
     }
 
     const data = (payload.data ?? payload) as Record<string, unknown>
+    const filled = [
+      col('nombre_negocio'),
+      col('contacto_nombre'),
+      col('ciudad_principal'),
+    ].filter(Boolean).length
+    if (filled === 0) {
+      console.warn(
+        'ElevenLabs webhook: data collection vacía para esta llamada; revisar identificadores en el agente (nombre_negocio, contacto_nombre, …)',
+        { conversationId, leadId }
+      )
+    }
 
     const { error } = await supabase.from('ia_call_profiles').upsert(
       {
         lead_id: leadId,
         vapi_call_id: conversationId,
 
+        contacto_nombre: col('contacto_nombre'),
         ciudad_principal: col('ciudad_principal'),
         nombre_negocio: col('nombre_negocio'),
         descripcion_negocio: col('descripcion_negocio'),

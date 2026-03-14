@@ -740,6 +740,7 @@ export interface Database {
           id: string
           lead_id: string
           vapi_call_id: string
+          contacto_nombre: string | null
           ciudad_principal: string | null
           nombre_negocio: string | null
           descripcion_negocio: string | null
@@ -768,6 +769,7 @@ export interface Database {
           id?: string
           lead_id: string
           vapi_call_id: string
+          contacto_nombre?: string | null
           ciudad_principal?: string | null
           nombre_negocio?: string | null
           descripcion_negocio?: string | null
@@ -796,6 +798,7 @@ export interface Database {
           id?: string
           lead_id?: string
           vapi_call_id?: string
+          contacto_nombre?: string | null
           ciudad_principal?: string | null
           nombre_negocio?: string | null
           descripcion_negocio?: string | null
