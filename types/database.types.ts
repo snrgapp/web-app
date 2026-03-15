@@ -841,6 +841,52 @@ export interface Database {
           }
         ]
       }
+      ia_matches: {
+        Row: {
+          id: string
+          profile_a_id: string | null
+          profile_b_id: string | null
+          score: number | null
+          razon: string | null
+          status: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          profile_a_id?: string | null
+          profile_b_id?: string | null
+          score?: number | null
+          razon?: string | null
+          status?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          profile_a_id?: string | null
+          profile_b_id?: string | null
+          score?: number | null
+          razon?: string | null
+          status?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ia_matches_profile_a_id_fkey'
+            columns: ['profile_a_id']
+            referencedRelation: 'ia_call_profiles'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'ia_matches_profile_b_id_fkey'
+            columns: ['profile_b_id']
+            referencedRelation: 'ia_call_profiles'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       event_attendance: {
         Row: {
           id: string

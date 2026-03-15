@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'crypto'
 import { NextResponse } from 'next/server'
 import { generateProfileEmbeddings } from '@/services/embeddings'
+import { buscarMatches, guardarMatches } from '@/services/matching'
 import { createAdminClient } from '@/utils/supabase/admin'
 
 
@@ -394,6 +395,43 @@ export async function POST(req: Request) {
             console.error('Error guardando embeddings:', embeddingError)
           } else {
             console.log('✅ Embeddings generados para:', col('contacto_nombre') || perfilGuardado.id)
+
+            // ── Paso 3: Matching ──
+            if (embedding_need) {
+              try {
+                const perfilParaMatch = {
+                  id: perfilGuardado.id,
+                  contacto_nombre: col('contacto_nombre'),
+                  nombre_negocio: col('nombre_negocio'),
+                  descripcion_negocio: col('descripcion_negocio'),
+                  tipo_negocio: col('tipo_negocio'),
+                  momento_negocio: col('momento_negocio'),
+                  cliente_objetivo: col('cliente_objetivo'),
+                  busca_primario: col('busca_primario'),
+                  busca_detalle: col('busca_detalle'),
+                  busca_secundario: col('busca_secundario'),
+                  ofrece: col('ofrece'),
+                  logro_notable: col('logro_notable'),
+                  ciudad_principal: col('ciudad_principal'),
+                  score_urgencia: col('score_urgencia'),
+                  embedding_need,
+                  embedding_offer,
+                }
+                const matches = await buscarMatches(perfilParaMatch)
+
+                if (matches.length > 0) {
+                  console.log(`🎯 ${matches.length} matches para:`, col('contacto_nombre'))
+                  matches.forEach((m) => {
+                    console.log(`  → ${m.perfil.nombre_negocio} (score: ${m.score.toFixed(2)}) — ${m.razon}`)
+                  })
+                  await guardarMatches(perfilGuardado.id, matches)
+                } else {
+                  console.log('Sin matches por ahora — la red necesita más miembros')
+                }
+              } catch (matchErr) {
+                console.error('Error en matching (no crítico):', matchErr)
+              }
+            }
           }
         }
       } catch (embErr) {
