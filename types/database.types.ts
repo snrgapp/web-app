@@ -926,7 +926,28 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      match_by_need: {
+        Args: {
+          query_embedding: number[] | string
+          exclude_id: string
+          match_threshold?: number
+          match_count?: number
+        }
+        Returns: Array<{
+          id: string
+          contacto_nombre: string | null
+          ciudad_principal: string | null
+          descripcion_negocio: string | null
+          nombre_negocio: string | null
+          busca_detalle: string | null
+          ofrece: string | null
+          score_urgencia: string | null
+          notas_personalidad: string | null
+          embedding_need: number[] | string
+          embedding_offer: number[] | string
+          similarity: number
+        }>
+      }
     }
     Enums: {
       [_ in never]: never
