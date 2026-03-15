@@ -130,6 +130,16 @@ export async function POST(req: Request) {
       .update({ status: 'aceptado_a', updated_at: new Date().toISOString() })
       .eq('id', matchSeleccionado.id)
 
+    const profileBId = matchSeleccionado.profile_b_id
+    if (!profileBId) {
+      console.error('Match sin profile_b_id:', matchSeleccionado.id)
+      return new Response(
+        `<?xml version="1.0" encoding="UTF-8"?>
+        <Response><Message>¡Perfecto! Voy a confirmar con la otra persona y te aviso. 🤝</Message></Response>`,
+        { headers: { 'Content-Type': 'text/xml' } }
+      )
+    }
+
     // Buscar datos del perfil B para hacer la intro
     const { data: perfilB } = await supabase
       .from('ia_call_profiles')
@@ -139,11 +149,11 @@ export async function POST(req: Request) {
         nombre_negocio,
         lead_id
       `)
-      .eq('id', matchSeleccionado.profile_b_id)
+      .eq('id', profileBId)
       .single()
 
     if (!perfilB) {
-      console.error('No se encontró perfil B:', matchSeleccionado.profile_b_id)
+      console.error('No se encontró perfil B:', profileBId)
       return new Response(
         `<?xml version="1.0" encoding="UTF-8"?>
         <Response><Message>¡Perfecto! Voy a confirmar con la otra persona y te aviso. 🤝</Message></Response>`,
