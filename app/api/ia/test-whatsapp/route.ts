@@ -78,22 +78,24 @@ export async function POST(req: Request) {
     }
 
     // 3. Enriquecer matches con datos del perfil B
+    const matchesConBId = matchesDB.filter(
+      (m): m is typeof m & { profile_b_id: string } => m.profile_b_id != null
+    )
     const matchesEnriquecidos: MatchResult[] = await Promise.all(
-      matchesDB
-        .filter((m) => m.profile_b_id != null)
-        .map(async (m) => {
-          const { data: perfilB } = await supabase
-            .from('ia_call_profiles')
-            .select(
-              'id, contacto_nombre, nombre_negocio, ciudad_principal, descripcion_negocio, busca_detalle, ofrece, score_urgencia, notas_personalidad'
-            )
-            .eq('id', m.profile_b_id)
-            .single()
+      matchesConBId.map(async (m) => {
+        const profileBId = m.profile_b_id
+        const { data: perfilB } = await supabase
+          .from('ia_call_profiles')
+          .select(
+            'id, contacto_nombre, nombre_negocio, ciudad_principal, descripcion_negocio, busca_detalle, ofrece, score_urgencia, notas_personalidad'
+          )
+          .eq('id', profileBId)
+          .single()
 
-          const score = Number(m.score)
-          return {
-            perfil: {
-              id: m.profile_b_id as string,
+        const score = Number(m.score)
+        return {
+          perfil: {
+            id: profileBId,
               contacto_nombre: perfilB?.contacto_nombre ?? null,
               nombre_negocio: perfilB?.nombre_negocio ?? null,
               ciudad_principal: perfilB?.ciudad_principal ?? null,
