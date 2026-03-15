@@ -2,6 +2,7 @@ import { createHmac, timingSafeEqual } from 'crypto'
 import { NextResponse } from 'next/server'
 import { generateProfileEmbeddings } from '@/services/embeddings'
 import { buscarMatches, guardarMatches } from '@/services/matching'
+import { enviarBienvenida, enviarMatches } from '@/services/whatsapp'
 import { createAdminClient } from '@/utils/supabase/admin'
 
 
@@ -425,6 +426,28 @@ export async function POST(req: Request) {
                     console.log(`  → ${m.perfil.nombre_negocio} (score: ${m.score.toFixed(2)}) — ${m.razon}`)
                   })
                   await guardarMatches(perfilGuardado.id, matches)
+
+                  // Buscar teléfono del usuario y enviar por WhatsApp
+                  const { data: submissionData } = await supabase
+                    .from('ia_form_submissions')
+                    .select('telefono, nombre_completo')
+                    .eq('id', leadId)
+                    .single()
+
+                  if (submissionData?.telefono) {
+                    await enviarBienvenida(submissionData.telefono, submissionData.nombre_completo)
+                    await new Promise((r) => setTimeout(r, 2000))
+                    await enviarMatches(submissionData.telefono, submissionData.nombre_completo, matches)
+
+                    // Marcar matches como enviados
+                    for (const match of matches) {
+                      await supabase
+                        .from('ia_matches')
+                        .update({ status: 'enviado' })
+                        .eq('profile_a_id', perfilGuardado.id)
+                        .eq('profile_b_id', match.perfil.id)
+                    }
+                  }
                 } else {
                   console.log('Sin matches por ahora — la red necesita más miembros')
                 }
