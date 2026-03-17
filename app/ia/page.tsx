@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { ArrowLeft } from 'lucide-react'
+import HeroOnboarding from '@/components/ia/HeroOnboarding'
 
 const ROLE_OPTIONS = [
   'Soy founder / Dueño de negocio',
@@ -116,68 +117,34 @@ export default function IAPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 py-12 md:py-16 relative">
-        {showVolver && (
-          <motion.button
-            type="button"
-            onClick={handleBack}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="absolute left-6 top-8 flex items-center gap-2 text-sm text-black/70 hover:text-black transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Volver
-          </motion.button>
-        )}
-
-        <div className={showVolver ? 'pt-10' : ''}>
-        <AnimatePresence mode="wait">
-          {step === 'intro' ? (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 1 }}
-              exit={{ opacity: 0, filter: 'blur(12px)' }}
-              transition={{ duration: 0.4, ease: 'easeInOut' }}
-              className="space-y-8"
+      {step === 'intro' ? (
+        <motion.div
+          key="intro"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0, filter: 'blur(12px)' }}
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          className="min-h-screen"
+        >
+          <HeroOnboarding onSelect={handleSelectRole} />
+        </motion.div>
+      ) : (
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 py-12 md:py-16 relative">
+          {showVolver && (
+            <motion.button
+              type="button"
+              onClick={handleBack}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="absolute left-6 top-8 flex items-center gap-2 text-sm text-black/70 hover:text-black transition-colors"
             >
-              <div className="flex items-start gap-2 md:gap-3">
-                <div className="flex-shrink-0 flex items-center gap-1">
-                  <span className="text-base md:text-xl font-bold tracking-tight text-black">AI</span>
-                  <span className="text-black/80">✦</span>
-                </div>
-                <div>
-                  <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-black">
-                    Hola que bueno tenerte aqui.
-                  </h1>
-                  <p className="mt-2 text-sm md:text-base text-black/90 leading-tight max-w-prose">
-                    Te conecto con clientes, aliados, inversores y socios estratégicos en Latinoamérica. Cuéntame, ¿cómo te describes?
-                  </p>
-                </div>
-              </div>
+              <ArrowLeft className="w-4 h-4" />
+              Volver
+            </motion.button>
+          )}
 
-              <div className="flex flex-col gap-2 md:gap-3 w-fit ml-8 sm:ml-10 md:ml-14">
-                {ROLE_OPTIONS.map((role, i) => (
-                  <motion.button
-                    key={role}
-                    type="button"
-                    onClick={() => handleSelectRole(role)}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06, duration: 0.3 }}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    className={cn(
-                      'w-full text-left py-3 md:py-4 px-4 md:px-5 rounded-2xl text-sm md:text-base font-medium text-white',
-                      'bg-black hover:bg-black/90 transition-colors',
-                      'focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2'
-                    )}
-                  >
-                    {role}
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          ) : step === 'formA' ? (
+          <div className={showVolver ? 'pt-10' : ''}>
+        <AnimatePresence mode="wait">
+          {step === 'formA' ? (
             <motion.div
               key="formA"
               {...formTransition}
@@ -428,8 +395,9 @@ export default function IAPage() {
             </motion.div>
           )}
         </AnimatePresence>
+          </div>
         </div>
-      </div>
+      )}
     </main>
   )
 }

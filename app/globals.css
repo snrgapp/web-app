@@ -2,6 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scroll-right {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+.logo-carousel-track-left {
+  animation: scroll-left 20s linear infinite;
+}
+
+.logo-carousel-track-right {
+  animation: scroll-right 20s linear infinite;
+}
+
+.logo-carousel-pause:hover .logo-carousel-track-left,
+.logo-carousel-pause:hover .logo-carousel-track-right {
+  animation-play-state: paused;
+}
+
+/* Fade al entrar/salir del carrusel (sin blur) — fondo blanco */
+.logo-carousel-fade-left {
+  background: linear-gradient(
+    to right,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.98) 8%,
+    rgba(255, 255, 255, 0.92) 18%,
+    rgba(255, 255, 255, 0.78) 28%,
+    rgba(255, 255, 255, 0.55) 40%,
+    rgba(255, 255, 255, 0.3) 55%,
+    rgba(255, 255, 255, 0.12) 70%,
+    rgba(255, 255, 255, 0.03) 85%,
+    transparent 100%
+  );
+}
+
+.logo-carousel-fade-right {
+  background: linear-gradient(
+    to left,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.98) 8%,
+    rgba(255, 255, 255, 0.92) 18%,
+    rgba(255, 255, 255, 0.78) 28%,
+    rgba(255, 255, 255, 0.55) 40%,
+    rgba(255, 255, 255, 0.3) 55%,
+    rgba(255, 255, 255, 0.12) 70%,
+    rgba(255, 255, 255, 0.03) 85%,
+    transparent 100%
+  );
+}
+
 @keyframes carousel-down {
   0% { transform: translateY(0); }
   100% { transform: translateY(-50%); }
