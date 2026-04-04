@@ -237,6 +237,49 @@ body {
 
 
 
+/* Mapa de la comunidad (inicio): pulso en nodos */
+@keyframes community-map-pulse {
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 0.55;
+  }
+  100% {
+    width: 300%;
+    height: 300%;
+    opacity: 0;
+  }
+}
+
+.community-map-hotspot-pulse::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: var(--community-map-accent, #e5b318);
+  transform: translate(-50%, -50%);
+  animation: community-map-pulse 2s infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .community-map-hotspot-pulse::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .synergy-page-dots {
+    background-color: #f2f2f2;
+    background-image: radial-gradient(#cfcfcf 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
+
 @layer base {
   * {
     @apply border-border;

@@ -46,7 +46,7 @@ function renderTextWithBold(text: string, boldWords: string[]) {
 
 export default function QueSigueSection() {
   return (
-    <section className="py-16 lg:py-24 bg-[#f2f2f2]">
+    <section className="py-16 lg:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pl-8 sm:pl-12 lg:pl-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Columna 1: título centrado + bullet points con descripciones a la izquierda */}

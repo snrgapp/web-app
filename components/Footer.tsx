@@ -7,6 +7,7 @@ import { ExternalLink } from 'lucide-react'
 const eventosLinks = [
   { href: '/eventos', label: 'Calendario de eventos' },
   { href: '/postula-tu-ciudad', label: 'Postula a tu ciudad' },
+  { href: '/ia', label: 'IA para conectar' },
 ]
 
 const contactoLinks = [

@@ -76,7 +76,21 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+  		keyframes: {
+  			'reviews-scroll-left': {
+  				'0%': { transform: 'translateX(0)' },
+  				'100%': { transform: 'translateX(-50%)' },
+  			},
+  			'reviews-scroll-right': {
+  				'0%': { transform: 'translateX(-50%)' },
+  				'100%': { transform: 'translateX(0)' },
+  			},
+  		},
+  		animation: {
+  			'reviews-scroll-left': 'reviews-scroll-left 38s linear infinite',
+  			'reviews-scroll-right': 'reviews-scroll-right 44s linear infinite',
+  		},
   	}
   },
   plugins: [require("tailwindcss-animate")],
