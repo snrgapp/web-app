@@ -1,53 +1,25 @@
 'use client'
 
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { Mail, MapPin, ArrowRight, Star, Instagram, Linkedin, Check } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { Star, Instagram, Linkedin } from 'lucide-react'
+import { useState, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useGSAP } from '@gsap/react'
 import { heroImages } from '@/lib/inicio-data'
-import { createLeadAction } from '@/app/actions/leads'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const CAROUSEL_DURATION = 25
 
 export default function Hero() {
-  const [email, setEmail] = useState('')
-  const [ciudad, setCiudad] = useState('')
-  const [submitted, setSubmitted] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
   const [foundersCount, setFoundersCount] = useState(0)
 
   const heroSectionRef = useRef<HTMLElement>(null)
   const titlePart1Ref = useRef<HTMLSpanElement>(null)
   const titlePart2Ref = useRef<HTMLSpanElement>(null)
   const subtitleRef = useRef<HTMLParagraphElement>(null)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
-    setLoading(true)
-    const result = await createLeadAction(email, ciudad || null)
-    if (!result.success) {
-      setError(result.error ?? 'No se pudo guardar. Intenta de nuevo.')
-      setLoading(false)
-      return
-    }
-    setSubmitted(true)
-    setEmail('')
-    setCiudad('')
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    if (!submitted) return
-    const t = setTimeout(() => setSubmitted(false), 3200)
-    return () => clearTimeout(t)
-  }, [submitted])
 
   useGSAP(
     () => {
@@ -121,7 +93,7 @@ export default function Hero() {
     >
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Columna izquierda: texto y formulario */}
+          {/* Columna izquierda: texto y prueba social */}
           <div className="space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -144,123 +116,20 @@ export default function Hero() {
               </p>
             </motion.div>
 
-            <div className="flex flex-col sm:flex-row sm:items-start gap-3 max-w-xl">
-              <div className="min-h-[52px] flex items-center flex-1 w-full sm:w-auto">
-                <AnimatePresence mode="wait">
-                {submitted ? (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex items-center gap-3 text-[#1a1a1a]"
-                  >
-                    <Check className="w-6 h-6 text-[#E5B318] flex-shrink-0" strokeWidth={2.5} />
-                    <p className="text-sm sm:text-base font-light lowercase">
-                      registro satisfactorio. te llegará más información a tu correo.
-                    </p>
-                  </motion.div>
-                ) : (
-                  <motion.form
-                    key="form"
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  onSubmit={handleSubmit}
-                  className="flex flex-col sm:flex-row gap-3 w-full"
-                >
-                  <div className="relative flex-1 min-w-0 sm:min-w-[120px] sm:max-w-[160px]">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="ciudad"
-                      value={ciudad}
-                      onChange={(e) => setCiudad(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3.5 rounded-2xl border border-gray-300 bg-white text-[#1a1a1a] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black/20 transition-all"
-                    />
-                  </div>
-                  <div className="relative flex-[2_1_0] min-w-0 sm:flex-[3_1_0]">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="email"
-                      placeholder="correo"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      className="w-full pl-12 pr-5 py-3.5 rounded-2xl border border-gray-300 bg-white text-[#1a1a1a] placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-black/20 transition-all"
-                    />
-                  </div>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:contents">
-                    {/* Mobile: línea 1 - rating izquierda, botón derecha */}
-                    <div className="flex sm:hidden justify-between items-center w-full">
-                      <div className="flex items-center gap-1.5 text-[10px] text-[#1a1a1a]">
-                        <span className="font-medium">4,9</span>
-                        <div className="flex items-center">
-                          {[1, 2, 3, 4].map((i) => (
-                            <Star key={i} className="w-2.5 h-2.5 text-[#E5B318] fill-[#E5B318]" />
-                          ))}
-                          <div className="w-1.5 h-2.5 overflow-hidden flex-shrink-0">
-                            <Star className="w-2.5 h-2.5 text-[#E5B318] fill-[#E5B318]" />
-                          </div>
-                        </div>
-                        <span className="font-light text-gray-600">
-                          en + <span>{foundersCount}</span> founders
-                        </span>
-                      </div>
-                      <motion.button
-                        type="submit"
-                        disabled={loading}
-                        whileHover={loading ? undefined : { scale: 1.03 }}
-                        whileTap={loading ? undefined : { scale: 0.98 }}
-                        className="shrink-0 px-6 py-3 rounded-2xl bg-black text-white text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-black/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
-                      >
-                        {loading ? 'enviando...' : 'regístrame'}
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </motion.button>
-                    </div>
-                    {/* Mobile: línea 2 - iconos más grandes */}
-                    <div className="flex sm:hidden items-center gap-3">
-                      <a href="https://www.instagram.com/_____synergy?igsh=MjhocGI0eWp3dDJr&utm_source=qr" target="_blank" rel="noopener noreferrer" className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors" aria-label="Instagram">
-                        <Instagram className="w-5 h-5" />
-                      </a>
-                      <a href="https://www.linkedin.com/company/synergy-founders-makers" target="_blank" rel="noopener noreferrer" className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors" aria-label="LinkedIn">
-                        <Linkedin className="w-5 h-5" />
-                      </a>
-                    </div>
-                    {/* Desktop: solo el botón */}
-                    <motion.button
-                      type="submit"
-                      disabled={loading}
-                      whileHover={loading ? undefined : { scale: 1.03 }}
-                      whileTap={loading ? undefined : { scale: 0.98 }}
-                      className="hidden sm:flex shrink-0 px-6 py-3 rounded-2xl bg-black text-white text-sm font-medium items-center justify-center gap-1.5 hover:bg-black/90 transition-colors disabled:opacity-70 disabled:cursor-not-allowed sm:ml-auto"
-                    >
-                      {loading ? 'enviando...' : 'regístrame'}
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </motion.button>
-                  </div>
-                </motion.form>
-                )}
-              </AnimatePresence>
-              </div>
-            </div>
-
-            {error && (
-              <p className="text-sm text-red-600 font-light">
-                {error}
-              </p>
-            )}
-
-            <div className="hidden sm:flex flex-col sm:flex-row sm:flex-wrap gap-4 max-w-md">
-              <div className="flex items-center gap-1.5 text-sm text-[#1a1a1a]">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex max-w-md flex-wrap items-center gap-x-6 gap-y-4"
+            >
+              <div className="flex items-center gap-1.5 text-[11px] text-[#1a1a1a] sm:text-sm">
                 <span className="font-medium">4,9</span>
                 <div className="flex items-center">
                   {[1, 2, 3, 4].map((i) => (
-                    <Star key={i} className="w-4 h-4 text-[#E5B318] fill-[#E5B318]" />
+                    <Star key={i} className="h-3 w-3 text-[#E5B318] fill-[#E5B318] sm:h-4 sm:w-4" />
                   ))}
-                  <div className="w-2 h-4 overflow-hidden flex-shrink-0">
-                    <Star className="w-4 h-4 text-[#E5B318] fill-[#E5B318]" />
+                  <div className="h-3 w-1.5 overflow-hidden sm:h-4 sm:w-2">
+                    <Star className="h-3 w-3 text-[#E5B318] fill-[#E5B318] sm:h-4 sm:w-4" />
                   </div>
                 </div>
                 <span className="font-light text-gray-600">
@@ -272,22 +141,22 @@ export default function Hero() {
                   href="https://www.instagram.com/_____synergy?igsh=MjhocGI0eWp3dDJr&utm_source=qr"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors"
+                  className="text-[#1a1a1a]/60 transition-colors hover:text-[#1a1a1a]"
                   aria-label="Instagram"
                 >
-                  <Instagram className="w-4 h-4" />
+                  <Instagram className="h-5 w-5 sm:h-4 sm:w-4" />
                 </a>
                 <a
                   href="https://www.linkedin.com/company/synergy-founders-makers"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#1a1a1a]/60 hover:text-[#1a1a1a] transition-colors"
+                  className="text-[#1a1a1a]/60 transition-colors hover:text-[#1a1a1a]"
                   aria-label="LinkedIn"
                 >
-                  <Linkedin className="w-4 h-4" />
+                  <Linkedin className="h-5 w-5 sm:h-4 sm:w-4" />
                 </a>
               </div>
-            </div>
+            </motion.div>
 
           </div>
 

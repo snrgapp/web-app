@@ -6,6 +6,7 @@ import Hero from '@/components/Hero'
 // import TarjetasSection from '@/components/inicio/TarjetasSection'
 import Partners from '@/components/Partners'
 import AIMatchingSection from '@/components/inicio/AIMatchingSection'
+import ThreeStepsSection from '@/components/inicio/ThreeStepsSection'
 import ReviewsCarousel from '@/components/inicio/ReviewsCarousel'
 import PhotoGallery from '@/components/inicio/PhotoGallery'
 import JoinFormSection from '@/components/inicio/JoinFormSection'
@@ -26,6 +27,7 @@ export default function InicioPage() {
       <Hero />
       <Partners />
       <AIMatchingSection />
+      <ThreeStepsSection />
       <CommunityMapSection />
       <PhotoGallery />
       <JoinFormSection />

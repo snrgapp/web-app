@@ -131,7 +131,7 @@ export default function CommunityMapSection() {
             manrope.className
           )}
         >
-          mapa de la comunidad
+          mapa de las conexiones
         </h2>
         <p className="text-base text-neutral-600 leading-relaxed max-w-md mx-auto lowercase">
           founders conectados en el caribe colombiano: cada punto es parte del ecosistema synergy.
