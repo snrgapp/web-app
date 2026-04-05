@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Manrope } from 'next/font/google'
 
@@ -247,6 +248,20 @@ export default function ThreeStepsSection() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="mt-12 flex justify-center px-6">
+          <a
+            href="/inicio#unete-red"
+            className={cn(
+              'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-[#1a1a1a] px-7 py-3.5',
+              'text-sm font-semibold text-white transition-colors hover:bg-[#2d2d2d] sm:w-auto',
+              manrope.className
+            )}
+          >
+            Quiero ir a la próxima reunión
+            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+          </a>
         </div>
       </section>
     </>
