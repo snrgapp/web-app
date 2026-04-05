@@ -5,11 +5,10 @@ import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 // import TarjetasSection from '@/components/inicio/TarjetasSection'
 import Partners from '@/components/Partners'
-import ConectarSection from '@/components/inicio/ConectarSection'
-import ComoFuncionaSection from '@/components/inicio/ComoFuncionaSection'
-import QueSigueSection from '@/components/inicio/QueSigueSection'
+import AIMatchingSection from '@/components/inicio/AIMatchingSection'
 import ReviewsCarousel from '@/components/inicio/ReviewsCarousel'
 import PhotoGallery from '@/components/inicio/PhotoGallery'
+import JoinFormSection from '@/components/inicio/JoinFormSection'
 import CommunityMapSection from '@/components/inicio/CommunityMapSection'
 import Footer from '@/components/Footer'
 import { useCinematicScroll } from '@/hooks/useCinematicScroll'
@@ -26,12 +25,11 @@ export default function InicioPage() {
       <Navbar />
       <Hero />
       <Partners />
-      <ConectarSection />
-      <ComoFuncionaSection />
-      <QueSigueSection />
-      <ReviewsCarousel />
-      <PhotoGallery />
+      <AIMatchingSection />
       <CommunityMapSection />
+      <PhotoGallery />
+      <JoinFormSection />
+      <ReviewsCarousel />
       {/* <TarjetasSection /> */}
       <Footer />
     </main>

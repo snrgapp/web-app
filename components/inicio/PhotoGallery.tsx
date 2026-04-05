@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 import { Manrope } from 'next/font/google'
 import { cn } from '@/lib/utils'
@@ -236,15 +235,6 @@ export default function PhotoGallery() {
             <GalleryCard p={p} className="absolute inset-0 h-full w-full" />
           </div>
         ))}
-      </div>
-
-      <div className={cn('flex justify-center mt-12 px-6', manrope.className)}>
-        <Link
-          href="/eventos"
-          className="inline-flex items-center justify-center rounded-xl bg-[#1a1a1a] text-white text-sm font-semibold px-7 py-3 transition-colors hover:bg-[#2d2d2d] w-full sm:w-auto"
-        >
-          ver calendario de eventos
-        </Link>
       </div>
     </section>
   )

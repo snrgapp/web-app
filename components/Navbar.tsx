@@ -4,12 +4,12 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Ticket, Mail, UserCircle } from 'lucide-react'
+import { Menu, X, Ticket, Mail, UserPlus } from 'lucide-react'
 
 const navLinks = [
+  { href: '/inicio#unete-red', label: 'únete a la red', icon: UserPlus },
   { href: '/eventos', label: 'eventos', icon: Ticket },
   { href: '/contacto', label: 'contacto', icon: Mail },
-  { href: '/miembros/login', label: 'miembros', icon: UserCircle },
 ]
 
 export default function Navbar() {
@@ -39,13 +39,19 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => {
             const Icon = link.icon
+            const className =
+              'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
+            if (link.href.includes('#')) {
+              return (
+                <a key={link.href} href={link.href} className={className}>
+                  <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
+                  {link.label}
+                </a>
+              )
+            }
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex items-center gap-2 text-sm font-medium text-[#1a1a1a] lowercase hover:text-black/80 transition-colors"
-              >
-                <Icon className="w-4 h-4 flex-shrink-0" />
+              <Link key={link.href} href={link.href} className={className}>
+                <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
                 {link.label}
               </Link>
             )
@@ -80,14 +86,19 @@ export default function Navbar() {
             <div className="px-4 py-4 flex flex-col gap-1">
               {navLinks.map((link) => {
                 const Icon = link.icon
+                const className =
+                  'flex items-center gap-2 py-3 px-2 text-base font-light text-[#1a1a1a] lowercase tracking-wide hover:bg-black/5 rounded-lg transition-colors'
+                if (link.href.includes('#')) {
+                  return (
+                    <a key={link.href} href={link.href} onClick={closeMenu} className={className}>
+                      <Icon className="h-5 w-5 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
+                      {link.label}
+                    </a>
+                  )
+                }
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={closeMenu}
-                    className="flex items-center gap-2 py-3 px-2 text-base font-medium text-[#1a1a1a] lowercase hover:bg-black/5 rounded-lg transition-colors"
-                  >
-                    <Icon className="w-5 h-5 flex-shrink-0" />
+                  <Link key={link.href} href={link.href} onClick={closeMenu} className={className}>
+                    <Icon className="h-5 w-5 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
                     {link.label}
                   </Link>
                 )
