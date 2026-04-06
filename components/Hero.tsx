@@ -112,7 +112,7 @@ export default function Hero() {
                 ref={subtitleRef}
                 className="text-base text-gray-500 tracking-widest max-w-md lowercase"
               >
-                creamos experiencias de conexión entre founders
+                conexiones que generan resultados
               </p>
             </motion.div>
 

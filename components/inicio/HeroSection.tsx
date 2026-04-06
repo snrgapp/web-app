@@ -38,7 +38,7 @@ export default function HeroSection() {
 
           {/* Subtítulo - más estrecho, espacio vertical mayor */}
           <p className="font-hero-subtitle text-lg sm:text-xl lg:text-2xl text-[#1a1a1a] lowercase tracking-tight max-w-md lg:max-w-lg leading-relaxed mt-8 lg:mt-10">
-            creamos experiencias de conexión entre founders.
+            conexiones que generan resultados.
           </p>
         </motion.div>
 
