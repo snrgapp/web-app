@@ -24,38 +24,40 @@ export default function Navbar() {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 bg-[#f2f2f2]/95 backdrop-blur-sm border-b border-black/5"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link href="/inicio" className="flex-shrink-0">
-          <Image
-            src="/logo.png"
-            alt="Synergy"
-            width={40}
-            height={40}
-            className="w-10 h-10 object-contain"
-          />
-        </Link>
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 flex-1 items-center gap-6 md:gap-8 lg:gap-10">
+          <Link href="/inicio" className="shrink-0">
+            <Image
+              src="/logo.png"
+              alt="Synergy"
+              width={40}
+              height={40}
+              className="h-10 w-10 object-contain"
+            />
+          </Link>
 
-        {/* Desktop: enlaces horizontales */}
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => {
-            const Icon = link.icon
-            const className =
-              'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
-            if (link.href.includes('#')) {
+          {/* Desktop: enlaces a la derecha del logo */}
+          <div className="hidden min-w-0 items-center gap-6 md:flex lg:gap-8">
+            {navLinks.map((link) => {
+              const Icon = link.icon
+              const className =
+                'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
+              if (link.href.includes('#')) {
+                return (
+                  <a key={link.href} href={link.href} className={className}>
+                    <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
+                    {link.label}
+                  </a>
+                )
+              }
               return (
-                <a key={link.href} href={link.href} className={className}>
+                <Link key={link.href} href={link.href} className={className}>
                   <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
                   {link.label}
-                </a>
+                </Link>
               )
-            }
-            return (
-              <Link key={link.href} href={link.href} className={className}>
-                <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
-                {link.label}
-              </Link>
-            )
-          })}
+            })}
+          </div>
         </div>
 
         {/* Mobile: botón hamburguesa */}

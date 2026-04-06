@@ -211,7 +211,7 @@ export default function ReviewsCarousel() {
   return (
     <section
       className={cn(
-        'overflow-hidden w-full pt-16 lg:pt-24 pb-24 lg:pb-36',
+        'overflow-hidden w-full pt-16 lg:pt-24 pb-10 lg:pb-12',
         manrope.variable
       )}
       aria-labelledby="reviews-heading"
