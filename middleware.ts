@@ -3,6 +3,12 @@ import { NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@/utils/supabase/middleware'
 import { getCookieName, hasValidSessionFormat } from '@/lib/members/session-edge'
 
+const PERRENQUE_HOSTS = [
+  'perrenque.snrg.lat',
+  'www.perrenque.snrg.lat',
+  'perrenque.localhost',
+]
+
 const INSCRIPCION_HOSTS = [
   'inscripcion.snrg.lat',
   'www.inscripcion.snrg.lat',
@@ -128,6 +134,19 @@ export async function middleware(request: NextRequest) {
     } catch {
       return NextResponse.redirect(new URL('/login', request.url))
     }
+  }
+
+  // Subdominio perrenque.snrg.lat — landing estática del formulario Conéctate
+  if (matchesHosts(request, PERRENQUE_HOSTS)) {
+    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+      return NextResponse.next({ request: { headers: requestHeaders } })
+    }
+    if (pathname === '/' || pathname === '') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/perrenque.html'
+      return NextResponse.rewrite(url)
+    }
+    return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
   // Subdominio inscripcion.snrg.lat

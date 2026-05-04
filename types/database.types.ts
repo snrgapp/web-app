@@ -73,6 +73,42 @@ export interface Database {
           }
         ]
       }
+      perrenque_conecta_submissions: {
+        Row: {
+          id: string
+          nombre_completo: string
+          telefono: string
+          identidad: string
+          motivacion: string
+          mundo: string
+          valor_humano: string
+          profile_text: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nombre_completo: string
+          telefono: string
+          identidad: string
+          motivacion: string
+          mundo: string
+          valor_humano: string
+          profile_text?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nombre_completo?: string
+          telefono?: string
+          identidad?: string
+          motivacion?: string
+          mundo?: string
+          valor_humano?: string
+          profile_text?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           id: string
@@ -961,6 +997,7 @@ export interface Database {
 // Tipos auxiliares para uso en la aplicación
 export type Organizacion = Database['public']['Tables']['organizaciones']['Row']
 export type OrganizacionMiembro = Database['public']['Tables']['organizacion_miembros']['Row']
+export type PerrenqueConectaSubmission = Database['public']['Tables']['perrenque_conecta_submissions']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']
 export type Asistente = Database['public']['Tables']['asistentes']['Row']
