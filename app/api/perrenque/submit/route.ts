@@ -79,11 +79,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Texto demasiado largo (máx. 200)' }, { status: 400 })
     }
 
-    const profileText =
-      typeof body.profile_text === 'string' && body.profile_text.length <= 4000
-        ? body.profile_text.trim() || null
-        : null
-
     const supabase = createAdminClient()
     if (!supabase) {
       return NextResponse.json(
@@ -101,18 +96,21 @@ export async function POST(req: NextRequest) {
         motivacion,
         mundo,
         valor_humano: valorHumanoRaw,
-        profile_text: profileText,
       })
       .select('id')
       .single()
 
     if (error) {
       console.error('perrenque_conecta_submissions insert:', error)
-      if (error.code === '23505') {
+      const msg = String(error.message ?? '')
+      const duplicate =
+        error.code === '23505' ||
+        /duplicate key|unique constraint/i.test(msg)
+      if (duplicate) {
         return NextResponse.json(
           {
             error:
-              'Este número ya tiene un perfil registrado. Usa ese mismo teléfono en la app para ver tus conexiones.',
+              'mmm.. alguien ya se registró con ese numero de telefono, revisa y confirma',
           },
           { status: 409 }
         )

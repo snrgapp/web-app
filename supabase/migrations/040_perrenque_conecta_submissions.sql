@@ -31,9 +31,8 @@ CREATE TABLE IF NOT EXISTS perrenque_conecta_submissions (
     'Comunicación corporativa'
   )),
   valor_humano TEXT NOT NULL CHECK (
-    char_length(valor_humano) BETWEEN 1 AND 200
+    char_length(valor_humano) BETWEEN 3 AND 200
   ),
-  profile_text TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
