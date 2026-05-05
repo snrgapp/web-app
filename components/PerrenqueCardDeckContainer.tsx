@@ -14,7 +14,7 @@ interface PerrenqueCardDeckContainerProps {
   ronda?: 1 | 2
 }
 
-/** Alterna amarillo Perrenque y azul oscuro de marca. */
+/** Fondo: gris cuando la tarjeta es amarilla (contraste); negro cuando la tarjeta es oscura. */
 export default function PerrenqueCardDeckContainer({
   questions,
   ronda = 1,
@@ -89,7 +89,7 @@ export default function PerrenqueCardDeckContainer({
     setSelectedCardIndex(newIndex)
   }
 
-  const bgHex = backgroundColor === 'yellow' ? '#FFD600' : '#1a1a1a'
+  const bgHex = backgroundColor === 'yellow' ? '#d4d4d8' : '#1a1a1a'
   const cardVariant = backgroundColor === 'yellow' ? 'yellow' : 'dark'
 
   return (

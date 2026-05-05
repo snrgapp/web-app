@@ -122,9 +122,13 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    void recomputePerrenqueMatches().catch((err) =>
+    // Importante: en serverless (p. ej. Vercel) el trabajo en segundo plano con `void` suele
+    // cancelarse al enviar la respuesta. Esperamos aquí para que grupos y matches existan.
+    try {
+      await recomputePerrenqueMatches()
+    } catch (err) {
       console.error('perrenque matching job:', err)
-    )
+    }
 
     return NextResponse.json({ ok: true, id: data.id })
   } catch {

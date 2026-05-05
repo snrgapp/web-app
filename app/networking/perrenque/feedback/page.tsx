@@ -53,7 +53,7 @@ export default function PerrenqueFeedbackPage() {
       localStorage.removeItem('perrenque_nombre')
       localStorage.removeItem('perrenque_ronda_actual')
     }
-    router.push('/')
+    router.push('/networking/perrenque')
   }
 
   const displayRating = hoverRating || rating
