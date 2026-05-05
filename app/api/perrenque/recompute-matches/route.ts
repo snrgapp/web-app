@@ -51,10 +51,11 @@ export async function GET(req: NextRequest) {
         process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() && process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
       ),
       note:
-        'POST este path (o cron de Vercel) ejecuta el recomputo. `groqApiKeyConfigured` solo indica que la variable existe; el último intento Groq exitoso sale en `groqPartitionOk` tras POST.',
+        'POST incremental por defecto (solo sin grupo). POST con body `{"full":true}` o `?full=1` recomputa todo. Escalas ~800: Groq solo en lotes ≤40; el resto reparto local.',
     })
   }
-  const result = await recomputePerrenqueMatches()
+  const full = req.nextUrl.searchParams.get('full') === '1'
+  const result = await recomputePerrenqueMatches({ mode: full ? 'full' : 'incremental' })
   return json(result, result.ok ? 200 : 500)
 }
 
@@ -63,6 +64,15 @@ export async function POST(req: NextRequest) {
   if (!auth.ok) {
     return NextResponse.json({ error: auth.body }, { status: auth.status })
   }
-  const result = await recomputePerrenqueMatches()
+  let full = req.nextUrl.searchParams.get('full') === '1'
+  if (!full) {
+    try {
+      const body = await req.json()
+      full = Boolean((body as { full?: boolean })?.full)
+    } catch {
+      /* body vacío u otro content-type */
+    }
+  }
+  const result = await recomputePerrenqueMatches({ mode: full ? 'full' : 'incremental' })
   return json(result, result.ok ? 200 : 500)
 }

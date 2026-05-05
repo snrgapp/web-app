@@ -11,14 +11,16 @@ export type PerrenqueRecomputePanelResult =
       groqApiKeyConfigured: boolean
     } & RecomputePerrenqueResult)
 
-/** Solo usuarios con sesión del panel (/panel). Ejecuta el mismo job que el POST cron. */
-export async function ejecutarPerrenqueRecomputeDesdePanel(): Promise<PerrenqueRecomputePanelResult> {
+/** Panel: por defecto solo asigna quienes no tienen r1+r2. `fullReset` vacía todo y recomputa. */
+export async function ejecutarPerrenqueRecomputeDesdePanel(options?: {
+  fullReset?: boolean
+}): Promise<PerrenqueRecomputePanelResult> {
   const authed = await isAuthenticated()
   if (!authed) {
     return { authorized: false, error: 'Inicia sesión en el panel para usar esta acción.' }
   }
 
-  const run = await recomputePerrenqueMatches()
+  const run = await recomputePerrenqueMatches({ mode: options?.fullReset ? 'full' : 'incremental' })
   return {
     authorized: true,
     groqApiKeyConfigured: Boolean(process.env.GROQ_API_KEY?.trim()),

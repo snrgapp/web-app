@@ -5,6 +5,7 @@
 #
 # Intervalo mínimo práctico en GitHub: 5 minutos. Para otra frecuencia usa un servicio HTTP externo
 # (p. ej. cron-job.org) que haga POST con Authorization: Bearer <secret>.
+# POST sin parámetros = incremental (solo quienes aún no tienen r1+r2). Full rebuild: ?full=1 o {"full":true}.
 
 name: Perrenque recompute matches
 

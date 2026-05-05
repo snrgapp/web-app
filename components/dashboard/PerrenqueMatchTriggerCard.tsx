@@ -10,13 +10,14 @@ import type { PerrenqueRecomputePanelResult } from '@/app/actions/perrenque-admi
 
 export function PerrenqueMatchTriggerCard() {
   const [loading, setLoading] = useState(false)
+  const [fullReset, setFullReset] = useState(false)
   const [last, setLast] = useState<PerrenqueRecomputePanelResult | null>(null)
 
   async function run() {
     setLoading(true)
     setLast(null)
     try {
-      const res = await ejecutarPerrenqueRecomputeDesdePanel()
+      const res = await ejecutarPerrenqueRecomputeDesdePanel({ fullReset })
       setLast(res)
     } finally {
       setLoading(false)
@@ -34,7 +35,8 @@ export function PerrenqueMatchTriggerCard() {
           <div>
             <h3 className="text-sm font-medium text-zinc-800">Perrenque Creativo</h3>
             <p className="text-xs text-zinc-500 mt-0.5">
-              Ejecutar agente de grupos y matches (misma lógica que el registro y el cron).
+              Por defecto solo asigna quienes aún no tienen ronda 1 y 2 (llegadas tarde). Marca abajo
+              para vaciar todo y recomputar (~800 inscritos: sin Groq en lotes grandes).
             </p>
           </div>
           <Button
@@ -49,10 +51,19 @@ export function PerrenqueMatchTriggerCard() {
             ) : (
               <PlayCircle className="h-4 w-4" aria-hidden />
             )}
-            {loading ? 'Ejecutando…' : 'Ejecutar matching'}
+            {loading ? 'Ejecutando…' : fullReset ? 'Recomputar todo' : 'Ejecutar matching'}
           </Button>
         </CardHeader>
         <CardContent className="pt-0 space-y-3">
+          <label className="flex items-center gap-2 text-xs text-zinc-600 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              className="rounded border-zinc-300"
+              checked={fullReset}
+              onChange={(e) => setFullReset(e.target.checked)}
+            />
+            Rehacer todos los grupos (borra asignaciones existentes)
+          </label>
           {last && !last.authorized && (
             <p className="text-sm text-red-600 font-medium" role="alert">
               {last.error}
@@ -66,6 +77,15 @@ export function PerrenqueMatchTriggerCard() {
                   <strong className={last.ok ? 'text-green-700' : 'text-red-700'}>
                     {last.ok ? 'OK' : 'Error'}
                   </strong>
+                </span>
+                <span>
+                  Modo: <strong>{last.mode === 'full' ? 'completo' : 'incremental'}</strong>
+                </span>
+                <span>
+                  Procesados ahora: <strong>{last.processedCount}</strong>
+                </span>
+                <span>
+                  Ya tenían grupo: <strong>{last.alreadyAssignedCount}</strong>
                 </span>
                 <span>
                   Inscritos: <strong>{last.profileCount}</strong>
