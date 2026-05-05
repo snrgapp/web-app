@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { recomputePerrenqueMatches } from '@/services/perrenque-matching'
 
 const IDENTIDAD = new Set([
   'Estudiante',
@@ -120,6 +121,10 @@ export async function POST(req: NextRequest) {
         { status: 500 }
       )
     }
+
+    void recomputePerrenqueMatches().catch((err) =>
+      console.error('perrenque matching job:', err)
+    )
 
     return NextResponse.json({ ok: true, id: data.id })
   } catch {

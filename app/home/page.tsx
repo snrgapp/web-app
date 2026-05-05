@@ -12,6 +12,12 @@ const dinamicas = [
     enabled: true,
   },
   {
+    label: 'Perrenque Creativo',
+    image: '/images/card-perrenque.png',
+    href: '/networking/perrenque',
+    enabled: true,
+  },
+  {
     label: 'Pitch',
     image: '/images/card-pitch.png',
     href: '/pitch',

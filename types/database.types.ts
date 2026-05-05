@@ -106,6 +106,126 @@ export interface Database {
         }
         Relationships: []
       }
+      perrenque_preguntas: {
+        Row: {
+          id: string
+          contenido: string
+          ronda: number
+          orden: number
+          activo: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          contenido: string
+          ronda: number
+          orden?: number
+          activo?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          contenido?: string
+          ronda?: number
+          orden?: number
+          activo?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      perrenque_grupo_ronda: {
+        Row: {
+          submission_id: string
+          ronda: number
+          grupo_numero: number
+        }
+        Insert: {
+          submission_id: string
+          ronda: number
+          grupo_numero: number
+        }
+        Update: {
+          submission_id?: string
+          ronda?: number
+          grupo_numero?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'perrenque_grupo_ronda_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'perrenque_conecta_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      match_perrenque: {
+        Row: {
+          id: string
+          submission_id: string
+          matched_submission_id: string
+          ronda: number
+          razon: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          matched_submission_id: string
+          ronda: number
+          razon?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          matched_submission_id?: string
+          ronda?: number
+          razon?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'match_perrenque_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'perrenque_conecta_submissions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'match_perrenque_matched_submission_id_fkey'
+            columns: ['matched_submission_id']
+            referencedRelation: 'perrenque_conecta_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      feedback_perrenque: {
+        Row: {
+          id: string
+          submission_id: string
+          rating: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          rating: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          rating?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'feedback_perrenque_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'perrenque_conecta_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       categories: {
         Row: {
           id: string
@@ -995,6 +1115,9 @@ export interface Database {
 export type Organizacion = Database['public']['Tables']['organizaciones']['Row']
 export type OrganizacionMiembro = Database['public']['Tables']['organizacion_miembros']['Row']
 export type PerrenqueConectaSubmission = Database['public']['Tables']['perrenque_conecta_submissions']['Row']
+export type PerrenquePregunta = Database['public']['Tables']['perrenque_preguntas']['Row']
+export type MatchPerrenque = Database['public']['Tables']['match_perrenque']['Row']
+export type FeedbackPerrenque = Database['public']['Tables']['feedback_perrenque']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']
 export type Asistente = Database['public']['Tables']['asistentes']['Row']
