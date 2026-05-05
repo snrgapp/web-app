@@ -139,7 +139,8 @@ function GrupoContent() {
 
           {grupoNumero != null && companeros.length > 0 && (
             <p className="mt-10 pt-8 border-t border-white/25 text-center text-white/95 text-sm sm:text-base font-semibold leading-relaxed max-w-md mx-auto">
-              Escríbele a tus conexiones para ubicarte dentro del evento
+              Presiona el número de teléfono en las tarjetas y diles a tus conexiones dónde estás
+              ubicado/a antes de comenzar.
             </p>
           )}
         </motion.div>
