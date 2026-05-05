@@ -8,6 +8,8 @@ import { Loader2, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { verificarPerrenquePorTelefono } from '@/app/actions/perrenque-networking'
 
+const PERRENQUE_FORM_URL = 'https://perrenque.snrg.lat'
+
 function VerifyContent() {
   const router = useRouter()
   const [telefono, setTelefono] = useState('')
@@ -24,7 +26,9 @@ function VerifyContent() {
     const result = await verificarPerrenquePorTelefono(telefono.trim())
 
     if (!result.ok) {
-      setError(result.error)
+      setError(
+        `${result.error} Si todavía no te has registrado, completa primero el formulario en "Registrarse".`
+      )
       setLoading(false)
       return
     }
@@ -128,6 +132,15 @@ function VerifyContent() {
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Ingresar'}
           </Button>
+
+          <a
+            href={PERRENQUE_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full h-12 inline-flex items-center justify-center text-base font-black rounded-xl bg-white text-[#1a1a1a] border-[2.5px] border-[#1a1a1a] shadow-[3px_3px_0_#1a1a1a] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+          >
+            Registrarse
+          </a>
         </form>
       </motion.div>
     </div>
