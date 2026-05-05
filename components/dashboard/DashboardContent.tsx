@@ -9,6 +9,7 @@ import { TotalAsistentesChart } from './charts/TotalAsistentesChart'
 import { SegmentosChart } from './charts/SegmentosChart'
 import { RegistroPorEventosChart } from './charts/RegistroPorEventosChart'
 import { StatsOverviewCard } from './StatsOverviewCard'
+import { PerrenqueMatchTriggerCard } from './PerrenqueMatchTriggerCard'
 
 const MONTHS_2026 = [
   { value: '2026-01', label: 'Enero 2026' },
@@ -103,6 +104,8 @@ export function DashboardContent() {
           <StatsOverviewCard />
         </motion.div>
       </div>
+
+      <PerrenqueMatchTriggerCard />
 
       {/* Segmentos y Registro por eventos - mismas dimensiones y altura */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-[minmax(280px,1fr)]">
