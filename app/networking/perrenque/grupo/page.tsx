@@ -123,16 +123,24 @@ function GrupoContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+          className="w-full max-w-4xl"
         >
-          {companeros.length === 0 ? (
-            <p className="col-span-2 md:col-span-3 text-center text-white font-bold py-8">
-              {grupoNumero != null
-                ? 'Todavía no hay más personas asignadas a tu grupo en la app.'
-                : ''}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {companeros.length === 0 ? (
+              <p className="col-span-2 md:col-span-3 text-center text-white font-bold py-8">
+                {grupoNumero != null
+                  ? 'Todavía no hay más personas asignadas a tu grupo en la app.'
+                  : ''}
+              </p>
+            ) : (
+              companeros.map((s, i) => <PerrenquePersonCard key={s.id} submission={s} index={i} />)
+            )}
+          </div>
+
+          {grupoNumero != null && companeros.length > 0 && (
+            <p className="mt-10 pt-8 border-t border-white/25 text-center text-white/95 text-sm sm:text-base font-semibold leading-relaxed max-w-md mx-auto">
+              Escríbele a tus conexiones para ubicarte dentro del evento
             </p>
-          ) : (
-            companeros.map((s, i) => <PerrenquePersonCard key={s.id} submission={s} index={i} />)
           )}
         </motion.div>
 

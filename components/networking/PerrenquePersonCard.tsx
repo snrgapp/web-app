@@ -4,6 +4,14 @@ import { motion } from 'framer-motion'
 import { User, Sparkles, Phone, CheckCircle } from 'lucide-react'
 import type { PerrenqueConectaSubmission } from '@/types/database.types'
 
+/** Dígitos para api.whatsapp.com; Colombia 57 si no viene en el valor guardado. */
+function whatsappPhoneParam(raw: string | null | undefined): string | null {
+  if (!raw) return null
+  const d = raw.replace(/\D/g, '')
+  if (d.length < 7) return null
+  return d.startsWith('57') ? d : `57${d}`
+}
+
 interface PerrenquePersonCardProps {
   submission: PerrenqueConectaSubmission
   index?: number
@@ -11,6 +19,8 @@ interface PerrenquePersonCardProps {
 
 export function PerrenquePersonCard({ submission, index = 0 }: PerrenquePersonCardProps) {
   const telefono = submission.telefono || null
+  const waParam = whatsappPhoneParam(telefono)
+  const whatsappHref = waParam ? `https://api.whatsapp.com/send?phone=${waParam}` : null
 
   return (
     <motion.div
@@ -39,11 +49,13 @@ export function PerrenquePersonCard({ submission, index = 0 }: PerrenquePersonCa
           <p className="text-[#1a1a1a] text-xs md:text-sm truncate">{submission.identidad}</p>
         </div>
 
-        {telefono && (
+        {telefono && whatsappHref && (
           <div className="flex items-center gap-2">
             <Phone className="h-4 w-4 shrink-0 text-[#1a1a1a]" strokeWidth={2} />
             <a
-              href={`tel:${telefono}`}
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[#1a1a1a] text-xs md:text-sm hover:underline truncate font-bold"
               onClick={(e) => e.stopPropagation()}
             >
