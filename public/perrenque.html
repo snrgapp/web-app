@@ -410,6 +410,15 @@ body{
         placeholder='Ej: "Ganas de colaborar", "Una red en Cartagena", "Energía y muchas ideas"...'
         oninput="onText()"></textarea>
       <div class="pq-char"><span id="cc">0</span>/200</div>
+      <label style="display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:14px;font-weight:700;line-height:1.35;color:#1a1a1a;">
+        <input id="pq-consent" type="checkbox" required onchange="onText()" style="margin-top:2px;width:16px;height:16px;accent-color:#1a9fd4;flex:0 0 auto;">
+        <span>
+          Autorización de tratamiento de datos.
+          <a href="https://agenciapopuli.com/assets/docs/politica-tratamiento-datos-personales-populi.pdf" target="_blank" rel="noopener noreferrer" style="color:#1a9fd4;text-decoration:underline;">
+            Leer política
+          </a>
+        </span>
+      </label>
     </div>
     <div class="pq-nav">
       <button class="pq-btn pq-btn-back" onclick="goBack(4)">←</button>
@@ -454,9 +463,10 @@ function onContact(){
 
 function onText(){
   const ta=document.getElementById('textarea-4');
+  const consent=document.getElementById('pq-consent');
   document.getElementById('cc').textContent=ta.value.length;
   ans[3]=ta.value.trim();
-  document.getElementById('next-4').disabled=ans[3].length<3;
+  document.getElementById('next-4').disabled=ans[3].length<3 || !consent.checked;
 }
 
 function prog(cur){
@@ -487,6 +497,11 @@ function goBack(s){
 
 
 async function submit(){
+  const consent=document.getElementById('pq-consent');
+  if(!consent || !consent.checked){
+    alert('Debes aceptar la autorización de tratamiento de datos para continuar.');
+    return;
+  }
   function finalize(){
     document.getElementById('step-4').classList.remove('visible');
     document.getElementById('progressBar').style.display='none';
