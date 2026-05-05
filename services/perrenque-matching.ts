@@ -28,12 +28,17 @@ interface GroqGrupoResponse {
   }>
 }
 
-function chunkGroups(ids: string[], targetSize: number): string[][] {
+/** Parte en bloques y evita un grupo de 1 persona (une la “sobra” al penúltimo). */
+function chunkGroupsAvoidSingleton(ids: string[], targetSize: number): string[][] {
   if (ids.length === 0) return []
   const size = Math.min(Math.max(2, targetSize), ids.length)
   const groups: string[][] = []
   for (let i = 0; i < ids.length; i += size) {
     groups.push(ids.slice(i, i + size))
+  }
+  if (groups.length >= 2 && groups[groups.length - 1]!.length === 1) {
+    const orphan = groups.pop()!
+    groups[groups.length - 1]!.push(orphan[0]!)
   }
   return groups
 }
@@ -65,9 +70,13 @@ function validatePartition(ids: string[], groups: string[][]): boolean {
 }
 
 function fallbackGroups(ids: string[]): { r1: string[][]; r2: string[][] } {
-  const targetSize = ids.length >= 10 ? 4 : ids.length >= 6 ? 3 : 2
-  const r1 = chunkGroups(ids, targetSize)
-  const r2 = chunkGroups(shuffle(ids), targetSize)
+  // 2–5 personas: un solo grupo (evita 2+1 sin conexiones como pasaba con n=3 y tamaño 2).
+  if (ids.length <= 5) {
+    return { r1: [[...ids]], r2: [shuffle([...ids])] }
+  }
+  const targetSize = ids.length >= 10 ? 4 : 3
+  const r1 = chunkGroupsAvoidSingleton([...ids], targetSize)
+  const r2 = chunkGroupsAvoidSingleton(shuffle([...ids]), targetSize)
   return { r1, r2 }
 }
 
@@ -112,7 +121,8 @@ Opcional "razones": máximo 20 pares viewer/matched del mismo grupo y misma rond
       }),
     })
     if (!response.ok) {
-      console.error('Groq perrenque:', response.status)
+      const errText = await response.text().catch(() => '')
+      console.error('Groq perrenque:', response.status, errText.slice(0, 500))
       return null
     }
     const data = (await response.json()) as { choices: Array<{ message: { content: string } }> }
@@ -140,9 +150,39 @@ async function clearMatchingTables(
     .neq('submission_id', '00000000-0000-0000-0000-000000000000')
 }
 
-export async function recomputePerrenqueMatches(): Promise<void> {
+export type RecomputePerrenqueResult = {
+  ok: boolean
+  profileCount: number
+  /** Se intentó llamar a Groq (hay API key y N≤40). */
+  groqAttempted: boolean
+  /** La respuesta Groq particionó bien todos los ids (si no, se usó fallback). */
+  groqPartitionOk: boolean
+  usedFallback: boolean
+  grupoRowsWritten: number
+  matchRowsWritten: number
+  messages: string[]
+}
+
+export async function recomputePerrenqueMatches(): Promise<RecomputePerrenqueResult> {
+  const messages: string[] = []
+  const fail = (
+    extra: Partial<Omit<RecomputePerrenqueResult, 'ok' | 'messages'>>
+  ): RecomputePerrenqueResult => ({
+    ok: false,
+    profileCount: extra.profileCount ?? 0,
+    groqAttempted: extra.groqAttempted ?? false,
+    groqPartitionOk: extra.groqPartitionOk ?? false,
+    usedFallback: extra.usedFallback ?? false,
+    grupoRowsWritten: extra.grupoRowsWritten ?? 0,
+    matchRowsWritten: extra.matchRowsWritten ?? 0,
+    messages: [...messages],
+  })
+
   const supabase = createAdminClient()
-  if (!supabase) return
+  if (!supabase) {
+    messages.push('Sin cliente admin: revisa NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY.')
+    return fail({})
+  }
 
   const { data: rows, error } = await supabase
     .from('perrenque_conecta_submissions')
@@ -151,7 +191,8 @@ export async function recomputePerrenqueMatches(): Promise<void> {
 
   if (error) {
     console.error('recomputePerrenqueMatches fetch:', error)
-    return
+    messages.push(`Error leyendo inscritos: ${error.message}`)
+    return fail({ profileCount: 0 })
   }
 
   const profiles = (rows ?? []) as Profile[]
@@ -159,30 +200,59 @@ export async function recomputePerrenqueMatches(): Promise<void> {
 
   await clearMatchingTables(supabase)
 
-  if (ids.length < 2) return
+  if (ids.length < 2) {
+    messages.push(
+      'Menos de 2 inscritos: tablas de match vaciadas. No hay pares posibles hasta el segundo registro.'
+    )
+    return {
+      ok: true,
+      profileCount: ids.length,
+      groqAttempted: false,
+      groqPartitionOk: false,
+      usedFallback: false,
+      grupoRowsWritten: 0,
+      matchRowsWritten: 0,
+      messages,
+    }
+  }
 
   let r1: string[][] = []
   let r2: string[][] = []
   let razones: GroqGrupoResponse['razones'] = []
 
-  const useGroq = profiles.length <= 40 && process.env.GROQ_API_KEY
-  const groq = useGroq ? await callGroqForGroups(profiles) : null
+  const groqAttempted = profiles.length <= 40 && Boolean(process.env.GROQ_API_KEY?.trim())
+  const groq = groqAttempted ? await callGroqForGroups(profiles) : null
 
-  if (
+  let groqPartitionOk = Boolean(
     groq?.grupos_ronda1?.length &&
-    groq.grupos_ronda2?.length &&
-    validatePartition(ids, groq.grupos_ronda1) &&
-    validatePartition(ids, groq.grupos_ronda2)
-  ) {
+      groq.grupos_ronda2?.length &&
+      validatePartition(ids, groq.grupos_ronda1) &&
+      validatePartition(ids, groq.grupos_ronda2)
+  )
+
+  if (groqAttempted && !groqPartitionOk) {
+    messages.push(
+      groq
+        ? 'Groq respondió pero la partición no es válida (o JSON inválido); se usa reparto local.'
+        : 'Groq no disponible (error HTTP, parse o sin respuesta); se usa reparto local.'
+    )
+  }
+
+  if (groqPartitionOk && groq) {
     r1 = groq.grupos_ronda1
     r2 = groq.grupos_ronda2
     razones = groq.razones ?? []
+    messages.push('Partición de grupos tomada desde Groq.')
   }
 
+  const usedFallback = !groqPartitionOk
   if (!r1.length) {
     const fb = fallbackGroups(ids)
     r1 = fb.r1
     r2 = fb.r2
+    if (usedFallback) {
+      messages.push('Reparto local (fallback): grupos sin solitarios para n≤5; chunk con merge para n>5.')
+    }
   }
 
   const razonMap = new Map<string, string>()
@@ -223,16 +293,66 @@ export async function recomputePerrenqueMatches(): Promise<void> {
     }
   }
 
+  let grupoRowsWritten = 0
+  let matchRowsWritten = 0
+  let insertFailed = false
+
   if (grupoRows.length) {
     const { error: e1 } = await supabase.from('perrenque_grupo_ronda').insert(grupoRows)
-    if (e1) console.error('insert perrenque_grupo_ronda:', e1)
+    if (e1) {
+      console.error('insert perrenque_grupo_ronda:', e1)
+      messages.push(`insert perrenque_grupo_ronda: ${e1.message}`)
+      insertFailed = true
+    } else {
+      grupoRowsWritten = grupoRows.length
+    }
   }
-  if (matchRows.length) {
+  if (matchRows.length && !insertFailed) {
     const batchSize = 80
     for (let i = 0; i < matchRows.length; i += batchSize) {
       const chunk = matchRows.slice(i, i + batchSize)
       const { error: e2 } = await supabase.from('match_perrenque').insert(chunk)
-      if (e2) console.error('insert match_perrenque:', e2)
+      if (e2) {
+        console.error('insert match_perrenque:', e2)
+        messages.push(`insert match_perrenque: ${e2.message}`)
+        insertFailed = true
+        break
+      }
+      matchRowsWritten += chunk.length
     }
+  }
+
+  console.info(
+    '[perrenque-match]',
+    JSON.stringify({
+      profileCount: ids.length,
+      groqAttempted,
+      groqPartitionOk,
+      usedFallback,
+      grupoRowsWritten,
+      matchRowsWritten,
+    })
+  )
+
+  if (insertFailed) {
+    return fail({
+      profileCount: ids.length,
+      groqAttempted,
+      groqPartitionOk,
+      usedFallback,
+      grupoRowsWritten,
+      matchRowsWritten,
+    })
+  }
+
+  return {
+    ok: true,
+    profileCount: ids.length,
+    groqAttempted,
+    groqPartitionOk,
+    usedFallback,
+    grupoRowsWritten,
+    matchRowsWritten,
+    messages,
   }
 }
