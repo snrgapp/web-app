@@ -145,6 +145,7 @@ export default function PerrenqueCardDeckContainer({
                 content={selectedQuestion.content}
                 category={selectedQuestion.category}
                 variant={cardVariant === 'yellow' ? 'yellow' : 'dark'}
+                theme="perrenque"
               />
             </motion.div>
           ) : null}
