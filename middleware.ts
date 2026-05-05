@@ -39,6 +39,12 @@ function matchesHosts(req: NextRequest, hosts: string[]): boolean {
   )
 }
 
+function getEffectiveHost(req: NextRequest): string {
+  const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
+  const host = req.headers.get('host') ?? ''
+  return (forwardedHost || host).replace(/:.*$/, '')
+}
+
 /** Extrae slug de org desde host (para header x-org-slug) */
 function getOrgSlugFromHost(req: NextRequest): string {
   const host = req.headers.get('host') ?? req.headers.get('x-forwarded-host') ?? ''
@@ -138,6 +144,14 @@ export async function middleware(request: NextRequest) {
 
   // Subdominio perrenque.snrg.lat — landing estática del formulario Conéctate
   if (matchesHosts(request, PERRENQUE_HOSTS)) {
+    // Canonical host para evitar inconsistencias de DNS/proxy sin www.
+    const effectiveHost = getEffectiveHost(request)
+    if (effectiveHost === 'perrenque.snrg.lat') {
+      const url = request.nextUrl.clone()
+      url.host = 'www.perrenque.snrg.lat'
+      return NextResponse.redirect(url, 308)
+    }
+
     if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
       return NextResponse.next({ request: { headers: requestHeaders } })
     }
