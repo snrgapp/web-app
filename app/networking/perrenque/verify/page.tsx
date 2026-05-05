@@ -8,7 +8,7 @@ import { Loader2, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { verificarPerrenquePorTelefono } from '@/app/actions/perrenque-networking'
 
-const PERRENQUE_FORM_URL = 'https://perrenque.snrg.lat'
+const PERRENQUE_FORM_URL = 'https://www.perrenque.snrg.lat'
 
 function VerifyContent() {
   const router = useRouter()

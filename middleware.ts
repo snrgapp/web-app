@@ -144,7 +144,7 @@ export async function middleware(request: NextRequest) {
 
   // Subdominio perrenque.snrg.lat — landing estática del formulario Conéctate
   if (matchesHosts(request, PERRENQUE_HOSTS)) {
-    // Canonical host para evitar inconsistencias de DNS/proxy sin www.
+    // Canonical host para unificar tráfico con www.
     const effectiveHost = getEffectiveHost(request)
     if (effectiveHost === 'perrenque.snrg.lat') {
       const url = request.nextUrl.clone()
