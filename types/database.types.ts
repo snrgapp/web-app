@@ -138,16 +138,19 @@ export interface Database {
           submission_id: string
           ronda: number
           grupo_numero: number
+          event_day: number
         }
         Insert: {
           submission_id: string
           ronda: number
           grupo_numero: number
+          event_day?: number
         }
         Update: {
           submission_id?: string
           ronda?: number
           grupo_numero?: number
+          event_day?: number
         }
         Relationships: [
           {
@@ -166,6 +169,7 @@ export interface Database {
           ronda: number
           razon: string | null
           created_at: string
+          event_day: number
         }
         Insert: {
           id?: string
@@ -174,6 +178,7 @@ export interface Database {
           ronda: number
           razon?: string | null
           created_at?: string
+          event_day?: number
         }
         Update: {
           id?: string
@@ -182,6 +187,7 @@ export interface Database {
           ronda?: number
           razon?: string | null
           created_at?: string
+          event_day?: number
         }
         Relationships: [
           {

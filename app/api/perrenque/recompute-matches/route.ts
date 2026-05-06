@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   recomputePerrenqueMatches,
   type RecomputePerrenqueResult,
+  type RecomputeOptions,
 } from '@/services/perrenque-matching'
 
 export const dynamic = 'force-dynamic'
@@ -51,11 +52,22 @@ export async function GET(req: NextRequest) {
         process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() && process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()
       ),
       note:
-        'POST incremental por defecto (solo sin grupo). POST con body `{"full":true}` o `?full=1` recomputa todo. Escalas ~800: Groq solo en lotes ≤40; el resto reparto local.',
+        'POST incremental por defecto (día activo desde env). `full` / `matchDay2` en query o JSON. Matching sin IA en servidor.',
     })
   }
   const full = req.nextUrl.searchParams.get('full') === '1'
-  const result = await recomputePerrenqueMatches({ mode: full ? 'full' : 'incremental' })
+  const matchDay2 = req.nextUrl.searchParams.get('matchDay2') === '1'
+  const eventDayRaw = req.nextUrl.searchParams.get('eventDay')
+  const eventDayParsed =
+    eventDayRaw === '1' || eventDayRaw === '2' ? (Number(eventDayRaw) as 1 | 2) : undefined
+  const result = await recomputePerrenqueMatches(
+    matchDay2
+      ? { matchDay2: true }
+      : {
+          mode: full ? 'full' : 'incremental',
+          ...(eventDayParsed !== undefined ? { eventDay: eventDayParsed } : {}),
+        }
+  )
   return json(result, result.ok ? 200 : 500)
 }
 
@@ -65,14 +77,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: auth.body }, { status: auth.status })
   }
   let full = req.nextUrl.searchParams.get('full') === '1'
-  if (!full) {
-    try {
-      const body = await req.json()
-      full = Boolean((body as { full?: boolean })?.full)
-    } catch {
-      /* body vacío u otro content-type */
+  let matchDay2 = req.nextUrl.searchParams.get('matchDay2') === '1'
+  let eventDay: RecomputeOptions['eventDay'] | undefined
+  try {
+    const body = (await req.json()) as {
+      full?: boolean
+      matchDay2?: boolean
+      eventDay?: 1 | 2
     }
+    if (!full) full = Boolean(body?.full)
+    if (!matchDay2) matchDay2 = Boolean(body?.matchDay2)
+    if (body?.eventDay === 1 || body?.eventDay === 2) eventDay = body.eventDay
+  } catch {
+    /* body vacío u otro content-type */
   }
-  const result = await recomputePerrenqueMatches({ mode: full ? 'full' : 'incremental' })
+
+  const result = await recomputePerrenqueMatches(
+    matchDay2
+      ? { matchDay2: true }
+      : { mode: full ? 'full' : 'incremental', ...(eventDay !== undefined ? { eventDay } : {}) }
+  )
   return json(result, result.ok ? 200 : 500)
 }

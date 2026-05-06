@@ -1,6 +1,7 @@
 'use server'
 
 import { createAdminClient } from '@/utils/supabase/admin'
+import { getPerrenqueEventDay } from '@/lib/perrenque-event-day'
 import type { PerrenqueConectaSubmission, PerrenquePregunta } from '@/types/database.types'
 
 export async function verificarPerrenquePorTelefono(
@@ -42,11 +43,14 @@ export async function getPerrenqueGrupoScreenData(
   const supabase = createAdminClient()
   if (!supabase) return { grupoNumero: null, companeros: [] }
 
+  const eventDay = getPerrenqueEventDay()
+
   const { data: mine } = await supabase
     .from('perrenque_grupo_ronda')
     .select('grupo_numero')
     .eq('submission_id', submissionId)
     .eq('ronda', ronda)
+    .eq('event_day', eventDay)
     .maybeSingle()
 
   const grupoNumero = mine?.grupo_numero ?? null
@@ -59,6 +63,7 @@ export async function getPerrenqueGrupoScreenData(
     .select('submission_id')
     .eq('ronda', ronda)
     .eq('grupo_numero', grupoNumero)
+    .eq('event_day', eventDay)
 
   const peerIds =
     peerRows?.map((r) => r.submission_id).filter((id) => id !== submissionId) ?? []

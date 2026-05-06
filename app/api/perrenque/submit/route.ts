@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { getPerrenqueEventDay } from '@/lib/perrenque-event-day'
 import { recomputePerrenqueMatches } from '@/services/perrenque-matching'
 
 const IDENTIDAD = new Set([
@@ -125,7 +126,10 @@ export async function POST(req: NextRequest) {
     // Importante: en serverless (p. ej. Vercel) el trabajo en segundo plano con `void` suele
     // cancelarse al enviar la respuesta. Esperamos aquí para que grupos y matches existan.
     try {
-      await recomputePerrenqueMatches({ mode: 'incremental' })
+      await recomputePerrenqueMatches({
+        mode: 'incremental',
+        eventDay: getPerrenqueEventDay(),
+      })
     } catch (err) {
       console.error('perrenque matching job:', err)
     }
