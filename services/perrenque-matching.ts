@@ -88,48 +88,41 @@ function canAddToGroup(id: string, group: string[], forbiddenPairs: Set<string>)
   return true
 }
 
-/** Ronda 2: nadie comparte pareja prohibida dentro del mismo grupo (típicamente parejas de R1 mismo día). */
+const MAX_GROUP_RONDA2 = 5
+
+/**
+ * Ronda 2: grupos de a lo sumo MAX_GROUP_RONDA2 sin parejas prohibidas dentro del grupo
+ * (p. ej. quienes compartieron grupo en ronda 1; en día 2 también pares del día 1).
+ *
+ * Evita el algoritmo “una persona por cubeta de r1”: si r1 queda con muchos grupos de 1,
+ * ese enfoque generaba un único megagrupo en la primera pasada y ~N−1 compañeros en la UI.
+ */
 function buildRound2AvoidingPairs(r1: string[][], forbiddenPairs: Set<string>): string[][] {
-  const buckets = r1.map((g) => shuffle([...g]))
-  const draft: string[][] = []
-  while (buckets.some((b) => b.length > 0)) {
+  let pool = shuffle(r1.flat())
+  if (pool.length === 0) return []
+
+  const groups: string[][] = []
+
+  while (pool.length > 0) {
     const g: string[] = []
-    for (const b of buckets) {
-      if (b.length > 0) g.push(b.shift()!)
-    }
-    if (g.length > 0) draft.push(g)
-  }
-
-  const groups: string[][] = draft.filter((gr) => gr.length > 1)
-  let singles = draft.filter((gr) => gr.length === 1).map((gr) => gr[0]!)
-
-  let changed = true
-  while (changed) {
-    changed = false
-    for (let i = singles.length - 1; i >= 0; i--) {
-      const s = singles[i]!
-      for (const gr of groups) {
-        if (canAddToGroup(s, gr, forbiddenPairs)) {
-          gr.push(s)
-          singles.splice(i, 1)
-          changed = true
+    let grew = true
+    while (grew && g.length < MAX_GROUP_RONDA2 && pool.length > 0) {
+      grew = false
+      for (let i = 0; i < pool.length && g.length < MAX_GROUP_RONDA2; i++) {
+        const cand = pool[i]!
+        if (canAddToGroup(cand, g, forbiddenPairs)) {
+          g.push(cand)
+          pool.splice(i, 1)
+          grew = true
           break
         }
       }
     }
-  }
-
-  while (singles.length >= 2) {
-    const a = singles.pop()!
-    const idx = singles.findIndex((b) => !forbiddenPairs.has(pairKey(a, b)))
-    if (idx >= 0) {
-      const b = singles.splice(idx, 1)[0]!
-      groups.push([a, b])
-    } else {
-      groups.push([a])
+    if (g.length === 0) {
+      g.push(pool.shift()!)
     }
+    groups.push(g)
   }
-  if (singles.length === 1) groups.push([singles[0]!])
 
   return groups
 }
