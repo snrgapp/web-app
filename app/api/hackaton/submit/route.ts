@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { recomputeHackathonMatches } from '@/services/hackathon-matching'
 
 const PERFIL = new Set(['frontend', 'backend', 'full_stack', 'data_analyst'])
 
@@ -114,6 +115,12 @@ export async function POST(req: NextRequest) {
         { error: 'No se pudo guardar. Intenta de nuevo.' },
         { status: 500 }
       )
+    }
+
+    try {
+      await recomputeHackathonMatches()
+    } catch (err) {
+      console.error('hackathon matching job:', err)
     }
 
     return NextResponse.json({ ok: true, id: data.id, badge_id: data.badge_id })

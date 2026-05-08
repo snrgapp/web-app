@@ -101,6 +101,11 @@ export default function HackathonShell() {
 
   useEffect(() => {
     if (!submissionId) return
+    void getHackathonUltimasAsignaciones(24).then(setRecientes)
+  }, [submissionId])
+
+  useEffect(() => {
+    if (!submissionId || tab !== 'conn') return
     let cancelled = false
     ;(async () => {
       setConnLoading(true)
@@ -118,14 +123,26 @@ export default function HackathonShell() {
     return () => {
       cancelled = true
     }
-  }, [submissionId, ronda])
+  }, [submissionId, tab, ronda])
 
   useEffect(() => {
-    const t = setInterval(() => {
-      void getHackathonUltimasAsignaciones(24).then(setRecientes)
-    }, 5000)
-    return () => clearInterval(t)
-  }, [])
+    if (!submissionId) return
+    const POLL_MS = 2500
+    const id = setInterval(() => {
+      void (async () => {
+        const rec = await getHackathonUltimasAsignaciones(24)
+        setRecientes(rec)
+        if (tab !== 'conn') return
+        const [e, c] = await Promise.all([
+          getHackathonMiEquipoSticky(submissionId, ronda),
+          getHackathonConexiones(submissionId, ronda),
+        ])
+        setEquipo(e)
+        setConexiones(c)
+      })()
+    }, POLL_MS)
+    return () => clearInterval(id)
+  }, [submissionId, tab, ronda])
 
   const roleRootClass = badge?.roleClass ?? 'role-purple'
 

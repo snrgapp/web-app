@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import {
   Loader2,
   RefreshCw,
+  Shuffle,
   Users,
   UserPlus,
   LayoutList,
@@ -25,6 +26,7 @@ import type { HackatonEquipo, HackatonSubmission } from '@/types/database.types'
 import {
   asignarHackathonMiembro,
   crearHackathonEquipo,
+  ejecutarHackathonRecomputeDesdePanel,
   quitarHackathonMiembro,
 } from '@/app/actions/hackathon-admin'
 
@@ -61,6 +63,8 @@ export default function PanelHackathonPage() {
   const [assignSubmissionId, setAssignSubmissionId] = useState('')
   const [assignRonda, setAssignRonda] = useState<'1' | '2'>('1')
   const [actionBusy, setActionBusy] = useState(false)
+  const [matchBusy, setMatchBusy] = useState(false)
+  const [matchLog, setMatchLog] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     if (!supabase) {
@@ -155,6 +159,28 @@ export default function PanelHackathonPage() {
     await load()
   }
 
+  async function handleRecomputarMatching() {
+    setMatchBusy(true)
+    setErr('')
+    setMatchLog(null)
+    const res = await ejecutarHackathonRecomputeDesdePanel()
+    setMatchBusy(false)
+    if (!res.authorized) {
+      setErr(res.error)
+      return
+    }
+    const lines = [
+      res.ok ? 'Matching aplicado correctamente.' : 'El servidor devolvió error.',
+      `Inscritos: ${res.profileCount}`,
+      `Aristas en BD: ${res.matchRowsWritten}`,
+      `Grupos R1: ${res.ronda1Groups} · R2: ${res.ronda2Groups}`,
+      ...res.messages,
+    ]
+    setMatchLog(lines.join('\n'))
+    if (!res.ok) setErr(res.messages.join(' · ') || 'Falló recomputar conexiones')
+    await load()
+  }
+
   async function handleQuitar(m: MiembroRow) {
     setActionBusy(true)
     setErr('')
@@ -183,18 +209,38 @@ export default function PanelHackathonPage() {
               Inscripciones y equipos en vivo (Realtime + actualización cada 5s).
             </p>
           </div>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="gap-2"
-            onClick={() => void load()}
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-            Actualizar
-          </Button>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => void load()}
+              disabled={loading}
+            >
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              Actualizar
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              className="gap-2"
+              onClick={() => void handleRecomputarMatching()}
+              disabled={matchBusy || loading}
+              title="Regenera sugerencias en match_hackaton (app Conexiones)"
+            >
+              {matchBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shuffle className="h-4 w-4" />}
+              Recomputar conexiones
+            </Button>
+          </div>
         </div>
+
+        {matchLog && (
+          <pre className="whitespace-pre-wrap rounded-lg border border-zinc-200 bg-white px-4 py-3 font-mono text-xs text-zinc-700">
+            {matchLog}
+          </pre>
+        )}
 
         {err && (
           <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
