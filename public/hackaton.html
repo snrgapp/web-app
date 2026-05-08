@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hackathon — Inscripción</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --c:#7B35FF;--c-glow:rgba(123,53,255,0.35);--c-soft:rgba(123,53,255,0.12);
+  --c-border:rgba(123,53,255,0.45);--c-text:#A87CFF;--bg:#08080C;--card:#141418;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;color:rgba(255,255,255,.9);}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");}
+.wrap{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:16px 16px 32px;}
+.head{text-align:center;margin-bottom:18px;}
+.head h1{font-size:clamp(1.35rem,4vw,1.65rem);font-weight:900;letter-spacing:-.02em;color:#fff;}
+.head p{font-size:12px;font-weight:600;color:rgba(255,255,255,.45);margin-top:6px;letter-spacing:.06em;text-transform:uppercase;}
+.progress{display:flex;align-items:center;gap:6px;margin-bottom:16px;padding:0 2px;}
+.pb{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:rgba(255,255,255,.35);flex-shrink:0;transition:.25s;}
+.pb.active{border-color:var(--c);background:var(--c-soft);color:var(--c);box-shadow:0 0 12px var(--c-glow);}
+.pb.done{border-color:var(--c);background:var(--c);color:#fff;}
+.pl{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;}
+.pl.done{background:linear-gradient(90deg,var(--c),var(--c-text));}
+.step{display:none;}
+.step.visible{display:block;animation:pop .28s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:linear-gradient(165deg,var(--card) 0%,#0f0f13 100%);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px 16px 16px;box-shadow:0 20px 50px rgba(0,0,0,.45);}
+.step-cat{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--c-text);margin-bottom:6px;}
+.step-q{font-size:clamp(1.05rem,3.2vw,1.2rem);font-weight:800;color:#fff;margin-bottom:14px;line-height:1.25;}
+.lbl{display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;}
+.inp{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(0,0,0,.35);color:#fff;font-size:15px;font-family:inherit;font-weight:600;}
+.inp::placeholder{color:rgba(255,255,255,.28);}
+.inp:focus{outline:none;border-color:var(--c-border);box-shadow:0 0 0 3px var(--c-soft);}
+.hint{font-size:11px;color:rgba(255,255,255,.38);margin-top:8px;line-height:1.4;}
+.opts{display:flex;flex-direction:column;gap:8px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);cursor:pointer;transition:.18s;}
+.opt:active{transform:scale(.99);}
+.opt.sel{border-color:var(--c-border);background:var(--c-soft);box-shadow:0 0 16px var(--c-glow);}
+.opt-rad{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.25);flex-shrink:0;}
+.opt.sel .opt-rad{border-color:var(--c);background:var(--c);}
+.opt-txt{font-size:14px;font-weight:700;color:#fff;flex:1;}
+.lang-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.lang-chip{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;transition:.18s;}
+.lang-chip.sel{border-color:var(--c);background:var(--c-soft);color:var(--c-text);}
+.nav{margin-top:18px;}
+.btn{width:100%;padding:14px 18px;border-radius:14px;border:none;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s;}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn-next{background:var(--c);color:#fff;box-shadow:0 8px 28px var(--c-glow);}
+.btn-next:not(:disabled):active{transform:scale(.98);}
+.ck{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:12px;color:rgba(255,255,255,.55);line-height:1.45;}
+.ck input{margin-top:3px;accent-color:var(--c);}
+.err{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(240,50,90,.12);border:1px solid rgba(240,50,90,.35);color:#f472a0;font-size:12px;font-weight:600;display:none;}
+.err.show{display:block;}
+.done-link{display:block;text-align:center;margin-top:16px;font-size:13px;font-weight:700;color:var(--c-text);text-decoration:none;}
+.done-link:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="wrap">
+  <header class="head">
+    <h1>Hackathon Barranquilla</h1>
+    <p>Inscripción · SNRG</p>
+  </header>
+
+  <div class="progress" id="prog">
+    <div class="pb active" id="p0">1</div><div class="pl" id="l0"></div>
+    <div class="pb" id="p1">2</div><div class="pl" id="l1"></div>
+    <div class="pb" id="p2">3</div><div class="pl" id="l2"></div>
+    <div class="pb" id="p3">4</div><div class="pl" id="l3"></div>
+    <div class="pb" id="p4">5</div>
+  </div>
+
+  <div id="errBox" class="err"></div>
+
+  <div class="step visible" id="s0">
+    <div class="card">
+      <div class="step-cat">Paso 1</div>
+      <div class="step-q">Tus datos de contacto</div>
+      <label class="lbl" for="nm">Nombre completo</label>
+      <input class="inp" id="nm" autocomplete="name" maxlength="200" placeholder="Ej: María Pérez" oninput="u0()">
+      <label class="lbl" for="tl" style="margin-top:14px">Número de teléfono</label>
+      <input class="inp" id="tl" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="Ej: 300 123 4567" oninput="u0()">
+      <p class="hint">Tu número será la llave para ingresar a la app de conexiones el día del evento.</p>
+    </div>
+    <div class="nav"><button type="button" class="btn btn-next" id="b0" disabled onclick="next(0)">Siguiente</button></div>
+  </div>
+
+  <div class="step" id="s1">
+    <div class="card">
+      <div class="step-cat">Paso 2</div>
+      <div class="step-q">¿Cuál es tu perfil principal?</div>
+      <div class="opts">
+        <div class="opt" data-v="frontend" onclick="pick1(this,'frontend')"><div class="opt-rad"></div><span class="opt-txt">Front-end</span></div>
+        <div class="opt" data-v="backend" onclick="pick1(this,'backend')"><div class="opt-rad"></div><span class="opt-txt">Back-end</span></div>
+        <div class="opt" data-v="full_stack" onclick="pick1(this,'full_stack')"><div class="opt-rad"></div><span class="opt-txt">Full stack</span></div>
+        <div class="opt" data-v="data_analyst" onclick="pick1(this,'data_analyst')"><div class="opt-rad"></div><span class="opt-txt">Analista de datos</span></div>
+      </div>
+    </div>
+    <div class="nav"><button type="button" class="btn btn-next" id="b1" disabled onclick="next(1)">Siguiente</button></div>
+  </div>
+
+  <div class="step" id="s2">
+    <div class="card">
+      <div class="step-cat">Paso 3</div>
+      <div class="step-q">Lenguajes que manejas</div>
+      <p class="hint" style="margin-bottom:12px">Elige uno o más.</p>
+      <div class="lang-grid" id="langs"></div>
+    </div>
+    <div class="nav"><button type="button" class="btn btn-next" id="b2" disabled onclick="next(2)">Siguiente</button></div>
+  </div>
+
+  <div class="step" id="s3">
+    <div class="card">
+      <div class="step-cat">Paso 4</div>
+      <div class="step-q">¿Cuál es tu nivel de experiencia?</div>
+      <div class="opts">
+        <div class="opt" data-v="principiante" onclick="pick3(this,'principiante')"><div class="opt-rad"></div><span class="opt-txt">Principiante</span></div>
+        <div class="opt" data-v="intermedio" onclick="pick3(this,'intermedio')"><div class="opt-rad"></div><span class="opt-txt">Intermedio</span></div>
+        <div class="opt" data-v="avanzado" onclick="pick3(this,'avanzado')"><div class="opt-rad"></div><span class="opt-txt">Avanzado</span></div>
+      </div>
+    </div>
+    <div class="nav"><button type="button" class="btn btn-next" id="b3" disabled onclick="next(3)">Siguiente</button></div>
+  </div>
+
+  <div class="step" id="s4">
+    <div class="card">
+      <div class="step-cat">Paso 5</div>
+      <div class="step-q">Listo para enviar</div>
+      <p class="hint">Revisa que tus datos sean correctos. Al enviar aceptas que usemos esta información para la dinámica del hackathon.</p>
+      <label class="ck"><input type="checkbox" id="ck" onchange="u4()"> Acepto el tratamiento de mis datos para participar en el evento.</label>
+    </div>
+    <div class="nav"><button type="button" class="btn btn-next" id="b4" disabled onclick="submitForm()">Enviar inscripción</button></div>
+  </div>
+
+  <div class="step" id="s5">
+    <div class="card">
+      <div class="step-cat">¡Listo!</div>
+      <div class="step-q">Registro guardado</div>
+      <p class="hint">El día del evento entra a la app con tu mismo número de teléfono para ver tu badge y tus conexiones.</p>
+      <a class="done-link" id="verifyLink" href="https://app.snrg.lat/networking/hackathon/verify">Verificar e ingresar a la app →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const LANGS=['Python','JavaScript','C++','TypeScript','Java','Go','Rust','SQL'];
+let perfil='', nivel='', selectedLangs=new Set();
+
+function showErr(m){
+  var e=document.getElementById('errBox');
+  e.textContent=m;
+  e.className='err show';
+}
+function hideErr(){
+  var e=document.getElementById('errBox');
+  e.className='err';
+  e.textContent='';
+}
+
+(function initLangs(){
+  var g=document.getElementById('langs');
+  LANGS.forEach(function(name){
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='lang-chip';
+    b.textContent=name;
+    b.onclick=function(){
+      if(selectedLangs.has(name))selectedLangs.delete(name);else selectedLangs.add(name);
+      b.className='lang-chip'+(selectedLangs.has(name)?' sel':'');
+      document.getElementById('b2').disabled=selectedLangs.size<1;
+    };
+    g.appendChild(b);
+  });
+})();
+
+function prog(n){
+  for(var i=0;i<5;i++){
+    var p=document.getElementById('p'+i);
+    p.className='pb';
+    if(i<n){p.classList.add('done');p.textContent='✓';}
+    else if(i===n){p.classList.add('active');p.textContent=i+1;}
+    else p.textContent=i+1;
+    if(i<4){
+      var l=document.getElementById('l'+i);
+      l.className='pl'+(i<n?' done':'');
+    }
+  }
+}
+
+function u0(){
+  var n=document.getElementById('nm').value.trim();
+  var d=document.getElementById('tl').value.replace(/\D/g,'');
+  document.getElementById('b0').disabled=!(n.length>=2&&d.length>=7&&d.length<=15);
+}
+
+function pick1(el,v){
+  document.querySelectorAll('#s1 .opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  perfil=v;
+  document.getElementById('b1').disabled=false;
+}
+
+function pick3(el,v){
+  document.querySelectorAll('#s3 .opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  nivel=v;
+  document.getElementById('b3').disabled=false;
+}
+
+function u4(){
+  document.getElementById('b4').disabled=!document.getElementById('ck').checked;
+}
+
+function next(i){
+  hideErr();
+  document.getElementById('s'+i).classList.remove('visible');
+  document.getElementById('s'+(i+1)).classList.add('visible');
+  prog(i+1);
+}
+
+async function submitForm(){
+  hideErr();
+  var btn=document.getElementById('b4');
+  btn.disabled=true;
+  var nombre=document.getElementById('nm').value.trim();
+  var telefono=document.getElementById('tl').value.replace(/\D/g,'');
+  var body={
+    nombre_completo:nombre,
+    telefono:telefono,
+    perfil:perfil,
+    lenguajes:Array.from(selectedLangs),
+    nivel_experiencia:nivel
+  };
+  try{
+    var res=await fetch('/api/hackaton/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    var j=await res.json().catch(function(){return {};});
+    if(!res.ok){
+      showErr(j.error||'No se pudo guardar. Intenta de nuevo.');
+      btn.disabled=false;
+      return;
+    }
+    document.getElementById('s4').classList.remove('visible');
+    document.getElementById('s5').classList.add('visible');
+    prog(5);
+  }catch(err){
+    showErr('Error de red. Revisa tu conexión.');
+    btn.disabled=false;
+  }
+}
+</script>
+</body>
+</html>

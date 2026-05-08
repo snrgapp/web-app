@@ -9,6 +9,12 @@ const PERRENQUE_HOSTS = [
   'perrenque.localhost',
 ]
 
+const HACKATON_HOSTS = [
+  'hackaton.snrg.lat',
+  'www.hackaton.snrg.lat',
+  'hackaton.localhost',
+] // Mismo deploy Vercel: añadir hackaton.snrg.lat en Project → Domains
+
 const INSCRIPCION_HOSTS = [
   'inscripcion.snrg.lat',
   'www.inscripcion.snrg.lat',
@@ -140,6 +146,19 @@ export async function middleware(request: NextRequest) {
     } catch {
       return NextResponse.redirect(new URL('/login', request.url))
     }
+  }
+
+  // Subdominio hackaton.snrg.lat — formulario de inscripción
+  if (matchesHosts(request, HACKATON_HOSTS)) {
+    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+      return NextResponse.next({ request: { headers: requestHeaders } })
+    }
+    if (pathname === '/' || pathname === '') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/hackaton.html'
+      return NextResponse.rewrite(url)
+    }
+    return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
   // Subdominio perrenque.snrg.lat — landing estática del formulario Conéctate

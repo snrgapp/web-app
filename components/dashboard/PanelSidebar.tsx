@@ -10,6 +10,7 @@ import {
   FileText,
   Trophy,
   Star,
+  Code2,
   ChevronDown,
   Menu,
   X,
@@ -31,6 +32,7 @@ const navItems = [
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
   { href: '/panel/spotlight', icon: Trophy, label: 'Spotlight', exact: false },
   { href: '/panel/networking-feedback', icon: Star, label: 'Feedback Networking', exact: false },
+  { href: '/panel/hackathon', icon: Code2, label: 'Hackathon', exact: false },
 ]
 
 const footerItems = [

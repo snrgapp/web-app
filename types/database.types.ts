@@ -232,6 +232,140 @@ export interface Database {
           },
         ]
       }
+      hackaton_submissions: {
+        Row: {
+          id: string
+          nombre_completo: string
+          telefono: string
+          perfil: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
+          lenguajes: string[]
+          nivel_experiencia: 'principiante' | 'intermedio' | 'avanzado'
+          badge_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nombre_completo: string
+          telefono: string
+          perfil: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
+          lenguajes: string[]
+          nivel_experiencia: 'principiante' | 'intermedio' | 'avanzado'
+          badge_id?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nombre_completo?: string
+          telefono?: string
+          perfil?: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
+          lenguajes?: string[]
+          nivel_experiencia?: 'principiante' | 'intermedio' | 'avanzado'
+          badge_id?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      hackaton_equipos: {
+        Row: {
+          id: string
+          numero: number
+          nombre: string
+          cupos_max: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          numero: number
+          nombre?: string
+          cupos_max?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          numero?: number
+          nombre?: string
+          cupos_max?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      hackaton_equipo_miembros: {
+        Row: {
+          equipo_id: string
+          submission_id: string
+          ronda: number
+          orden: number
+          created_at: string
+        }
+        Insert: {
+          equipo_id: string
+          submission_id: string
+          ronda: number
+          orden?: number
+          created_at?: string
+        }
+        Update: {
+          equipo_id?: string
+          submission_id?: string
+          ronda?: number
+          orden?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'hackaton_equipo_miembros_equipo_id_fkey'
+            columns: ['equipo_id']
+            referencedRelation: 'hackaton_equipos'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'hackaton_equipo_miembros_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      match_hackaton: {
+        Row: {
+          id: string
+          submission_id: string
+          matched_submission_id: string
+          ronda: number
+          razon: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          matched_submission_id: string
+          ronda: number
+          razon?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          matched_submission_id?: string
+          ronda?: number
+          razon?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'match_hackaton_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'match_hackaton_matched_submission_id_fkey'
+            columns: ['matched_submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       categories: {
         Row: {
           id: string
@@ -1124,6 +1258,10 @@ export type PerrenqueConectaSubmission = Database['public']['Tables']['perrenque
 export type PerrenquePregunta = Database['public']['Tables']['perrenque_preguntas']['Row']
 export type MatchPerrenque = Database['public']['Tables']['match_perrenque']['Row']
 export type FeedbackPerrenque = Database['public']['Tables']['feedback_perrenque']['Row']
+export type HackatonSubmission = Database['public']['Tables']['hackaton_submissions']['Row']
+export type HackatonEquipo = Database['public']['Tables']['hackaton_equipos']['Row']
+export type HackatonEquipoMiembro = Database['public']['Tables']['hackaton_equipo_miembros']['Row']
+export type MatchHackaton = Database['public']['Tables']['match_hackaton']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']
 export type Asistente = Database['public']['Tables']['asistentes']['Row']

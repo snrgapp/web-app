@@ -1,0 +1,585 @@
+/* Hackathon networking — tokens del mock badge (Inter, neón, oscuro) */
+
+.hackathon-app-root {
+  --c: #7b35ff;
+  --c-glow: rgba(123, 53, 255, 0.3);
+  --c-soft: rgba(123, 53, 255, 0.1);
+  --c-border: rgba(123, 53, 255, 0.4);
+  --c-text: #a87cff;
+  --c-back: #3d0faa;
+  --c-shadow: rgba(61, 15, 170, 0.5);
+}
+
+.hackathon-app-root.role-purple {
+  --c: #7b35ff;
+  --c-glow: rgba(123, 53, 255, 0.3);
+  --c-soft: rgba(123, 53, 255, 0.1);
+  --c-border: rgba(123, 53, 255, 0.4);
+  --c-text: #a87cff;
+  --c-back: #3d0faa;
+  --c-shadow: rgba(61, 15, 170, 0.5);
+}
+.hackathon-app-root.role-green {
+  --c: #00e87a;
+  --c-glow: rgba(0, 232, 122, 0.25);
+  --c-soft: rgba(0, 232, 122, 0.08);
+  --c-border: rgba(0, 232, 122, 0.35);
+  --c-text: #00e87a;
+  --c-back: #005c30;
+  --c-shadow: rgba(0, 160, 90, 0.4);
+}
+.hackathon-app-root.role-yellow {
+  --c: #f5d800;
+  --c-glow: rgba(245, 216, 0, 0.25);
+  --c-soft: rgba(245, 216, 0, 0.08);
+  --c-border: rgba(245, 216, 0, 0.35);
+  --c-text: #f5d800;
+  --c-back: #635800;
+  --c-shadow: rgba(160, 140, 0, 0.4);
+}
+.hackathon-app-root.role-blue {
+  --c: #00bfea;
+  --c-glow: rgba(0, 191, 234, 0.25);
+  --c-soft: rgba(0, 191, 234, 0.08);
+  --c-border: rgba(0, 191, 234, 0.35);
+  --c-text: #00bfea;
+  --c-back: #004060;
+  --c-shadow: rgba(0, 120, 170, 0.4);
+}
+
+.ha-noise {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.ha-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(5, 5, 9, 0.98);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  padding: 4px 24px max(12px, env(safe-area-inset-bottom));
+  backdrop-filter: blur(20px);
+}
+
+.ha-tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 8px 4px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255,0.28);
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  transition: color 0.25s;
+  position: relative;
+}
+.ha-tab-btn svg {
+  width: 22px;
+  height: 22px;
+  transition: filter 0.25s;
+}
+.ha-tab-btn.HaActive {
+  color: var(--c);
+}
+.ha-tab-btn.HaActive svg {
+  filter: drop-shadow(0 0 6px var(--c-glow));
+}
+.ha-tab-pip {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 2.5px;
+  border-radius: 0 0 3px 3px;
+  background: var(--c);
+  opacity: 0;
+  transition:
+    opacity 0.25s,
+    box-shadow 0.25s;
+}
+.ha-tab-btn.HaActive .ha-tab-pip {
+  opacity: 1;
+  box-shadow: 0 2px 8px var(--c-glow);
+}
+
+.ha-view {
+  display: none;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-bottom: 76px;
+  position: relative;
+  z-index: 1;
+}
+.ha-view.HaActive {
+  display: flex;
+}
+
+.ha-picks {
+  width: 100%;
+  padding: 10px 14px 8px;
+  background: rgba(6, 6, 10, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ha-picks-label {
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.ha-picks-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+.ha-pick-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 11px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #141418, #0f0f13);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+}
+.ha-pick-av {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+/* Badge scene */
+.ha-scene {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  padding: 48px 0 24px;
+}
+.ha-badge-wrap {
+  position: relative;
+  width: 258px;
+  height: 390px;
+  transform-style: preserve-3d;
+  animation: ha-float 8s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes ha-float {
+  0% {
+    transform: translateY(0) rotateX(1deg) rotateY(-3deg);
+  }
+  25% {
+    transform: translateY(-10px) rotateX(3deg) rotateY(5deg);
+  }
+  50% {
+    transform: translateY(-5px) rotateX(-2deg) rotateY(-6deg);
+  }
+  75% {
+    transform: translateY(-14px) rotateX(4deg) rotateY(3deg);
+  }
+  100% {
+    transform: translateY(0) rotateX(1deg) rotateY(-3deg);
+  }
+}
+
+.ha-lanyard {
+  position: absolute;
+  top: -84px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 92px;
+  border-radius: 3px;
+  z-index: 10;
+  background: linear-gradient(180deg, #1a1a2e 0%, var(--c-back) 40%, var(--c) 70%, var(--c-back) 100%);
+}
+.ha-lanyard-text {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 4.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  writing-mode: vertical-rl;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+}
+
+.ha-card-back {
+  position: absolute;
+  width: 246px;
+  height: 358px;
+  border-radius: 18px;
+  top: 22px;
+  left: -12px;
+  transform: rotate(-7deg) translateZ(-24px);
+  background: linear-gradient(145deg, var(--c-back) 0%, #1a0060 60%, #0d0020 100%);
+  box-shadow: 0 20px 50px var(--c-shadow), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.ha-card-front {
+  position: absolute;
+  width: 246px;
+  height: 358px;
+  border-radius: 18px;
+  top: 10px;
+  left: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(160deg, #18181f 0%, #111116 50%, #0e0e14 100%);
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.06) inset,
+    0 50px 100px rgba(0, 0, 0, 0.95),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.ha-cf-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% -10%, var(--c-soft) 0%, transparent 60%);
+}
+
+.ha-cf-hd {
+  padding: 12px 14px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 1;
+}
+.ha-cf-logo {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+}
+.ha-cf-logo em {
+  color: rgba(255, 255, 255, 0.18);
+  font-style: normal;
+}
+
+.ha-cf-id {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.ha-id-avatar {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+  border: 1.5px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.3));
+  box-shadow:
+    0 0 20px var(--c-glow),
+    0 0 0 5px var(--c-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.ha-id-init {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--c);
+  letter-spacing: 2px;
+  text-shadow: 0 0 24px var(--c-glow);
+}
+.ha-id-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.4px;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 1.15;
+  padding: 0 4px;
+}
+.ha-id-role {
+  font-size: 7.5px;
+  font-weight: 700;
+  color: var(--c-text);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.ha-cf-info {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.15));
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 10px 12px;
+  position: relative;
+  z-index: 1;
+}
+.ha-il {
+  font-size: 5.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.ha-iv {
+  font-size: 8.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.ha-qr-box {
+  width: 56px;
+  height: 56px;
+  background: #fff;
+  border-radius: 6px;
+  padding: 4px;
+  box-shadow: 0 0 14px var(--c-glow);
+}
+
+/* Conexiones */
+.ha-conn-sticky {
+  width: 100%;
+  background: rgba(6, 6, 10, 0.97);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 16px 16px 14px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(16px);
+}
+.ha-team-label {
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.ha-team-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+  padding-bottom: 12px;
+}
+.ha-team-av-wrap {
+  position: relative;
+  margin-left: -10px;
+}
+.ha-team-av-wrap:first-child {
+  margin-left: 0;
+}
+.ha-team-av {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  border: 2.5px solid #08080c;
+}
+.ha-team-av-name {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 6px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap;
+}
+.ha-team-slots {
+  display: flex;
+  margin-left: 6px;
+  gap: 4px;
+}
+.ha-team-slot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 14px;
+}
+.ha-team-meta {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.ha-ronda-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.ha-ronda-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.ha-ronda-btn.HaRondaOn {
+  border-color: var(--c-border);
+  background: var(--c-soft);
+  color: var(--c-text);
+}
+
+.ha-section-label {
+  padding: 14px 16px 6px;
+  font-size: 8px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.22);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.ha-conn-list {
+  padding: 0 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ha-conn-card {
+  background: linear-gradient(135deg, #141418, #0f0f13);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 15px;
+  padding: 12px 12px 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ha-cc-accent {
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--cc-c, var(--c));
+  box-shadow: 0 0 10px var(--cc-c, var(--c));
+}
+
+.ha-conn-av {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--cc-border, var(--c-border));
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.3));
+  flex-shrink: 0;
+}
+.ha-conn-av-t {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--cc-c, var(--c));
+}
+.ha-conn-body {
+  flex: 1;
+  min-width: 0;
+}
+.ha-conn-name {
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ha-conn-chip {
+  display: inline-block;
+  margin-top: 4px;
+  background: var(--cc-soft, var(--c-soft));
+  border: 1px solid var(--cc-border, var(--c-border));
+  color: var(--cc-text, var(--c-text));
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 2.5px 7px;
+  border-radius: 20px;
+}
+
+.neon-blue {
+  --cc-c: #00bfea;
+  --cc-border: rgba(0, 191, 234, 0.38);
+  --cc-soft: rgba(0, 191, 234, 0.09);
+  --cc-text: #5ee0ff;
+}
+.neon-green {
+  --cc-c: #00e87a;
+  --cc-border: rgba(0, 232, 122, 0.38);
+  --cc-soft: rgba(0, 232, 122, 0.09);
+  --cc-text: #00e87a;
+}
+.neon-yellow {
+  --cc-c: #f5d800;
+  --cc-border: rgba(245, 216, 0, 0.38);
+  --cc-soft: rgba(245, 216, 0, 0.09);
+  --cc-text: #f5d800;
+}
+.neon-purple {
+  --cc-c: #7b35ff;
+  --cc-border: rgba(123, 53, 255, 0.38);
+  --cc-soft: rgba(123, 53, 255, 0.1);
+  --cc-text: #a87cff;
+}
