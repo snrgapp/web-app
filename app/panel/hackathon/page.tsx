@@ -10,6 +10,7 @@ import {
   UserPlus,
   LayoutList,
   Radio,
+  Wand2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -26,6 +27,7 @@ import type { HackatonEquipo, HackatonSubmission } from '@/types/database.types'
 import {
   asignarHackathonMiembro,
   crearHackathonEquipo,
+  ejecutarHackathonFormacionEquipos,
   ejecutarHackathonRecomputeDesdePanel,
   quitarHackathonMiembro,
 } from '@/app/actions/hackathon-admin'
@@ -65,6 +67,10 @@ export default function PanelHackathonPage() {
   const [actionBusy, setActionBusy] = useState(false)
   const [matchBusy, setMatchBusy] = useState(false)
   const [matchLog, setMatchLog] = useState<string | null>(null)
+  const [formBusy, setFormBusy] = useState(false)
+  const [formLog, setFormLog] = useState<string | null>(null)
+  const [skipFormSms, setSkipFormSms] = useState(false)
+  const [skipBalanceCheck, setSkipBalanceCheck] = useState(false)
 
   const load = useCallback(async () => {
     if (!supabase) {
@@ -181,6 +187,31 @@ export default function PanelHackathonPage() {
     await load()
   }
 
+  async function handleFormarEquipos() {
+    setFormBusy(true)
+    setErr('')
+    setFormLog(null)
+    const res = await ejecutarHackathonFormacionEquipos({
+      skipSms: skipFormSms,
+      skipBalanceCheck,
+    })
+    setFormBusy(false)
+    if (!res.authorized) {
+      setErr(res.error)
+      return
+    }
+    const lines = [
+      res.ok ? 'Equipos formados.' : 'Revisa mensajes del servidor.',
+      `Equipos creados: ${res.teamsCreated}`,
+      `Participantes asignados: ${res.participantsAssigned}`,
+      res.smsAttempted ? `SMS intentado: ${res.smsOk ? 'ok' : 'falló o omitido'}` : 'SMS no solicitado',
+      ...res.messages,
+    ]
+    setFormLog(lines.join('\n'))
+    if (!res.ok) setErr(res.messages.join(' · ') || 'Falló la formación')
+    await load()
+  }
+
   async function handleQuitar(m: MiembroRow) {
     setActionBusy(true)
     setErr('')
@@ -209,7 +240,8 @@ export default function PanelHackathonPage() {
               Inscripciones y equipos en vivo (Realtime + actualización cada 5s).
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col gap-3 sm:items-end">
+            <div className="flex flex-wrap items-center gap-2">
             <Button
               type="button"
               variant="outline"
@@ -233,12 +265,51 @@ export default function PanelHackathonPage() {
               {matchBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shuffle className="h-4 w-4" />}
               Recomputar conexiones
             </Button>
+            <Button
+              type="button"
+              variant="default"
+              size="sm"
+              className="gap-2 bg-violet-600 hover:bg-violet-700"
+              onClick={() => void handleFormarEquipos()}
+              disabled={formBusy || loading}
+              title="Union-find + desafíos; reemplaza equipos auto_formados y asignaciones ronda 1"
+            >
+              {formBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Wand2 className="h-4 w-4" />}
+              Formar equipos
+            </Button>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-xs text-zinc-600">
+              <label className="flex cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={skipFormSms}
+                  onChange={(e) => setSkipFormSms(e.target.checked)}
+                  className="rounded border-zinc-300"
+                />
+                Omitir SMS Inalambria
+              </label>
+              <label className="flex cursor-pointer items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={skipBalanceCheck}
+                  onChange={(e) => setSkipBalanceCheck(e.target.checked)}
+                  className="rounded border-zinc-300"
+                />
+                Omitir chequeo de balance
+              </label>
+            </div>
           </div>
         </div>
 
         {matchLog && (
           <pre className="whitespace-pre-wrap rounded-lg border border-zinc-200 bg-white px-4 py-3 font-mono text-xs text-zinc-700">
             {matchLog}
+          </pre>
+        )}
+
+        {formLog && (
+          <pre className="whitespace-pre-wrap rounded-lg border border-violet-200 bg-violet-50/80 px-4 py-3 font-mono text-xs text-zinc-800">
+            {formLog}
           </pre>
         )}
 

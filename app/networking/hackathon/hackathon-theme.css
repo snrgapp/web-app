@@ -500,6 +500,7 @@
   border-radius: 15px;
   padding: 12px 12px 12px 14px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 11px;
   position: relative;
@@ -557,6 +558,50 @@
   text-transform: uppercase;
   padding: 2.5px 7px;
   border-radius: 20px;
+}
+
+.ha-conn-actions {
+  flex-basis: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 10px 0 2px 0;
+  margin-left: 57px;
+  box-sizing: border-box;
+}
+
+.ha-intent-pass {
+  flex: 1;
+  min-height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.ha-intent-pass:disabled {
+  opacity: 0.35;
+}
+
+.ha-intent-save {
+  flex: 1;
+  min-height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--c-border);
+  background: var(--c-soft);
+  color: var(--c);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 12px rgba(123, 53, 255, 0.12);
+}
+
+.ha-intent-save:disabled {
+  opacity: 0.35;
 }
 
 .neon-blue {

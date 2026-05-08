@@ -3,6 +3,10 @@
 import { createAdminClient } from '@/utils/supabase/admin'
 import type { HackatonSubmission } from '@/types/database.types'
 import {
+  upsertHackathonIntention,
+  fetchMisIntenciones,
+} from '@/services/hackathon-intentions'
+import {
   PERFIL_LABEL,
   inicialesDesdeNombre,
   perfilToRoleClass,
@@ -289,4 +293,35 @@ export async function getHackathonUltimasAsignaciones(
       createdAt: r.created_at,
     }
   })
+}
+
+export async function getHackathonChallengesList(): Promise<{ id: string; name: string }[]> {
+  const supabase = createAdminClient()
+  if (!supabase) return []
+  const { data } = await supabase
+    .from('hackaton_challenges')
+    .select('id, name')
+    .order('sort_order', { ascending: true })
+  return (data ?? []) as { id: string; name: string }[]
+}
+
+export async function registrarIntencionHackathon(input: {
+  telefono: string
+  fromSubmissionId: string
+  toSubmissionId: string
+  type: 'interested' | 'pass'
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  return upsertHackathonIntention({
+    telefonoDigits: input.telefono,
+    fromSubmissionId: input.fromSubmissionId,
+    toSubmissionId: input.toSubmissionId,
+    type: input.type,
+  })
+}
+
+export async function obtenerMisIntencionesHackathon(
+  telefono: string,
+  fromSubmissionId: string
+): Promise<Record<string, 'interested' | 'pass'>> {
+  return fetchMisIntenciones(telefono, fromSubmissionId)
 }

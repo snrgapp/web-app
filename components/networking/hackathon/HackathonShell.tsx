@@ -8,12 +8,16 @@ import {
   getHackathonConexiones,
   getHackathonMiEquipoSticky,
   getHackathonUltimasAsignaciones,
+  obtenerMisIntencionesHackathon,
+  registrarIntencionHackathon,
   type HackathonBadgePayload,
   type HackathonConexionUsuario,
   type HackathonMiEquipoSticky,
   type HackathonRecienteEnEquipo,
   type HackathonRoleClass,
 } from '@/app/actions/hackathon-networking'
+
+const STORAGE_PHONE = 'hackathon_viewer_phone'
 
 const NEON_CLASS: Record<HackathonRoleClass, string> = {
   'role-blue': 'neon-blue',
@@ -71,6 +75,16 @@ export default function HackathonShell() {
   const [recientes, setRecientes] = useState<HackathonRecienteEnEquipo[]>([])
   const [loading, setLoading] = useState(true)
   const [connLoading, setConnLoading] = useState(false)
+  const [viewerPhone, setViewerPhone] = useState<string | null>(null)
+  const [intentions, setIntentions] = useState<Record<string, 'interested' | 'pass'>>({})
+  const [intentBusyId, setIntentBusyId] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const p =
+      sessionStorage.getItem(STORAGE_PHONE) ?? localStorage.getItem(STORAGE_PHONE)
+    setViewerPhone(p)
+  }, [])
 
   useEffect(() => {
     const sid =
@@ -109,21 +123,40 @@ export default function HackathonShell() {
     let cancelled = false
     ;(async () => {
       setConnLoading(true)
-      const [e, c, r] = await Promise.all([
+      const [e, c, r, intents] = await Promise.all([
         getHackathonMiEquipoSticky(submissionId, ronda),
         getHackathonConexiones(submissionId, ronda),
         getHackathonUltimasAsignaciones(24),
+        viewerPhone
+          ? obtenerMisIntencionesHackathon(viewerPhone, submissionId)
+          : Promise.resolve({} as Record<string, 'interested' | 'pass'>),
       ])
       if (cancelled) return
       setEquipo(e)
       setConexiones(c)
       setRecientes(r)
+      setIntentions(intents)
       setConnLoading(false)
     })()
     return () => {
       cancelled = true
     }
-  }, [submissionId, tab, ronda])
+  }, [submissionId, tab, ronda, viewerPhone])
+
+  async function enviarIntencion(toSubmissionId: string, type: 'interested' | 'pass') {
+    if (!submissionId || !viewerPhone) return
+    setIntentBusyId(toSubmissionId)
+    const res = await registrarIntencionHackathon({
+      telefono: viewerPhone,
+      fromSubmissionId: submissionId,
+      toSubmissionId,
+      type,
+    })
+    setIntentBusyId(null)
+    if (res.ok) {
+      setIntentions((prev) => ({ ...prev, [toSubmissionId]: type }))
+    }
+  }
 
   useEffect(() => {
     if (!submissionId) return
@@ -133,16 +166,20 @@ export default function HackathonShell() {
         const rec = await getHackathonUltimasAsignaciones(24)
         setRecientes(rec)
         if (tab !== 'conn') return
-        const [e, c] = await Promise.all([
+        const [e, c, intentsMaybe] = await Promise.all([
           getHackathonMiEquipoSticky(submissionId, ronda),
           getHackathonConexiones(submissionId, ronda),
+          viewerPhone
+            ? obtenerMisIntencionesHackathon(viewerPhone, submissionId)
+            : Promise.resolve(null),
         ])
         setEquipo(e)
         setConexiones(c)
+        if (intentsMaybe) setIntentions(intentsMaybe)
       })()
     }, POLL_MS)
     return () => clearInterval(id)
-  }, [submissionId, tab, ronda])
+  }, [submissionId, tab, ronda, viewerPhone])
 
   const roleRootClass = badge?.roleClass ?? 'role-purple'
 
@@ -358,6 +395,12 @@ export default function HackathonShell() {
           </div>
         </div>
         <div className="ha-section-label">Conexiones sugeridas</div>
+        {!viewerPhone && (
+          <p className="text-center text-[10px] text-white/35 px-4 pb-2 leading-snug">
+            Para usar Pasar / Guardar, verifica tu acceso otra vez con tu teléfono en esta app (así
+            guardamos tu número solo en tu dispositivo).
+          </p>
+        )}
         <div className="ha-conn-list">
           {connLoading ? (
             <p className="text-center text-sm text-white/40 py-8">Cargando…</p>
@@ -366,33 +409,56 @@ export default function HackathonShell() {
               Aún no hay conexiones para esta ronda.
             </p>
           ) : (
-            conexiones.map((c) => (
-              <div
-                key={c.id}
-                className={`ha-conn-card relative ${NEON_CLASS[c.roleClass]}`}
-              >
-                <div className="ha-cc-accent" />
-                <div className="ha-conn-av">
-                  <span className="ha-conn-av-t">
-                    {c.nombreCompleto
-                      .split(/\s+/)
-                      .map((w) => w[0])
-                      .join('')
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </span>
+            conexiones.map((c) => {
+              const chosen = intentions[c.id]
+              const busy = intentBusyId === c.id
+              const locked = Boolean(chosen) || busy || !viewerPhone
+              return (
+                <div
+                  key={c.id}
+                  className={`ha-conn-card relative ${NEON_CLASS[c.roleClass]}`}
+                >
+                  <div className="ha-cc-accent" />
+                  <div className="ha-conn-av">
+                    <span className="ha-conn-av-t">
+                      {c.nombreCompleto
+                        .split(/\s+/)
+                        .map((w) => w[0])
+                        .join('')
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="ha-conn-body">
+                    <div className="ha-conn-name">{c.nombreCompleto}</div>
+                    <span className="ha-conn-chip">{c.perfilLabel}</span>
+                    {c.equipoLabel && (
+                      <div className="mt-1 text-[9px] text-white/25 tracking-wide">
+                        {c.equipoLabel}
+                      </div>
+                    )}
+                  </div>
+                  <div className="ha-conn-actions">
+                    <button
+                      type="button"
+                      className="ha-intent-pass"
+                      disabled={locked}
+                      onClick={() => void enviarIntencion(c.id, 'pass')}
+                    >
+                      {busy ? '…' : chosen === 'pass' ? 'Pasaste' : 'Pasar'}
+                    </button>
+                    <button
+                      type="button"
+                      className="ha-intent-save"
+                      disabled={locked}
+                      onClick={() => void enviarIntencion(c.id, 'interested')}
+                    >
+                      {busy ? '…' : chosen === 'interested' ? 'Guardado' : 'Guardar'}
+                    </button>
+                  </div>
                 </div>
-                <div className="ha-conn-body">
-                  <div className="ha-conn-name">{c.nombreCompleto}</div>
-                  <span className="ha-conn-chip">{c.perfilLabel}</span>
-                  {c.equipoLabel && (
-                    <div className="mt-1 text-[9px] text-white/25 tracking-wide">
-                      {c.equipoLabel}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       </div>

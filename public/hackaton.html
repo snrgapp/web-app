@@ -129,7 +129,19 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
   <div class="step" id="s4">
     <div class="card">
       <div class="step-cat">Paso 5</div>
-      <div class="step-q">Listo para enviar</div>
+      <div class="step-q">Preferencias de equipo</div>
+      <label class="lbl" for="chSel">Desafío que te interesa</label>
+      <select class="inp" id="chSel" style="margin-bottom:12px">
+        <option value="">— Sin preferencia —</option>
+      </select>
+      <div class="step-q" style="font-size:1rem;margin-top:6px">¿Cómo te ves en el equipo?</div>
+      <div class="opts">
+        <div class="opt sel" data-tr="flexible" onclick="pickTeamRole(this,'flexible')"><div class="opt-rad"></div><span class="opt-txt">Flexible — donde me necesiten</span></div>
+        <div class="opt" data-tr="colaborador" onclick="pickTeamRole(this,'colaborador')"><div class="opt-rad"></div><span class="opt-txt">Colaborador/a</span></div>
+        <div class="opt" data-tr="lider" onclick="pickTeamRole(this,'lider')"><div class="opt-rad"></div><span class="opt-txt">Líder de equipo</span></div>
+      </div>
+      <p class="hint" style="margin-top:12px">Si eliges líder, priorizamos agruparte con quienes eligieron el mismo desafío.</p>
+      <div class="step-q" style="font-size:1rem;margin-top:14px">Confirmación</div>
       <p class="hint">Revisa que tus datos sean correctos. Al enviar aceptas que usemos esta información para la dinámica del hackathon.</p>
       <label class="ck"><input type="checkbox" id="ck" onchange="u4()"> Acepto el tratamiento de mis datos para participar en el evento.</label>
     </div>
@@ -148,7 +160,28 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
 
 <script>
 const LANGS=['Python','JavaScript','C++','TypeScript','Java','Go','Rust','SQL'];
-let perfil='', nivel='', selectedLangs=new Set();
+let perfil='', nivel='', teamRole='flexible', challengeId='', selectedLangs=new Set();
+
+(async function loadChallenges(){
+  try{
+    var res=await fetch('/api/hackathon/challenges');
+    var j=await res.json().catch(function(){return {};});
+    var sel=document.getElementById('chSel');
+    if(!sel||!j.challenges)return;
+    j.challenges.forEach(function(c){
+      var o=document.createElement('option');
+      o.value=c.id;
+      o.textContent=c.name||c.id;
+      sel.appendChild(o);
+    });
+  }catch(_){}
+})();
+
+function pickTeamRole(el,v){
+  document.querySelectorAll('#s4 .opt').forEach(function(o){o.classList.remove('sel');});
+  el.classList.add('sel');
+  teamRole=v;
+}
 
 function showErr(m){
   var e=document.getElementById('errBox');
@@ -228,13 +261,17 @@ async function submitForm(){
   btn.disabled=true;
   var nombre=document.getElementById('nm').value.trim();
   var telefono=document.getElementById('tl').value.replace(/\D/g,'');
+  var ch=document.getElementById('chSel');
+  challengeId=ch&&ch.value?ch.value:'';
   var body={
     nombre_completo:nombre,
     telefono:telefono,
     perfil:perfil,
     lenguajes:Array.from(selectedLangs),
-    nivel_experiencia:nivel
+    nivel_experiencia:nivel,
+    team_role:teamRole
   };
+  if(challengeId)body.challenge_id=challengeId;
   try{
     var res=await fetch('/api/hackaton/submit',{
       method:'POST',

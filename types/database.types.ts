@@ -232,6 +232,70 @@ export interface Database {
           },
         ]
       }
+      hackaton_challenges: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          max_teams: number
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          max_teams?: number
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          max_teams?: number
+          sort_order?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      hackaton_intentions: {
+        Row: {
+          id: string
+          from_submission_id: string
+          to_submission_id: string
+          type: 'interested' | 'pass'
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          from_submission_id: string
+          to_submission_id: string
+          type?: 'interested' | 'pass'
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          from_submission_id?: string
+          to_submission_id?: string
+          type?: 'interested' | 'pass'
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'hackaton_intentions_from_submission_id_fkey'
+            columns: ['from_submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'hackaton_intentions_to_submission_id_fkey'
+            columns: ['to_submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       hackaton_submissions: {
         Row: {
           id: string
@@ -241,6 +305,8 @@ export interface Database {
           lenguajes: string[]
           nivel_experiencia: 'principiante' | 'intermedio' | 'avanzado'
           badge_id: string
+          challenge_id: string | null
+          team_role: 'lider' | 'colaborador' | 'flexible'
           created_at: string
         }
         Insert: {
@@ -251,6 +317,8 @@ export interface Database {
           lenguajes: string[]
           nivel_experiencia: 'principiante' | 'intermedio' | 'avanzado'
           badge_id?: string
+          challenge_id?: string | null
+          team_role?: 'lider' | 'colaborador' | 'flexible'
           created_at?: string
         }
         Update: {
@@ -261,9 +329,18 @@ export interface Database {
           lenguajes?: string[]
           nivel_experiencia?: 'principiante' | 'intermedio' | 'avanzado'
           badge_id?: string
+          challenge_id?: string | null
+          team_role?: 'lider' | 'colaborador' | 'flexible'
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'hackaton_submissions_challenge_id_fkey'
+            columns: ['challenge_id']
+            referencedRelation: 'hackaton_challenges'
+            referencedColumns: ['id']
+          },
+        ]
       }
       hackaton_equipos: {
         Row: {
@@ -271,6 +348,11 @@ export interface Database {
           numero: number
           nombre: string
           cupos_max: number
+          challenge_id: string | null
+          leader_submission_id: string | null
+          mesa: string
+          status: 'forming' | 'confirmed' | 'active'
+          auto_formed: boolean
           created_at: string
         }
         Insert: {
@@ -278,6 +360,11 @@ export interface Database {
           numero: number
           nombre?: string
           cupos_max?: number
+          challenge_id?: string | null
+          leader_submission_id?: string | null
+          mesa?: string
+          status?: 'forming' | 'confirmed' | 'active'
+          auto_formed?: boolean
           created_at?: string
         }
         Update: {
@@ -285,9 +372,27 @@ export interface Database {
           numero?: number
           nombre?: string
           cupos_max?: number
+          challenge_id?: string | null
+          leader_submission_id?: string | null
+          mesa?: string
+          status?: 'forming' | 'confirmed' | 'active'
+          auto_formed?: boolean
           created_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: 'hackaton_equipos_challenge_id_fkey'
+            columns: ['challenge_id']
+            referencedRelation: 'hackaton_challenges'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'hackaton_equipos_leader_submission_id_fkey'
+            columns: ['leader_submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+        ]
       }
       hackaton_equipo_miembros: {
         Row: {
@@ -1216,7 +1321,20 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      v_hackaton_mutual_matches: {
+        Row: {
+          from_id: string
+          to_id: string
+        }
+        Relationships: []
+      }
+      v_hackaton_exclusions: {
+        Row: {
+          from_id: string
+          to_id: string
+        }
+        Relationships: []
+      }
     }
     Functions: {
       match_by_need: {
@@ -1259,6 +1377,8 @@ export type PerrenquePregunta = Database['public']['Tables']['perrenque_pregunta
 export type MatchPerrenque = Database['public']['Tables']['match_perrenque']['Row']
 export type FeedbackPerrenque = Database['public']['Tables']['feedback_perrenque']['Row']
 export type HackatonSubmission = Database['public']['Tables']['hackaton_submissions']['Row']
+export type HackatonChallenge = Database['public']['Tables']['hackaton_challenges']['Row']
+export type HackatonIntention = Database['public']['Tables']['hackaton_intentions']['Row']
 export type HackatonEquipo = Database['public']['Tables']['hackaton_equipos']['Row']
 export type HackatonEquipoMiembro = Database['public']['Tables']['hackaton_equipo_miembros']['Row']
 export type MatchHackaton = Database['public']['Tables']['match_hackaton']['Row']

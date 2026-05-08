@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { recomputeHackathonMatches } from '@/services/hackathon-matching'
+import { hackathonOnRegistro } from '@/lib/hackathon-eventos'
 
 const PERFIL = new Set(['frontend', 'backend', 'full_stack', 'data_analyst'])
 
 const NIVEL = new Set(['principiante', 'intermedio', 'avanzado'])
+
+const TEAM_ROLE = new Set(['lider', 'colaborador', 'flexible'])
 
 const LENGUAJES_ALLOWED = new Set([
   'Python',
@@ -29,6 +32,16 @@ function normalizeTelefono(raw: string): string | null {
   return d
 }
 
+function validUuid(v: unknown): string | null {
+  if (typeof v !== 'string') return null
+  const t = v.trim()
+  if (
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(t)
+  )
+    return t
+  return null
+}
+
 function validarLenguajes(raw: unknown): string[] | null {
   if (!Array.isArray(raw) || raw.length < 1) return null
   const out: string[] = []
@@ -50,6 +63,12 @@ export async function POST(req: NextRequest) {
     const perfil = str(body.perfil)
     const nivelExperiencia = str(body.nivel_experiencia)
     const lenguajes = validarLenguajes(body.lenguajes)
+    const challengeId = validUuid(body.challenge_id)
+    const teamRoleRaw = str(body.team_role)
+    const team_role =
+      teamRoleRaw && TEAM_ROLE.has(teamRoleRaw)
+        ? (teamRoleRaw as 'lider' | 'colaborador' | 'flexible')
+        : ('flexible' as const)
 
     if (!nombreCompleto || nombreCompleto.length < 2 || nombreCompleto.length > 200) {
       return NextResponse.json(
@@ -84,15 +103,19 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const insertPayload: Record<string, unknown> = {
+      nombre_completo: nombreCompleto,
+      telefono,
+      perfil: perfil as 'frontend' | 'backend' | 'full_stack' | 'data_analyst',
+      lenguajes,
+      nivel_experiencia: nivelExperiencia as 'principiante' | 'intermedio' | 'avanzado',
+      team_role,
+    }
+    if (challengeId) insertPayload.challenge_id = challengeId
+
     const { data, error } = await supabase
       .from('hackaton_submissions')
-      .insert({
-        nombre_completo: nombreCompleto,
-        telefono,
-        perfil: perfil as 'frontend' | 'backend' | 'full_stack' | 'data_analyst',
-        lenguajes,
-        nivel_experiencia: nivelExperiencia as 'principiante' | 'intermedio' | 'avanzado',
-      })
+      .insert(insertPayload as never)
       .select('id, badge_id')
       .single()
 
@@ -121,6 +144,16 @@ export async function POST(req: NextRequest) {
       await recomputeHackathonMatches()
     } catch (err) {
       console.error('hackathon matching job:', err)
+    }
+
+    try {
+      await hackathonOnRegistro({
+        nombre: nombreCompleto,
+        telefono,
+        badge_id: data.badge_id as string,
+      })
+    } catch (smsErr) {
+      console.error('hackathon SMS registro:', smsErr)
     }
 
     return NextResponse.json({ ok: true, id: data.id, badge_id: data.badge_id })

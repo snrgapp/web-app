@@ -7,6 +7,31 @@ import {
   recomputeHackathonMatches,
   type RecomputeHackathonResult,
 } from '@/services/hackathon-matching'
+import {
+  runHackathonTeamFormation,
+  type HackathonFormationResult,
+} from '@/services/hackathon-team-formation'
+
+export type HackathonFormacionPanelResult =
+  | { authorized: false; error: string }
+  | ({ authorized: true } & HackathonFormationResult)
+
+/** Forma equipos (ronda 1) con union-find + SMS opcional. */
+export async function ejecutarHackathonFormacionEquipos(options?: {
+  skipSms?: boolean
+  skipBalanceCheck?: boolean
+}): Promise<HackathonFormacionPanelResult> {
+  const authed = await isAuthenticated()
+  if (!authed) {
+    return { authorized: false, error: 'Inicia sesión en el panel para usar esta acción.' }
+  }
+  const run = await runHackathonTeamFormation({
+    skipSms: options?.skipSms,
+    skipBalanceCheck: options?.skipBalanceCheck,
+  })
+  revalidatePath('/panel/hackathon')
+  return { authorized: true, ...run }
+}
 
 export type HackathonRecomputePanelResult =
   | { authorized: false; error: string }
