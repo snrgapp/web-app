@@ -43,8 +43,8 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
 .opt.sel .opt-rad{border-color:var(--c);background:var(--c);}
 .opt-txt{font-size:14px;font-weight:700;color:#fff;flex:1;}
 .lang-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.lang-chip{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:700;color:rgba(255,255,255,.55);cursor:pointer;transition:.18s;}
-.lang-chip.sel{border-color:var(--c);background:var(--c-soft);color:var(--c-text);}
+.lang-chip{padding:8px 14px;border-radius:999px;border:1px solid rgba(123,53,255,.28);background:#0c0c12;font-size:12px;font-weight:700;color:var(--c-text);cursor:pointer;transition:.18s;}
+.lang-chip.sel{border-color:var(--c);background:#10101a;box-shadow:0 0 14px var(--c-glow);color:#C9A8FF;}
 .nav{margin-top:18px;}
 .btn{width:100%;padding:14px 18px;border-radius:14px;border:none;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s;}
 .btn:disabled{opacity:.35;cursor:not-allowed;}
@@ -130,17 +130,13 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
     <div class="card">
       <div class="step-cat">Paso 5</div>
       <div class="step-q">Preferencias de equipo</div>
-      <label class="lbl" for="chSel">Desafío que te interesa</label>
-      <select class="inp" id="chSel" style="margin-bottom:12px">
-        <option value="">— Sin preferencia —</option>
-      </select>
-      <div class="step-q" style="font-size:1rem;margin-top:6px">¿Cómo te ves en el equipo?</div>
+      <div class="step-q" style="font-size:1rem;margin-top:0">¿Cómo te ves en el equipo?</div>
       <div class="opts">
         <div class="opt sel" data-tr="flexible" onclick="pickTeamRole(this,'flexible')"><div class="opt-rad"></div><span class="opt-txt">Flexible — donde me necesiten</span></div>
         <div class="opt" data-tr="colaborador" onclick="pickTeamRole(this,'colaborador')"><div class="opt-rad"></div><span class="opt-txt">Colaborador/a</span></div>
         <div class="opt" data-tr="lider" onclick="pickTeamRole(this,'lider')"><div class="opt-rad"></div><span class="opt-txt">Líder de equipo</span></div>
       </div>
-      <p class="hint" style="margin-top:12px">Si eliges líder, priorizamos agruparte con quienes eligieron el mismo desafío.</p>
+      <p class="hint" style="margin-top:12px">Si eliges líder, ayudamos a formar equipos equilibrados.</p>
       <div class="step-q" style="font-size:1rem;margin-top:14px">Confirmación</div>
       <p class="hint">Revisa que tus datos sean correctos. Al enviar aceptas que usemos esta información para la dinámica del hackathon.</p>
       <label class="ck"><input type="checkbox" id="ck" onchange="u4()"> Acepto el tratamiento de mis datos para participar en el evento.</label>
@@ -160,22 +156,7 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
 
 <script>
 const LANGS=['Python','JavaScript','C++','TypeScript','Java','Go','Rust','SQL'];
-let perfil='', nivel='', teamRole='flexible', challengeId='', selectedLangs=new Set();
-
-(async function loadChallenges(){
-  try{
-    var res=await fetch('/api/hackathon/challenges');
-    var j=await res.json().catch(function(){return {};});
-    var sel=document.getElementById('chSel');
-    if(!sel||!j.challenges)return;
-    j.challenges.forEach(function(c){
-      var o=document.createElement('option');
-      o.value=c.id;
-      o.textContent=c.name||c.id;
-      sel.appendChild(o);
-    });
-  }catch(_){}
-})();
+let perfil='', nivel='', teamRole='flexible', selectedLangs=new Set();
 
 function pickTeamRole(el,v){
   document.querySelectorAll('#s4 .opt').forEach(function(o){o.classList.remove('sel');});
@@ -261,8 +242,6 @@ async function submitForm(){
   btn.disabled=true;
   var nombre=document.getElementById('nm').value.trim();
   var telefono=document.getElementById('tl').value.replace(/\D/g,'');
-  var ch=document.getElementById('chSel');
-  challengeId=ch&&ch.value?ch.value:'';
   var body={
     nombre_completo:nombre,
     telefono:telefono,
@@ -271,7 +250,6 @@ async function submitForm(){
     nivel_experiencia:nivel,
     team_role:teamRole
   };
-  if(challengeId)body.challenge_id=challengeId;
   try{
     var res=await fetch('/api/hackaton/submit',{
       method:'POST',
