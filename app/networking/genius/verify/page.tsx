@@ -53,14 +53,14 @@ function VerifyContent() {
           width={1080}
           height={1080}
           decoding="async"
-          className="block h-[clamp(132px,36vmin,220px)] w-auto max-w-[min(400px,92vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
+          className="block h-[clamp(180px,44vmin,300px)] w-auto max-w-[min(520px,94vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
         />
       </div>
 
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 w-full max-w-sm rounded-[22px] border border-white/10 bg-[#1c1c1c] p-7 shadow-[6px_6px_0_#daff00]"
+        className="relative z-10 w-full max-w-sm rounded-[22px] border border-white/10 bg-[#1c1c1c] p-7 shadow-[6px_6px_0_#694aff]"
       >
         <p
           className="text-center text-[0.68rem] font-medium uppercase tracking-[0.15em] text-white/65"
@@ -112,7 +112,7 @@ function VerifyContent() {
           <button
             type="submit"
             disabled={!telefono.trim() || loading}
-            className="h-12 w-full rounded-xl border-2 border-[#161616] bg-white text-sm font-medium uppercase tracking-wide text-[#161616] shadow-[6px_6px_0_#daff00] transition hover:bg-white/95 disabled:opacity-40"
+            className="h-12 w-full rounded-xl border-2 border-[#161616] bg-white text-sm font-medium uppercase tracking-wide text-[#161616] shadow-[6px_6px_0_#694aff] transition hover:bg-white/95 disabled:opacity-40"
           >
             {loading ? <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#161616]" /> : 'Ingresar'}
           </button>

@@ -25,7 +25,7 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06 * index }}
-      className="rounded-[22px] border border-white/10 bg-[#1c1c1c] px-4 py-4 shadow-[6px_6px_0_#daff00]"
+      className="rounded-[22px] border border-white/10 bg-[#1c1c1c] px-4 py-4 shadow-[6px_6px_0_#694aff]"
     >
       <div className="flex flex-col gap-3">
         <div>
@@ -39,7 +39,7 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
         </div>
 
         <div className="flex items-start gap-2">
-          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#daff00]" strokeWidth={2} />
+          <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#694aff]" strokeWidth={2} />
           <p className="min-w-0 text-sm font-medium text-white/88">{person.identidad}</p>
         </div>
 
@@ -59,7 +59,7 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="truncate text-xs font-medium text-white underline decoration-[#daff00]/85 underline-offset-2 hover:text-white/85"
+              className="truncate text-xs font-medium text-white underline decoration-[#694aff]/85 underline-offset-2 hover:text-white/85"
               onClick={(e) => e.stopPropagation()}
             >
               WhatsApp

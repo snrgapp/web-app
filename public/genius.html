@@ -9,6 +9,7 @@
 :root{
   --bg:#161616;
   --lime:#daff00;
+  --gf-shadow:#694aff;
   --card:#1c1c1c;
   --border:rgba(255,255,255,.1);
 }
@@ -23,7 +24,7 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
   background-size:28px 28px;
 }
 .gf-logo-top{
-  display:block;width:auto;max-width:min(400px,92vw);height:clamp(132px,36vmin,220px);margin:28px auto 12px;padding:0 16px;
+  display:block;width:auto;max-width:min(520px,94vw);height:clamp(180px,44vmin,300px);margin:28px auto 12px;padding:0 16px;
   object-fit:contain;object-position:center center;
   background:transparent !important;border:none;box-shadow:none;
   position:relative;z-index:1;
@@ -42,7 +43,7 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 .step{display:none;}
 .step.visible{display:block;animation:pop .28s ease;}
 @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:18px 16px;box-shadow:6px 6px 0 var(--lime);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:18px 16px;box-shadow:6px 6px 0 var(--gf-shadow);}
 .gf-step-head{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
 .gf-num{flex-shrink:0;width:34px;height:34px;border-radius:999px;background:transparent;border:2px solid rgba(255,255,255,.35);color:#fff;font-family:'Fraunces',serif;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;}
 .gf-step-cat{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:500;margin-bottom:4px;}
@@ -55,7 +56,7 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 .opts{display:flex;flex-direction:column;gap:9px;}
 .opt{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:16px;border:1px solid var(--border);background:#141414;cursor:pointer;transition:.15s;color:rgba(255,255,255,.92);font-weight:500;font-size:.9rem;}
 .opt:active{transform:scale(.99);}
-.opt.selected{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06);box-shadow:4px 4px 0 var(--lime);}
+.opt.selected{border-color:rgba(255,255,255,.45);background:rgba(255,255,255,.06);box-shadow:4px 4px 0 var(--gf-shadow);}
 .opt-ico{font-size:20px;width:30px;text-align:center;flex-shrink:0;}
 .opt-txt{flex:1;}
 .opt-radio{width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.35);flex-shrink:0;}
@@ -65,16 +66,16 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 .ta:focus{outline:none;border-color:rgba(255,255,255,.35);}
 .ta-counter{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:rgba(255,255,255,.45);text-align:right;margin-top:6px;text-transform:uppercase;}
 .nav{margin-top:18px;}
-.btn{width:100%;padding:14px 18px;border-radius:14px;border:2px solid #161616;background:#fff;color:#161616;font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--lime);transition:transform .15s,filter .15s;}
+.btn{width:100%;padding:14px 18px;border-radius:14px;border:2px solid #161616;background:#fff;color:#161616;font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--gf-shadow);transition:transform .15s,filter .15s;}
 .btn:disabled{opacity:.38;cursor:not-allowed;}
-.btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--lime);}
+.btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--gf-shadow);}
 .ck{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.62);line-height:1.45;font-weight:300;}
 .ck input{margin-top:3px;accent-color:var(--lime);}
 .done{display:none;}
 .done.visible{display:block;}
 .done-card{text-align:center;}
 .done-card .gf-q{margin-bottom:10px;}
-.done-link{display:inline-block;margin-top:18px;font-family:'Inter',sans-serif;font-weight:500;font-size:.82rem;color:#fff;text-decoration:none;border-bottom:2px solid var(--lime);padding-bottom:2px;}
+.done-link{display:inline-block;margin-top:18px;font-family:'Inter',sans-serif;font-weight:500;font-size:.82rem;color:#fff;text-decoration:none;border-bottom:2px solid var(--gf-shadow);padding-bottom:2px;}
 .done-link:hover{color:rgba(255,255,255,.85);}
 .mb-mt{margin-top:14px;}
 </style>
