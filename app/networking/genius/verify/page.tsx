@@ -33,7 +33,7 @@ function VerifyContent() {
   }
 
   return (
-    <div className="relative flex min-h-dvh flex-col items-center justify-center px-5 py-10">
+    <div className="relative flex min-h-dvh flex-col items-center justify-start px-3 pb-10 pt-10 sm:px-5">
       <div className="absolute left-0 top-0 w-full p-4">
         <button
           type="button"
@@ -45,15 +45,18 @@ function VerifyContent() {
         </button>
       </div>
 
-      {/* img nativo: mix-blend-mode con el fondo (igual que genius.html); next/image envuelve en span y el blend a veces no aplica al PNG */}
-      <img
-        src="/images/genius-fest-logo.png"
-        alt="Genius FEST 2026"
-        width={300}
-        height={100}
-        decoding="async"
-        className="mb-10 block h-auto w-[min(300px,85vw)] bg-transparent object-contain mix-blend-screen"
-      />
+      {/* Misma apariencia que .gf-logo-top en public/genius.html; padding en el contenedor para no pintar caja alrededor del img */}
+      <div className="relative z-[1] mx-auto mb-10 flex w-full justify-center px-4">
+        <img
+          src="/images/genius-fest-logo.png"
+          alt="Genius FEST 2026"
+          width={600}
+          height={200}
+          decoding="async"
+          className="block h-[clamp(132px,36vmin,220px)] w-auto max-w-[min(400px,92vw)] border-0 bg-transparent object-contain object-[center_top] shadow-none outline-none"
+          style={{ mixBlendMode: 'screen' }}
+        />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: -8 }}
