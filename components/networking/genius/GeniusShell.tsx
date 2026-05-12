@@ -50,7 +50,7 @@ export default function GeniusShell() {
   if (!submissionId) {
     return (
       <div className="flex min-h-dvh items-center justify-center bg-[#161616]">
-        <Loader2 className="h-8 w-8 animate-spin text-[#694aff]" />
+        <Loader2 className="h-8 w-8 animate-spin text-white/65" />
       </div>
     )
   }
@@ -66,18 +66,16 @@ export default function GeniusShell() {
         >
           <ArrowLeft size={22} />
         </button>
-        <div className="relative h-10 w-28 shrink-0 overflow-hidden rounded-lg shadow-[4px_4px_0_#daff00]">
-          <Image
-            src="/images/genius-fest-logo.png"
-            alt="Genius FEST"
-            fill
-            className="object-cover object-center"
-            sizes="112px"
-            priority
-          />
-        </div>
+        <Image
+          src="/images/genius-fest-logo.png"
+          alt="Genius FEST"
+          width={220}
+          height={110}
+          className="h-10 w-auto shrink-0 bg-transparent object-contain object-left"
+          priority
+        />
         <span
-          className="text-[0.68rem] font-medium uppercase tracking-[0.15em] text-[#694aff]"
+          className="text-[0.68rem] font-medium uppercase tracking-[0.15em] text-white/55"
           style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
         >
           Conexiones
@@ -86,7 +84,7 @@ export default function GeniusShell() {
 
       <div className="relative z-10 px-4">
         <h1
-          className="text-2xl font-black leading-tight text-[#694aff]"
+          className="text-2xl font-black leading-tight text-white"
           style={{ fontFamily: 'var(--font-fraunces-genius), serif' }}
         >
           Tu radar Genius
@@ -103,8 +101,8 @@ export default function GeniusShell() {
               onClick={() => setRonda(r)}
               className={`rounded-full px-5 py-2.5 text-xs font-medium uppercase tracking-wider transition ${
                 ronda === r
-                  ? 'bg-[#694aff] text-white shadow-[4px_4px_0_#daff00]'
-                  : 'border border-white/15 bg-black/30 text-white/55 hover:border-[#694aff]/40 hover:text-white/85'
+                  ? 'border border-white/25 bg-[#1c1c1c] text-white shadow-[4px_4px_0_#daff00]'
+                  : 'border border-white/12 bg-[#141414] text-white/45 hover:border-white/22 hover:text-white/75'
               }`}
               style={{ fontFamily: 'var(--font-geist-sans), sans-serif' }}
             >
@@ -116,10 +114,10 @@ export default function GeniusShell() {
         <div className="mt-8 space-y-4">
           {loading ? (
             <div className="flex justify-center py-16">
-              <Loader2 className="h-8 w-8 animate-spin text-[#694aff]" />
+              <Loader2 className="h-8 w-8 animate-spin text-white/65" />
             </div>
           ) : conexiones.length === 0 ? (
-            <div className="rounded-[22px] border border-white/10 bg-white/[0.04] px-5 py-10 text-center shadow-[6px_6px_0_#daff00]/40">
+            <div className="rounded-[22px] border border-white/10 bg-[#1c1c1c] px-5 py-10 text-center shadow-[6px_6px_0_#daff00]">
               <p className="text-sm font-light text-white/65">
                 Aún no hay sugerencias para esta ronda. Vuelve más tarde o confirma que ya enviaste el
                 formulario en genius.snrg.lat.

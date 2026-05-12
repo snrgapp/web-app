@@ -25,41 +25,41 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06 * index }}
-      className="rounded-[22px] border border-white/[0.12] bg-white/[0.04] px-4 py-4 shadow-[6px_6px_0_#daff00]"
+      className="rounded-[22px] border border-white/10 bg-[#1c1c1c] px-4 py-4 shadow-[6px_6px_0_#daff00]"
     >
       <div className="flex flex-col gap-3">
         <div>
           <h3
-            className="text-lg font-black leading-tight text-[#694aff]"
+            className="text-lg font-black leading-tight text-white"
             style={{ fontFamily: 'var(--font-fraunces-genius), serif' }}
           >
             {person.nombreCompleto}
           </h3>
-          <div className="mt-2 h-px w-3/5 bg-[#694aff]/35" />
+          <div className="mt-2 h-px w-3/5 bg-white/18" />
         </div>
 
         <div className="flex items-start gap-2">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#daff00]" strokeWidth={2} />
-          <p className="min-w-0 text-sm font-medium text-white/85">{person.identidad}</p>
+          <p className="min-w-0 text-sm font-medium text-white/88">{person.identidad}</p>
         </div>
 
         <div className="flex items-start gap-2">
-          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#694aff]" strokeWidth={2} />
-          <p className="min-w-0 text-xs font-light leading-snug text-white/65">{person.mundo}</p>
+          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
+          <p className="min-w-0 text-xs font-light leading-snug text-white/62">{person.mundo}</p>
         </div>
 
-        <p className="border-l-2 border-[#694aff]/50 pl-3 text-xs font-light italic leading-relaxed text-white/55">
+        <p className="border-l-2 border-white/22 pl-3 text-xs font-light italic leading-relaxed text-white/52">
           “{person.valorHumano.length > 140 ? `${person.valorHumano.slice(0, 137)}…` : person.valorHumano}”
         </p>
 
         {whatsappHref ? (
           <div className="flex items-center gap-2 pt-1">
-            <Phone className="h-4 w-4 shrink-0 text-[#694aff]" strokeWidth={2} />
+            <Phone className="h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
             <a
               href={whatsappHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="truncate text-xs font-medium text-[#694aff] underline decoration-[#daff00]/80 underline-offset-2 hover:text-[#8c74ff]"
+              className="truncate text-xs font-medium text-white underline decoration-[#daff00]/85 underline-offset-2 hover:text-white/85"
               onClick={(e) => e.stopPropagation()}
             >
               WhatsApp

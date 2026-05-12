@@ -21,17 +21,7 @@ export default function GeniusNetworkingLayout({
     <div
       className={`genius-app-root ${GeistSans.className} ${fraunces.variable} ${GeistMono.variable} relative min-h-dvh bg-[#161616] text-white antialiased`}
     >
-      <div
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          opacity: 0.07,
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px)',
-          backgroundSize: '28px 28px',
-        }}
-        aria-hidden
-      />
-      <div className="relative z-[1]">{children}</div>
+      {children}
     </div>
   )
 }
