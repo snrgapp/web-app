@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Genius FEST 2026 — Conéctate</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;900&family=Inter:wght@300;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#161616;
+  --accent:#694aff;
+  --lime:#daff00;
+  --card:rgba(255,255,255,.05);
+  --border:rgba(255,255,255,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100dvh;background:var(--bg);color:rgba(255,255,255,.92);}
+body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
+.gf-grid{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.gf-noise{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.06;background:rgba(255,255,255,.03);}
+.wrap{position:relative;z-index:2;max-width:440px;margin:0 auto;padding:20px 16px 40px;}
+.gf-head{text-align:center;margin-bottom:18px;}
+.gf-logo{width:min(220px,72vw);height:auto;display:block;margin:0 auto 14px;filter:drop-shadow(4px 4px 0 var(--lime));}
+.gf-kicker{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:500;}
+.gf-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(1.35rem,4vw,1.85rem);color:var(--accent);margin-top:10px;line-height:1.15;text-wrap:balance;}
+.gf-sub{font-size:.8125rem;color:rgba(255,255,255,.72);margin-top:8px;line-height:1.45;font-weight:300;}
+.progress{display:flex;align-items:center;gap:6px;margin-bottom:18px;padding:0 2px;}
+.pb{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500;color:rgba(255,255,255,.4);flex-shrink:0;transition:.22s;}
+.pb.active{border-color:var(--accent);color:var(--accent);background:rgba(105,74,255,.12);}
+.pb.done{border-color:var(--lime);background:var(--lime);color:#161616;}
+.pl{flex:1;height:3px;background:rgba(255,255,255,.08);border-radius:2px;}
+.pl.done{background:linear-gradient(90deg,var(--accent),var(--lime));}
+.step{display:none;}
+.step.visible{display:block;animation:pop .28s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:18px 16px;box-shadow:6px 6px 0 var(--lime);}
+.gf-step-head{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.gf-num{flex-shrink:0;width:34px;height:34px;border-radius:999px;background:var(--accent);color:#fff;font-family:'Fraunces',serif;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;box-shadow:3px 3px 0 var(--lime);}
+.gf-step-cat{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:4px;}
+.gf-q{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.05rem,3vw,1.25rem);color:var(--accent);line-height:1.25;}
+.lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px;}
+.inp{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--border);background:rgba(0,0,0,.35);color:rgba(255,255,255,.95);font-size:15px;font-family:inherit;font-weight:300;}
+.inp::placeholder{color:rgba(255,255,255,.28);}
+.inp:focus{outline:none;border-color:var(--accent);}
+.hint{font-size:.75rem;color:rgba(255,255,255,.52);margin-top:8px;line-height:1.45;font-weight:300;}
+.opts{display:flex;flex-direction:column;gap:9px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:16px;border:1px solid var(--border);background:rgba(0,0,0,.22);cursor:pointer;transition:.15s;color:rgba(255,255,255,.9);font-weight:500;font-size:.9rem;}
+.opt:active{transform:scale(.99);}
+.opt.selected{border-color:var(--accent);background:rgba(105,74,255,.15);box-shadow:4px 4px 0 var(--lime);}
+.opt-ico{font-size:20px;width:30px;text-align:center;flex-shrink:0;}
+.opt-txt{flex:1;}
+.opt-radio{width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.35);flex-shrink:0;}
+.opt.selected .opt-radio{border-color:var(--accent);background:var(--accent);}
+.opt.selected .opt-radio::after{content:'';display:block;width:7px;height:7px;margin:4px auto;border-radius:50%;background:var(--lime);}
+.ta{width:100%;min-height:110px;padding:12px;border-radius:14px;border:1px solid var(--border);background:rgba(0,0,0,.35);color:rgba(255,255,255,.95);font-family:inherit;font-weight:300;font-size:.95rem;resize:vertical;}
+.ta:focus{outline:none;border-color:var(--accent);}
+.ta-counter{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:rgba(255,255,255,.45);text-align:right;margin-top:6px;text-transform:uppercase;}
+.nav{margin-top:18px;}
+.btn{width:100%;padding:14px 18px;border-radius:14px;border:2px solid #161616;background:var(--accent);color:#fff;font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--lime);transition:transform .15s,filter .15s;}
+.btn:disabled{opacity:.38;cursor:not-allowed;}
+.btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--lime);}
+.ck{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.62);line-height:1.45;font-weight:300;}
+.ck input{margin-top:3px;accent-color:var(--accent);}
+.done{display:none;}
+.done.visible{display:block;}
+.done-card{text-align:center;}
+.done-card .gf-q{margin-bottom:10px;}
+.done-link{display:inline-block;margin-top:18px;font-family:'Inter',sans-serif;font-weight:500;font-size:.82rem;color:var(--accent);text-decoration:none;border-bottom:2px solid var(--lime);padding-bottom:2px;}
+.done-link:hover{color:#8c74ff;}
+.mb-mt{margin-top:14px;}
+</style>
+</head>
+<body>
+<div class="gf-grid"></div>
+<div class="gf-noise"></div>
+<div class="wrap">
+  <header class="gf-head">
+    <img class="gf-logo" src="/images/genius-fest-logo.png" alt="Genius FEST 2026">
+    <p class="gf-kicker">Networking · Genius FEST</p>
+    <h1 class="gf-title">Ideas para diseñar el futuro</h1>
+    <p class="gf-sub">Completa el formulario con el mismo teléfono con el que entrarás a la app el día del evento.</p>
+  </header>
+  <div class="progress" id="prog">
+    <div class="pb active" id="p0">1</div><div class="pl" id="l0"></div>
+    <div class="pb" id="p1">2</div><div class="pl" id="l1"></div>
+    <div class="pb" id="p2">3</div><div class="pl" id="l2"></div>
+    <div class="pb" id="p3">4</div><div class="pl" id="l3"></div>
+    <div class="pb" id="p4">5</div>
+  </div>
+  <div class="step visible" id="step-0">
+    <div class="card">
+      <div class="gf-step-head">
+        <div class="gf-num">1</div>
+        <div>
+          <div class="gf-step-cat">Tus datos</div>
+          <div class="gf-q">Vamos a conocerte un poco</div>
+        </div>
+      </div>
+      <label class="lbl" for="gf-nombre">Nombre completo</label>
+      <input class="inp" id="gf-nombre" type="text" autocomplete="name" maxlength="200" minlength="2" required placeholder="Ej: María Pérez García" oninput="onContact()">
+      <label class="lbl mb-mt" for="gf-tel">Número de teléfono</label>
+      <input class="inp" id="gf-tel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="Ej: 300 123 4567" oninput="onContact()">
+      <p class="hint">Tu número será la llave para ver en la app las conexiones que te sugerimos.</p>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-0" disabled onclick="goNext(0)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-1">
+    <div class="card">
+      <div class="gf-step-head">
+        <div class="gf-num">2</div>
+        <div>
+          <div class="gf-step-cat">Tu identidad</div>
+          <div class="gf-q">¿Cómo te defines hoy?</div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt" onclick="sel(1,this,'Estudiante')"><span class="opt-ico">🎓</span><span class="opt-txt">Estudiante</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(1,this,'Emprendedor/a')"><span class="opt-ico">🚀</span><span class="opt-txt">Emprendedor/a</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(1,this,'Empleado en empresa')"><span class="opt-ico">🏢</span><span class="opt-txt">Empleado en empresa</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(1,this,'Freelance / Independiente')"><span class="opt-ico">💻</span><span class="opt-txt">Freelance / Independiente</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(1,this,'Dueño/a de negocio')"><span class="opt-ico">🏪</span><span class="opt-txt">Dueño/a de negocio</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(1,this,'Creativo/a')"><span class="opt-ico">🎨</span><span class="opt-txt">Creativo/a</span><div class="opt-radio"></div></div>
+      </div>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-1" disabled onclick="goNext(1)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-2">
+    <div class="card">
+      <div class="gf-step-head">
+        <div class="gf-num">3</div>
+        <div>
+          <div class="gf-step-cat">Tu motivación</div>
+          <div class="gf-q">¿Qué te trajo aquí?</div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt" onclick="sel(2,this,'Aprender algo nuevo')"><span class="opt-ico">📚</span><span class="opt-txt">Aprender algo nuevo</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(2,this,'Encontrar clientes o proyectos')"><span class="opt-ico">🤝</span><span class="opt-txt">Encontrar clientes o proyectos</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(2,this,'Conectar con personas afines')"><span class="opt-ico">✨</span><span class="opt-txt">Conectar con personas afines</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(2,this,'Buscar empleo u oportunidades')"><span class="opt-ico">🎯</span><span class="opt-txt">Buscar empleo u oportunidades</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(2,this,'Curiosidad / me invitaron')"><span class="opt-ico">👀</span><span class="opt-txt">Curiosidad / me invitaron</span><div class="opt-radio"></div></div>
+      </div>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-2" disabled onclick="goNext(2)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-3">
+    <div class="card">
+      <div class="gf-step-head">
+        <div class="gf-num">4</div>
+        <div>
+          <div class="gf-step-cat">Tu mundo</div>
+          <div class="gf-q">¿En qué mundo te mueves?</div>
+        </div>
+      </div>
+      <div class="opts">
+        <div class="opt" onclick="sel(3,this,'Marketing y publicidad')"><span class="opt-ico">📢</span><span class="opt-txt">Marketing y publicidad</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(3,this,'Tecnología e innovación')"><span class="opt-ico">⚡</span><span class="opt-txt">Tecnología e innovación</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(3,this,'Negocios y emprendimiento')"><span class="opt-ico">📈</span><span class="opt-txt">Negocios y emprendimiento</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(3,this,'Arte, cultura y medios')"><span class="opt-ico">🎬</span><span class="opt-txt">Arte, cultura y medios</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(3,this,'Educación y academia')"><span class="opt-ico">🔬</span><span class="opt-txt">Educación y academia</span><div class="opt-radio"></div></div>
+        <div class="opt" onclick="sel(3,this,'Comunicación corporativa')"><span class="opt-ico">🌐</span><span class="opt-txt">Comunicación corporativa</span><div class="opt-radio"></div></div>
+      </div>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-3" disabled onclick="goNext(3)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-4">
+    <div class="card">
+      <div class="gf-step-head">
+        <div class="gf-num">5</div>
+        <div>
+          <div class="gf-step-cat">Tu valor humano</div>
+          <div class="gf-q">¿Qué traes que otros deberían saber?</div>
+        </div>
+      </div>
+      <textarea class="ta" id="textarea-4" maxlength="200" minlength="3" required placeholder="Ej: Escucho bien, conecto personas y me gusta cocrear..." oninput="onText()"></textarea>
+      <div class="ta-counter"><span id="cc">0</span> / 200</div>
+      <label class="ck"><input id="gf-consent" type="checkbox" onchange="onText()"> Acepto el tratamiento de mis datos para participar en la dinámica del evento.</label>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-4" disabled onclick="submit()">Enviar →</button></div>
+  </div>
+  <div class="done" id="done">
+    <div class="card done-card">
+      <div class="gf-step-cat">Listo</div>
+      <div class="gf-q">Ya estás dentro del radar Genius.</div>
+      <p class="hint" style="color:rgba(255,255,255,.72)">El día del evento entra con tu mismo número para ver tus conexiones sugeridas.</p>
+      <a class="done-link" href="https://app.snrg.lat/networking/genius/verify">Verificar e ingresar a la app →</a>
+    </div>
+  </div>
+</div>
+<script>
+const ans=['','','',''];
+let gfNombre='';
+let gfTelefonoDigits='';
+function sel(step,el,val){
+  document.querySelectorAll('#step-'+step+' .opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  ans[step-1]=val;
+  document.getElementById('next-'+step).disabled=false;
+}
+function onContact(){
+  const n=document.getElementById('gf-nombre').value.trim();
+  const raw=document.getElementById('gf-tel').value;
+  const digits=raw.replace(/\D/g,'');
+  gfNombre=n;
+  gfTelefonoDigits=digits;
+  document.getElementById('next-0').disabled=!(n.length>=2 && digits.length>=7 && digits.length<=15);
+}
+function onText(){
+  const ta=document.getElementById('textarea-4');
+  const consent=document.getElementById('gf-consent');
+  document.getElementById('cc').textContent=ta.value.length;
+  ans[3]=ta.value.trim();
+  document.getElementById('next-4').disabled=ans[3].length<3 || !consent.checked;
+}
+function prog(cur){
+  for(let i=0;i<5;i++){
+    const b=document.getElementById('p'+i);
+    b.className='pb';
+    if(i<cur){b.classList.add('done');b.textContent='✓';}
+    else if(i===cur){b.classList.add('active');b.textContent=i+1;}
+    else b.textContent=i+1;
+    if(i<4)document.getElementById('l'+i).className='pl'+(i<cur?' done':'');
+  }
+}
+function goNext(s){
+  document.getElementById('step-'+s).classList.remove('visible');
+  document.getElementById('step-'+(s+1)).classList.add('visible');
+  prog(s+1);window.scrollTo(0,0);
+}
+async function submit(){
+  const consent=document.getElementById('gf-consent');
+  if(!consent||!consent.checked){alert('Debes aceptar la autorización de tratamiento de datos para continuar.');return;}
+  const btn=document.getElementById('next-4');
+  const orig=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='Guardando...';
+  try{
+    const res=await fetch('/api/genius/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({nombre_completo:gfNombre,telefono:gfTelefonoDigits,identidad:ans[0],motivacion:ans[1],mundo:ans[2],valor_humano:ans[3]})});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error||'No se pudo guardar');
+    document.getElementById('step-4').classList.remove('visible');
+    document.getElementById('prog').style.display='none';
+    document.getElementById('done').classList.add('visible');
+    window.scrollTo(0,0);
+  }catch(e){alert(e.message||'Error al guardar. Intenta de nuevo.');}
+  finally{btn.disabled=false;btn.textContent=orig;}
+}
+prog(0);
+</script>
+</body>
+</html>

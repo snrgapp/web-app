@@ -12,9 +12,9 @@ const dinamicas = [
     enabled: true,
   },
   {
-    label: 'Perrenque Creativo',
-    image: '/images/card-perrenque.png',
-    href: '/networking/perrenque',
+    label: 'Genius FEST',
+    image: '/images/genius-fest-logo.png',
+    href: '/networking/genius',
     enabled: true,
   },
   {

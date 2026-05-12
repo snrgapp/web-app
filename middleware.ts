@@ -3,17 +3,17 @@ import { NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@/utils/supabase/middleware'
 import { getCookieName, hasValidSessionFormat } from '@/lib/members/session-edge'
 
-const PERRENQUE_HOSTS = [
-  'perrenque.snrg.lat',
-  'www.perrenque.snrg.lat',
-  'perrenque.localhost',
-]
-
 const HACKATON_HOSTS = [
   'hackaton.snrg.lat',
   'www.hackaton.snrg.lat',
   'hackaton.localhost',
 ] // Mismo deploy Vercel: añadir hackaton.snrg.lat en Project → Domains
+
+const GENIUS_HOSTS = [
+  'genius.snrg.lat',
+  'www.genius.snrg.lat',
+  'genius.localhost',
+]
 
 const INSCRIPCION_HOSTS = [
   'inscripcion.snrg.lat',
@@ -161,13 +161,12 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
-  // Subdominio perrenque.snrg.lat — landing estática del formulario Conéctate
-  if (matchesHosts(request, PERRENQUE_HOSTS)) {
-    // Canonical host para unificar tráfico con www.
+  // Subdominio genius.snrg.lat — formulario Genius FEST
+  if (matchesHosts(request, GENIUS_HOSTS)) {
     const effectiveHost = getEffectiveHost(request)
-    if (effectiveHost === 'perrenque.snrg.lat') {
+    if (effectiveHost === 'genius.snrg.lat') {
       const url = request.nextUrl.clone()
-      url.host = 'www.perrenque.snrg.lat'
+      url.host = 'www.genius.snrg.lat'
       return NextResponse.redirect(url, 308)
     }
 
@@ -176,7 +175,7 @@ export async function middleware(request: NextRequest) {
     }
     if (pathname === '/' || pathname === '') {
       const url = request.nextUrl.clone()
-      url.pathname = '/perrenque.html'
+      url.pathname = '/genius.html'
       return NextResponse.rewrite(url)
     }
     return NextResponse.next({ request: { headers: requestHeaders } })

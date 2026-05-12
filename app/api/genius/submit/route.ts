@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
-import { getPerrenqueEventDay } from '@/lib/perrenque-event-day'
-import { recomputePerrenqueMatches } from '@/services/perrenque-matching'
+import { recomputeGeniusMatches } from '@/services/genius-matching'
 
 const IDENTIDAD = new Set([
   'Estudiante',
@@ -35,7 +34,6 @@ function str(v: unknown): string | null {
   return t || null
 }
 
-/** Solo dígitos, para llave única en BD (7–15). */
 function normalizeTelefono(raw: string): string | null {
   const d = raw.replace(/\D/g, '')
   if (d.length < 7 || d.length > 15) return null
@@ -90,7 +88,7 @@ export async function POST(req: NextRequest) {
     }
 
     const { data, error } = await supabase
-      .from('perrenque_conecta_submissions')
+      .from('genius_conecta_submissions')
       .insert({
         nombre_completo: nombreCompleto,
         telefono,
@@ -103,7 +101,7 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (error) {
-      console.error('perrenque_conecta_submissions insert:', error)
+      console.error('genius_conecta_submissions insert:', error)
       const msg = String(error.message ?? '')
       const duplicate =
         error.code === '23505' ||
@@ -123,15 +121,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Importante: en serverless (p. ej. Vercel) el trabajo en segundo plano con `void` suele
-    // cancelarse al enviar la respuesta. Esperamos aquí para que grupos y matches existan.
     try {
-      await recomputePerrenqueMatches({
-        mode: 'incremental',
-        eventDay: getPerrenqueEventDay(),
-      })
+      await recomputeGeniusMatches()
     } catch (err) {
-      console.error('perrenque matching job:', err)
+      console.error('genius matching job:', err)
     }
 
     return NextResponse.json({ ok: true, id: data.id })

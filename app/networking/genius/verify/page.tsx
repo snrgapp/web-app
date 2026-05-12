@@ -1,0 +1,137 @@
+'use client'
+
+import { Suspense, useState } from 'react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import { verificarGeniusPorTelefono } from '@/app/actions/genius-networking'
+
+const STORAGE_ID = 'genius_submission_id'
+
+function VerifyContent() {
+  const router = useRouter()
+  const [telefono, setTelefono] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!telefono.trim()) return
+    setLoading(true)
+    setError('')
+    const result = await verificarGeniusPorTelefono(telefono.trim())
+    if (!result.ok) {
+      setError(result.error)
+      setLoading(false)
+      return
+    }
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(STORAGE_ID, result.submission.id)
+      localStorage.setItem(STORAGE_ID, result.submission.id)
+    }
+    router.push('/networking/genius')
+  }
+
+  return (
+    <div className="relative flex min-h-dvh flex-col items-center justify-center px-5 py-10">
+      <div className="absolute left-0 top-0 w-full p-4">
+        <button
+          type="button"
+          onClick={() => router.push('/home')}
+          className="text-white/55 transition-colors hover:text-white"
+          aria-label="Volver"
+        >
+          <ArrowLeft size={24} />
+        </button>
+      </div>
+
+      <div className="relative mb-8 h-[120px] w-[min(280px,85vw)] shrink-0 shadow-[8px_8px_0_#daff00]">
+        <Image
+          src="/images/genius-fest-logo.png"
+          alt="Genius FEST 2026"
+          fill
+          className="object-contain"
+          sizes="280px"
+          priority
+        />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative z-10 w-full max-w-sm rounded-[22px] border border-white/[0.12] bg-white/[0.04] p-7 shadow-[8px_8px_0_#daff00]"
+      >
+        <p
+          className="text-center text-[0.68rem] font-medium uppercase tracking-[0.15em] text-[#694aff]"
+          style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+        >
+          Genius FEST · Acceso
+        </p>
+        <h1
+          className="mt-3 text-center text-2xl font-black tracking-tight text-[#694aff]"
+          style={{ fontFamily: 'var(--font-fraunces-genius), serif' }}
+        >
+          Verificar acceso
+        </h1>
+        <p className="mt-3 text-center text-sm font-light leading-relaxed text-white/65">
+          Ingresa el mismo número con el que te inscribiste en{' '}
+          <span className="font-medium text-white/85">www.genius.snrg.lat</span>
+        </p>
+
+        <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+          <div>
+            <label
+              htmlFor="gf-verify-tel"
+              className="mb-2 block text-[0.68rem] font-medium uppercase tracking-[0.15em] text-[#694aff]"
+              style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+            >
+              Teléfono
+            </label>
+            <input
+              id="gf-verify-tel"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+              placeholder="Ej: 300 123 4567"
+              className="h-12 w-full rounded-xl border border-white/12 bg-black/45 px-4 text-base font-normal text-white placeholder:text-white/28 focus:border-[#694aff]/55 focus:outline-none focus:ring-2 focus:ring-[#694aff]/25"
+              autoFocus
+            />
+          </div>
+          {error ? (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-sm font-normal text-red-300"
+            >
+              {error}
+            </motion.p>
+          ) : null}
+          <button
+            type="submit"
+            disabled={!telefono.trim() || loading}
+            className="h-12 w-full rounded-xl border-2 border-[#161616] bg-[#694aff] text-sm font-medium uppercase tracking-wide text-white shadow-[6px_6px_0_#daff00] transition hover:brightness-110 disabled:opacity-40"
+          >
+            {loading ? <Loader2 className="mx-auto h-5 w-5 animate-spin" /> : 'Ingresar'}
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  )
+}
+
+export default function GeniusVerifyPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-dvh items-center justify-center bg-[#161616]">
+          <Loader2 className="h-8 w-8 animate-spin text-[#694aff]" />
+        </div>
+      }
+    >
+      <VerifyContent />
+    </Suspense>
+  )
+}
