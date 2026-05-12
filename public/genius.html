@@ -15,8 +15,20 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{min-height:100dvh;background:var(--bg);color:rgba(255,255,255,.92);}
 body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
-.gf-logo-top{display:block;width:min(240px,78vw);height:auto;margin:28px auto 8px;padding:0 16px;background:none;border:none;box-shadow:none;}
-.wrap{position:relative;max-width:440px;margin:0 auto;padding:12px 16px 40px;}
+.gf-grid{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+.gf-logo-top{
+  display:block;width:min(300px,85vw);max-height:120px;height:auto;margin:28px auto 8px;padding:0 16px;
+  background:none;border:none;box-shadow:none;
+  position:relative;z-index:1;
+  mix-blend-mode:screen;
+}
+.wrap{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:12px 16px 40px;}
 .gf-head{text-align:center;margin-bottom:20px;padding:0 4px;}
 .gf-kicker{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.72);font-weight:500;}
 .gf-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(1.35rem,4vw,1.85rem);color:#fff;margin-top:10px;line-height:1.15;text-wrap:balance;}
@@ -68,7 +80,8 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 </style>
 </head>
 <body>
-<img class="gf-logo-top" src="/images/genius-fest-logo.png" alt="Genius FEST 2026">
+<div class="gf-grid" aria-hidden="true"></div>
+<img class="gf-logo-top" src="/images/genius-fest-logo.png" alt="Genius FEST 2026" width="300" height="100">
 <div class="wrap">
   <header class="gf-head">
     <p class="gf-kicker">Networking · Genius FEST</p>

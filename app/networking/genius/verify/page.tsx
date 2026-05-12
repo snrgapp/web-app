@@ -49,9 +49,10 @@ function VerifyContent() {
       <Image
         src="/images/genius-fest-logo.png"
         alt="Genius FEST 2026"
-        width={560}
-        height={280}
-        className="mb-10 h-auto w-[min(280px,85vw)] bg-transparent object-contain"
+        width={300}
+        height={100}
+        className="mb-10 h-auto w-[min(300px,85vw)] bg-transparent object-contain"
+        style={{ mixBlendMode: 'screen' }}
         priority
       />
 

@@ -69,9 +69,10 @@ export default function GeniusShell() {
         <Image
           src="/images/genius-fest-logo.png"
           alt="Genius FEST"
-          width={220}
-          height={110}
+          width={300}
+          height={100}
           className="h-10 w-auto shrink-0 bg-transparent object-contain object-left"
+          style={{ mixBlendMode: 'screen' }}
           priority
         />
         <span
