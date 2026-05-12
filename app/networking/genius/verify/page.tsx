@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense, useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Loader2 } from 'lucide-react'
@@ -46,14 +45,14 @@ function VerifyContent() {
         </button>
       </div>
 
-      <Image
+      {/* img nativo: mix-blend-mode con el fondo (igual que genius.html); next/image envuelve en span y el blend a veces no aplica al PNG */}
+      <img
         src="/images/genius-fest-logo.png"
         alt="Genius FEST 2026"
         width={300}
         height={100}
-        className="mb-10 h-auto w-[min(300px,85vw)] bg-transparent object-contain"
-        style={{ mixBlendMode: 'screen' }}
-        priority
+        decoding="async"
+        className="mb-10 block h-auto w-[min(300px,85vw)] bg-transparent object-contain mix-blend-screen"
       />
 
       <motion.div

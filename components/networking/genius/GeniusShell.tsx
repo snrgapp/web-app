@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import {
@@ -66,14 +65,13 @@ export default function GeniusShell() {
         >
           <ArrowLeft size={22} />
         </button>
-        <Image
+        <img
           src="/images/genius-fest-logo.png"
           alt="Genius FEST"
           width={300}
           height={100}
-          className="h-10 w-auto shrink-0 bg-transparent object-contain object-left"
-          style={{ mixBlendMode: 'screen' }}
-          priority
+          decoding="async"
+          className="h-10 w-auto shrink-0 bg-transparent object-contain object-left mix-blend-screen"
         />
         <span
           className="text-[0.68rem] font-medium uppercase tracking-[0.15em] text-white/55"
