@@ -45,13 +45,13 @@ function VerifyContent() {
         </button>
       </div>
 
-      {/* Misma escala que .gf-logo-top en public/genius.html (PNG 1024², transparente) */}
-      <div className="relative z-[1] mx-auto mb-10 flex w-full justify-center px-4">
+      {/* Logo fuera de la tarjeta del formulario; solo PNG sobre #161616 + grid */}
+      <div className="relative z-[1] mx-auto mb-10 flex w-full justify-center bg-transparent px-4">
         <img
           src="/images/genius-fest-logo.png"
           alt="Genius FEST 2026"
-          width={1024}
-          height={1024}
+          width={1080}
+          height={1080}
           decoding="async"
           className="block h-[clamp(132px,36vmin,220px)] w-auto max-w-[min(400px,92vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
         />

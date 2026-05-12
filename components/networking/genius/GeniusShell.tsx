@@ -68,8 +68,8 @@ export default function GeniusShell() {
         <img
           src="/images/genius-fest-logo.png"
           alt="Genius FEST"
-          width={1024}
-          height={1024}
+          width={1080}
+          height={1080}
           decoding="async"
           className="h-10 w-auto shrink-0 bg-transparent object-contain object-left"
         />

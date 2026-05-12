@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
+const GENIUS_LOGO_SRC = '/images/genius-fest-logo.png'
+
 const dinamicas = [
   {
     label: 'Networking',
@@ -13,7 +15,7 @@ const dinamicas = [
   },
   {
     label: 'Genius FEST',
-    image: '/images/genius-fest-logo.png',
+    image: GENIUS_LOGO_SRC,
     href: '/networking/genius',
     enabled: true,
   },
@@ -70,22 +72,26 @@ export default function HomePage() {
               !item.enabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
             }`}
           >
-            {/* Contenedor de imagen */}
+            {/* Contenedor: Genius = solo logo sobre fondo blanco (sin “tarjeta” gris); el resto mantiene miniatura */}
             <motion.div
               whileHover={item.enabled ? { scale: 1.04 } : undefined}
               whileTap={item.enabled ? { scale: 0.97 } : undefined}
-              className="w-full aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-[#e0e0e0] flex items-center justify-center"
+              className={
+                item.image === GENIUS_LOGO_SRC
+                  ? 'flex w-full min-h-[148px] items-center justify-center rounded-2xl bg-transparent py-3 sm:min-h-[168px] sm:py-4'
+                  : 'flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#e0e0e0] sm:rounded-3xl'
+              }
             >
               <Image
                 src={item.image}
                 alt={item.label}
-                width={1024}
-                height={1024}
-                className={`w-full h-full ${
-                  item.image === '/images/genius-fest-logo.png'
-                    ? 'object-contain'
-                    : 'object-cover'
-                }`}
+                width={1080}
+                height={1080}
+                className={
+                  item.image === GENIUS_LOGO_SRC
+                    ? 'h-auto max-h-[min(200px,46vw)] w-auto max-w-full bg-transparent object-contain'
+                    : 'h-full w-full object-cover'
+                }
               />
             </motion.div>
 
