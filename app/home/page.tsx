@@ -79,9 +79,13 @@ export default function HomePage() {
               <Image
                 src={item.image}
                 alt={item.label}
-                width={300}
-                height={300}
-                className="w-full h-full object-cover"
+                width={1024}
+                height={1024}
+                className={`w-full h-full ${
+                  item.image === '/images/genius-fest-logo.png'
+                    ? 'object-contain'
+                    : 'object-cover'
+                }`}
               />
             </motion.div>
 

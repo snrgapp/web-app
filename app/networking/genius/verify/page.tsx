@@ -45,16 +45,15 @@ function VerifyContent() {
         </button>
       </div>
 
-      {/* Misma apariencia que .gf-logo-top en public/genius.html; padding en el contenedor para no pintar caja alrededor del img */}
+      {/* Misma escala que .gf-logo-top en public/genius.html (PNG 1024², transparente) */}
       <div className="relative z-[1] mx-auto mb-10 flex w-full justify-center px-4">
         <img
           src="/images/genius-fest-logo.png"
           alt="Genius FEST 2026"
-          width={600}
-          height={200}
+          width={1024}
+          height={1024}
           decoding="async"
-          className="block h-[clamp(132px,36vmin,220px)] w-auto max-w-[min(400px,92vw)] border-0 bg-transparent object-contain object-[center_top] shadow-none outline-none"
-          style={{ mixBlendMode: 'screen' }}
+          className="block h-[clamp(132px,36vmin,220px)] w-auto max-w-[min(400px,92vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
         />
       </div>
 
