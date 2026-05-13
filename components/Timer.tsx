@@ -7,11 +7,19 @@ interface TimerProps {
   onComplete?: () => void
   /** Cuando true, texto e icono en blanco y círculo oscuro (fondo gris) */
   dark?: boolean
+  /** Estilo Genius FEST (morado / oscuro) */
+  genius?: boolean
   /** Si true, no muestra la fila "tienes 3 min" (se usa en el padre centrada sobre ambos círculos) */
   hideLabel?: boolean
 }
 
-export default function Timer({ initialMinutes = 3, onComplete, dark = false, hideLabel = false }: TimerProps) {
+export default function Timer({
+  initialMinutes = 3,
+  onComplete,
+  dark = false,
+  genius = false,
+  hideLabel = false,
+}: TimerProps) {
   const totalSeconds = initialMinutes * 60
   const [seconds, setSeconds] = useState(totalSeconds)
   const [isRunning, setIsRunning] = useState(false)
@@ -51,7 +59,7 @@ export default function Timer({ initialMinutes = 3, onComplete, dark = false, hi
   return (
     <div className="flex flex-col items-center gap-2">
       {!hideLabel && (
-        <div className={`flex items-center gap-2 ${dark ? 'text-white' : 'text-black'}`}>
+        <div className={`flex items-center gap-2 ${dark || genius ? 'text-white' : 'text-black'}`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0">
             <circle cx="12" cy="12" r="10"/>
             <polyline points="12 6 12 12 16 14"/>
@@ -64,10 +72,14 @@ export default function Timer({ initialMinutes = 3, onComplete, dark = false, hi
         type="button"
         onClick={!isRunning ? handleStart : undefined}
         className={`w-20 h-20 rounded-full border-2 flex items-center justify-center cursor-pointer select-none transition-opacity ${
-          dark ? 'border-white bg-[#1a1a1a]' : 'border-black bg-white'
+          genius
+            ? 'border-[#694aff] bg-[#141414] shadow-[3px_3px_0_rgba(105,74,255,0.45)]'
+            : dark
+              ? 'border-white bg-[#1a1a1a]'
+              : 'border-black bg-white'
         } ${!isRunning ? 'hover:opacity-90 active:opacity-80 cursor-pointer' : 'cursor-default'}`}
       >
-        <span className={`font-bold text-lg ${dark ? 'text-white' : 'text-black'}`}>
+        <span className={`font-bold text-lg ${dark || genius ? 'text-white' : 'text-black'}`}>
           {isRunning ? formattedTime : 'iniciar'}
         </span>
       </button>

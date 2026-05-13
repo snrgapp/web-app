@@ -10,6 +10,7 @@ import {
 import { GeniusPersonCard } from '@/components/networking/genius/GeniusPersonCard'
 
 const STORAGE_ID = 'genius_submission_id'
+const STORAGE_RONDA = 'genius_ronda_actual'
 
 export default function GeniusShell() {
   const router = useRouter()
@@ -45,6 +46,14 @@ export default function GeniusShell() {
       cancelled = true
     }
   }, [submissionId, ronda])
+
+  function handleComenzarPreguntas() {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(STORAGE_RONDA, String(ronda))
+      localStorage.setItem(STORAGE_RONDA, String(ronda))
+    }
+    router.push(`/networking/genius/questions?ronda=${ronda}`)
+  }
 
   if (!submissionId) {
     return (
@@ -92,7 +101,7 @@ export default function GeniusShell() {
           Personas sugeridas para esta ronda según tu perfil del formulario.
         </p>
 
-        <div className="mt-6 flex gap-2">
+        <div className="mt-6 flex flex-wrap items-center gap-2">
           {([1, 2] as const).map((r) => (
             <button
               key={r}
@@ -108,6 +117,20 @@ export default function GeniusShell() {
               Ronda {r}
             </button>
           ))}
+        </div>
+
+        <div className="mt-5">
+          <button
+            type="button"
+            onClick={handleComenzarPreguntas}
+            className="w-full max-w-md rounded-full border border-white/12 bg-white py-3.5 text-center text-sm font-medium uppercase tracking-wide text-[#161616] shadow-[6px_6px_0_#694aff] transition hover:bg-white/95 active:scale-[0.99] sm:w-auto sm:px-10"
+            style={{ fontFamily: 'var(--font-geist-sans), sans-serif' }}
+          >
+            Comenzar · preguntas con tarjetas
+          </button>
+          <p className="mt-2 max-w-md text-xs font-light leading-relaxed text-white/45">
+            Elige la ronda arriba y entra directo a las tarjetas: cuenta atrás, temporizador de 3 min y girar pregunta.
+          </p>
         </div>
 
         <div className="mt-8 space-y-4">

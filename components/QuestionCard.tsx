@@ -8,7 +8,7 @@ import { Category } from '@/types/database.types'
 interface QuestionCardProps {
   content: string
   category: Category
-  variant?: 'yellow' | 'dark'
+  variant?: 'yellow' | 'dark' | 'genius'
   className?: string
   variants?: any
   initial?: any
@@ -38,11 +38,14 @@ export default function QuestionCard({
   style,
 }: QuestionCardProps) {
   const IconComponent = getIcon(category.icon_slug)
-  const isDark = variant === 'dark'
+  const isGenius = variant === 'genius'
+  const isDark = variant === 'dark' || isGenius
 
-  const shellClasses = `rounded-[20px] sm:rounded-[25px] md:rounded-[30px] ${
-    isDark ? 'bg-[#1a1a1a] border border-white/10' : 'bg-[#FFE100] border border-black/5'
-  }`
+  const shellClasses = isGenius
+    ? 'rounded-[20px] sm:rounded-[25px] md:rounded-[30px] bg-[#1c1c1c] border border-white/12 shadow-[6px_6px_0_#694aff]'
+    : `rounded-[20px] sm:rounded-[25px] md:rounded-[30px] ${
+        variant === 'dark' ? 'bg-[#1a1a1a] border border-white/10' : 'bg-[#FFE100] border border-black/5'
+      }`
 
   return (
     <motion.div
@@ -77,21 +80,34 @@ export default function QuestionCard({
       </div>
 
       <div className="flex justify-center w-full shrink-0 pt-2">
-        <Image
-          src="/logo.png"
-          alt=""
-          width={24}
-          height={24}
-          className={`object-contain ${isDark ? 'brightness-0 invert' : ''}`}
-        />
+        {isGenius ? (
+          <img
+            src="/images/genius-fest-logo.png"
+            alt=""
+            width={56}
+            height={56}
+            decoding="async"
+            className="h-7 w-auto object-contain opacity-90"
+          />
+        ) : (
+          <Image
+            src="/logo.png"
+            alt=""
+            width={24}
+            height={24}
+            className={`object-contain ${isDark ? 'brightness-0 invert' : ''}`}
+          />
+        )}
       </div>
 
       <div
         className="absolute bottom-0 left-0 right-0 h-[28%] pointer-events-none rounded-b-[20px] sm:rounded-b-[25px] md:rounded-b-[30px]"
         style={{
-          background: isDark
-            ? 'linear-gradient(to top, rgba(255,255,255,0.1) 0%, transparent 100%)'
-            : 'linear-gradient(to top, rgba(255,255,255,0.25) 0%, transparent 100%)',
+          background: isGenius
+            ? 'linear-gradient(to top, rgba(105,74,255,0.2) 0%, transparent 100%)'
+            : isDark
+              ? 'linear-gradient(to top, rgba(255,255,255,0.1) 0%, transparent 100%)'
+              : 'linear-gradient(to top, rgba(255,255,255,0.25) 0%, transparent 100%)',
         }}
       />
     </motion.div>

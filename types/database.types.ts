@@ -106,6 +106,37 @@ export interface Database {
         }
         Relationships: []
       }
+      genius_networking_feedback: {
+        Row: {
+          id: string
+          submission_id: string
+          rating: number
+          comment: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          rating: number
+          comment?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          rating?: number
+          comment?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'genius_networking_feedback_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'genius_conecta_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       hackaton_challenges: {
         Row: {
           id: string

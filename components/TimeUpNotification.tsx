@@ -8,6 +8,8 @@ import { X } from 'lucide-react'
 interface TimeUpNotificationProps {
   isOpen: boolean
   onClose: () => void
+  /** Tema oscuro Genius FEST */
+  genius?: boolean
 }
 
 async function playAlarmSound() {
@@ -38,7 +40,7 @@ async function playAlarmSound() {
   }
 }
 
-export default function TimeUpNotification({ isOpen, onClose }: TimeUpNotificationProps) {
+export default function TimeUpNotification({ isOpen, onClose, genius = false }: TimeUpNotificationProps) {
   useEffect(() => {
     if (isOpen) {
       playAlarmSound().catch(() => {})
@@ -59,7 +61,7 @@ export default function TimeUpNotification({ isOpen, onClose }: TimeUpNotificati
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50"
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60"
           style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, minHeight: '100dvh' }}
           onClick={handleBackdropClick}
         >
@@ -68,17 +70,31 @@ export default function TimeUpNotification({ isOpen, onClose }: TimeUpNotificati
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full"
+            className={
+              genius
+                ? 'relative rounded-[22px] border border-white/12 bg-[#1c1c1c] p-8 shadow-[6px_6px_0_#694aff] max-w-sm w-full'
+                : 'relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full'
+            }
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={onClose}
-              className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors touch-manipulation"
+              className={
+                genius
+                  ? 'absolute top-3 right-3 p-1 rounded-full hover:bg-white/10 transition-colors touch-manipulation'
+                  : 'absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors touch-manipulation'
+              }
               aria-label="Cerrar"
             >
-              <X size={20} className="text-gray-500" />
+              <X size={20} className={genius ? 'text-white/55' : 'text-gray-500'} />
             </button>
-            <p className="text-xl font-semibold text-center text-gray-900 pt-2">
+            <p
+              className={
+                genius
+                  ? 'text-xl font-semibold text-center text-white pt-2'
+                  : 'text-xl font-semibold text-center text-gray-900 pt-2'
+              }
+            >
               se acabo el tiempo
             </p>
           </motion.div>
