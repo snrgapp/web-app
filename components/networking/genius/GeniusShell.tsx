@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import {
   getGeniusConexiones,
@@ -17,8 +17,9 @@ const SLOTS: { value: 1 | 2; label: string }[] = [
   { value: 2, label: 'Tarde' },
 ]
 
-export default function GeniusShell() {
+function GeniusShellInner() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const [ronda, setRonda] = useState<1 | 2>(1)
   const [conexiones, setConexiones] = useState<GeniusConexionUsuario[]>([])
@@ -35,6 +36,16 @@ export default function GeniusShell() {
     }
     setSubmissionId(sid)
   }, [router])
+
+  useEffect(() => {
+    const momento = searchParams.get('momento')
+    if (momento === 'tarde') {
+      setRonda(2)
+      sessionStorage.setItem(STORAGE_RONDA, '2')
+      localStorage.setItem(STORAGE_RONDA, '2')
+      router.replace('/networking/genius', { scroll: false })
+    }
+  }, [searchParams, router])
 
   useEffect(() => {
     if (!submissionId) return
@@ -160,5 +171,19 @@ export default function GeniusShell() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function GeniusShell() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-dvh items-center justify-center bg-[#161616]">
+          <Loader2 className="h-8 w-8 animate-spin text-white/65" />
+        </div>
+      }
+    >
+      <GeniusShellInner />
+    </Suspense>
   )
 }

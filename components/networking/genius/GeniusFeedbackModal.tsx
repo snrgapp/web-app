@@ -93,7 +93,7 @@ export function GeniusFeedbackModal({ isOpen, submissionId, onClose, onComplete 
             >
               ¿Qué te pareció la dinámica?
             </h2>
-            <p className="mt-2 text-center text-sm font-light text-white/58">
+            <p className="mt-2 text-center text-sm font-light text-white">
               Tu opinión nos ayuda a mejorar las conexiones en el festival.
             </p>
 

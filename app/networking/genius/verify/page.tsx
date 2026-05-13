@@ -8,15 +8,18 @@ import { verificarGeniusPorTelefono } from '@/app/actions/genius-networking'
 
 const STORAGE_ID = 'genius_submission_id'
 
+const REGISTRO_GENIUS_URL = 'https://genius.snrg.lat'
+
 function VerifyContent() {
   const router = useRouter()
   const [telefono, setTelefono] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const telefonoValido = telefono.replace(/\D/g, '').length >= 7
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!telefono.trim()) return
+    if (!telefonoValido) return
     setLoading(true)
     setError('')
     const result = await verificarGeniusPorTelefono(telefono.trim())
@@ -74,9 +77,8 @@ function VerifyContent() {
         >
           Verificar acceso
         </h1>
-        <p className="mt-3 text-center text-sm font-light leading-relaxed text-white/58">
-          Ingresa el mismo número con el que te inscribiste en{' '}
-          <span className="font-medium text-white/88">www.genius.snrg.lat</span>
+        <p className="mt-3 text-center text-sm font-light leading-relaxed text-white/72">
+          Ingresa el mismo número de teléfono con el que completaste tu registro para el evento.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -111,12 +113,21 @@ function VerifyContent() {
           ) : null}
           <button
             type="submit"
-            disabled={!telefono.trim() || loading}
+            disabled={!telefonoValido || loading}
             className="h-12 w-full rounded-xl border-2 border-[#161616] bg-white text-sm font-medium uppercase tracking-wide text-[#161616] shadow-[6px_6px_0_#694aff] transition hover:bg-white/95 disabled:opacity-40"
           >
             {loading ? <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#161616]" /> : 'Ingresar'}
           </button>
         </form>
+
+        <a
+          href={REGISTRO_GENIUS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 flex h-12 w-full items-center justify-center rounded-xl border border-white/18 bg-[#141414] text-sm font-medium uppercase tracking-wide text-white shadow-[4px_4px_0_#694aff] transition hover:border-white/28 hover:bg-[#1a1a1a]"
+        >
+          Registrarse
+        </a>
       </motion.div>
 
       <footer className="relative z-[1] mx-auto mt-12 flex w-full max-w-sm flex-col items-center gap-2.5 px-4 pb-8 opacity-[0.9]">

@@ -66,7 +66,7 @@ export default function GeniusCardDeckContainer({ questions, ronda }: Props) {
 
   const handleFinalizar = () => {
     if (ronda === 1) {
-      router.push('/networking/genius')
+      router.push('/networking/genius?momento=tarde')
       return
     }
     setShowFeedback(true)

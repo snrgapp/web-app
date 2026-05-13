@@ -73,14 +73,13 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 .btn{width:100%;padding:14px 18px;border-radius:14px;border:2px solid #161616;background:#fff;color:#161616;font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--gf-shadow);transition:transform .15s,filter .15s;}
 .btn:disabled{opacity:.38;cursor:not-allowed;}
 .btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--gf-shadow);}
+a.btn{text-decoration:none;display:flex;align-items:center;justify-content:center;box-sizing:border-box;}
 .ck{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.62);line-height:1.45;font-weight:300;}
 .ck input{margin-top:3px;accent-color:var(--lime);}
 .done{display:none;}
 .done.visible{display:block;}
 .done-card{text-align:center;}
 .done-card .gf-q{margin-bottom:10px;}
-.done-link{display:inline-block;margin-top:18px;font-family:'Inter',sans-serif;font-weight:500;font-size:.82rem;color:#fff;text-decoration:none;border-bottom:2px solid var(--gf-shadow);padding-bottom:2px;}
-.done-link:hover{color:rgba(255,255,255,.85);}
 .mb-mt{margin-top:14px;}
 .gf-powered{position:relative;z-index:1;text-align:center;padding:8px 16px 36px;margin-top:4px;}
 .gf-powered-inner{display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.88;}
@@ -200,7 +199,9 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
       <div class="gf-step-cat">Listo</div>
       <div class="gf-q">Ya estás dentro del radar Genius.</div>
       <p class="hint" style="color:rgba(255,255,255,.72)">El día del evento entra con tu mismo número para ver tus conexiones sugeridas.</p>
-      <a class="done-link" href="https://app.snrg.lat/networking/genius/verify">Verificar e ingresar a la app →</a>
+      <div class="nav" style="margin-top:20px">
+        <a class="btn" href="https://app.snrg.lat/networking/genius/verify">Verificar e ingresar a la app →</a>
+      </div>
     </div>
   </div>
 </div>
