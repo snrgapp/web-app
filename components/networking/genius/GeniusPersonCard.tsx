@@ -25,7 +25,7 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.06 * index }}
-      className="rounded-[22px] border border-white/10 bg-[#1c1c1c] px-4 py-4 shadow-[6px_6px_0_#694aff]"
+      className="rounded-[22px] border border-white/10 bg-[#1c1c1c] px-4 py-4 text-center shadow-[6px_6px_0_#694aff] sm:text-left"
     >
       <div className="flex flex-col gap-3">
         <div>
@@ -35,25 +35,25 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
           >
             {person.nombreCompleto}
           </h3>
-          <div className="mt-2 h-px w-3/5 bg-white/18" />
+          <div className="mx-auto mt-2 h-px w-3/5 bg-white/18 sm:mx-0" />
         </div>
 
-        <div className="flex items-start gap-2">
+        <div className="flex items-start justify-center gap-2 sm:justify-start">
           <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#694aff]" strokeWidth={2} />
           <p className="min-w-0 text-sm font-medium text-white/88">{person.identidad}</p>
         </div>
 
-        <div className="flex items-start gap-2">
+        <div className="flex items-start justify-center gap-2 sm:justify-start">
           <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
           <p className="min-w-0 text-xs font-light leading-snug text-white/62">{person.mundo}</p>
         </div>
 
-        <p className="border-l-2 border-white/22 pl-3 text-xs font-light italic leading-relaxed text-white/52">
+        <p className="border-none text-center text-xs font-light italic leading-relaxed text-white/52 sm:border-l-2 sm:border-white/22 sm:pl-3 sm:text-left">
           “{person.valorHumano.length > 140 ? `${person.valorHumano.slice(0, 137)}…` : person.valorHumano}”
         </p>
 
         {whatsappHref ? (
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center justify-center gap-2 pt-1 sm:justify-start">
             <Phone className="h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
             <a
               href={whatsappHref}
@@ -68,7 +68,7 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
         ) : null}
 
         <p
-          className="text-[0.68rem] uppercase tracking-[0.15em] text-white/35"
+          className="text-center text-[0.68rem] uppercase tracking-[0.15em] text-white/35 sm:text-left"
           style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
         >
           Conexión sugerida

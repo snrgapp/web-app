@@ -9,6 +9,7 @@ import QuestionCard from '@/components/QuestionCard'
 import Timer from '@/components/Timer'
 import TimeUpNotification from '@/components/TimeUpNotification'
 import { GeniusFeedbackModal } from '@/components/networking/genius/GeniusFeedbackModal'
+import { GeniusCreativityBackdrop } from '@/components/networking/genius/GeniusCreativityBackdrop'
 
 const STORAGE_ID = 'genius_submission_id'
 const STORAGE_RONDA = 'genius_ronda_actual'
@@ -115,9 +116,11 @@ export default function GeniusCardDeckContainer({ questions, ronda }: Props) {
 
   return (
     <motion.div
-      className="flex min-h-dvh flex-col bg-[#161616] transition-colors duration-300"
+      className="relative flex min-h-dvh flex-col overflow-hidden bg-[#161616] transition-colors duration-300"
       animate={{ backgroundColor: '#161616' }}
     >
+      <GeniusCreativityBackdrop />
+
       {submissionId ? (
         <GeniusFeedbackModal
           isOpen={showFeedback}
@@ -146,7 +149,7 @@ export default function GeniusCardDeckContainer({ questions, ronda }: Props) {
         </button>
       </header>
 
-      <div className="relative flex min-h-0 flex-1 flex-col px-4 pb-20 sm:px-6 sm:pb-28">
+      <div className="relative z-[1] flex min-h-0 flex-1 flex-col px-4 pb-20 sm:px-6 sm:pb-28">
         <div className="relative z-10 flex min-h-0 flex-1 items-center justify-center px-2 py-2 sm:px-6">
           {countdown !== null ? (
             <motion.div
