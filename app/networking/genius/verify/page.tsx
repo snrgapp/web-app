@@ -53,7 +53,7 @@ function VerifyContent() {
           width={1080}
           height={1080}
           decoding="async"
-          className="block h-[clamp(180px,44vmin,300px)] w-auto max-w-[min(520px,94vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
+          className="block h-[clamp(226px,58vmin,300px)] w-auto max-w-[min(572px,96vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none sm:h-[clamp(210px,48vmin,300px)] sm:max-w-[min(560px,96vw)]"
         />
       </div>
 
@@ -118,6 +118,24 @@ function VerifyContent() {
           </button>
         </form>
       </motion.div>
+
+      <footer className="relative z-[1] mx-auto mt-12 flex w-full max-w-sm flex-col items-center gap-2.5 px-4 pb-8 opacity-[0.9]">
+        <p
+          className="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-white/42"
+          style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+        >
+          Powered by
+        </p>
+        <img
+          src="/images/logowhite.png"
+          alt="Synergy"
+          width={160}
+          height={48}
+          decoding="async"
+          loading="lazy"
+          className="h-[26px] w-auto object-contain"
+        />
+      </footer>
     </div>
   )
 }

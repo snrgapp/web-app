@@ -71,7 +71,7 @@ export default function GeniusShell() {
           width={1080}
           height={1080}
           decoding="async"
-          className="h-12 w-auto shrink-0 bg-transparent object-contain object-left sm:h-14"
+          className="h-16 w-auto shrink-0 bg-transparent object-contain object-left sm:h-14"
         />
         <span
           className="text-[0.68rem] font-medium uppercase tracking-[0.15em] text-white/55"
