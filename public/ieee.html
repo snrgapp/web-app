@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>IEEE · Networking Synergy</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;900&family=Inter:wght@300;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#161616;
+  --accent:#00629B;
+  --lime:#7dd3fc;
+  --card:#252525;
+  --border:rgba(255,255,255,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100dvh;background:var(--bg);color:rgba(255,255,255,.92);}
+body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
+.ieee-dots{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-color:var(--bg);
+  background-image:radial-gradient(circle at center,rgba(255,255,255,.14) 1.2px,transparent 1.4px);
+  background-size:22px 22px;
+}
+.ieee-logo-top{
+  display:block;width:auto;max-width:min(320px,88vw);height:clamp(72px,22vmin,120px);margin:24px auto 8px;padding:0 16px;
+  object-fit:contain;object-position:center center;
+  background:transparent !important;border:none;box-shadow:none;
+  position:relative;z-index:1;
+}
+.wrap{position:relative;z-index:1;max-width:440px;margin:0 auto;padding:8px 16px 40px;}
+.ieee-head{text-align:center;margin-bottom:18px;padding:0 4px;}
+.ieee-kicker{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.72);font-weight:500;}
+.ieee-title{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(1.25rem,4vw,1.75rem);color:#fff;margin-top:10px;line-height:1.15;text-wrap:balance;}
+.ieee-sub{font-size:.8125rem;color:rgba(255,255,255,.62);margin-top:10px;line-height:1.45;font-weight:300;}
+.progress{display:flex;align-items:center;gap:6px;margin-bottom:18px;padding:0 2px;}
+.pb{width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.62rem;font-weight:500;color:rgba(255,255,255,.45);flex-shrink:0;transition:.22s;}
+.pb.active{border-color:#fff;color:#fff;background:rgba(255,255,255,.08);}
+.pb.done{border-color:var(--lime);background:var(--lime);color:#161616;}
+.pl{flex:1;height:3px;background:rgba(0,98,155,.45);border-radius:2px;}
+.pl.done{background:linear-gradient(90deg,var(--accent),var(--lime));}
+.step{display:none;}
+.step.visible{display:block;animation:pop .28s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:18px 16px;box-shadow:6px 6px 0 var(--accent);}
+.ieee-step-head{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start;}
+.ieee-num{flex-shrink:0;width:34px;height:34px;border-radius:999px;background:transparent;border:2px solid rgba(255,255,255,.35);color:#fff;font-family:'Fraunces',serif;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.ieee-step-cat{font-family:'JetBrains Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.65);font-weight:500;margin-bottom:4px;}
+.ieee-q{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.05rem,3vw,1.2rem);color:#fff;line-height:1.25;}
+.lbl{display:block;font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:8px;}
+.inp{width:100%;padding:13px 14px;border-radius:14px;border:1px solid var(--border);background:#1a1a1a;color:rgba(255,255,255,.95);font-size:15px;font-family:inherit;font-weight:400;}
+.inp::placeholder{color:rgba(255,255,255,.28);}
+.inp:focus{outline:none;border-color:rgba(255,255,255,.35);}
+.hint{font-size:.75rem;color:rgba(255,255,255,.52);margin-top:8px;line-height:1.45;font-weight:300;}
+.opts{display:flex;flex-direction:column;gap:9px;}
+.opt{display:flex;align-items:center;gap:12px;padding:12px 13px;border-radius:16px;border:1px solid var(--border);background:#1a1a1a;cursor:pointer;transition:.15s;color:rgba(255,255,255,.92);font-weight:500;font-size:.88rem;}
+.opt:active{transform:scale(.99);}
+.opt.selected{border-color:rgba(0,98,155,.65);background:rgba(0,98,155,.12);box-shadow:4px 4px 0 var(--accent);}
+.opt-ico{font-size:18px;width:28px;text-align:center;flex-shrink:0;}
+.opt-txt{flex:1;}
+.opt-check{width:18px;height:18px;border-radius:5px;border:2px solid rgba(255,255,255,.35);flex-shrink:0;position:relative;}
+.opt.selected .opt-check{border-color:#fff;background:#fff;}
+.opt.selected .opt-check::after{content:'';position:absolute;left:5px;top:2px;width:5px;height:9px;border:2px solid #161616;border-top:none;border-left:none;transform:rotate(45deg);}
+.ta{width:100%;min-height:120px;padding:12px;border-radius:14px;border:1px solid var(--border);background:#1a1a1a;color:rgba(255,255,255,.95);font-family:inherit;font-weight:300;font-size:.95rem;resize:vertical;}
+.ta:focus{outline:none;border-color:rgba(255,255,255,.35);}
+.ta-counter{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:rgba(255,255,255,.45);text-align:right;margin-top:6px;text-transform:uppercase;}
+.nav{margin-top:18px;}
+.btn{width:100%;padding:14px 18px;border-radius:14px;border:2px solid #161616;background:#fff;color:#161616;font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--accent);transition:transform .15s,filter .15s;}
+.btn:disabled{opacity:.38;cursor:not-allowed;}
+.btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--accent);}
+a.btn{text-decoration:none;display:flex;align-items:center;justify-content:center;box-sizing:border-box;}
+.ck{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.62);line-height:1.45;font-weight:300;}
+.ck input{margin-top:3px;accent-color:var(--accent);}
+.done{display:none;}
+.done.visible{display:block;}
+.done-card{text-align:center;}
+.done-card .ieee-q{margin-bottom:10px;}
+.mb-mt{margin-top:14px;}
+.ieee-powered{position:relative;z-index:1;text-align:center;padding:8px 16px 36px;margin-top:4px;}
+.ieee-powered-inner{display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.88;}
+.ieee-powered-kicker{font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.42);}
+.ieee-powered img{display:block;width:auto;height:26px;margin:0;object-fit:contain;}
+</style>
+</head>
+<body>
+<div class="ieee-dots" aria-hidden="true"></div>
+<img class="ieee-logo-top" src="/images/ieee.png" alt="IEEE" width="800" height="800" decoding="async">
+<div class="wrap">
+  <header class="ieee-head">
+    <p class="ieee-kicker">Networking · IEEE</p>
+    <h1 class="ieee-title">Conecta con la comunidad</h1>
+    <p class="ieee-sub">Usa el mismo WhatsApp/teléfono para ingresar a la app el día del evento. Paso 1 de 4: tus datos.</p>
+  </header>
+  <div class="progress" id="prog">
+    <div class="pb active" id="p0">1</div><div class="pl" id="l0"></div>
+    <div class="pb" id="p1">2</div><div class="pl" id="l1"></div>
+    <div class="pb" id="p2">3</div><div class="pl" id="l2"></div>
+    <div class="pb" id="p3">4</div>
+  </div>
+  <div class="step visible" id="step-0">
+    <div class="card">
+      <div class="ieee-step-head">
+        <div class="ieee-num">1</div>
+        <div>
+          <div class="ieee-step-cat">Tus datos</div>
+          <div class="ieee-q">Nombre, WhatsApp y correo</div>
+        </div>
+      </div>
+      <label class="lbl" for="ie-nombre">Nombre completo</label>
+      <input class="inp" id="ie-nombre" type="text" autocomplete="name" maxlength="200" minlength="2" required placeholder="Ej: Ana María López" oninput="onContact()">
+      <label class="lbl mb-mt" for="ie-tel">WhatsApp / teléfono</label>
+      <input class="inp" id="ie-tel" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required placeholder="Ej: 300 123 4567" oninput="onContact()">
+      <label class="lbl mb-mt" for="ie-mail">Correo electrónico</label>
+      <input class="inp" id="ie-mail" type="email" inputmode="email" autocomplete="email" maxlength="320" required placeholder="tu@correo.com" oninput="onContact()">
+      <p class="hint">El número será tu llave para ver tus conexiones sugeridas en app.snrg.lat.</p>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-0" disabled onclick="goNext(0)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-1">
+    <div class="card">
+      <div class="ieee-step-head">
+        <div class="ieee-num">2</div>
+        <div>
+          <div class="ieee-step-cat">Intereses</div>
+          <div class="ieee-q">¿Cuáles son tus principales áreas de interés?</div>
+        </div>
+      </div>
+      <p class="hint" style="margin-bottom:12px">Puedes elegir varias.</p>
+      <div class="opts" id="opts-areas">
+        <div class="opt" data-val="Inteligencia Artificial" onclick="toggleArea(this)"><span class="opt-ico">🤖</span><span class="opt-txt">Inteligencia Artificial</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Ciencia de Datos" onclick="toggleArea(this)"><span class="opt-ico">📊</span><span class="opt-txt">Ciencia de Datos</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Ciberseguridad" onclick="toggleArea(this)"><span class="opt-ico">🔐</span><span class="opt-txt">Ciberseguridad</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="IoT" onclick="toggleArea(this)"><span class="opt-ico">📡</span><span class="opt-txt">IoT</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Robótica" onclick="toggleArea(this)"><span class="opt-ico">🦾</span><span class="opt-txt">Robótica</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Desarrollo de Software" onclick="toggleArea(this)"><span class="opt-ico">💻</span><span class="opt-txt">Desarrollo de Software</span><div class="opt-check"></div></div>
+      </div>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-1" disabled onclick="goNext(1)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-2">
+    <div class="card">
+      <div class="ieee-step-head">
+        <div class="ieee-num">3</div>
+        <div>
+          <div class="ieee-step-cat">Aporte</div>
+          <div class="ieee-q">¿Qué habilidades o conocimientos puedes compartir con otros?</div>
+        </div>
+      </div>
+      <textarea class="ta" id="textarea-skills" maxlength="2000" minlength="3" required placeholder="Ej: Proyectos en Python, mentoría en algoritmos, experiencia en equipos ágiles..." oninput="onSkills()"></textarea>
+      <div class="ta-counter"><span id="cc-sk">0</span> / 2000</div>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-2" disabled onclick="goNext(2)">Siguiente →</button></div>
+  </div>
+  <div class="step" id="step-3">
+    <div class="card">
+      <div class="ieee-step-head">
+        <div class="ieee-num">4</div>
+        <div>
+          <div class="ieee-step-cat">Conexiones</div>
+          <div class="ieee-q">¿Qué tipo de conexiones te interesa hacer?</div>
+        </div>
+      </div>
+      <p class="hint" style="margin-bottom:12px">Puedes elegir varias.</p>
+      <div class="opts" id="opts-tipos">
+        <div class="opt" data-val="Mentoría" onclick="toggleTipo(this)"><span class="opt-ico">🎓</span><span class="opt-txt">Mentoría</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Socios para proyectos" onclick="toggleTipo(this)"><span class="opt-ico">🤝</span><span class="opt-txt">Socios para proyectos</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Oportunidades laborales" onclick="toggleTipo(this)"><span class="opt-ico">💼</span><span class="opt-txt">Oportunidades laborales</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Colaboración en investigación" onclick="toggleTipo(this)"><span class="opt-ico">🔬</span><span class="opt-txt">Colaboración en investigación</span><div class="opt-check"></div></div>
+        <div class="opt" data-val="Amistades profesionales" onclick="toggleTipo(this)"><span class="opt-ico">✨</span><span class="opt-txt">Amistades profesionales</span><div class="opt-check"></div></div>
+      </div>
+      <label class="ck"><input id="ieee-consent" type="checkbox" onchange="onConsent()"> Acepto el tratamiento de mis datos para participar en la dinámica del evento.</label>
+    </div>
+    <div class="nav"><button type="button" class="btn" id="next-3" disabled onclick="submitIeee()">Enviar →</button></div>
+  </div>
+  <div class="done" id="done">
+    <div class="card done-card">
+      <div class="ieee-step-cat">Listo</div>
+      <div class="ieee-q">Ya estás en la lista IEEE</div>
+      <p class="hint" style="color:rgba(255,255,255,.72)">El día del evento entra con tu mismo número en la app para ver tus conexiones por ronda.</p>
+      <div class="nav" style="margin-top:20px">
+        <a class="btn" href="https://app.snrg.lat/networking/ieee/verify">Verificar e ingresar a la app →</a>
+      </div>
+    </div>
+  </div>
+</div>
+<footer class="ieee-powered" aria-label="Tecnología">
+  <div class="ieee-powered-inner">
+    <p class="ieee-powered-kicker">Powered by</p>
+    <img src="/images/logowhite.png" alt="Synergy" width="160" height="48" loading="lazy" decoding="async"/>
+  </div>
+</footer>
+<script>
+const areasOrder=[];
+function toggleArea(el){
+  const v=el.getAttribute('data-val');
+  el.classList.toggle('selected');
+  const i=areasOrder.indexOf(v);
+  if(i>=0){areasOrder.splice(i,1);} else {areasOrder.push(v);}
+  document.getElementById('next-1').disabled=areasOrder.length===0;
+}
+const tiposOrder=[];
+function toggleTipo(el){
+  const v=el.getAttribute('data-val');
+  el.classList.toggle('selected');
+  const i=tiposOrder.indexOf(v);
+  if(i>=0){tiposOrder.splice(i,1);} else {tiposOrder.push(v);}
+  onConsent();
+}
+let ieNombre='',ieTelDigits='',ieMail='';
+function emailOk(s){
+  return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(s)&&s.length>=5&&s.length<=320;
+}
+function onContact(){
+  const n=document.getElementById('ie-nombre').value.trim();
+  const raw=document.getElementById('ie-tel').value;
+  const mail=(document.getElementById('ie-mail').value||'').trim();
+  const digits=raw.replace(/\D/g,'');
+  ieNombre=n;ieTelDigits=digits;ieMail=mail;
+  document.getElementById('next-0').disabled=!(n.length>=2&&digits.length>=7&&digits.length<=15&&emailOk(mail));
+}
+function onSkills(){
+  const ta=document.getElementById('textarea-skills');
+  const t=ta.value.trim();
+  document.getElementById('cc-sk').textContent=ta.value.length;
+  document.getElementById('next-2').disabled=t.length<3;
+}
+function onConsent(){
+  const c=document.getElementById('ieee-consent');
+  document.getElementById('next-3').disabled=tiposOrder.length===0||!c.checked;
+}
+function prog(cur){
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('p'+i);
+    b.className='pb';
+    if(i<cur){b.classList.add('done');b.textContent='✓';}
+    else if(i===cur){b.classList.add('active');b.textContent=i+1;}
+    else b.textContent=i+1;
+    if(i<3)document.getElementById('l'+i).className='pl'+(i<cur?' done':'');
+  }
+}
+function goNext(s){
+  document.getElementById('step-'+s).classList.remove('visible');
+  document.getElementById('step-'+(s+1)).classList.add('visible');
+  prog(s+1);window.scrollTo(0,0);
+}
+async function submitIeee(){
+  const consent=document.getElementById('ieee-consent');
+  if(!consent||!consent.checked){alert('Debes aceptar la autorización de tratamiento de datos.');return;}
+  if(tiposOrder.length===0)return;
+  const skills=document.getElementById('textarea-skills').value.trim();
+  if(skills.length<3)return;
+  const btn=document.getElementById('next-3');
+  const orig=btn.textContent;
+  btn.disabled=true;
+  btn.textContent='Guardando...';
+  try{
+    const res=await fetch('/api/ieee/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      nombre_completo:ieNombre,
+      telefono:ieTelDigits,
+      correo:ieMail,
+      areas_interes:areasOrder.slice(),
+      habilidades_compartir:skills,
+      tipos_conexion:tiposOrder.slice()
+    })});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error||'No se pudo guardar');
+    document.getElementById('step-3').classList.remove('visible');
+    document.getElementById('prog').style.display='none';
+    document.getElementById('done').classList.add('visible');
+    window.scrollTo(0,0);
+  }catch(e){alert(e.message||'Error al guardar. Intenta de nuevo.');}
+  finally{btn.disabled=false;btn.textContent=orig;}
+}
+prog(0);
+</script>
+</body>
+</html>

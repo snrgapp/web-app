@@ -15,6 +15,12 @@ const GENIUS_HOSTS = [
   'genius.localhost',
 ]
 
+const IEEE_HOSTS = [
+  'ieee.snrg.lat',
+  'www.ieee.snrg.lat',
+  'ieee.localhost',
+]
+
 const INSCRIPCION_HOSTS = [
   'inscripcion.snrg.lat',
   'www.inscripcion.snrg.lat',
@@ -201,6 +207,26 @@ export async function middleware(request: NextRequest) {
       const url = request.nextUrl.clone()
       url.pathname = '/genius.html'
       return NextResponse.rewrite(url)
+    }
+    return NextResponse.next({ request: { headers: requestHeaders } })
+  }
+
+  // Subdominio ieee.snrg.lat — formulario IEEE networking
+  if (matchesHosts(request, IEEE_HOSTS)) {
+    const effectiveHost = getEffectiveHost(request)
+    if (effectiveHost === 'ieee.snrg.lat') {
+      const url = request.nextUrl.clone()
+      url.host = 'www.ieee.snrg.lat'
+      return NextResponse.redirect(url, 308)
+    }
+
+    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+      return NextResponse.next({ request: { headers: requestHeaders } })
+    }
+    if (pathname === '/' || pathname === '') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/ieee.html'
+      return NextResponse.rewrite(url, { request: { headers: requestHeaders } })
     }
     return NextResponse.next({ request: { headers: requestHeaders } })
   }

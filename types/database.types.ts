@@ -522,6 +522,70 @@ export interface Database {
           },
         ]
       }
+      ieee_networking_feedback: {
+        Row: {
+          id: string
+          submission_id: string
+          rating: number
+          comment: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          rating: number
+          comment?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          rating?: number
+          comment?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'ieee_networking_feedback_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'ieee_networking_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      ieee_networking_submissions: {
+        Row: {
+          id: string
+          nombre_completo: string
+          telefono: string
+          correo: string
+          areas_interes: string[]
+          habilidades_compartir: string
+          tipos_conexion: string[]
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          nombre_completo: string
+          telefono: string
+          correo: string
+          areas_interes: string[]
+          habilidades_compartir: string
+          tipos_conexion: string[]
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          nombre_completo?: string
+          telefono?: string
+          correo?: string
+          areas_interes?: string[]
+          habilidades_compartir?: string
+          tipos_conexion?: string[]
+          created_at?: string
+        }
+        Relationships: []
+      }
       match_genius: {
         Row: {
           id: string
@@ -598,6 +662,46 @@ export interface Database {
             foreignKeyName: 'match_hackaton_matched_submission_id_fkey'
             columns: ['matched_submission_id']
             referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      match_ieee: {
+        Row: {
+          id: string
+          submission_id: string
+          matched_submission_id: string
+          ronda: number
+          razon: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          matched_submission_id: string
+          ronda: number
+          razon?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          matched_submission_id?: string
+          ronda?: number
+          razon?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'match_ieee_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'ieee_networking_submissions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'match_ieee_matched_submission_id_fkey'
+            columns: ['matched_submission_id']
+            referencedRelation: 'ieee_networking_submissions'
             referencedColumns: ['id']
           },
         ]
@@ -1520,6 +1624,8 @@ export type ExperienceTemplate = Database['public']['Tables']['experience_templa
 export type TenantExperience = Database['public']['Tables']['tenant_experiences']['Row']
 export type GeniusConectaSubmission = Database['public']['Tables']['genius_conecta_submissions']['Row']
 export type MatchGenius = Database['public']['Tables']['match_genius']['Row']
+export type IeeeNetworkingSubmission = Database['public']['Tables']['ieee_networking_submissions']['Row']
+export type MatchIeee = Database['public']['Tables']['match_ieee']['Row']
 export type HackatonSubmission = Database['public']['Tables']['hackaton_submissions']['Row']
 export type HackatonChallenge = Database['public']['Tables']['hackaton_challenges']['Row']
 export type HackatonIntention = Database['public']['Tables']['hackaton_intentions']['Row']

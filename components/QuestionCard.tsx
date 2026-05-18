@@ -8,7 +8,7 @@ import { Category } from '@/types/database.types'
 interface QuestionCardProps {
   content: string
   category: Category
-  variant?: 'yellow' | 'dark' | 'genius'
+  variant?: 'yellow' | 'dark' | 'genius' | 'ieee'
   className?: string
   variants?: any
   initial?: any
@@ -39,11 +39,14 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const IconComponent = getIcon(category.icon_slug)
   const isGenius = variant === 'genius'
-  const isDark = variant === 'dark' || isGenius
+  const isIeee = variant === 'ieee'
+  const isDark = variant === 'dark' || isGenius || isIeee
 
   const shellClasses = isGenius
     ? 'rounded-[20px] sm:rounded-[25px] md:rounded-[30px] bg-[#1c1c1c] border border-white/12 shadow-[6px_6px_0_#694aff]'
-    : `rounded-[20px] sm:rounded-[25px] md:rounded-[30px] ${
+    : isIeee
+      ? 'rounded-[20px] sm:rounded-[25px] md:rounded-[30px] bg-[#1c1c1c] border border-white/12 shadow-[6px_6px_0_#00629B]'
+      : `rounded-[20px] sm:rounded-[25px] md:rounded-[30px] ${
         variant === 'dark' ? 'bg-[#1a1a1a] border border-white/10' : 'bg-[#FFE100] border border-black/5'
       }`
 
@@ -89,6 +92,15 @@ export default function QuestionCard({
             decoding="async"
             className="h-7 w-auto object-contain opacity-90"
           />
+        ) : isIeee ? (
+          <img
+            src="/images/ieee.png"
+            alt=""
+            width={56}
+            height={56}
+            decoding="async"
+            className="h-7 w-auto object-contain opacity-90"
+          />
         ) : (
           <Image
             src="/logo.png"
@@ -105,9 +117,11 @@ export default function QuestionCard({
         style={{
           background: isGenius
             ? 'linear-gradient(to top, rgba(105,74,255,0.2) 0%, transparent 100%)'
-            : isDark
-              ? 'linear-gradient(to top, rgba(255,255,255,0.1) 0%, transparent 100%)'
-              : 'linear-gradient(to top, rgba(255,255,255,0.25) 0%, transparent 100%)',
+            : isIeee
+              ? 'linear-gradient(to top, rgba(0,98,155,0.22) 0%, transparent 100%)'
+              : isDark
+                ? 'linear-gradient(to top, rgba(255,255,255,0.1) 0%, transparent 100%)'
+                : 'linear-gradient(to top, rgba(255,255,255,0.25) 0%, transparent 100%)',
         }}
       />
     </motion.div>

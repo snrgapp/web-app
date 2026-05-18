@@ -10,6 +10,8 @@ interface TimeUpNotificationProps {
   onClose: () => void
   /** Tema oscuro Genius FEST */
   genius?: boolean
+  /** Tema oscuro IEEE (azul) */
+  ieee?: boolean
 }
 
 async function playAlarmSound() {
@@ -40,7 +42,12 @@ async function playAlarmSound() {
   }
 }
 
-export default function TimeUpNotification({ isOpen, onClose, genius = false }: TimeUpNotificationProps) {
+export default function TimeUpNotification({
+  isOpen,
+  onClose,
+  genius = false,
+  ieee = false,
+}: TimeUpNotificationProps) {
   useEffect(() => {
     if (isOpen) {
       playAlarmSound().catch(() => {})
@@ -73,24 +80,26 @@ export default function TimeUpNotification({ isOpen, onClose, genius = false }: 
             className={
               genius
                 ? 'relative rounded-[22px] border border-white/12 bg-[#1c1c1c] p-8 shadow-[6px_6px_0_#694aff] max-w-sm w-full'
-                : 'relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full'
+                : ieee
+                  ? 'relative rounded-[22px] border border-white/12 bg-[#1c1c1c] p-8 shadow-[6px_6px_0_#00629B] max-w-sm w-full'
+                  : 'relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full'
             }
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={onClose}
               className={
-                genius
+                genius || ieee
                   ? 'absolute top-3 right-3 p-1 rounded-full hover:bg-white/10 transition-colors touch-manipulation'
                   : 'absolute top-3 right-3 p-1 rounded-full hover:bg-gray-100 transition-colors touch-manipulation'
               }
               aria-label="Cerrar"
             >
-              <X size={20} className={genius ? 'text-white/55' : 'text-gray-500'} />
+              <X size={20} className={genius || ieee ? 'text-white/55' : 'text-gray-500'} />
             </button>
             <p
               className={
-                genius
+                genius || ieee
                   ? 'text-xl font-semibold text-center text-white pt-2'
                   : 'text-xl font-semibold text-center text-gray-900 pt-2'
               }

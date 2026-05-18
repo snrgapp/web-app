@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 const GENIUS_LOGO_SRC = '/images/genius-fest-logo.png'
+const IEEE_LOGO_SRC = '/images/ieee.png'
 
 const dinamicas = [
   {
@@ -17,6 +18,12 @@ const dinamicas = [
     label: 'Genius FEST',
     image: GENIUS_LOGO_SRC,
     href: '/networking/genius',
+    enabled: true,
+  },
+  {
+    label: 'IEEE · Networking',
+    image: IEEE_LOGO_SRC,
+    href: '/networking/ieee',
     enabled: true,
   },
   {
@@ -77,7 +84,7 @@ export default function HomePage() {
               whileHover={item.enabled ? { scale: 1.04 } : undefined}
               whileTap={item.enabled ? { scale: 0.97 } : undefined}
               className={
-                item.image === GENIUS_LOGO_SRC
+                item.image === GENIUS_LOGO_SRC || item.image === IEEE_LOGO_SRC
                   ? 'flex w-full min-h-[200px] items-center justify-center rounded-2xl bg-transparent py-3 sm:min-h-[210px] sm:py-4'
                   : 'flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#e0e0e0] sm:rounded-3xl'
               }
@@ -88,7 +95,7 @@ export default function HomePage() {
                 width={1080}
                 height={1080}
                 className={
-                  item.image === GENIUS_LOGO_SRC
+                  item.image === GENIUS_LOGO_SRC || item.image === IEEE_LOGO_SRC
                     ? 'h-auto max-h-[min(300px,66vw)] w-auto max-w-full bg-transparent object-contain sm:max-h-[min(280px,58vw)]'
                     : 'h-full w-full object-cover'
                 }
