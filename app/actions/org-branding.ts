@@ -69,6 +69,7 @@ export async function updateOrgTheme(
 
   revalidatePath('/panel/marca')
   revalidatePath('/networking', 'layout')
+  revalidatePath('/exp', 'layout')
   return { ok: true }
 }
 
@@ -110,5 +111,6 @@ export async function setActiveTenantExperienceId(
 
   revalidatePath('/panel/plantillas')
   revalidatePath('/networking', 'layout')
+  revalidatePath('/exp', 'layout')
   return { ok: true }
 }

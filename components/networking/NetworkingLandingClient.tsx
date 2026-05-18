@@ -7,9 +7,17 @@ import Image from 'next/image'
 
 export type NetworkingLandingClientProps = {
   logoUrl: string | null
+  /** Ruta interna de verificación (ej. /networking/verify o /exp/slug/verify) */
+  verifyHref?: string
+  /** Destino del botón atrás (por defecto /) */
+  backHref?: string
 }
 
-export function NetworkingLandingClient({ logoUrl }: NetworkingLandingClientProps) {
+export function NetworkingLandingClient({
+  logoUrl,
+  verifyHref = '/networking/verify',
+  backHref = '/',
+}: NetworkingLandingClientProps) {
   const router = useRouter()
   const mark = logoUrl?.trim() || '/logo.png'
   const useUnoptimized = mark.startsWith('http')
@@ -18,7 +26,7 @@ export function NetworkingLandingClient({ logoUrl }: NetworkingLandingClientProp
     <div className="min-h-screen flex flex-col items-center justify-between p-8 relative overflow-hidden">
       <div className="w-full flex items-center justify-start z-30 absolute top-0 left-0 p-4 sm:p-6">
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.push(backHref)}
           className="text-[var(--net-fg)]"
           aria-label="Volver al inicio"
         >
@@ -117,7 +125,7 @@ export function NetworkingLandingClient({ logoUrl }: NetworkingLandingClientProp
 
       <div className="w-full max-w-sm px-4 mb-12 z-30">
         <motion.button
-          onClick={() => router.push('/networking/verify')}
+          onClick={() => router.push(verifyHref)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}

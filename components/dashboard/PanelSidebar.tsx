@@ -19,6 +19,7 @@ import {
   ArrowUpRight,
   LayoutTemplate,
   Palette,
+  ClipboardList,
 } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -26,17 +27,30 @@ import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import Image from 'next/image'
 
-const navItems = [
+type NavItem = {
+  href: string
+  icon: React.ElementType
+  label: string
+  exact: boolean
+}
+
+const defaultNavItems: NavItem[] = [
   { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
   { href: '/panel/eventos', icon: Calendar, label: 'Eventos', exact: false },
-  { href: '/panel/plantillas', icon: LayoutTemplate, label: 'Plantillas', exact: false },
-  { href: '/panel/marca', icon: Palette, label: 'Marca', exact: false },
   { href: '/panel/formularios', icon: FileText, label: 'Formularios', exact: false },
   { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
   { href: '/panel/spotlight', icon: Trophy, label: 'Spotlight', exact: false },
   { href: '/panel/networking-feedback', icon: Star, label: 'Feedback Networking', exact: false },
   { href: '/panel/hackathon', icon: Code2, label: 'Hackathon', exact: false },
+]
+
+const eventosNavItems: NavItem[] = [
+  { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
+  { href: '/panel/plantillas', icon: LayoutTemplate, label: 'Plantillas', exact: false },
+  { href: '/panel/marca', icon: Palette, label: 'Marca', exact: false },
+  { href: '/panel/exp-inscripciones', icon: ClipboardList, label: 'Inscripciones PaaS', exact: false },
+  { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
 ]
 
 const footerItems = [
@@ -79,8 +93,9 @@ function NavLink({
   )
 }
 
-export function PanelSidebar() {
+export function PanelSidebar({ variant = 'default' }: { variant?: 'default' | 'eventos' }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navItems = variant === 'eventos' ? eventosNavItems : defaultNavItems
 
   return (
     <>
@@ -96,7 +111,9 @@ export function PanelSidebar() {
         </button>
         <div className="flex items-center gap-2">
           <Image src="/logo.png" alt="Synergy" width={28} height={28} />
-          <span className="font-semibold text-black">Panel</span>
+          <span className="font-semibold text-black">
+            {variant === 'eventos' ? 'Eventos' : 'Panel'}
+          </span>
         </div>
         <div className="w-10" />
       </header>
@@ -200,15 +217,19 @@ export function PanelSidebar() {
             <span className="absolute top-1.5 right-1.5 text-[9px] font-medium px-1 py-0.5 rounded bg-green-100 text-green-700">
               Nuevo
             </span>
-            <p className="font-semibold text-black text-xs mb-0.5">Networking multi-eventos</p>
+            <p className="font-semibold text-black text-xs mb-0.5">
+              {variant === 'eventos' ? 'Experiencias PaaS' : 'Networking multi-eventos'}
+            </p>
             <p className="text-[10px] text-zinc-500 mb-2">
-              Gestiona varios eventos con QR y check-in independiente.
+              {variant === 'eventos'
+                ? 'Plantillas, marca y rutas /exp aisladas del legado.'
+                : 'Gestiona varios eventos con QR y check-in independiente.'}
             </p>
             <Link
-              href="/panel/eventos"
+              href={variant === 'eventos' ? '/panel/plantillas' : '/panel/eventos'}
               className="inline-flex items-center gap-0.5 text-[10px] font-medium text-zinc-700 hover:text-black"
             >
-              Ver eventos
+              {variant === 'eventos' ? 'Ver plantillas' : 'Ver eventos'}
               <ArrowUpRight className="w-3 h-3" />
             </Link>
           </div>

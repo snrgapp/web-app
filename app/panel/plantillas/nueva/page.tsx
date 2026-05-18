@@ -25,7 +25,10 @@ function WizardInner() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<{ inscripcionUrl: string; basePath: string } | null>(null)
+  const [result, setResult] = useState<{
+    inscripcionUrl: string
+    expUrl: string
+  } | null>(null)
 
   useEffect(() => {
     void (async () => {
@@ -53,7 +56,7 @@ function WizardInner() {
     })
     setSubmitting(false)
     if (r.ok) {
-      setResult({ inscripcionUrl: r.inscripcionUrl, basePath: r.basePath })
+      setResult({ inscripcionUrl: r.inscripcionUrl, expUrl: r.expUrl })
     } else setError(r.error)
   }
 
@@ -82,7 +85,7 @@ function WizardInner() {
       <div>
         <h1 className="text-2xl font-light text-black tracking-tight">Nueva experiencia</h1>
         <p className="text-sm text-zinc-500 mt-1">
-          Se crearán un evento, un formulario de inscripción vinculado y el registro de experiencia.
+          Formulario PaaS y experiencia con rutas /inscripcion-exp y /exp (sin tablas eventos/forms legacy).
         </p>
       </div>
 
@@ -96,7 +99,10 @@ function WizardInner() {
             </a>
           </p>
           <p>
-            Base networking: <span className="font-mono">{result.basePath}</span>
+            Experiencia (networking):{' '}
+            <a href={result.expUrl} className="underline break-all" target="_blank" rel="noreferrer">
+              {result.expUrl}
+            </a>
           </p>
           <Button asChild variant="outline" size="sm" className="mt-2">
             <Link href="/panel/plantillas">Ver listado</Link>

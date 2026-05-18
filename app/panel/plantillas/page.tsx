@@ -67,7 +67,7 @@ export default function PanelPlantillasPage() {
               Plantillas de experiencia
             </h1>
             <p className="text-sm text-zinc-500 mt-1">
-              Crea evento + formulario desde un preset (PaaS). Ejecuta la migración SQL 051 si aún no existe el catálogo.
+              Crea formulario PaaS + experiencia (tablas <code className="font-mono text-xs">experience_*</code>). Migraciones 051–053.
             </p>
           </div>
           <Button asChild>
@@ -132,27 +132,27 @@ export default function PanelPlantillasPage() {
                       </span>
                     </td>
                     <td className="p-3">
-                      {row.form_slug ? (
-                        <a
-                          href={absoluteUrl(`/inscripcion/${row.form_slug}`)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-zinc-700 hover:underline text-xs"
-                        >
-                          Inscripción <ExternalLink className="w-3 h-3" />
-                        </a>
+                      {row.public_slug ? (
+                        <>
+                          <a
+                            href={absoluteUrl(`/inscripcion-exp/${row.public_slug}`)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-zinc-700 hover:underline text-xs"
+                          >
+                            Inscripción PaaS <ExternalLink className="w-3 h-3" />
+                          </a>
+                          <a
+                            href={absoluteUrl(`/exp/${row.public_slug}`)}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="block mt-1 text-xs text-zinc-600 hover:underline inline-flex items-center gap-1"
+                          >
+                            Experiencia / networking <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </>
                       ) : (
                         '—'
-                      )}
-                      {row.experience_templates?.base_path && (
-                        <a
-                          href={absoluteUrl(row.experience_templates.base_path)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block mt-1 text-xs text-zinc-500 hover:underline inline-flex items-center gap-1"
-                        >
-                          Networking <ExternalLink className="w-3 h-3" />
-                        </a>
                       )}
                     </td>
                     <td className="p-3 space-x-1 flex flex-wrap gap-1">

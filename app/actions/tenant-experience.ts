@@ -49,7 +49,8 @@ export type TenantExperienceRow = {
   template_id: string
   evento_id: string | null
   form_id: string | null
-  form_slug: string | null
+  experience_form_id: string | null
+  public_slug: string | null
   experience_templates: { key: string; label: string; base_path: string } | null
 }
 
@@ -61,7 +62,9 @@ export async function listTenantExperiencesAction(): Promise<TenantExperienceRow
 
   const { data: rows, error } = await supabase
     .from('tenant_experiences')
-    .select('id, status, created_at, template_id, evento_id, form_id')
+    .select(
+      'id, status, created_at, template_id, evento_id, form_id, experience_form_id, public_slug'
+    )
     .eq('organizacion_id', orgId)
     .order('created_at', { ascending: false })
 
@@ -75,13 +78,6 @@ export async function listTenantExperiencesAction(): Promise<TenantExperienceRow
 
   const byId = new Map((templates ?? []).map((t) => [t.id, t]))
 
-  const formIds = [...new Set(rows.map((r) => r.form_id).filter(Boolean))] as string[]
-  let slugByFormId = new Map<string, string>()
-  if (formIds.length > 0) {
-    const { data: forms } = await supabase.from('forms').select('id, slug').in('id', formIds)
-    slugByFormId = new Map((forms ?? []).map((f) => [f.id, f.slug]))
-  }
-
   return rows.map((r) => ({
     id: r.id,
     status: r.status,
@@ -89,7 +85,8 @@ export async function listTenantExperiencesAction(): Promise<TenantExperienceRow
     template_id: r.template_id,
     evento_id: r.evento_id,
     form_id: r.form_id,
-    form_slug: r.form_id ? (slugByFormId.get(r.form_id) ?? null) : null,
+    experience_form_id: r.experience_form_id,
+    public_slug: r.public_slug,
     experience_templates: byId.get(r.template_id) ?? null,
   }))
 }
@@ -105,10 +102,10 @@ export type ProvisionResult =
   | {
       ok: true
       tenantExperienceId: string
-      eventoId: string
-      formId: string
+      experienceFormId: string
       formSlug: string
-      basePath: string
+      publicSlug: string
+      expUrl: string
       inscripcionUrl: string
     }
   | { ok: false; error: string }
@@ -135,51 +132,41 @@ export async function provisionTenantExperienceAction(input: ProvisionInput): Pr
   if (tErr || !template) return { ok: false, error: 'Plantilla no encontrada.' }
 
   const { data: slugClash } = await supabase
-    .from('forms')
+    .from('experience_forms')
     .select('id')
     .eq('organizacion_id', orgId)
     .eq('slug', slug)
     .maybeSingle()
 
-  if (slugClash) return { ok: false, error: 'Ya existe un formulario con ese slug en tu organización.' }
+  if (slugClash) return { ok: false, error: 'Ya existe un formulario PaaS con ese slug en tu organización.' }
+
+  const { data: slugTe } = await supabase
+    .from('tenant_experiences')
+    .select('id')
+    .eq('organizacion_id', orgId)
+    .eq('public_slug', slug)
+    .maybeSingle()
+
+  if (slugTe) return { ok: false, error: 'Ya existe una experiencia con ese slug público.' }
 
   const campos = parseFormPreset(template.default_form_preset)
 
-  const { data: evento, error: eErr } = await supabase
-    .from('eventos')
-    .insert({
-      titulo: title,
-      image_url: '/logo.png',
-      link: null,
-      orden: 0,
-      organizacion_id: orgId,
-      checkin_slug: slug,
-      inscripcion_abierta: true,
-    })
-    .select('id')
-    .single()
-
-  if (eErr || !evento) {
-    return { ok: false, error: eErr?.message ?? 'No se pudo crear el evento.' }
-  }
-
-  const { data: form, error: fErr } = await supabase
-    .from('forms')
+  const { data: xform, error: xfErr } = await supabase
+    .from('experience_forms')
     .insert({
       slug,
       titulo: title,
       descripcion: `Inscripción — ${template.label}`,
       organizacion_id: orgId,
-      evento_id: evento.id,
       campos: campos as unknown as Json,
       activo: true,
+      updated_at: new Date().toISOString(),
     })
     .select('id')
     .single()
 
-  if (fErr || !form) {
-    await supabase.from('eventos').delete().eq('id', evento.id)
-    return { ok: false, error: fErr?.message ?? 'No se pudo crear el formulario.' }
+  if (xfErr || !xform) {
+    return { ok: false, error: xfErr?.message ?? 'No se pudo crear el formulario PaaS.' }
   }
 
   const { data: te, error: teErr } = await supabase
@@ -187,8 +174,10 @@ export async function provisionTenantExperienceAction(input: ProvisionInput): Pr
     .insert({
       organizacion_id: orgId,
       template_id: template.id,
-      evento_id: evento.id,
-      form_id: form.id,
+      experience_form_id: xform.id,
+      public_slug: slug,
+      evento_id: null,
+      form_id: null,
       status: input.publish ? 'published' : 'draft',
       config: (template.default_modules ?? {}) as Json,
       updated_at: new Date().toISOString(),
@@ -197,8 +186,7 @@ export async function provisionTenantExperienceAction(input: ProvisionInput): Pr
     .single()
 
   if (teErr || !te) {
-    await supabase.from('forms').delete().eq('id', form.id)
-    await supabase.from('eventos').delete().eq('id', evento.id)
+    await supabase.from('experience_forms').delete().eq('id', xform.id)
     return { ok: false, error: teErr?.message ?? 'No se pudo crear la experiencia.' }
   }
 
@@ -207,18 +195,18 @@ export async function provisionTenantExperienceAction(input: ProvisionInput): Pr
   }
 
   revalidatePath('/panel/plantillas')
-  revalidatePath('/panel/eventos')
-  revalidatePath('/panel/formularios')
+  revalidatePath('/panel/exp-inscripciones')
+  revalidatePath(`/inscripcion-exp/${slug}`)
+  revalidatePath(`/exp/${slug}`)
 
-  const basePath = String(template.base_path ?? '/networking')
   return {
     ok: true,
     tenantExperienceId: te.id,
-    eventoId: evento.id,
-    formId: form.id,
+    experienceFormId: xform.id,
     formSlug: slug,
-    basePath,
-    inscripcionUrl: absoluteUrl(`/inscripcion/${slug}`),
+    publicSlug: slug,
+    expUrl: absoluteUrl(`/exp/${slug}`),
+    inscripcionUrl: absoluteUrl(`/inscripcion-exp/${slug}`),
   }
 }
 

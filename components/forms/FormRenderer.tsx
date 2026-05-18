@@ -10,6 +10,7 @@ import { Loader2, CheckCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FormField } from './FormField'
 import { submitFormAction } from '@/app/actions/forms'
+import type { SubmitFormResult } from '@/app/actions/forms'
 import type { FormFieldConfig } from '@/types/form.types'
 
 interface FormRendererProps {
@@ -19,6 +20,10 @@ interface FormRendererProps {
   iconUrl?: string | null
   coverUrl?: string | null
   campos: FormFieldConfig[]
+  /** Tras éxito: CTA secundaria (ej. ir al networking PaaS) */
+  afterSuccess?: { href: string; label: string }
+  /** Sustituye submitFormAction (formularios experience_forms) */
+  submitForm?: (slug: string, formData: FormData) => Promise<SubmitFormResult>
 }
 
 export function FormRenderer({
@@ -28,6 +33,8 @@ export function FormRenderer({
   iconUrl,
   coverUrl,
   campos,
+  afterSuccess,
+  submitForm,
 }: FormRendererProps) {
   const [status, setStatus] = useState<{
     type: 'idle' | 'loading' | 'success' | 'error'
@@ -37,7 +44,8 @@ export function FormRenderer({
 
   async function handleSubmit(formData: FormData) {
     setStatus({ type: 'loading' })
-    const result = await submitFormAction(formSlug, formData)
+    const submit = submitForm ?? submitFormAction
+    const result = await submit(formSlug, formData)
 
     if (result.success) {
       setStatus({ type: 'success', message: result.message })
@@ -60,6 +68,13 @@ export function FormRenderer({
           ¡Inscripción registrada!
         </h2>
         <p className="mt-2 text-zinc-600">{status.message}</p>
+        {afterSuccess && (
+          <div className="mt-6">
+            <Button asChild className="w-full rounded-xl sm:w-auto">
+              <a href={afterSuccess.href}>{afterSuccess.label}</a>
+            </Button>
+          </div>
+        )}
       </div>
     )
   }

@@ -73,6 +73,86 @@ export interface Database {
           }
         ]
       }
+      experience_form_submissions: {
+        Row: {
+          id: string
+          experience_form_id: string
+          datos: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          experience_form_id: string
+          datos?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          experience_form_id?: string
+          datos?: Json
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'experience_form_submissions_experience_form_id_fkey'
+            columns: ['experience_form_id']
+            referencedRelation: 'experience_forms'
+            referencedColumns: ['id']
+          }
+        ]
+      }
+      experience_forms: {
+        Row: {
+          id: string
+          organizacion_id: string
+          slug: string
+          titulo: string
+          descripcion: string | null
+          icon_url: string | null
+          cover_url: string | null
+          campos: Json
+          activo: boolean
+          brevo_list_id: number | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          organizacion_id: string
+          slug: string
+          titulo: string
+          descripcion?: string | null
+          icon_url?: string | null
+          cover_url?: string | null
+          campos?: Json
+          activo?: boolean
+          brevo_list_id?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          organizacion_id?: string
+          slug?: string
+          titulo?: string
+          descripcion?: string | null
+          icon_url?: string | null
+          cover_url?: string | null
+          campos?: Json
+          activo?: boolean
+          brevo_list_id?: number | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'experience_forms_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       experience_templates: {
         Row: {
           id: string
@@ -113,6 +193,8 @@ export interface Database {
           template_id: string
           evento_id: string | null
           form_id: string | null
+          experience_form_id: string | null
+          public_slug: string | null
           status: string
           config: Json
           created_at: string
@@ -124,6 +206,8 @@ export interface Database {
           template_id: string
           evento_id?: string | null
           form_id?: string | null
+          experience_form_id?: string | null
+          public_slug?: string | null
           status?: string
           config?: Json
           created_at?: string
@@ -135,12 +219,20 @@ export interface Database {
           template_id?: string
           evento_id?: string | null
           form_id?: string | null
+          experience_form_id?: string | null
+          public_slug?: string | null
           status?: string
           config?: Json
           created_at?: string
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: 'tenant_experiences_experience_form_id_fkey'
+            columns: ['experience_form_id']
+            referencedRelation: 'experience_forms'
+            referencedColumns: ['id']
+          },
           {
             foreignKeyName: 'tenant_experiences_organizacion_id_fkey'
             columns: ['organizacion_id']
@@ -1376,6 +1468,17 @@ export interface Database {
       }
     }
     Functions: {
+      verify_experience_submission_by_phone: {
+        Args: {
+          p_public_slug: string
+          p_organizacion_id: string
+          p_phone: string
+        }
+        Returns: Array<{
+          submission_id: string
+          experience_form_id: string
+        }>
+      }
       match_by_need: {
         Args: {
           query_embedding: number[] | string
@@ -1411,6 +1514,8 @@ export interface Database {
 // Tipos auxiliares para uso en la aplicación
 export type Organizacion = Database['public']['Tables']['organizaciones']['Row']
 export type OrganizacionMiembro = Database['public']['Tables']['organizacion_miembros']['Row']
+export type ExperienceFormRow = Database['public']['Tables']['experience_forms']['Row']
+export type ExperienceFormSubmissionRow = Database['public']['Tables']['experience_form_submissions']['Row']
 export type ExperienceTemplate = Database['public']['Tables']['experience_templates']['Row']
 export type TenantExperience = Database['public']['Tables']['tenant_experiences']['Row']
 export type GeniusConectaSubmission = Database['public']['Tables']['genius_conecta_submissions']['Row']

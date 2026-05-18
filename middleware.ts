@@ -35,6 +35,13 @@ const MIEMBROS_HOSTS = [
   'miembros.localhost',
 ]
 
+/** Panel PaaS (plantillas, marca, formularios aislados) */
+const EVENTOS_PANEL_HOSTS = [
+  'www.eventos.snrg.lat',
+  'eventos.snrg.lat',
+  'eventos.localhost',
+]
+
 function matchesHosts(req: NextRequest, hosts: string[]): boolean {
   // En Vercel/proxy: x-forwarded-host tiene el host original del usuario
   const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
@@ -68,8 +75,12 @@ function getOrgSlugFromHost(req: NextRequest): string {
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
-  const orgSlug = getOrgSlugFromHost(request)
   const requestHeaders = new Headers(request.headers)
+
+  let orgSlug = getOrgSlugFromHost(request)
+  if (matchesHosts(request, EVENTOS_PANEL_HOSTS)) {
+    orgSlug = process.env.NEXT_PUBLIC_EVENTOS_PANEL_ORG_SLUG?.trim() || 'snrg'
+  }
   requestHeaders.set('x-org-slug', orgSlug)
 
   const isMiembrosHost = matchesHosts(request, MIEMBROS_HOSTS)
@@ -124,6 +135,19 @@ export async function middleware(request: NextRequest) {
     const url = request.nextUrl.clone()
     url.pathname = newPath
     return NextResponse.rewrite(url)
+  }
+
+  // www.eventos.snrg.lat: panel PaaS (raíz → /panel)
+  if (matchesHosts(request, EVENTOS_PANEL_HOSTS)) {
+    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
+      return NextResponse.next({ request: { headers: requestHeaders } })
+    }
+    if (pathname === '/' || pathname === '') {
+      const url = request.nextUrl.clone()
+      url.pathname = '/panel'
+      return NextResponse.rewrite(url, { request: { headers: requestHeaders } })
+    }
+    return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
   // Proteger /panel: requiere sesión Supabase Auth (solo cuando NO es subdominio miembros)
@@ -201,6 +225,8 @@ export async function middleware(request: NextRequest) {
     if (
       pathname.startsWith('/home') ||
       pathname.startsWith('/networking') ||
+      pathname.startsWith('/exp') ||
+      pathname.startsWith('/inscripcion-exp') ||
       pathname.startsWith('/api') ||
       pathname.startsWith('/_next')
     ) {
