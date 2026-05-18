@@ -8,7 +8,7 @@ import { verificarIeeePorTelefono } from '@/app/actions/ieee-networking'
 
 const STORAGE_ID = 'ieee_submission_id'
 
-const REGISTRO_IEEE_URL = 'https://www.ieee.snrg.lat'
+const REGISTRO_IEEE_URL = 'https://ieee.snrg.lat'
 
 function VerifyContent() {
   const router = useRouter()

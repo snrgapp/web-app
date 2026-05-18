@@ -190,10 +190,10 @@ function IeeeShellInner() {
             <div className="rounded-[22px] border border-white/10 bg-[#252525] px-5 py-10 text-center shadow-[6px_6px_0_#00629B]">
               <p className="text-sm font-light text-white/65">
                 Aún no hay sugerencias para esta ronda. Vuelve más tarde o confirma que ya enviaste el formulario en{' '}
-                <span className="text-white/80">www.ieee.snrg.lat</span>.
+                <span className="text-white/80">ieee.snrg.lat</span>.
               </p>
               <a
-                href="https://www.ieee.snrg.lat"
+                href="https://ieee.snrg.lat"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-white/18 bg-[#1a1a1a] px-6 text-xs font-medium uppercase tracking-wide text-white shadow-[4px_4px_0_#00629B] transition hover:border-white/28"
@@ -216,7 +216,7 @@ function IeeeShellInner() {
             Comenzar
           </button>
           <a
-            href="https://www.ieee.snrg.lat"
+            href="https://ieee.snrg.lat"
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-11 w-full items-center justify-center rounded-full border border-white/18 bg-[#1a1a1a] text-center text-xs font-medium uppercase tracking-wide text-white/88 shadow-[4px_4px_0_#00629B] transition hover:border-white/28"

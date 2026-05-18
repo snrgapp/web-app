@@ -212,14 +212,9 @@ export async function middleware(request: NextRequest) {
   }
 
   // Subdominio ieee.snrg.lat — formulario IEEE networking
+  // Nota: no redirigir ieee → www.ieee; algunos resolvers ISP responden NXDOMAIN para el 4º nivel
+  // (www.ieee) aunque el apex ieee.snrg.lat resuelva. Servir el formulario en ambos hosts sin 308.
   if (matchesHosts(request, IEEE_HOSTS)) {
-    const effectiveHost = getEffectiveHost(request)
-    if (effectiveHost === 'ieee.snrg.lat') {
-      const url = request.nextUrl.clone()
-      url.host = 'www.ieee.snrg.lat'
-      return NextResponse.redirect(url, 308)
-    }
-
     if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
       return NextResponse.next({ request: { headers: requestHeaders } })
     }

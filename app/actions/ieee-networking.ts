@@ -23,7 +23,7 @@ export async function verificarIeeePorTelefono(
     return {
       ok: false,
       error:
-        'No encontramos tu registro. Completa primero el formulario en www.ieee.snrg.lat.',
+        'No encontramos tu registro. Completa primero el formulario en ieee.snrg.lat.',
     }
   }
 

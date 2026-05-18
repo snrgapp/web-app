@@ -1,4 +1,4 @@
--- IEEE networking — formulario www.ieee.snrg.lat + matches por ronda (app.snrg.lat)
+-- IEEE networking — formulario ieee.snrg.lat + matches por ronda (app.snrg.lat)
 
 CREATE TABLE IF NOT EXISTS ieee_networking_submissions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -48,7 +48,7 @@ CREATE INDEX IF NOT EXISTS idx_ieee_networking_created_at
 ALTER TABLE ieee_networking_submissions ENABLE ROW LEVEL SECURITY;
 
 COMMENT ON TABLE ieee_networking_submissions IS
-  'IEEE networking — respuestas del formulario www.ieee.snrg.lat; acceso app por teléfono.';
+  'IEEE networking — respuestas del formulario ieee.snrg.lat; acceso app por teléfono.';
 
 CREATE POLICY ieee_networking_submissions_select_authenticated
   ON ieee_networking_submissions FOR SELECT TO authenticated USING (true);
