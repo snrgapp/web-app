@@ -19,6 +19,16 @@ const TIPOS_CONEXION = new Set([
   'Amistades profesionales',
 ])
 
+/** Paso 3: conocimiento que podría ofrecer (una opción) */
+const CONOCIMIENTO_OFRECER = new Set([
+  'Desarrollo de software',
+  'Inteligencia Artificial / Machine Learning',
+  'Ciencia de Datos',
+  'Ciberseguridad',
+  'Robótica e IoT',
+  'Electrónica y hardware',
+])
+
 function str(v: unknown): string | null {
   if (typeof v !== 'string') return null
   const t = v.trim()
@@ -88,14 +98,11 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: 'Área de interés no válida' }, { status: 400 })
       }
     }
-    if (!habilidades || habilidades.length < 3) {
+    if (!habilidades || !CONOCIMIENTO_OFRECER.has(habilidades)) {
       return NextResponse.json(
-        { error: 'Describe qué puedes compartir (mín. 3 caracteres)' },
+        { error: 'Selecciona qué tipo de conocimiento podrías ofrecer' },
         { status: 400 }
       )
-    }
-    if (habilidades.length > 2000) {
-      return NextResponse.json({ error: 'Texto demasiado largo (máx. 2000)' }, { status: 400 })
     }
     if (!tiposRaw || tiposRaw.length === 0) {
       return NextResponse.json(

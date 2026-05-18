@@ -61,6 +61,9 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 .opt-check{width:18px;height:18px;border-radius:5px;border:2px solid rgba(255,255,255,.35);flex-shrink:0;position:relative;}
 .opt.selected .opt-check{border-color:#fff;background:#fff;}
 .opt.selected .opt-check::after{content:'';position:absolute;left:5px;top:2px;width:5px;height:9px;border:2px solid #161616;border-top:none;border-left:none;transform:rotate(45deg);}
+.opt-radio{width:17px;height:17px;border-radius:50%;border:2px solid rgba(255,255,255,.35);flex-shrink:0;}
+.opt.selected .opt-radio{border-color:#fff;background:#fff;}
+.opt.selected .opt-radio::after{content:'';display:block;width:7px;height:7px;margin:4px auto;border-radius:50%;background:#161616;}
 .ta{width:100%;min-height:120px;padding:12px;border-radius:14px;border:1px solid var(--border);background:#1a1a1a;color:rgba(255,255,255,.95);font-family:inherit;font-weight:300;font-size:.95rem;resize:vertical;}
 .ta:focus{outline:none;border-color:rgba(255,255,255,.35);}
 .ta-counter{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:rgba(255,255,255,.45);text-align:right;margin-top:6px;text-transform:uppercase;}
@@ -143,11 +146,18 @@ a.btn{text-decoration:none;display:flex;align-items:center;justify-content:cente
         <div class="ieee-num">3</div>
         <div>
           <div class="ieee-step-cat">Aporte</div>
-          <div class="ieee-q">¿Qué habilidades o conocimientos puedes compartir con otros?</div>
+          <div class="ieee-q">¿Qué tipo de conocimiento podrías ofrecer a otros asistentes?</div>
         </div>
       </div>
-      <textarea class="ta" id="textarea-skills" maxlength="2000" minlength="3" required placeholder="Ej: Proyectos en Python, mentoría en algoritmos, experiencia en equipos ágiles..." oninput="onSkills()"></textarea>
-      <div class="ta-counter"><span id="cc-sk">0</span> / 2000</div>
+      <p class="hint" style="margin-bottom:12px">Elige una opción.</p>
+      <div class="opts" id="opts-conocimiento">
+        <div class="opt" data-val="Desarrollo de software" onclick="selConocimiento(this,'Desarrollo de software')"><span class="opt-ico">💻</span><span class="opt-txt">Desarrollo de software</span><div class="opt-radio"></div></div>
+        <div class="opt" data-val="Inteligencia Artificial / Machine Learning" onclick="selConocimiento(this,'Inteligencia Artificial / Machine Learning')"><span class="opt-ico">🤖</span><span class="opt-txt">Inteligencia Artificial / Machine Learning</span><div class="opt-radio"></div></div>
+        <div class="opt" data-val="Ciencia de Datos" onclick="selConocimiento(this,'Ciencia de Datos')"><span class="opt-ico">📊</span><span class="opt-txt">Ciencia de Datos</span><div class="opt-radio"></div></div>
+        <div class="opt" data-val="Ciberseguridad" onclick="selConocimiento(this,'Ciberseguridad')"><span class="opt-ico">🔐</span><span class="opt-txt">Ciberseguridad</span><div class="opt-radio"></div></div>
+        <div class="opt" data-val="Robótica e IoT" onclick="selConocimiento(this,'Robótica e IoT')"><span class="opt-ico">🦾</span><span class="opt-txt">Robótica e IoT</span><div class="opt-radio"></div></div>
+        <div class="opt" data-val="Electrónica y hardware" onclick="selConocimiento(this,'Electrónica y hardware')"><span class="opt-ico">🔌</span><span class="opt-txt">Electrónica y hardware</span><div class="opt-radio"></div></div>
+      </div>
     </div>
     <div class="nav"><button type="button" class="btn" id="next-2" disabled onclick="goNext(2)">Siguiente →</button></div>
   </div>
@@ -218,11 +228,12 @@ function onContact(){
   ieNombre=n;ieTelDigits=digits;ieMail=mail;
   document.getElementById('next-0').disabled=!(n.length>=2&&digits.length>=7&&digits.length<=15&&emailOk(mail));
 }
-function onSkills(){
-  const ta=document.getElementById('textarea-skills');
-  const t=ta.value.trim();
-  document.getElementById('cc-sk').textContent=ta.value.length;
-  document.getElementById('next-2').disabled=t.length<3;
+let conocimientoEleccion='';
+function selConocimiento(el,val){
+  document.querySelectorAll('#opts-conocimiento .opt').forEach(function(o){o.classList.remove('selected');});
+  el.classList.add('selected');
+  conocimientoEleccion=val;
+  document.getElementById('next-2').disabled=false;
 }
 function onConsent(){
   const c=document.getElementById('ieee-consent');
@@ -247,8 +258,7 @@ async function submitIeee(){
   const consent=document.getElementById('ieee-consent');
   if(!consent||!consent.checked){alert('Debes aceptar la autorización de tratamiento de datos.');return;}
   if(tiposOrder.length===0)return;
-  const skills=document.getElementById('textarea-skills').value.trim();
-  if(skills.length<3)return;
+  if(!conocimientoEleccion)return;
   const btn=document.getElementById('next-3');
   const orig=btn.textContent;
   btn.disabled=true;
@@ -259,7 +269,7 @@ async function submitIeee(){
       telefono:ieTelDigits,
       correo:ieMail,
       areas_interes:areasOrder.slice(),
-      habilidades_compartir:skills,
+      habilidades_compartir:conocimientoEleccion,
       tipos_conexion:tiposOrder.slice()
     })});
     const data=await res.json().catch(()=>({}));
