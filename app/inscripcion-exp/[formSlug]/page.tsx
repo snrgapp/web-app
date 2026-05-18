@@ -70,7 +70,7 @@ export default async function InscripcionExperienceFormPage({ params }: PageProp
           coverUrl={form.cover_url}
           campos={form.campos}
           afterSuccess={afterSuccess}
-          submitForm={(slug, fd) => submitExperienceFormAction(slug, fd)}
+          submitForm={submitExperienceFormAction}
           variant="paas"
         />
         <div className="mt-8 flex justify-center">
