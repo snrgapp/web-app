@@ -55,7 +55,7 @@ function VerifyContent() {
           width={800}
           height={800}
           decoding="async"
-          className="block h-[clamp(88px,26vmin,140px)] w-auto max-w-[min(320px,88vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
+          className="block h-[clamp(108px,34vmin,178px)] w-auto max-w-[min(400px,92vw)] border-0 bg-transparent object-contain object-center shadow-none outline-none"
         />
       </div>
 

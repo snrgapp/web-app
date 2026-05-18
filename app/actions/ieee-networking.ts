@@ -30,23 +30,6 @@ export async function verificarIeeePorTelefono(
   return { ok: true, submission: data as IeeeNetworkingSubmission }
 }
 
-export async function getIeeeResumenParticipante(
-  submissionId: string
-): Promise<{ nombreCompleto: string; telefono: string } | null> {
-  const supabase = createAdminClient()
-  if (!supabase) return null
-  const { data } = await supabase
-    .from('ieee_networking_submissions')
-    .select('nombre_completo, telefono')
-    .eq('id', submissionId)
-    .maybeSingle()
-  if (!data) return null
-  return {
-    nombreCompleto: data.nombre_completo,
-    telefono: data.telefono,
-  }
-}
-
 export type IeeeConexionUsuario = {
   id: string
   nombreCompleto: string

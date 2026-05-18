@@ -84,9 +84,11 @@ export default function HomePage() {
               whileHover={item.enabled ? { scale: 1.04 } : undefined}
               whileTap={item.enabled ? { scale: 0.97 } : undefined}
               className={
-                item.image === GENIUS_LOGO_SRC || item.image === IEEE_LOGO_SRC
+                item.image === GENIUS_LOGO_SRC
                   ? 'flex w-full min-h-[200px] items-center justify-center rounded-2xl bg-transparent py-3 sm:min-h-[210px] sm:py-4'
-                  : 'flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#e0e0e0] sm:rounded-3xl'
+                  : item.image === IEEE_LOGO_SRC
+                    ? 'flex w-full min-h-[220px] items-center justify-center rounded-2xl bg-transparent py-3 sm:min-h-[235px] sm:py-4'
+                    : 'flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-[#e0e0e0] sm:rounded-3xl'
               }
             >
               <Image
@@ -95,9 +97,11 @@ export default function HomePage() {
                 width={1080}
                 height={1080}
                 className={
-                  item.image === GENIUS_LOGO_SRC || item.image === IEEE_LOGO_SRC
+                  item.image === GENIUS_LOGO_SRC
                     ? 'h-auto max-h-[min(300px,66vw)] w-auto max-w-full bg-transparent object-contain sm:max-h-[min(280px,58vw)]'
-                    : 'h-full w-full object-cover'
+                    : item.image === IEEE_LOGO_SRC
+                      ? 'h-auto max-h-[min(340px,72vw)] w-auto max-w-full bg-transparent object-contain sm:max-h-[min(320px,62vw)]'
+                      : 'h-full w-full object-cover'
                 }
               />
             </motion.div>

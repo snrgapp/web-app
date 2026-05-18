@@ -2,12 +2,8 @@
 
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, Loader2, Phone } from 'lucide-react'
-import {
-  getIeeeConexiones,
-  getIeeeResumenParticipante,
-  type IeeeConexionUsuario,
-} from '@/app/actions/ieee-networking'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import { getIeeeConexiones, type IeeeConexionUsuario } from '@/app/actions/ieee-networking'
 import { IeeePersonCard } from '@/components/networking/ieee/IeeePersonCard'
 
 const STORAGE_ID = 'ieee_submission_id'
@@ -18,13 +14,6 @@ const SLOTS: { value: 1 | 2; label: string }[] = [
   { value: 2, label: 'Ronda 2' },
 ]
 
-function formatPhoneDisplay(digits: string): string {
-  const d = digits.replace(/\D/g, '')
-  if (d.length <= 6) return d
-  if (d.length <= 10) return `${d.slice(0, 3)} ${d.slice(3)}`
-  return `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}`
-}
-
 function IeeeShellInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -32,7 +21,6 @@ function IeeeShellInner() {
   const [ronda, setRonda] = useState<1 | 2>(1)
   const [conexiones, setConexiones] = useState<IeeeConexionUsuario[]>([])
   const [loading, setLoading] = useState(true)
-  const [resumen, setResumen] = useState<{ nombreCompleto: string; telefono: string } | null>(null)
 
   useEffect(() => {
     const sid =
@@ -55,18 +43,6 @@ function IeeeShellInner() {
       router.replace('/networking/ieee', { scroll: false })
     }
   }, [searchParams, router])
-
-  useEffect(() => {
-    if (!submissionId) return
-    let cancelled = false
-    ;(async () => {
-      const r = await getIeeeResumenParticipante(submissionId)
-      if (!cancelled) setResumen(r)
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [submissionId])
 
   useEffect(() => {
     if (!submissionId) return
@@ -118,7 +94,7 @@ function IeeeShellInner() {
             width={800}
             height={800}
             decoding="async"
-            className="h-11 w-auto shrink-0 bg-transparent object-contain sm:h-12"
+            className="h-14 w-auto shrink-0 bg-transparent object-contain sm:h-[4.5rem]"
           />
           <span
             className="text-center text-[0.68rem] font-medium uppercase tracking-[0.15em] text-white/55 sm:text-left"
@@ -140,24 +116,6 @@ function IeeeShellInner() {
         <p className="mt-2 text-sm font-light leading-relaxed text-white/65 sm:max-w-md">
           Personas sugeridas según tu perfil. Elige la ronda y escríbeles por WhatsApp.
         </p>
-
-        {resumen ? (
-          <div className="mx-auto mt-6 max-w-md rounded-[18px] border border-white/12 bg-[#252525] px-4 py-3 text-left shadow-[4px_4px_0_#00629B] sm:mx-0">
-            <p
-              className="text-[0.65rem] font-medium uppercase tracking-[0.15em] text-[#00629B]/90"
-              style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
-            >
-              Verificación
-            </p>
-            <p className="mt-1 text-sm font-medium text-white">{resumen.nombreCompleto}</p>
-            <div className="mt-2 flex items-center gap-2 text-sm text-white/85">
-              <Phone className="h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
-              <span className="font-mono text-[0.95rem] tracking-wide">
-                {formatPhoneDisplay(resumen.telefono)}
-              </span>
-            </div>
-          </div>
-        ) : null}
 
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2 sm:justify-start">
           {SLOTS.map(({ value, label }) => (
@@ -189,24 +147,15 @@ function IeeeShellInner() {
           ) : conexiones.length === 0 ? (
             <div className="rounded-[22px] border border-white/10 bg-[#252525] px-5 py-10 text-center shadow-[6px_6px_0_#00629B]">
               <p className="text-sm font-light text-white/65">
-                Aún no hay sugerencias para esta ronda. Vuelve más tarde o confirma que ya enviaste el formulario en{' '}
-                <span className="text-white/80">ieee.snrg.lat</span>.
+                Aún no hay sugerencias para esta ronda. Vuelve más tarde
               </p>
-              <a
-                href="https://ieee.snrg.lat"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 inline-flex h-11 items-center justify-center rounded-full border border-white/18 bg-[#1a1a1a] px-6 text-xs font-medium uppercase tracking-wide text-white shadow-[4px_4px_0_#00629B] transition hover:border-white/28"
-              >
-                Inscribirme
-              </a>
             </div>
           ) : (
             conexiones.map((c, i) => <IeeePersonCard key={c.id} person={c} index={i} />)
           )}
         </div>
 
-        <div className="mt-10 flex flex-col gap-3 pb-8">
+        <div className="mt-10 pb-8">
           <button
             type="button"
             onClick={handleComenzarPreguntas}
@@ -215,14 +164,6 @@ function IeeeShellInner() {
           >
             Comenzar
           </button>
-          <a
-            href="https://ieee.snrg.lat"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-11 w-full items-center justify-center rounded-full border border-white/18 bg-[#1a1a1a] text-center text-xs font-medium uppercase tracking-wide text-white/88 shadow-[4px_4px_0_#00629B] transition hover:border-white/28"
-          >
-            ¿No te inscribiste? Ir al formulario
-          </a>
         </div>
       </div>
     </div>

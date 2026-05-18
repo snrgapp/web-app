@@ -96,10 +96,10 @@ export default function QuestionCard({
           <img
             src="/images/ieee.png"
             alt=""
-            width={56}
-            height={56}
+            width={72}
+            height={72}
             decoding="async"
-            className="h-7 w-auto object-contain opacity-90"
+            className="h-9 w-auto object-contain opacity-90 sm:h-10"
           />
         ) : (
           <Image
