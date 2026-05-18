@@ -13,19 +13,25 @@ interface FormFieldProps {
   field: FormFieldConfig
   error?: string
   defaultValue?: string | number | boolean | string[]
+  /** Tema para formularios PaaS (fondo oscuro) */
+  variant?: 'light' | 'dark'
 }
 
-export function FormField({ field, error, defaultValue }: FormFieldProps) {
+export function FormField({ field, error, defaultValue, variant = 'light' }: FormFieldProps) {
   const id = `field-${field.key}`
   const isRequired = field.required ?? false
+  const isDark = variant === 'dark'
 
   const label = (
     <label
       htmlFor={id}
-      className="block text-sm font-medium text-zinc-700 mb-1.5"
+      className={cn(
+        'block text-sm font-medium mb-1.5',
+        isDark ? 'text-zinc-100' : 'text-zinc-700'
+      )}
     >
       {field.label}
-      {isRequired && <span className="text-red-500 ml-0.5">*</span>}
+      {isRequired && <span className="text-red-400 ml-0.5">*</span>}
     </label>
   )
 
@@ -42,12 +48,16 @@ export function FormField({ field, error, defaultValue }: FormFieldProps) {
             defaultValue={Array.isArray(defaultValue) ? undefined : String(defaultValue ?? '')}
             maxLength={field.max}
             className={cn(
-              'flex min-h-[100px] w-full rounded-xl border border-zinc-200 bg-white px-4 py-3 text-sm transition-colors',
-              'placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-1',
+              'flex min-h-[100px] w-full rounded-xl border px-4 py-3 text-sm transition-colors',
+              isDark
+                ? 'border-zinc-600 bg-zinc-900/80 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-white/30'
+                : 'border-zinc-200 bg-white placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-1',
               error && 'border-red-400 focus:ring-red-400'
             )}
           />
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className={cn('text-sm', isDark ? 'text-red-400' : 'text-red-600')}>{error}</p>
+          )}
         </div>
       )
 
@@ -60,8 +70,10 @@ export function FormField({ field, error, defaultValue }: FormFieldProps) {
             name={field.key}
             required={isRequired}
             className={cn(
-              'flex h-11 w-full rounded-xl border border-zinc-200 bg-white px-4 text-sm transition-colors',
-              'focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-1',
+              'flex h-11 w-full rounded-xl border px-4 text-sm transition-colors',
+              isDark
+                ? 'border-zinc-600 bg-zinc-900/80 text-white focus:outline-none focus:ring-2 focus:ring-white/30'
+                : 'border-zinc-200 bg-white focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-1',
               error && 'border-red-400 focus:ring-red-400'
             )}
             defaultValue={String(defaultValue ?? '')}
@@ -73,7 +85,9 @@ export function FormField({ field, error, defaultValue }: FormFieldProps) {
               </option>
             ))}
           </select>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className={cn('text-sm', isDark ? 'text-red-400' : 'text-red-600')}>{error}</p>
+          )}
         </div>
       )
 
@@ -93,13 +107,22 @@ export function FormField({ field, error, defaultValue }: FormFieldProps) {
                   value={opt.value}
                   required={isRequired}
                   defaultChecked={String(defaultValue) === opt.value}
-                  className="h-4 w-4 rounded-full border-zinc-300 text-zinc-900 focus:ring-zinc-900"
+                  className={cn(
+                    'h-4 w-4 rounded-full',
+                    isDark
+                      ? 'border-zinc-500 bg-zinc-800 text-white'
+                      : 'border-zinc-300 text-zinc-900 focus:ring-zinc-900'
+                  )}
                 />
-                <span className="text-sm text-zinc-700">{opt.label}</span>
+                <span className={cn('text-sm', isDark ? 'text-zinc-200' : 'text-zinc-700')}>
+                  {opt.label}
+                </span>
               </label>
             ))}
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className={cn('text-sm', isDark ? 'text-red-400' : 'text-red-600')}>{error}</p>
+          )}
         </div>
       )
 
@@ -120,13 +143,22 @@ export function FormField({ field, error, defaultValue }: FormFieldProps) {
                   defaultChecked={
                     Array.isArray(defaultValue) && defaultValue.includes(opt.value)
                   }
-                  className="h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900"
+                  className={cn(
+                    'h-4 w-4 rounded',
+                    isDark
+                      ? 'border-zinc-500 bg-zinc-800 text-white'
+                      : 'border-zinc-300 text-zinc-900 focus:ring-zinc-900'
+                  )}
                 />
-                <span className="text-sm text-zinc-700">{opt.label}</span>
+                <span className={cn('text-sm', isDark ? 'text-zinc-200' : 'text-zinc-700')}>
+                  {opt.label}
+                </span>
               </label>
             ))}
           </div>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className={cn('text-sm', isDark ? 'text-red-400' : 'text-red-600')}>{error}</p>
+          )}
         </div>
       )
 
@@ -147,11 +179,16 @@ export function FormField({ field, error, defaultValue }: FormFieldProps) {
             min={field.min}
             max={field.max}
             className={cn(
-              'rounded-xl border-zinc-200 bg-white h-11',
+              'rounded-xl h-11',
+              isDark
+                ? 'border-zinc-600 bg-zinc-900/80 text-white placeholder:text-zinc-500'
+                : 'border-zinc-200 bg-white',
               error && 'border-red-400 focus-visible:ring-red-400'
             )}
           />
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && (
+            <p className={cn('text-sm', isDark ? 'text-red-400' : 'text-red-600')}>{error}</p>
+          )}
         </div>
       )
     }

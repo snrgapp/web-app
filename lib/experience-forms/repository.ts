@@ -6,6 +6,7 @@ import type { FormFieldConfig } from '@/types/form.types'
 import type { Json } from '@/types/database.types'
 import { createServerClient } from '@/utils/supabase/server'
 import { getDefaultOrgId } from '@/lib/org-resolver'
+import { filterCustomPaasCampos } from '@/lib/experience-forms/paas-default-fields'
 
 export type ExperienceFormWithFields = {
   id: string
@@ -24,7 +25,7 @@ export type ExperienceFormWithFields = {
 
 function parseCampos(campos: unknown): FormFieldConfig[] {
   if (!Array.isArray(campos)) return []
-  return campos.filter(
+  const raw = campos.filter(
     (c): c is FormFieldConfig =>
       typeof c === 'object' &&
       c !== null &&
@@ -32,6 +33,7 @@ function parseCampos(campos: unknown): FormFieldConfig[] {
       typeof (c as FormFieldConfig).label === 'string' &&
       typeof (c as FormFieldConfig).type === 'string'
   )
+  return filterCustomPaasCampos(raw)
 }
 
 export async function getExperienceFormBySlug(slug: string): Promise<ExperienceFormWithFields | null> {

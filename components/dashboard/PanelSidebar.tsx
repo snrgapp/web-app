@@ -17,6 +17,7 @@ import {
   Settings,
   HelpCircle,
   ArrowUpRight,
+  FileEdit,
   LayoutTemplate,
   Palette,
   ClipboardList,
@@ -48,6 +49,7 @@ const defaultNavItems: NavItem[] = [
 const eventosNavItems: NavItem[] = [
   { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
   { href: '/panel/plantillas', icon: LayoutTemplate, label: 'Plantillas', exact: false },
+  { href: '/panel/formulario', icon: FileEdit, label: 'Formulario', exact: false },
   { href: '/panel/marca', icon: Palette, label: 'Marca', exact: false },
   { href: '/panel/exp-inscripciones', icon: ClipboardList, label: 'Inscripciones PaaS', exact: false },
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },

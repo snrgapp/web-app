@@ -5,21 +5,8 @@ import { createServerClient } from '@/utils/supabase/server'
 import { getDefaultOrgId } from '@/lib/org-resolver'
 import { setActiveTenantExperienceId } from '@/app/actions/org-branding'
 import { parseOrgSettings } from '@/lib/org-settings-schema'
-import type { FormFieldConfig } from '@/types/form.types'
 import type { ExperienceTemplate, Json } from '@/types/database.types'
 import { absoluteUrl } from '@/lib/site'
-
-function parseFormPreset(raw: unknown): FormFieldConfig[] {
-  if (!Array.isArray(raw)) return []
-  return raw.filter(
-    (c): c is FormFieldConfig =>
-      typeof c === 'object' &&
-      c !== null &&
-      typeof (c as FormFieldConfig).key === 'string' &&
-      typeof (c as FormFieldConfig).label === 'string' &&
-      typeof (c as FormFieldConfig).type === 'string'
-  )
-}
 
 function normalizeSlug(s: string): string {
   return s
@@ -149,8 +136,6 @@ export async function provisionTenantExperienceAction(input: ProvisionInput): Pr
 
   if (slugTe) return { ok: false, error: 'Ya existe una experiencia con ese slug público.' }
 
-  const campos = parseFormPreset(template.default_form_preset)
-
   const { data: xform, error: xfErr } = await supabase
     .from('experience_forms')
     .insert({
@@ -158,7 +143,7 @@ export async function provisionTenantExperienceAction(input: ProvisionInput): Pr
       titulo: title,
       descripcion: `Inscripción — ${template.label}`,
       organizacion_id: orgId,
-      campos: campos as unknown as Json,
+      campos: [] as unknown as Json,
       activo: true,
       updated_at: new Date().toISOString(),
     })
