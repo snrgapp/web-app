@@ -10,6 +10,7 @@ import {
   FileText,
   Trophy,
   Star,
+  Share2,
   Code2,
   ChevronDown,
   Menu,
@@ -43,6 +44,7 @@ const defaultNavItems: NavItem[] = [
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
   { href: '/panel/spotlight', icon: Trophy, label: 'Spotlight', exact: false },
   { href: '/panel/networking-feedback', icon: Star, label: 'Feedback Networking', exact: false },
+  { href: '/panel/ieee-networking', icon: Share2, label: 'IEEE · Matching', exact: false },
   { href: '/panel/hackathon', icon: Code2, label: 'Hackathon', exact: false },
 ]
 
