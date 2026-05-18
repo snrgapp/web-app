@@ -17,6 +17,8 @@ import {
   Settings,
   HelpCircle,
   ArrowUpRight,
+  LayoutTemplate,
+  Palette,
 } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -27,6 +29,8 @@ import Image from 'next/image'
 const navItems = [
   { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
   { href: '/panel/eventos', icon: Calendar, label: 'Eventos', exact: false },
+  { href: '/panel/plantillas', icon: LayoutTemplate, label: 'Plantillas', exact: false },
+  { href: '/panel/marca', icon: Palette, label: 'Marca', exact: false },
   { href: '/panel/formularios', icon: FileText, label: 'Formularios', exact: false },
   { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },

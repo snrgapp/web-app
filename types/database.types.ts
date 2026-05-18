@@ -73,6 +73,100 @@ export interface Database {
           }
         ]
       }
+      experience_templates: {
+        Row: {
+          id: string
+          key: string
+          label: string
+          description: string | null
+          default_modules: Json
+          default_form_preset: Json
+          base_path: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          label: string
+          description?: string | null
+          default_modules?: Json
+          default_form_preset?: Json
+          base_path?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          label?: string
+          description?: string | null
+          default_modules?: Json
+          default_form_preset?: Json
+          base_path?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      tenant_experiences: {
+        Row: {
+          id: string
+          organizacion_id: string
+          template_id: string
+          evento_id: string | null
+          form_id: string | null
+          status: string
+          config: Json
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          organizacion_id: string
+          template_id: string
+          evento_id?: string | null
+          form_id?: string | null
+          status?: string
+          config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          organizacion_id?: string
+          template_id?: string
+          evento_id?: string | null
+          form_id?: string | null
+          status?: string
+          config?: Json
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'tenant_experiences_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tenant_experiences_template_id_fkey'
+            columns: ['template_id']
+            referencedRelation: 'experience_templates'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tenant_experiences_evento_id_fkey'
+            columns: ['evento_id']
+            referencedRelation: 'eventos'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'tenant_experiences_form_id_fkey'
+            columns: ['form_id']
+            referencedRelation: 'forms'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       genius_conecta_submissions: {
         Row: {
           id: string
@@ -1317,6 +1411,8 @@ export interface Database {
 // Tipos auxiliares para uso en la aplicación
 export type Organizacion = Database['public']['Tables']['organizaciones']['Row']
 export type OrganizacionMiembro = Database['public']['Tables']['organizacion_miembros']['Row']
+export type ExperienceTemplate = Database['public']['Tables']['experience_templates']['Row']
+export type TenantExperience = Database['public']['Tables']['tenant_experiences']['Row']
 export type GeniusConectaSubmission = Database['public']['Tables']['genius_conecta_submissions']['Row']
 export type MatchGenius = Database['public']['Tables']['match_genius']['Row']
 export type HackatonSubmission = Database['public']['Tables']['hackaton_submissions']['Row']
