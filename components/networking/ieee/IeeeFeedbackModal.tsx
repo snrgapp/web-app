@@ -9,11 +9,19 @@ import { guardarFeedbackIeeeNetworking } from '@/app/actions/ieee-networking'
 type Props = {
   isOpen: boolean
   submissionId: string
+  /** Teléfono verificado (solo dígitos); evita FK si `submissionId` del storage no coincide con la BD */
+  telefonoDigits?: string | null
   onClose: () => void
   onComplete: () => void
 }
 
-export function IeeeFeedbackModal({ isOpen, submissionId, onClose, onComplete }: Props) {
+export function IeeeFeedbackModal({
+  isOpen,
+  submissionId,
+  telefonoDigits,
+  onClose,
+  onComplete,
+}: Props) {
   const [rating, setRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
   const [comment, setComment] = useState('')
@@ -41,7 +49,7 @@ export function IeeeFeedbackModal({ isOpen, submissionId, onClose, onComplete }:
     if (rating < 1 || rating > 5) return
     setLoading(true)
     setError('')
-    const result = await guardarFeedbackIeeeNetworking(submissionId, rating, comment || null)
+    const result = await guardarFeedbackIeeeNetworking(submissionId, rating, comment || null, telefonoDigits)
     setLoading(false)
     if (!result.ok) {
       setError(result.error ?? 'No se pudo enviar. Intenta de nuevo.')

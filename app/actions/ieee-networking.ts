@@ -77,10 +77,39 @@ export async function getIeeeConexiones(
   return out
 }
 
+async function resolverSubmissionIdIEEE(
+  supabase: NonNullable<ReturnType<typeof createAdminClient>>,
+  submissionId: string,
+  telefonoFromClient?: string | null
+): Promise<string | null> {
+  const digits = (telefonoFromClient ?? '').replace(/\D/g, '')
+  if (digits.length >= 7 && digits.length <= 15) {
+    const { data } = await supabase
+      .from('ieee_networking_submissions')
+      .select('id')
+      .eq('telefono', digits)
+      .maybeSingle()
+    if (data?.id) return data.id
+  }
+
+  const tid = submissionId.trim()
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(tid)) {
+    return null
+  }
+  const { data: byId } = await supabase
+    .from('ieee_networking_submissions')
+    .select('id')
+    .eq('id', tid)
+    .maybeSingle()
+  return byId?.id ?? null
+}
+
+/** `telefono` opcional pero recomendado: evita errores FK si `submissionId` del storage quedó desactualizado */
 export async function guardarFeedbackIeeeNetworking(
   submissionId: string,
   rating: number,
-  comment: string | null
+  comment: string | null,
+  telefono?: string | null
 ): Promise<{ ok: boolean; error?: string }> {
   const supabase = createAdminClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
@@ -89,9 +118,18 @@ export async function guardarFeedbackIeeeNetworking(
     return { ok: false, error: 'La calificación debe ser entre 1 y 5.' }
   }
 
+  const resolved = await resolverSubmissionIdIEEE(supabase, submissionId, telefono)
+  if (!resolved) {
+    return {
+      ok: false,
+      error:
+        'No encontramos tu registro IEEE. Cierra esta ventana y vuelve a verificar tu número desde “Ingresar”.',
+    }
+  }
+
   const trimmed = comment?.trim() ?? ''
   const { error } = await supabase.from('ieee_networking_feedback').insert({
-    submission_id: submissionId,
+    submission_id: resolved,
     rating,
     comment: trimmed.length > 0 ? trimmed.slice(0, 2000) : null,
   })

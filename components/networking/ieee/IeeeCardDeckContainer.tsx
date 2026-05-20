@@ -12,6 +12,7 @@ import { IeeeFeedbackModal } from '@/components/networking/ieee/IeeeFeedbackModa
 import { IeeeTechBackdrop } from '@/components/networking/ieee/IeeeTechBackdrop'
 
 const STORAGE_ID = 'ieee_submission_id'
+const STORAGE_TELEFONO = 'ieee_viewer_telefono'
 const STORAGE_RONDA = 'ieee_ronda_actual'
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
 export default function IeeeCardDeckContainer({ questions, ronda }: Props) {
   const router = useRouter()
   const [submissionId, setSubmissionId] = useState<string | null>(null)
+  const [telefonoDigits, setTelefonoDigits] = useState<string | null>(null)
   const [countdown, setCountdown] = useState<number | null>(null)
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null)
   const [pulse, setPulse] = useState(false)
@@ -33,11 +35,17 @@ export default function IeeeCardDeckContainer({ questions, ronda }: Props) {
       typeof window !== 'undefined'
         ? sessionStorage.getItem(STORAGE_ID) ?? localStorage.getItem(STORAGE_ID)
         : null
+    const telRaw =
+      typeof window !== 'undefined'
+        ? sessionStorage.getItem(STORAGE_TELEFONO) ?? localStorage.getItem(STORAGE_TELEFONO)
+        : null
+    const tel = telRaw ? telRaw.replace(/\D/g, '') : null
     if (!sid) {
       router.replace('/networking/ieee/verify')
       return
     }
     setSubmissionId(sid)
+    setTelefonoDigits(tel && tel.length >= 7 ? tel : null)
   }, [router])
 
   useEffect(() => {
@@ -88,8 +96,10 @@ export default function IeeeCardDeckContainer({ questions, ronda }: Props) {
   const handleFeedbackComplete = () => {
     if (typeof window !== 'undefined') {
       sessionStorage.removeItem(STORAGE_ID)
+      sessionStorage.removeItem(STORAGE_TELEFONO)
       sessionStorage.removeItem(STORAGE_RONDA)
       localStorage.removeItem(STORAGE_ID)
+      localStorage.removeItem(STORAGE_TELEFONO)
       localStorage.removeItem(STORAGE_RONDA)
     }
     setShowFeedback(false)
@@ -125,6 +135,7 @@ export default function IeeeCardDeckContainer({ questions, ronda }: Props) {
         <IeeeFeedbackModal
           isOpen={showFeedback}
           submissionId={submissionId}
+          telefonoDigits={telefonoDigits}
           onClose={() => setShowFeedback(false)}
           onComplete={handleFeedbackComplete}
         />

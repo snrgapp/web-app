@@ -7,6 +7,8 @@ import { ArrowLeft, Loader2 } from 'lucide-react'
 import { verificarIeeePorTelefono } from '@/app/actions/ieee-networking'
 
 const STORAGE_ID = 'ieee_submission_id'
+/** Mismo dígitos que en DB; permite resolver submission_id confiable tras feedback */
+const STORAGE_TELEFONO = 'ieee_viewer_telefono'
 
 const REGISTRO_IEEE_URL = 'https://ieee.snrg.lat'
 
@@ -31,6 +33,11 @@ function VerifyContent() {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(STORAGE_ID, result.submission.id)
       localStorage.setItem(STORAGE_ID, result.submission.id)
+      const telStored = String(result.submission.telefono ?? '').replace(/\D/g, '')
+      if (telStored.length >= 7) {
+        sessionStorage.setItem(STORAGE_TELEFONO, telStored)
+        localStorage.setItem(STORAGE_TELEFONO, telStored)
+      }
     }
     router.push('/networking/ieee')
   }
