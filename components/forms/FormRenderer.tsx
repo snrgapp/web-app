@@ -148,6 +148,10 @@ export function FormRenderer({
           </div>
           <h2 className="text-xl font-semibold text-white">¡Inscripción registrada!</h2>
           <p className="mt-2 text-zinc-300">{status.message}</p>
+          <p className="mt-6 text-sm leading-relaxed text-zinc-400">
+            Gracias por tomarte el tiempo de completar el formulario. Tu información ya quedó
+            registrada.
+          </p>
           {afterSuccess && (
             <div className="mt-6">
               <Button
@@ -169,6 +173,10 @@ export function FormRenderer({
         </div>
         <h2 className="text-xl font-semibold text-zinc-900">¡Inscripción registrada!</h2>
         <p className="mt-2 text-zinc-600">{status.message}</p>
+        <p className="mt-6 text-sm leading-relaxed text-zinc-500">
+          Gracias por tomarte el tiempo de completar el formulario. Tu información ya quedó
+          registrada.
+        </p>
         {afterSuccess && (
           <div className="mt-6">
             <Button asChild className="w-full rounded-xl sm:w-auto">

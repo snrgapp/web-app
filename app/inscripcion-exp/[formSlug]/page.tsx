@@ -9,8 +9,6 @@ import { Inter } from 'next/font/google'
 import { getExperienceFormBySlug } from '@/lib/experience-forms/repository'
 import { FormRenderer } from '@/components/forms'
 import { submitExperienceFormAction } from '@/app/actions/experience-forms'
-import { absoluteUrl } from '@/lib/site'
-import { createServerClient } from '@/utils/supabase/server'
 import { cn } from '@/lib/utils'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -34,23 +32,6 @@ export default async function InscripcionExperienceFormPage({ params }: PageProp
   const form = await getExperienceFormBySlug(formSlug)
   if (!form) notFound()
 
-  let afterSuccess: { href: string; label: string } | undefined
-  const supabase = await createServerClient()
-  if (supabase) {
-    const { data: te } = await supabase
-      .from('tenant_experiences')
-      .select('public_slug, status')
-      .eq('experience_form_id', form.id)
-      .eq('status', 'published')
-      .maybeSingle()
-    if (te?.public_slug) {
-      afterSuccess = {
-        href: absoluteUrl(`/exp/${te.public_slug}`),
-        label: 'Ir al networking del evento',
-      }
-    }
-  }
-
   return (
     <main
       className={cn(
@@ -69,7 +50,6 @@ export default async function InscripcionExperienceFormPage({ params }: PageProp
           iconUrl={form.icon_url}
           coverUrl={form.cover_url}
           campos={form.campos}
-          afterSuccess={afterSuccess}
           submitForm={submitExperienceFormAction}
           variant="paas"
         />
