@@ -540,6 +540,11 @@
   overflow: hidden;
 }
 
+/* Tarjeta sin fila de acciones (solo relacionamiento) */
+.ha-conn-card-solo {
+  flex-wrap: nowrap;
+}
+
 .ha-cc-accent {
   position: absolute;
   left: 0;

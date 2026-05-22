@@ -6,31 +6,16 @@ import { ArrowLeft, Loader2 } from 'lucide-react'
 import {
   getHackathonBadgePayload,
   getHackathonConexiones,
-  getHackathonMiEquipoSticky,
-  getHackathonUltimasAsignaciones,
-  obtenerMisIntencionesHackathon,
-  registrarIntencionHackathon,
   type HackathonBadgePayload,
   type HackathonConexionUsuario,
-  type HackathonMiEquipoSticky,
-  type HackathonRecienteEnEquipo,
   type HackathonRoleClass,
 } from '@/app/actions/hackathon-networking'
-
-const STORAGE_PHONE = 'hackathon_viewer_phone'
 
 const NEON_CLASS: Record<HackathonRoleClass, string> = {
   'role-blue': 'neon-blue',
   'role-green': 'neon-green',
   'role-yellow': 'neon-yellow',
   'role-purple': 'neon-purple',
-}
-
-const ROLE_BG: Record<HackathonRoleClass, string> = {
-  'role-purple': '#2a0880',
-  'role-green': '#003d20',
-  'role-yellow': '#3d3600',
-  'role-blue': '#00293d',
 }
 
 function hackathonQrSvg(seed: string): string {
@@ -71,14 +56,9 @@ function HackathonShellContent() {
   const [ronda, setRonda] = useState<1 | 2>(1)
 
   const [badge, setBadge] = useState<HackathonBadgePayload | null>(null)
-  const [equipo, setEquipo] = useState<HackathonMiEquipoSticky | null>(null)
   const [conexiones, setConexiones] = useState<HackathonConexionUsuario[]>([])
-  const [recientes, setRecientes] = useState<HackathonRecienteEnEquipo[]>([])
   const [loading, setLoading] = useState(true)
   const [connLoading, setConnLoading] = useState(false)
-  const [viewerPhone, setViewerPhone] = useState<string | null>(null)
-  const [intentions, setIntentions] = useState<Record<string, 'interested' | 'pass'>>({})
-  const [intentBusyId, setIntentBusyId] = useState<string | null>(null)
 
   useEffect(() => {
     const momento = searchParams.get('momento')
@@ -87,13 +67,6 @@ function HackathonShellContent() {
       router.replace('/networking/hackathon', { scroll: false })
     }
   }, [searchParams, router])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const p =
-      sessionStorage.getItem(STORAGE_PHONE) ?? localStorage.getItem(STORAGE_PHONE)
-    setViewerPhone(p)
-  }, [])
 
   useEffect(() => {
     const sid =
@@ -123,72 +96,28 @@ function HackathonShellContent() {
   }, [submissionId])
 
   useEffect(() => {
-    if (!submissionId) return
-    void getHackathonUltimasAsignaciones(24).then(setRecientes)
-  }, [submissionId])
-
-  useEffect(() => {
     if (!submissionId || tab !== 'conn') return
     let cancelled = false
     ;(async () => {
       setConnLoading(true)
-      const [e, c, r, intents] = await Promise.all([
-        getHackathonMiEquipoSticky(submissionId, ronda),
-        getHackathonConexiones(submissionId, ronda),
-        getHackathonUltimasAsignaciones(24),
-        viewerPhone
-          ? obtenerMisIntencionesHackathon(viewerPhone, submissionId)
-          : Promise.resolve({} as Record<string, 'interested' | 'pass'>),
-      ])
+      const c = await getHackathonConexiones(submissionId, ronda)
       if (cancelled) return
-      setEquipo(e)
       setConexiones(c)
-      setRecientes(r)
-      setIntentions(intents)
       setConnLoading(false)
     })()
     return () => {
       cancelled = true
     }
-  }, [submissionId, tab, ronda, viewerPhone])
-
-  async function enviarIntencion(toSubmissionId: string, type: 'interested' | 'pass') {
-    if (!submissionId || !viewerPhone) return
-    setIntentBusyId(toSubmissionId)
-    const res = await registrarIntencionHackathon({
-      telefono: viewerPhone,
-      fromSubmissionId: submissionId,
-      toSubmissionId,
-      type,
-    })
-    setIntentBusyId(null)
-    if (res.ok) {
-      setIntentions((prev) => ({ ...prev, [toSubmissionId]: type }))
-    }
-  }
+  }, [submissionId, tab, ronda])
 
   useEffect(() => {
-    if (!submissionId) return
+    if (!submissionId || tab !== 'conn') return
     const POLL_MS = 2500
     const id = setInterval(() => {
-      void (async () => {
-        const rec = await getHackathonUltimasAsignaciones(24)
-        setRecientes(rec)
-        if (tab !== 'conn') return
-        const [e, c, intentsMaybe] = await Promise.all([
-          getHackathonMiEquipoSticky(submissionId, ronda),
-          getHackathonConexiones(submissionId, ronda),
-          viewerPhone
-            ? obtenerMisIntencionesHackathon(viewerPhone, submissionId)
-            : Promise.resolve(null),
-        ])
-        setEquipo(e)
-        setConexiones(c)
-        if (intentsMaybe) setIntentions(intentsMaybe)
-      })()
+      void getHackathonConexiones(submissionId, ronda).then(setConexiones)
     }, POLL_MS)
     return () => clearInterval(id)
-  }, [submissionId, tab, ronda, viewerPhone])
+  }, [submissionId, tab, ronda])
 
   const roleRootClass = badge?.roleClass ?? 'role-purple'
 
@@ -232,10 +161,6 @@ function HackathonShellContent() {
     )
   }
 
-  const maxSlots = equipo?.cuposMax ?? 5
-  const miembros = equipo?.miembros ?? []
-  const vacios = Math.max(0, maxSlots - miembros.length)
-
   return (
     <div className={`hackathon-app-root ${roleRootClass} min-h-dvh bg-[#08080C] text-white`}>
       <div className="ha-noise" />
@@ -250,38 +175,9 @@ function HackathonShellContent() {
           <ArrowLeft size={22} />
         </button>
         <span className="text-xs font-bold tracking-widest text-white/35 uppercase">
-          Hackathon · Conexiones
+          Hackathon · Networking
         </span>
       </header>
-
-      <div className="ha-picks relative z-10">
-        <div className="ha-picks-label">Recién en equipo</div>
-        <div className="ha-picks-row">
-          {recientes.length === 0 ? (
-            <span className="text-[11px] text-white/30 font-medium px-1">
-              Aún no hay asignaciones publicadas.
-            </span>
-          ) : (
-            recientes.map((p, idx) => (
-              <div key={`${p.nombreCorto}-${p.equipoNumero}-${idx}`} className="ha-pick-chip">
-                <div
-                  className="ha-pick-av"
-                  style={{
-                    background: ROLE_BG[p.roleClass],
-                    color: 'var(--c)',
-                    boxShadow: `0 0 8px ${p.roleClass === 'role-purple' ? '#7b35ff' : '#00e87a'}`,
-                  }}
-                >
-                  {p.iniciales}
-                </div>
-                <span>
-                  {p.nombreCorto} · Eq. {p.equipoNumero}
-                </span>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
 
       <div className={`ha-view ${tab === 'badge' ? 'HaActive' : ''}`}>
         <div className="ha-scene" id="ha-scene">
@@ -338,7 +234,7 @@ function HackathonShellContent() {
       </div>
 
       <div className={`ha-view ${tab === 'conn' ? 'HaActive' : ''}`}>
-        <div className="ha-conn-sticky">
+        <div className="ha-conn-head px-4 pt-2 pb-3">
           <div className="ha-ronda-row">
             <button
               type="button"
@@ -355,43 +251,6 @@ function HackathonShellContent() {
               Ronda 2
             </button>
           </div>
-          <div className="ha-team-label">
-            {equipo?.grupoNumero != null ? equipo.grupoNombre.toUpperCase() : 'SIN EQUIPO ASIGNADO'}
-          </div>
-          <div className="ha-team-row">
-            <div className="flex items-end justify-center">
-              {miembros.map((m) => (
-                <div key={m.submissionId} className="ha-team-av-wrap">
-                  <div
-                    className="ha-team-av"
-                    style={{
-                      background: ROLE_BG[m.roleClass],
-                      color: 'var(--c)',
-                      borderColor: '#08080c',
-                    }}
-                  >
-                    {m.iniciales}
-                  </div>
-                  <div className="ha-team-av-name">
-                    {m.nombreCompleto.split(/\s+/)[0]}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="ha-team-slots">
-              {Array.from({ length: vacios }).map((_, i) => (
-                <div key={i} className="ha-team-slot">
-                  +
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="ha-team-meta">
-            <span className="text-white/50 font-bold">
-              {equipo?.grupoNumero != null ? `${miembros.length} / ${maxSlots}` : '—'}
-            </span>{' '}
-            miembros
-          </div>
         </div>
         <div className="ha-section-label">Conexiones sugeridas</div>
         <div className="px-4 pb-3">
@@ -403,12 +262,6 @@ function HackathonShellContent() {
             Preguntas para conversar · ronda {ronda}
           </button>
         </div>
-        {!viewerPhone && (
-          <p className="text-center text-[10px] text-white/35 px-4 pb-2 leading-snug">
-            Para usar Pasar / Guardar, verifica tu acceso otra vez con tu teléfono en esta app (así
-            guardamos tu número solo en tu dispositivo).
-          </p>
-        )}
         <div className="ha-conn-list">
           {connLoading ? (
             <p className="text-center text-sm text-white/40 py-8">Cargando…</p>
@@ -417,56 +270,25 @@ function HackathonShellContent() {
               Aún no hay conexiones para esta ronda.
             </p>
           ) : (
-            conexiones.map((c) => {
-              const chosen = intentions[c.id]
-              const busy = intentBusyId === c.id
-              const locked = Boolean(chosen) || busy || !viewerPhone
-              return (
-                <div
-                  key={c.id}
-                  className={`ha-conn-card relative ${NEON_CLASS[c.roleClass]}`}
-                >
-                  <div className="ha-cc-accent" />
-                  <div className="ha-conn-av">
-                    <span className="ha-conn-av-t">
-                      {c.nombreCompleto
-                        .split(/\s+/)
-                        .map((w) => w[0])
-                        .join('')
-                        .slice(0, 2)
-                        .toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="ha-conn-body">
-                    <div className="ha-conn-name">{c.nombreCompleto}</div>
-                    <span className="ha-conn-chip">{c.perfilLabel}</span>
-                    {c.equipoLabel && (
-                      <div className="mt-1 text-[9px] text-white/25 tracking-wide">
-                        {c.equipoLabel}
-                      </div>
-                    )}
-                  </div>
-                  <div className="ha-conn-actions">
-                    <button
-                      type="button"
-                      className="ha-intent-pass"
-                      disabled={locked}
-                      onClick={() => void enviarIntencion(c.id, 'pass')}
-                    >
-                      {busy ? '…' : chosen === 'pass' ? 'Pasaste' : 'Pasar'}
-                    </button>
-                    <button
-                      type="button"
-                      className="ha-intent-save"
-                      disabled={locked}
-                      onClick={() => void enviarIntencion(c.id, 'interested')}
-                    >
-                      {busy ? '…' : chosen === 'interested' ? 'Guardado' : 'Guardar'}
-                    </button>
-                  </div>
+            conexiones.map((c) => (
+              <div key={c.id} className={`ha-conn-card ha-conn-card-solo ${NEON_CLASS[c.roleClass]}`}>
+                <div className="ha-cc-accent" />
+                <div className="ha-conn-av">
+                  <span className="ha-conn-av-t">
+                    {c.nombreCompleto
+                      .split(/\s+/)
+                      .map((w) => w[0])
+                      .join('')
+                      .slice(0, 2)
+                      .toUpperCase()}
+                  </span>
                 </div>
-              )
-            })
+                <div className="ha-conn-body">
+                  <div className="ha-conn-name">{c.nombreCompleto}</div>
+                  <span className="ha-conn-chip">{c.perfilLabel}</span>
+                </div>
+              </div>
+            ))
           )}
         </div>
       </div>

@@ -7,7 +7,6 @@ import { ArrowLeft, Loader2 } from 'lucide-react'
 import { verificarHackathonPorTelefono } from '@/app/actions/hackathon-networking'
 
 const STORAGE_ID = 'hackathon_submission_id'
-const STORAGE_HACKATHON_PHONE = 'hackathon_viewer_phone'
 
 function VerifyContent() {
   const router = useRouter()
@@ -29,8 +28,6 @@ function VerifyContent() {
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(STORAGE_ID, result.submission.id)
       localStorage.setItem(STORAGE_ID, result.submission.id)
-      sessionStorage.setItem(STORAGE_HACKATHON_PHONE, result.submission.telefono)
-      localStorage.setItem(STORAGE_HACKATHON_PHONE, result.submission.telefono)
     }
     router.push('/networking/hackathon')
   }

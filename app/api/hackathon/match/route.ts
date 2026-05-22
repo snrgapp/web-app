@@ -1,24 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { authorizeHackathonCron } from '@/app/api/hackathon/_authorize'
-import { runHackathonTeamFormation } from '@/services/hackathon-team-formation'
+import { recomputeHackathonMatches } from '@/services/hackathon-matching'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
 
-export async function POST(req: NextRequest) {
-  const auth = authorizeHackathonCron(req)
+/** Cron / operaciones: recomputar sugerencias en `match_hackaton` (sin formación de equipos). */
+export async function POST(_req: NextRequest) {
+  const auth = authorizeHackathonCron(_req)
   if (!auth.ok) {
     return NextResponse.json({ error: auth.body }, { status: auth.status })
   }
-  let skipSms = false
-  let skipBalanceCheck = false
-  try {
-    const body = (await req.json()) as { skipSms?: boolean; skipBalanceCheck?: boolean }
-    skipSms = Boolean(body?.skipSms)
-    skipBalanceCheck = Boolean(body?.skipBalanceCheck)
-  } catch {
-    /* vacío */
-  }
-  const result = await runHackathonTeamFormation({ skipSms, skipBalanceCheck })
+  const result = await recomputeHackathonMatches()
   return NextResponse.json(result, { status: result.ok ? 200 : 500 })
 }
