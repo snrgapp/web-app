@@ -122,3 +122,31 @@ export async function getHackathonConexiones(
   }
   return out
 }
+
+export async function guardarHackathonNetworkingFeedback(
+  submissionId: string,
+  rating: number,
+  comment: string | null
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = createAdminClient()
+  if (!supabase) return { ok: false, error: 'Error de conexión' }
+
+  if (rating < 1 || rating > 5) {
+    return { ok: false, error: 'La calificación debe ser entre 1 y 5.' }
+  }
+
+  const trimmed = comment?.trim() ?? ''
+  const { error } = await supabase.from('hackaton_networking_feedback').insert({
+    submission_id: submissionId,
+    rating,
+    comment: trimmed.length > 0 ? trimmed.slice(0, 2000) : null,
+  })
+
+  if (error) {
+    if (error.code === '23505') {
+      return { ok: true }
+    }
+    return { ok: false, error: error.message }
+  }
+  return { ok: true }
+}

@@ -350,6 +350,37 @@ export interface Database {
         }
         Relationships: []
       }
+      hackaton_networking_feedback: {
+        Row: {
+          id: string
+          submission_id: string
+          rating: number
+          comment: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          rating: number
+          comment?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          rating?: number
+          comment?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'hackaton_networking_feedback_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'hackaton_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
       ieee_networking_feedback: {
         Row: {
           id: string
@@ -1442,6 +1473,7 @@ export type MatchGenius = Database['public']['Tables']['match_genius']['Row']
 export type IeeeNetworkingSubmission = Database['public']['Tables']['ieee_networking_submissions']['Row']
 export type MatchIeee = Database['public']['Tables']['match_ieee']['Row']
 export type HackatonSubmission = Database['public']['Tables']['hackaton_submissions']['Row']
+export type HackatonNetworkingFeedback = Database['public']['Tables']['hackaton_networking_feedback']['Row']
 export type MatchHackaton = Database['public']['Tables']['match_hackaton']['Row']
 export type Category = Database['public']['Tables']['categories']['Row']
 export type Question = Database['public']['Tables']['questions']['Row']

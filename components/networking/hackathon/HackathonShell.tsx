@@ -232,6 +232,18 @@ function HackathonShellContent() {
             </div>
           </div>
         </div>
+        <div className="ha-finish-banner">
+          <p className="ha-finish-hint">
+            ¿Terminaste el meet &amp; greet? Deja tu feedback y vuelve a verificar cuando quieras.
+          </p>
+          <button
+            type="button"
+            className="ha-finish-btn"
+            onClick={() => router.push('/networking/hackathon/feedback')}
+          >
+            Finalizar y dar feedback
+          </button>
+        </div>
       </div>
 
       <div className={`ha-view ${tab === 'conn' ? 'HaActive' : ''}`}>
@@ -313,6 +325,18 @@ function HackathonShellContent() {
               )
             })
           )}
+        </div>
+        <div className="ha-finish-banner">
+          <p className="ha-finish-hint">
+            ¿Terminaste el meet &amp; greet? Deja tu feedback y vuelve a verificar cuando quieras.
+          </p>
+          <button
+            type="button"
+            className="ha-finish-btn"
+            onClick={() => router.push('/networking/hackathon/feedback')}
+          >
+            Finalizar y dar feedback
+          </button>
         </div>
       </div>
 

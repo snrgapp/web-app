@@ -66,7 +66,7 @@ export default function HackathonCardDeckContainer({ questions, ronda }: Props) 
       router.push('/networking/hackathon?momento=tarde')
       return
     }
-    router.push('/networking/hackathon')
+    router.push('/networking/hackathon/feedback')
   }
 
   const handleVolver = () => {
@@ -122,7 +122,7 @@ export default function HackathonCardDeckContainer({ questions, ronda }: Props) 
           className="rounded-full border border-[#7B35FF]/40 bg-[#141418] px-5 py-2 text-xs font-bold uppercase tracking-wider text-white shadow-[4px_4px_0_rgba(123,53,255,0.45)] transition hover:border-[#7B35FF]/60"
           style={{ fontFamily: 'var(--font-geist-sans), system-ui, sans-serif' }}
         >
-          Finalizar
+          {ronda === 2 ? 'Valorar experiencia' : 'Finalizar'}
         </button>
       </header>
 

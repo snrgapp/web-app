@@ -517,6 +517,55 @@
   transform: translate(1px, 1px);
 }
 
+.ha-finish-banner {
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 16px 18px 8px;
+}
+
+.ha-finish-hint {
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.38);
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.ha-finish-btn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(123, 53, 255, 0.45);
+  background: rgba(123, 53, 255, 0.12);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 4px 4px 0 rgba(61, 15, 170, 0.35);
+}
+
+.ha-finish-btn:hover {
+  background: rgba(123, 53, 255, 0.2);
+  border-color: rgba(168, 124, 255, 0.55);
+}
+
+.ha-finish-btn:active {
+  transform: translate(1px, 1px);
+}
+
 .ha-conn-list {
   padding: 0 14px 20px;
   display: flex;
