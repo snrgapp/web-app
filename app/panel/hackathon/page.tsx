@@ -360,7 +360,6 @@ export default function PanelHackathonPage() {
                       <TableHead>Teléfono</TableHead>
                       <TableHead>Perfil</TableHead>
                       <TableHead>Badge</TableHead>
-                      <TableHead>Nivel</TableHead>
                       <TableHead>Fecha</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -371,7 +370,6 @@ export default function PanelHackathonPage() {
                         <TableCell>{s.telefono}</TableCell>
                         <TableCell>{s.perfil}</TableCell>
                         <TableCell className="font-mono text-xs">{s.badge_id}</TableCell>
-                        <TableCell>{s.nivel_experiencia}</TableCell>
                         <TableCell className="text-xs text-zinc-500">
                           {new Date(s.created_at).toLocaleString('es-CO')}
                         </TableCell>

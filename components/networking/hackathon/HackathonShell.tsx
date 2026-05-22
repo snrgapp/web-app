@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import {
   getHackathonBadgePayload,
@@ -63,8 +63,9 @@ function hackathonQrSvg(seed: string): string {
 
 const STORAGE_ID = 'hackathon_submission_id'
 
-export default function HackathonShell() {
+function HackathonShellContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const [tab, setTab] = useState<'badge' | 'conn'>('badge')
   const [ronda, setRonda] = useState<1 | 2>(1)
@@ -78,6 +79,14 @@ export default function HackathonShell() {
   const [viewerPhone, setViewerPhone] = useState<string | null>(null)
   const [intentions, setIntentions] = useState<Record<string, 'interested' | 'pass'>>({})
   const [intentBusyId, setIntentBusyId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const momento = searchParams.get('momento')
+    if (momento === 'tarde') {
+      setRonda(2)
+      router.replace('/networking/hackathon', { scroll: false })
+    }
+  }, [searchParams, router])
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -310,18 +319,8 @@ export default function HackathonShell() {
                 <div className="flex gap-3 items-start">
                   <div className="flex-1 flex flex-col gap-2">
                     <div>
-                      <div className="ha-il">Nivel</div>
-                      <div className="ha-iv capitalize">{badge.nivelExperiencia}</div>
-                    </div>
-                    <div>
                       <div className="ha-il">Badge ID</div>
                       <div className="ha-iv">{badge.badgeId}</div>
-                    </div>
-                    <div>
-                      <div className="ha-il">Lenguajes</div>
-                      <div className="ha-iv text-[7px] leading-snug">
-                        {badge.lenguajes.join(', ')}
-                      </div>
                     </div>
                   </div>
                   <div className="flex flex-col items-center gap-1 shrink-0">
@@ -395,6 +394,15 @@ export default function HackathonShell() {
           </div>
         </div>
         <div className="ha-section-label">Conexiones sugeridas</div>
+        <div className="px-4 pb-3">
+          <button
+            type="button"
+            onClick={() => router.push(`/networking/hackathon/questions?ronda=${ronda}`)}
+            className="ha-hk-prompt-cta"
+          >
+            Preguntas para conversar · ronda {ronda}
+          </button>
+        </div>
         {!viewerPhone && (
           <p className="text-center text-[10px] text-white/35 px-4 pb-2 leading-snug">
             Para usar Pasar / Guardar, verifica tu acceso otra vez con tu teléfono en esta app (así
@@ -505,5 +513,19 @@ export default function HackathonShell() {
         </button>
       </nav>
     </div>
+  )
+}
+
+export default function HackathonShell() {
+  return (
+    <Suspense
+      fallback={
+        <div className="hackathon-app-root role-purple flex min-h-dvh items-center justify-center bg-[#08080C]">
+          <Loader2 className="h-9 w-9 animate-spin text-[#A87CFF]" />
+        </div>
+      }
+    >
+      <HackathonShellContent />
+    </Suspense>
   )
 }

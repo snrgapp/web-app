@@ -42,9 +42,6 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
 .opt-rad{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.25);flex-shrink:0;}
 .opt.sel .opt-rad{border-color:var(--c);background:var(--c);}
 .opt-txt{font-size:14px;font-weight:700;color:#fff;flex:1;}
-.lang-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.lang-chip{padding:8px 14px;border-radius:999px;border:1px solid rgba(123,53,255,.28);background:#0c0c12;font-size:12px;font-weight:700;color:var(--c-text);cursor:pointer;transition:.18s;}
-.lang-chip.sel{border-color:var(--c);background:#10101a;box-shadow:0 0 14px var(--c-glow);color:#C9A8FF;}
 .nav{margin-top:18px;}
 .btn{width:100%;padding:14px 18px;border-radius:14px;border:none;font-family:inherit;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.2s;}
 .btn:disabled{opacity:.35;cursor:not-allowed;}
@@ -69,9 +66,7 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
   <div class="progress" id="prog">
     <div class="pb active" id="p0">1</div><div class="pl" id="l0"></div>
     <div class="pb" id="p1">2</div><div class="pl" id="l1"></div>
-    <div class="pb" id="p2">3</div><div class="pl" id="l2"></div>
-    <div class="pb" id="p3">4</div><div class="pl" id="l3"></div>
-    <div class="pb" id="p4">5</div>
+    <div class="pb" id="p2">3</div>
   </div>
 
   <div id="errBox" class="err"></div>
@@ -106,42 +101,11 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
   <div class="step" id="s2">
     <div class="card">
       <div class="step-cat">Paso 3</div>
-      <div class="step-q">Lenguajes que manejas</div>
-      <p class="hint" style="margin-bottom:12px">Elige uno o más.</p>
-      <div class="lang-grid" id="langs"></div>
+      <div class="step-q">Confirmar y enviar</div>
+      <p class="hint">Revisa que tus datos sean correctos.</p>
+      <label class="ck"><input type="checkbox" id="ck" onchange="u2()"> Acepto el tratamiento de mis datos para participar en el hackathon.</label>
     </div>
-    <div class="nav"><button type="button" class="btn btn-next" id="b2" disabled onclick="next(2)">Siguiente</button></div>
-  </div>
-
-  <div class="step" id="s3">
-    <div class="card">
-      <div class="step-cat">Paso 4</div>
-      <div class="step-q">¿Cuál es tu nivel de experiencia?</div>
-      <div class="opts">
-        <div class="opt" data-v="principiante" onclick="pick3(this,'principiante')"><div class="opt-rad"></div><span class="opt-txt">Principiante</span></div>
-        <div class="opt" data-v="intermedio" onclick="pick3(this,'intermedio')"><div class="opt-rad"></div><span class="opt-txt">Intermedio</span></div>
-        <div class="opt" data-v="avanzado" onclick="pick3(this,'avanzado')"><div class="opt-rad"></div><span class="opt-txt">Avanzado</span></div>
-      </div>
-    </div>
-    <div class="nav"><button type="button" class="btn btn-next" id="b3" disabled onclick="next(3)">Siguiente</button></div>
-  </div>
-
-  <div class="step" id="s4">
-    <div class="card">
-      <div class="step-cat">Paso 5</div>
-      <div class="step-q">Preferencias de equipo</div>
-      <div class="step-q" style="font-size:1rem;margin-top:0">¿Cómo te ves en el equipo?</div>
-      <div class="opts">
-        <div class="opt sel" data-tr="flexible" onclick="pickTeamRole(this,'flexible')"><div class="opt-rad"></div><span class="opt-txt">Flexible — donde me necesiten</span></div>
-        <div class="opt" data-tr="colaborador" onclick="pickTeamRole(this,'colaborador')"><div class="opt-rad"></div><span class="opt-txt">Colaborador/a</span></div>
-        <div class="opt" data-tr="lider" onclick="pickTeamRole(this,'lider')"><div class="opt-rad"></div><span class="opt-txt">Líder de equipo</span></div>
-      </div>
-      <p class="hint" style="margin-top:12px">Si eliges líder, ayudamos a formar equipos equilibrados.</p>
-      <div class="step-q" style="font-size:1rem;margin-top:14px">Confirmación</div>
-      <p class="hint">Revisa que tus datos sean correctos. Al enviar aceptas que usemos esta información para la dinámica del hackathon.</p>
-      <label class="ck"><input type="checkbox" id="ck" onchange="u4()"> Acepto el tratamiento de mis datos para participar en el evento.</label>
-    </div>
-    <div class="nav"><button type="button" class="btn btn-next" id="b4" disabled onclick="submitForm()">Enviar inscripción</button></div>
+    <div class="nav"><button type="button" class="btn btn-next" id="b2" disabled onclick="submitForm()">Enviar inscripción</button></div>
   </div>
 
   <div class="step" id="s5">
@@ -155,13 +119,13 @@ html,body{min-height:100dvh;background:var(--bg);font-family:'Inter',sans-serif;
 </div>
 
 <script>
-const LANGS=['Python','JavaScript','C++','TypeScript','Java','Go','Rust','SQL'];
-let perfil='', nivel='', teamRole='flexible', selectedLangs=new Set();
+let perfil='';
 
-function pickTeamRole(el,v){
-  document.querySelectorAll('#s4 .opt').forEach(function(o){o.classList.remove('sel');});
+function pick1(el,v){
+  document.querySelectorAll('#s1 .opt').forEach(function(o){o.classList.remove('sel');});
   el.classList.add('sel');
-  teamRole=v;
+  perfil=v;
+  document.getElementById('b1').disabled=false;
 }
 
 function showErr(m){
@@ -175,30 +139,14 @@ function hideErr(){
   e.textContent='';
 }
 
-(function initLangs(){
-  var g=document.getElementById('langs');
-  LANGS.forEach(function(name){
-    var b=document.createElement('button');
-    b.type='button';
-    b.className='lang-chip';
-    b.textContent=name;
-    b.onclick=function(){
-      if(selectedLangs.has(name))selectedLangs.delete(name);else selectedLangs.add(name);
-      b.className='lang-chip'+(selectedLangs.has(name)?' sel':'');
-      document.getElementById('b2').disabled=selectedLangs.size<1;
-    };
-    g.appendChild(b);
-  });
-})();
-
 function prog(n){
-  for(var i=0;i<5;i++){
+  for(var i=0;i<3;i++){
     var p=document.getElementById('p'+i);
     p.className='pb';
     if(i<n){p.classList.add('done');p.textContent='✓';}
     else if(i===n){p.classList.add('active');p.textContent=i+1;}
     else p.textContent=i+1;
-    if(i<4){
+    if(i<2){
       var l=document.getElementById('l'+i);
       l.className='pl'+(i<n?' done':'');
     }
@@ -211,22 +159,8 @@ function u0(){
   document.getElementById('b0').disabled=!(n.length>=2&&d.length>=7&&d.length<=15);
 }
 
-function pick1(el,v){
-  document.querySelectorAll('#s1 .opt').forEach(function(o){o.classList.remove('sel');});
-  el.classList.add('sel');
-  perfil=v;
-  document.getElementById('b1').disabled=false;
-}
-
-function pick3(el,v){
-  document.querySelectorAll('#s3 .opt').forEach(function(o){o.classList.remove('sel');});
-  el.classList.add('sel');
-  nivel=v;
-  document.getElementById('b3').disabled=false;
-}
-
-function u4(){
-  document.getElementById('b4').disabled=!document.getElementById('ck').checked;
+function u2(){
+  document.getElementById('b2').disabled=!document.getElementById('ck').checked;
 }
 
 function next(i){
@@ -238,18 +172,16 @@ function next(i){
 
 async function submitForm(){
   hideErr();
-  var btn=document.getElementById('b4');
+  var btn=document.getElementById('b2');
   btn.disabled=true;
   var nombre=document.getElementById('nm').value.trim();
   var telefono=document.getElementById('tl').value.replace(/\D/g,'');
-  var body={
-    nombre_completo:nombre,
-    telefono:telefono,
-    perfil:perfil,
-    lenguajes:Array.from(selectedLangs),
-    nivel_experiencia:nivel,
-    team_role:teamRole
-  };
+  if(!perfil){
+    showErr('Selecciona tu perfil en el paso anterior.');
+    btn.disabled=false;
+    return;
+  }
+  var body={nombre_completo:nombre,telefono:telefono,perfil:perfil};
   try{
     var res=await fetch('/api/hackaton/submit',{
       method:'POST',
@@ -262,14 +194,16 @@ async function submitForm(){
       btn.disabled=false;
       return;
     }
-    document.getElementById('s4').classList.remove('visible');
+    document.getElementById('s2').classList.remove('visible');
     document.getElementById('s5').classList.add('visible');
-    prog(5);
+    prog(3);
   }catch(err){
     showErr('Error de red. Revisa tu conexión.');
     btn.disabled=false;
   }
 }
+
+prog(0);
 </script>
 </body>
 </html>

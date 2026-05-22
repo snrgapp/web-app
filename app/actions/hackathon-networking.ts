@@ -50,8 +50,6 @@ export type HackathonBadgePayload = {
   badgeId: string
   iniciales: string
   roleClass: HackathonRoleClass
-  lenguajes: string[]
-  nivelExperiencia: string
 }
 
 export async function getHackathonBadgePayload(
@@ -74,8 +72,6 @@ export async function getHackathonBadgePayload(
     badgeId: row.badge_id,
     iniciales: inicialesDesdeNombre(row.nombre_completo),
     roleClass: perfilToRoleClass(row.perfil),
-    lenguajes: row.lenguajes ?? [],
-    nivelExperiencia: row.nivel_experiencia,
   }
 }
 

@@ -29,9 +29,6 @@ export type HackathonParticipantRow = {
   nombre_completo: string
   telefono: string
   perfil: string
-  nivel_experiencia: string
-  challenge_id: string | null
-  team_role: 'lider' | 'colaborador' | 'flexible'
 }
 
 class UnionFind {
@@ -98,17 +95,12 @@ function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
-/** Divide un grupo grande en equipos de 3–5 priorizando mismo challenge_id. */
+/** Divide un grupo grande en equipos de 3–5 (orden estable por id). */
 function splitLargeCluster(
   ids: string[],
-  byId: Map<string, HackathonParticipantRow>
+  _byId: Map<string, HackathonParticipantRow>
 ): string[][] {
-  const sorted = [...ids].sort((a, b) => {
-    const ca = byId.get(a)?.challenge_id ?? ''
-    const cb = byId.get(b)?.challenge_id ?? ''
-    if (ca !== cb) return ca.localeCompare(cb)
-    return a.localeCompare(b)
-  })
+  const sorted = [...ids].sort((a, b) => a.localeCompare(b))
   const teams: string[][] = []
   let i = 0
   while (i < sorted.length) {
@@ -131,29 +123,13 @@ function splitLargeCluster(
   return teams
 }
 
-function teamChallengeId(members: string[], byId: Map<string, HackathonParticipantRow>): string | null {
-  const leader = members.map((id) => byId.get(id)).find((p) => p?.team_role === 'lider')
-  if (leader?.challenge_id) return leader.challenge_id
-  const counts = new Map<string, number>()
-  for (const id of members) {
-    const c = byId.get(id)?.challenge_id
-    if (!c) continue
-    counts.set(c, (counts.get(c) ?? 0) + 1)
-  }
-  let best: string | null = null
-  let mx = 0
-  for (const [k, v] of counts) {
-    if (v > mx) {
-      mx = v
-      best = k
-    }
-  }
-  return best
+function teamChallengeId(_members: string[], _byId: Map<string, HackathonParticipantRow>): string | null {
+  return null
 }
 
-function teamLeaderId(members: string[], byId: Map<string, HackathonParticipantRow>): string | null {
-  const lider = members.find((id) => byId.get(id)?.team_role === 'lider')
-  return lider ?? members[0] ?? null
+function teamLeaderId(members: string[], _byId: Map<string, HackathonParticipantRow>): string | null {
+  if (members.length === 0) return null
+  return [...members].sort((a, b) => a.localeCompare(b))[0] ?? null
 }
 
 /** Heurística de afinidad para meter un candidato en un equipo con huecos. */
@@ -165,14 +141,9 @@ function affinityScore(
   const p = byId.get(candidateId)
   if (!p) return 0
   let score = 0
-  const chall = teamChallengeId(team, byId)
-  if (chall && p.challenge_id === chall) score += 10
   const needProfiles = new Set(['frontend', 'backend', 'full_stack', 'data_analyst'])
   for (const id of team) needProfiles.delete(byId.get(id)?.perfil ?? '')
-  if (needProfiles.has(p.perfil)) score += 4
-  const niveles = team.map((id) => byId.get(id)?.nivel_experiencia ?? '')
-  const sameLvl = niveles.filter((n) => n === p.nivel_experiencia).length
-  score += Math.max(0, 3 - sameLvl)
+  if (needProfiles.has(p.perfil)) score += 6
   return score
 }
 
@@ -253,7 +224,7 @@ export async function runHackathonTeamFormation(options?: {
 
   const { data: subsRaw, error: eSub } = await supabase
     .from('hackaton_submissions')
-    .select('id, nombre_completo, telefono, perfil, nivel_experiencia, challenge_id, team_role')
+    .select('id, nombre_completo, telefono, perfil')
     .order('created_at', { ascending: true })
 
   if (eSub || !subsRaw?.length) {

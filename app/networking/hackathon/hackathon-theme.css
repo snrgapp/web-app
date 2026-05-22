@@ -484,6 +484,39 @@
   text-transform: uppercase;
 }
 
+.ha-hk-prompt-cta {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 13px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(123, 53, 255, 0.45);
+  background: linear-gradient(135deg, #16161c, #0f0f13);
+  color: var(--c-text);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+  box-shadow:
+    0 0 0 1px rgba(123, 53, 255, 0.12),
+    4px 4px 0 rgba(61, 15, 170, 0.45);
+}
+.ha-hk-prompt-cta:hover {
+  box-shadow:
+    0 0 20px rgba(123, 53, 255, 0.25),
+    4px 4px 0 rgba(61, 15, 170, 0.55);
+}
+.ha-hk-prompt-cta:active {
+  transform: translate(1px, 1px);
+}
+
 .ha-conn-list {
   padding: 0 14px 20px;
   display: flex;

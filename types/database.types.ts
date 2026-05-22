@@ -393,11 +393,7 @@ export interface Database {
           nombre_completo: string
           telefono: string
           perfil: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
-          lenguajes: string[]
-          nivel_experiencia: 'principiante' | 'intermedio' | 'avanzado'
           badge_id: string
-          challenge_id: string | null
-          team_role: 'lider' | 'colaborador' | 'flexible'
           created_at: string
         }
         Insert: {
@@ -405,11 +401,7 @@ export interface Database {
           nombre_completo: string
           telefono: string
           perfil: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
-          lenguajes: string[]
-          nivel_experiencia: 'principiante' | 'intermedio' | 'avanzado'
           badge_id?: string
-          challenge_id?: string | null
-          team_role?: 'lider' | 'colaborador' | 'flexible'
           created_at?: string
         }
         Update: {
@@ -417,21 +409,10 @@ export interface Database {
           nombre_completo?: string
           telefono?: string
           perfil?: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
-          lenguajes?: string[]
-          nivel_experiencia?: 'principiante' | 'intermedio' | 'avanzado'
           badge_id?: string
-          challenge_id?: string | null
-          team_role?: 'lider' | 'colaborador' | 'flexible'
           created_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: 'hackaton_submissions_challenge_id_fkey'
-            columns: ['challenge_id']
-            referencedRelation: 'hackaton_challenges'
-            referencedColumns: ['id']
-          },
-        ]
+        Relationships: []
       }
       hackaton_equipos: {
         Row: {
