@@ -598,6 +598,67 @@
   border-radius: 20px;
 }
 
+.ha-conn-wa {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  background: rgba(37, 211, 102, 0.08);
+  text-decoration: none;
+  color: #c8f8d4;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.ha-conn-wa:hover {
+  background: rgba(37, 211, 102, 0.14);
+  border-color: rgba(37, 211, 102, 0.5);
+}
+.ha-conn-wa-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #25d366;
+}
+.ha-conn-wa-tel {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #fff;
+  flex: 1;
+  min-width: 0;
+}
+.ha-conn-wa-hint {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #25d366;
+}
+
+.ha-conn-tel-fallback {
+  margin-top: 8px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+.ha-conn-tel-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.ha-conn-tel-num {
+  font-family: ui-monospace, monospace;
+  color: rgba(255, 255, 255, 0.62);
+}
+
 .ha-conn-actions {
   flex-basis: 100%;
   width: 100%;

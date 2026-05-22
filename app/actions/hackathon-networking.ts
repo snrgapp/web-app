@@ -74,6 +74,7 @@ export async function getHackathonBadgePayload(
 export type HackathonConexionUsuario = {
   id: string
   nombreCompleto: string
+  telefono: string
   perfil: string
   perfilLabel: string
   roleClass: HackathonRoleClass
@@ -99,7 +100,7 @@ export async function getHackathonConexiones(
 
   const { data: people } = await supabase
     .from('hackaton_submissions')
-    .select('id, nombre_completo, perfil')
+    .select('id, nombre_completo, perfil, telefono')
     .in('id', ids)
 
   const peopleMap = new Map((people ?? []).map((p) => [p.id, p]))
@@ -112,6 +113,7 @@ export async function getHackathonConexiones(
     out.push({
       id: p.id,
       nombreCompleto: p.nombre_completo,
+      telefono: (p.telefono as string) ?? '',
       perfil,
       perfilLabel: perfilHackathonLabel(perfil),
       roleClass: perfilToRoleClass(perfil),

@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, Loader2, MessageCircle } from 'lucide-react'
 import {
   getHackathonBadgePayload,
   getHackathonConexiones,
@@ -10,6 +10,7 @@ import {
   type HackathonConexionUsuario,
   type HackathonRoleClass,
 } from '@/app/actions/hackathon-networking'
+import { hackathonWhatsappMeetGreetHref } from '@/lib/hackathon-whatsapp'
 
 const NEON_CLASS: Record<HackathonRoleClass, string> = {
   'role-blue': 'neon-blue',
@@ -270,25 +271,47 @@ function HackathonShellContent() {
               Aún no hay conexiones para esta ronda.
             </p>
           ) : (
-            conexiones.map((c) => (
-              <div key={c.id} className={`ha-conn-card ha-conn-card-solo ${NEON_CLASS[c.roleClass]}`}>
-                <div className="ha-cc-accent" />
-                <div className="ha-conn-av">
-                  <span className="ha-conn-av-t">
-                    {c.nombreCompleto
-                      .split(/\s+/)
-                      .map((w) => w[0])
-                      .join('')
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </span>
+            conexiones.map((c) => {
+              const waHref = hackathonWhatsappMeetGreetHref(c.telefono)
+              const telDisplay = c.telefono?.replace(/\D/g, '') || c.telefono || '—'
+              return (
+                <div key={c.id} className={`ha-conn-card ha-conn-card-solo ${NEON_CLASS[c.roleClass]}`}>
+                  <div className="ha-cc-accent" />
+                  <div className="ha-conn-av">
+                    <span className="ha-conn-av-t">
+                      {c.nombreCompleto
+                        .split(/\s+/)
+                        .map((w) => w[0])
+                        .join('')
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="ha-conn-body">
+                    <div className="ha-conn-name">{c.nombreCompleto}</div>
+                    <span className="ha-conn-chip">{c.perfilLabel}</span>
+                    {waHref ? (
+                      <a
+                        href={waHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="ha-conn-wa"
+                        aria-label={`Abrir WhatsApp con mensaje de meet and greet: ${c.nombreCompleto}`}
+                      >
+                        <MessageCircle className="ha-conn-wa-icon" aria-hidden />
+                        <span className="ha-conn-wa-tel">{telDisplay}</span>
+                        <span className="ha-conn-wa-hint">WhatsApp</span>
+                      </a>
+                    ) : (
+                      <div className="ha-conn-tel-fallback">
+                        <span className="ha-conn-tel-label">Tel.</span>
+                        <span className="ha-conn-tel-num">{telDisplay}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="ha-conn-body">
-                  <div className="ha-conn-name">{c.nombreCompleto}</div>
-                  <span className="ha-conn-chip">{c.perfilLabel}</span>
-                </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       </div>
