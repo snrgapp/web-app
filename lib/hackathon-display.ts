@@ -1,23 +1,33 @@
-import type { HackatonSubmission } from '@/types/database.types'
-
-export type HackathonRoleClass = 'role-purple' | 'role-green' | 'role-yellow' | 'role-blue'
-
-export const PERFIL_LABEL: Record<HackatonSubmission['perfil'], string> = {
+const LEGACY_PERFIL_UPPER: Record<string, string> = {
   frontend: 'FRONT-END DEV',
   backend: 'BACK-END DEV',
   full_stack: 'FULL STACK DEV',
   data_analyst: 'DATA ANALYST',
 }
 
-export function perfilToRoleClass(perfil: HackatonSubmission['perfil']): HackathonRoleClass {
-  switch (perfil) {
+export type HackathonRoleClass = 'role-purple' | 'role-green' | 'role-yellow' | 'role-blue'
+
+/** Etiqueta en badge / cards: valores históricos mapeados; el resto se muestra en mayúsculas. */
+export function perfilHackathonLabel(perfil: string): string {
+  const trimmed = perfil.trim()
+  if (!trimmed) return '—'
+  const key = trimmed.toLowerCase().replace(/\s+/g, '_').replace(/-/g, '_')
+  const legacy = LEGACY_PERFIL_UPPER[key]
+  return legacy ?? trimmed.toUpperCase()
+}
+
+export function perfilToRoleClass(perfil: string): HackathonRoleClass {
+  const key = perfil.trim().toLowerCase().replace(/\s+/g, '_').replace(/-/g, '_')
+  switch (key) {
     case 'frontend':
       return 'role-blue'
     case 'backend':
       return 'role-green'
     case 'full_stack':
+    case 'fullstack':
       return 'role-purple'
     case 'data_analyst':
+    case 'dataanalyst':
       return 'role-yellow'
     default:
       return 'role-purple'

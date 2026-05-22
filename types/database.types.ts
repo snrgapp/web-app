@@ -328,7 +328,7 @@ export interface Database {
           id: string
           nombre_completo: string
           telefono: string
-          perfil: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
+          perfil: string
           badge_id: string
           created_at: string
         }
@@ -336,7 +336,7 @@ export interface Database {
           id?: string
           nombre_completo: string
           telefono: string
-          perfil: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
+          perfil: string
           badge_id?: string
           created_at?: string
         }
@@ -344,7 +344,7 @@ export interface Database {
           id?: string
           nombre_completo?: string
           telefono?: string
-          perfil?: 'frontend' | 'backend' | 'full_stack' | 'data_analyst'
+          perfil?: string
           badge_id?: string
           created_at?: string
         }

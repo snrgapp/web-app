@@ -3,8 +3,8 @@
 import { createAdminClient } from '@/utils/supabase/admin'
 import type { HackatonSubmission } from '@/types/database.types'
 import {
-  PERFIL_LABEL,
   inicialesDesdeNombre,
+  perfilHackathonLabel,
   perfilToRoleClass,
   type HackathonRoleClass,
 } from '@/lib/hackathon-display'
@@ -41,7 +41,7 @@ export async function verificarHackathonPorTelefono(
 export type HackathonBadgePayload = {
   nombreCompleto: string
   nombreDisplay: string
-  perfil: HackatonSubmission['perfil']
+  perfil: string
   perfilLabel: string
   badgeId: string
   iniciales: string
@@ -64,7 +64,7 @@ export async function getHackathonBadgePayload(
     nombreCompleto: row.nombre_completo,
     nombreDisplay: row.nombre_completo.toUpperCase(),
     perfil: row.perfil,
-    perfilLabel: PERFIL_LABEL[row.perfil],
+    perfilLabel: perfilHackathonLabel(row.perfil),
     badgeId: row.badge_id,
     iniciales: inicialesDesdeNombre(row.nombre_completo),
     roleClass: perfilToRoleClass(row.perfil),
@@ -74,7 +74,7 @@ export async function getHackathonBadgePayload(
 export type HackathonConexionUsuario = {
   id: string
   nombreCompleto: string
-  perfil: HackatonSubmission['perfil']
+  perfil: string
   perfilLabel: string
   roleClass: HackathonRoleClass
   matchedAt: string
@@ -108,12 +108,12 @@ export async function getHackathonConexiones(
   for (const m of matches ?? []) {
     const p = peopleMap.get(m.matched_submission_id)
     if (!p) continue
-    const perfil = p.perfil as HackatonSubmission['perfil']
+    const perfil = p.perfil
     out.push({
       id: p.id,
       nombreCompleto: p.nombre_completo,
       perfil,
-      perfilLabel: PERFIL_LABEL[perfil],
+      perfilLabel: perfilHackathonLabel(perfil),
       roleClass: perfilToRoleClass(perfil),
       matchedAt: m.created_at,
     })

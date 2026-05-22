@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Loader2, RefreshCw, Shuffle } from 'lucide-react'
+import { Loader2, RefreshCw, UsersRound } from 'lucide-react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -90,22 +90,45 @@ export default function PanelHackathonPage() {
               disabled={loading}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-              Actualizar
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              size="sm"
-              className="gap-2"
-              onClick={() => void handleRecomputarMatching()}
-              disabled={matchBusy || loading}
-              title="Regenera sugerencias en match_hackaton (app Conexiones)"
-            >
-              {matchBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Shuffle className="h-4 w-4" />}
-              Recomputar conexiones
+              Actualizar lista
             </Button>
           </div>
         </div>
+
+        <Card className="border-violet-200 bg-gradient-to-br from-violet-50/90 to-white">
+          <CardHeader className="pb-2">
+            <h2 className="text-base font-semibold text-zinc-900">Crear matches (conexiones sugeridas)</h2>
+            <p className="text-sm text-zinc-600 leading-relaxed">
+              Genera o actualiza las filas en{' '}
+              <code className="rounded bg-violet-100/80 px-1.5 py-0.5 text-xs">match_hackaton</code> para
+              ronda 1 y 2 según los inscritos actuales. Las personas ven las parejas sugeridas en la app de
+              networking del hackathon.
+            </p>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <Button
+              type="button"
+              variant="default"
+              size="default"
+              className="gap-2 bg-violet-600 hover:bg-violet-700"
+              disabled={matchBusy || loading}
+              title="Ejecutar algoritmo de matching sobre todos los inscritos"
+              onClick={() => void handleRecomputarMatching()}
+            >
+              {matchBusy ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Generando matches…
+                </>
+              ) : (
+                <>
+                  <UsersRound className="h-4 w-4" />
+                  Crear matches
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
 
         {matchLog && (
           <pre className="whitespace-pre-wrap rounded-lg border border-zinc-200 bg-white px-4 py-3 font-mono text-xs text-zinc-700">

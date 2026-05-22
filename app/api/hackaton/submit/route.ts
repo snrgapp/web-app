@@ -3,7 +3,9 @@ import { createAdminClient } from '@/utils/supabase/admin'
 import { recomputeHackathonMatches } from '@/services/hackathon-matching'
 import { hackathonOnRegistro } from '@/lib/hackathon-eventos'
 
-const PERFIL = new Set(['frontend', 'backend', 'full_stack', 'data_analyst'])
+function perfilValido(perfilTrimmed: string): boolean {
+  return perfilTrimmed.length >= 1 && perfilTrimmed.length <= 200
+}
 
 function str(v: unknown): string | null {
   if (typeof v !== 'string') return null
@@ -23,7 +25,8 @@ export async function POST(req: NextRequest) {
     const nombreCompleto = str(body.nombre_completo)
     const telefonoRaw = typeof body.telefono === 'string' ? body.telefono : ''
     const telefono = normalizeTelefono(telefonoRaw)
-    const perfil = str(body.perfil)
+    const perfilRaw = str(body.perfil)
+    const perfil = perfilRaw ? perfilRaw.trim().replace(/\s+/g, ' ') : ''
 
     if (!nombreCompleto || nombreCompleto.length < 2 || nombreCompleto.length > 200) {
       return NextResponse.json(
@@ -37,8 +40,11 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       )
     }
-    if (!perfil || !PERFIL.has(perfil)) {
-      return NextResponse.json({ error: 'Selecciona un perfil válido.' }, { status: 400 })
+    if (!perfilValido(perfil)) {
+      return NextResponse.json(
+        { error: 'Indica tu perfil o rol en 1–200 caracteres.' },
+        { status: 400 }
+      )
     }
 
     const supabase = createAdminClient()
@@ -54,7 +60,7 @@ export async function POST(req: NextRequest) {
       .insert({
         nombre_completo: nombreCompleto,
         telefono,
-        perfil: perfil as 'frontend' | 'backend' | 'full_stack' | 'data_analyst',
+        perfil,
       })
       .select('id, badge_id')
       .single()
