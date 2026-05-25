@@ -3,12 +3,17 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
+import { SNRG_SHOW_PUBLIC_EVENTOS_NAV } from '@/lib/snrg-public-flags'
 
-const eventosLinks = [
+const eventosLinksRaw = [
   { href: '/eventos', label: 'Calendario de eventos' },
   { href: '/postula-tu-ciudad', label: 'Postula a tu ciudad' },
   { href: '/ia', label: 'IA para conectar' },
 ]
+
+const eventosLinks = SNRG_SHOW_PUBLIC_EVENTOS_NAV
+  ? eventosLinksRaw
+  : eventosLinksRaw.filter((link) => link.href !== '/eventos')
 
 const contactoLinks = [
   { href: '/contacto', label: 'Dudas y preguntas' },
