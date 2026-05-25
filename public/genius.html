@@ -71,11 +71,13 @@ body{font-family:'Inter',system-ui,sans-serif;font-weight:300;}
 .ta{width:100%;min-height:110px;padding:12px;border-radius:14px;border:1px solid var(--border);background:#141414;color:rgba(255,255,255,.95);font-family:inherit;font-weight:300;font-size:.95rem;resize:vertical;}
 .ta:focus{outline:none;border-color:rgba(255,255,255,.35);}
 .ta-counter{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:rgba(255,255,255,.45);text-align:right;margin-top:6px;text-transform:uppercase;}
-.nav{margin-top:18px;}
+.nav{margin-top:18px;display:flex;flex-direction:column;gap:10px;}
 .btn{width:100%;padding:14px 18px;border-radius:14px;border:2px solid #161616;background:#fff;color:#161616;font-family:'Inter',sans-serif;font-size:.8125rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:6px 6px 0 var(--gf-shadow);transition:transform .15s,filter .15s;}
 .btn:disabled{opacity:.38;cursor:not-allowed;}
 .btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--gf-shadow);}
 a.btn{text-decoration:none;display:flex;align-items:center;justify-content:center;box-sizing:border-box;}
+.btn-back{width:100%;padding:11px 18px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:transparent;color:rgba(255,255,255,.55);font-family:'Inter',sans-serif;font-size:.75rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:color .15s,border-color .15s;}
+.btn-back:hover{color:rgba(255,255,255,.85);border-color:rgba(255,255,255,.35);}
 .ck{display:flex;align-items:flex-start;gap:10px;margin-top:12px;font-size:.78rem;color:rgba(255,255,255,.62);line-height:1.45;font-weight:300;}
 .ck input{margin-top:3px;accent-color:var(--lime);}
 .done{display:none;}
@@ -177,7 +179,10 @@ a.btn{text-decoration:none;display:flex;align-items:center;justify-content:cente
       <p class="gf-q-sub">Abre cada tarjeta para conocer el arquetipo y elige el que mejor te describe.</p>
       <div id="arc-list" class="gf-arc-list"></div>
     </div>
-    <div class="nav"><button type="button" class="btn" id="next-1" disabled onclick="goNext(1)">Continuar →</button></div>
+    <div class="nav">
+      <button type="button" class="btn" id="next-1" disabled onclick="goNext(1)">Continuar →</button>
+      <button type="button" class="btn-back" onclick="goBack(1)">← Atrás</button>
+    </div>
   </div>
   <div class="step" id="step-2">
     <div class="card">
@@ -196,7 +201,10 @@ a.btn{text-decoration:none;display:flex;align-items:center;justify-content:cente
         <div class="opt" onclick="sel(2,this,'Curiosidad / me invitaron')"><span class="opt-ico">👀</span><span class="opt-txt">Curiosidad / me invitaron</span><div class="opt-radio"></div></div>
       </div>
     </div>
-    <div class="nav"><button type="button" class="btn" id="next-2" disabled onclick="goNext(2)">Siguiente →</button></div>
+    <div class="nav">
+      <button type="button" class="btn" id="next-2" disabled onclick="goNext(2)">Siguiente →</button>
+      <button type="button" class="btn-back" onclick="goBack(2)">← Atrás</button>
+    </div>
   </div>
   <div class="step" id="step-3">
     <div class="card">
@@ -211,7 +219,10 @@ a.btn{text-decoration:none;display:flex;align-items:center;justify-content:cente
       <div class="ta-counter"><span id="cc">0</span> / 200</div>
       <label class="ck"><input id="gf-consent" type="checkbox" onchange="onText()"> Acepto el tratamiento de mis datos para participar en la dinámica del evento.</label>
     </div>
-    <div class="nav"><button type="button" class="btn" id="next-3" disabled onclick="submit()">Enviar →</button></div>
+    <div class="nav">
+      <button type="button" class="btn" id="next-3" disabled onclick="submit()">Enviar →</button>
+      <button type="button" class="btn-back" onclick="goBack(3)">← Atrás</button>
+    </div>
   </div>
   <div class="done" id="done">
     <div class="card done-card">
@@ -387,6 +398,11 @@ function prog(cur){
     else b.textContent=i+1;
     if(i<3)document.getElementById('l'+i).className='pl'+(i<cur?' done':'');
   }
+}
+function goBack(s){
+  document.getElementById('step-'+s).classList.remove('visible');
+  document.getElementById('step-'+(s-1)).classList.add('visible');
+  prog(s-1);window.scrollTo(0,0);
 }
 function goNext(s){
   document.getElementById('step-'+s).classList.remove('visible');
