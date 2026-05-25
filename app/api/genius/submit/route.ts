@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
 import { recomputeGeniusMatches } from '@/services/genius-matching'
+import { GENIUS_ARQUETIPO_IDENTIDADES } from '@/lib/genius-fest-arquetipo-identidades'
 
-const IDENTIDAD = new Set([
-  'Estudiante',
-  'Emprendedor/a',
-  'Empleado en empresa',
-  'Freelance / Independiente',
-  'Dueño/a de negocio',
-  'Creativo/a',
-])
+const IDENTIDAD = new Set<string>(GENIUS_ARQUETIPO_IDENTIDADES)
 
 const MOTIVACION = new Set([
   'Aprender algo nuevo',
@@ -17,15 +11,6 @@ const MOTIVACION = new Set([
   'Conectar con personas afines',
   'Buscar empleo u oportunidades',
   'Curiosidad / me invitaron',
-])
-
-const MUNDO = new Set([
-  'Marketing y publicidad',
-  'Tecnología e innovación',
-  'Negocios y emprendimiento',
-  'Arte, cultura y medios',
-  'Educación y academia',
-  'Comunicación corporativa',
 ])
 
 function str(v: unknown): string | null {
@@ -48,7 +33,6 @@ export async function POST(req: NextRequest) {
     const telefono = normalizeTelefono(telefonoRaw)
     const identidad = str(body.identidad)
     const motivacion = str(body.motivacion)
-    const mundo = str(body.mundo)
     const valorHumanoRaw = str(body.valor_humano)
 
     if (!nombreCompleto || nombreCompleto.length < 2 || nombreCompleto.length > 200) {
@@ -65,9 +49,6 @@ export async function POST(req: NextRequest) {
     }
     if (!motivacion || !MOTIVACION.has(motivacion)) {
       return NextResponse.json({ error: 'Opción "Vine a" no válida' }, { status: 400 })
-    }
-    if (!mundo || !MUNDO.has(mundo)) {
-      return NextResponse.json({ error: 'Opción "Mi mundo" no válida' }, { status: 400 })
     }
     if (!valorHumanoRaw || valorHumanoRaw.length < 3) {
       return NextResponse.json(
@@ -94,7 +75,6 @@ export async function POST(req: NextRequest) {
         telefono,
         identidad,
         motivacion,
-        mundo,
         valor_humano: valorHumanoRaw,
       })
       .select('id')

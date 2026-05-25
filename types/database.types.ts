@@ -266,7 +266,7 @@ export interface Database {
           telefono: string
           identidad: string
           motivacion: string
-          mundo: string
+          mundo: string | null
           valor_humano: string
           created_at: string
         }
@@ -276,7 +276,7 @@ export interface Database {
           telefono: string
           identidad: string
           motivacion: string
-          mundo: string
+          mundo?: string | null
           valor_humano: string
           created_at?: string
         }
