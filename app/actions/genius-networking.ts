@@ -34,7 +34,7 @@ export type GeniusConexionUsuario = {
   id: string
   nombreCompleto: string
   identidad: string
-  mundo: string
+  mundo: string | null
   valorHumano: string
   telefono: string
   matchedAt: string

@@ -43,10 +43,12 @@ export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
           <p className="min-w-0 text-sm font-medium text-white/88">{person.identidad}</p>
         </div>
 
-        <div className="flex items-start justify-center gap-2 sm:justify-start">
-          <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
-          <p className="min-w-0 text-xs font-light leading-snug text-white/62">{person.mundo}</p>
-        </div>
+        {person.mundo && (
+          <div className="flex items-start justify-center gap-2 sm:justify-start">
+            <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-white/55" strokeWidth={2} />
+            <p className="min-w-0 text-xs font-light leading-snug text-white/62">{person.mundo}</p>
+          </div>
+        )}
 
         <p className="border-none text-center text-xs font-light italic leading-relaxed text-white/52 sm:border-l-2 sm:border-white/22 sm:pl-3 sm:text-left">
           “{person.valorHumano.length > 140 ? `${person.valorHumano.slice(0, 137)}…` : person.valorHumano}”
