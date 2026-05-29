@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import {
   getGeniusConexiones,
+  getGeniusPerfil,
   type GeniusConexionUsuario,
 } from '@/app/actions/genius-networking'
 import { GeniusPersonCard } from '@/components/networking/genius/GeniusPersonCard'
@@ -23,6 +24,7 @@ function GeniusShellInner() {
   const [submissionId, setSubmissionId] = useState<string | null>(null)
   const [ronda, setRonda] = useState<1 | 2>(1)
   const [conexiones, setConexiones] = useState<GeniusConexionUsuario[]>([])
+  const [miNombre, setMiNombre] = useState<string>('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -46,6 +48,13 @@ function GeniusShellInner() {
       router.replace('/networking/genius', { scroll: false })
     }
   }, [searchParams, router])
+
+  useEffect(() => {
+    if (!submissionId) return
+    getGeniusPerfil(submissionId).then((p) => {
+      if (p) setMiNombre(p.nombreCompleto)
+    })
+  }, [submissionId])
 
   useEffect(() => {
     if (!submissionId) return
@@ -155,7 +164,7 @@ function GeniusShellInner() {
               </p>
             </div>
           ) : (
-            conexiones.map((c, i) => <GeniusPersonCard key={c.id} person={c} index={i} />)
+            conexiones.map((c, i) => <GeniusPersonCard key={c.id} person={c} index={i} miNombre={miNombre} />)
           )}
         </div>
 

@@ -14,11 +14,15 @@ function whatsappPhoneParam(raw: string | null | undefined): string | null {
 interface GeniusPersonCardProps {
   person: GeniusConexionUsuario
   index?: number
+  miNombre?: string
 }
 
-export function GeniusPersonCard({ person, index = 0 }: GeniusPersonCardProps) {
+export function GeniusPersonCard({ person, index = 0, miNombre = '' }: GeniusPersonCardProps) {
   const waParam = whatsappPhoneParam(person.telefono)
-  const whatsappHref = waParam ? `https://api.whatsapp.com/send?phone=${waParam}` : null
+  const waMessage = `Hola estoy en Genius Fest y me gustaria conectar contigo. Me llamo ${miNombre || 'un asistente'}. ¿Donde te encuentas?☺️`
+  const whatsappHref = waParam
+    ? `https://api.whatsapp.com/send?phone=${waParam}&text=${encodeURIComponent(waMessage)}`
+    : null
 
   return (
     <motion.article

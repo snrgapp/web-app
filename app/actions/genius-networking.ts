@@ -30,6 +30,20 @@ export async function verificarGeniusPorTelefono(
   return { ok: true, submission: data as GeniusConectaSubmission }
 }
 
+export async function getGeniusPerfil(
+  submissionId: string
+): Promise<{ nombreCompleto: string } | null> {
+  const supabase = createAdminClient()
+  if (!supabase) return null
+  const { data } = await supabase
+    .from('genius_conecta_submissions')
+    .select('nombre_completo')
+    .eq('id', submissionId)
+    .maybeSingle()
+  if (!data) return null
+  return { nombreCompleto: data.nombre_completo }
+}
+
 export type GeniusConexionUsuario = {
   id: string
   nombreCompleto: string
