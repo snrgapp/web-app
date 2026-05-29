@@ -298,6 +298,7 @@ export interface Database {
           submission_id: string
           rating: number
           comment: string | null
+          conexiones_count: number | null
           created_at: string
         }
         Insert: {
@@ -305,6 +306,7 @@ export interface Database {
           submission_id: string
           rating: number
           comment?: string | null
+          conexiones_count?: number | null
           created_at?: string
         }
         Update: {
@@ -312,12 +314,50 @@ export interface Database {
           submission_id?: string
           rating?: number
           comment?: string | null
+          conexiones_count?: number | null
           created_at?: string
         }
         Relationships: [
           {
             foreignKeyName: 'genius_networking_feedback_submission_id_fkey'
             columns: ['submission_id']
+            referencedRelation: 'genius_conecta_submissions'
+            referencedColumns: ['id']
+          },
+        ]
+      }
+      genius_networking_wa_clicks: {
+        Row: {
+          id: string
+          submission_id: string
+          clicked_submission_id: string
+          ronda: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          submission_id: string
+          clicked_submission_id: string
+          ronda: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          submission_id?: string
+          clicked_submission_id?: string
+          ronda?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'genius_wa_clicks_submission_id_fkey'
+            columns: ['submission_id']
+            referencedRelation: 'genius_conecta_submissions'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'genius_wa_clicks_clicked_submission_id_fkey'
+            columns: ['clicked_submission_id']
             referencedRelation: 'genius_conecta_submissions'
             referencedColumns: ['id']
           },

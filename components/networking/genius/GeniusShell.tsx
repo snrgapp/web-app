@@ -164,7 +164,16 @@ function GeniusShellInner() {
               </p>
             </div>
           ) : (
-            conexiones.map((c, i) => <GeniusPersonCard key={c.id} person={c} index={i} miNombre={miNombre} />)
+            conexiones.map((c, i) => (
+              <GeniusPersonCard
+                key={c.id}
+                person={c}
+                index={i}
+                miNombre={miNombre}
+                miSubmissionId={submissionId ?? undefined}
+                ronda={ronda}
+              />
+            ))
           )}
         </div>
 

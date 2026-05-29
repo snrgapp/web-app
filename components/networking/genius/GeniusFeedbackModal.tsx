@@ -3,18 +3,26 @@
 import { useCallback, useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Star, X } from 'lucide-react'
+import { Loader2, Star, X, Users } from 'lucide-react'
 import { guardarFeedbackGeniusNetworking } from '@/app/actions/genius-networking'
 
 type Props = {
   isOpen: boolean
   submissionId: string
   onClose: () => void
-  /** Tras guardar OK: limpiar sesión y navegar */
   onComplete: () => void
 }
 
+const CONEXIONES_OPTS = [
+  { value: 0, label: 'Ninguna', emoji: '😅' },
+  { value: 1, label: '1 persona', emoji: '🤝' },
+  { value: 2, label: '2 personas', emoji: '✌️' },
+  { value: 3, label: '3 o más', emoji: '🔥' },
+]
+
 export function GeniusFeedbackModal({ isOpen, submissionId, onClose, onComplete }: Props) {
+  const [step, setStep] = useState<0 | 1>(0)
+  const [conexionesCount, setConexionesCount] = useState<number | null>(null)
   const [rating, setRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
   const [comment, setComment] = useState('')
@@ -23,6 +31,8 @@ export function GeniusFeedbackModal({ isOpen, submissionId, onClose, onComplete 
 
   useEffect(() => {
     if (!isOpen) {
+      setStep(0)
+      setConexionesCount(null)
       setRating(0)
       setHoverRating(0)
       setComment('')
@@ -42,7 +52,12 @@ export function GeniusFeedbackModal({ isOpen, submissionId, onClose, onComplete 
     if (rating < 1 || rating > 5) return
     setLoading(true)
     setError('')
-    const result = await guardarFeedbackGeniusNetworking(submissionId, rating, comment || null)
+    const result = await guardarFeedbackGeniusNetworking(
+      submissionId,
+      rating,
+      comment || null,
+      conexionesCount
+    )
     setLoading(false)
     if (!result.ok) {
       setError(result.error ?? 'No se pudo enviar. Intenta de nuevo.')
@@ -85,77 +100,141 @@ export function GeniusFeedbackModal({ isOpen, submissionId, onClose, onComplete 
               className="text-center text-[0.68rem] font-medium uppercase tracking-[0.15em] text-white/55"
               style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
             >
-              Genius FEST
-            </p>
-            <h2
-              className="mt-3 text-center text-2xl font-black tracking-tight text-white"
-              style={{ fontFamily: 'var(--font-fraunces-genius), serif' }}
-            >
-              ¿Qué te pareció la dinámica?
-            </h2>
-            <p className="mt-2 text-center text-sm font-light text-white">
-              Tu opinión nos ayuda a mejorar las conexiones en el festival.
+              Genius FEST · {step === 0 ? '1 de 2' : '2 de 2'}
             </p>
 
-            <div className="mt-8 flex justify-center gap-1 sm:gap-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <motion.button
-                  key={star}
-                  type="button"
-                  onClick={() => setRating(star)}
-                  onMouseEnter={() => setHoverRating(star)}
-                  onMouseLeave={() => setHoverRating(0)}
-                  className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#694aff] rounded-md"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.96 }}
+            <AnimatePresence mode="wait">
+              {step === 0 ? (
+                <motion.div
+                  key="step0"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <Star
-                    size={44}
-                    className={`transition-colors sm:w-12 sm:h-12 ${
-                      star <= displayRating
-                        ? 'fill-[#694aff] text-[#694aff]'
-                        : 'fill-transparent text-white/22'
-                    }`}
-                    strokeWidth={1.35}
-                  />
-                </motion.button>
-              ))}
-            </div>
+                  <div className="mt-4 flex justify-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/12 bg-[#694aff]/20">
+                      <Users size={28} className="text-[#694aff]" />
+                    </div>
+                  </div>
+                  <h2
+                    className="mt-4 text-center text-2xl font-black tracking-tight text-white"
+                    style={{ fontFamily: 'var(--font-fraunces-genius), serif' }}
+                  >
+                    ¿Con cuántas personas lograste conectar hoy?
+                  </h2>
+                  <p className="mt-2 text-center text-sm font-light text-white/55">
+                    Cuéntanos cómo resultó el networking.
+                  </p>
 
-            <p className="mt-4 text-center text-xs text-white/45">
-              {rating > 0 ? `${rating} de 5 estrellas` : 'Toca las estrellas para calificar'}
-            </p>
+                  <div className="mt-7 grid grid-cols-2 gap-3">
+                    {CONEXIONES_OPTS.map((opt) => (
+                      <motion.button
+                        key={opt.value}
+                        type="button"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => {
+                          setConexionesCount(opt.value)
+                          setStep(1)
+                        }}
+                        className="flex flex-col items-center gap-1.5 rounded-2xl border border-white/10 bg-[#141414] px-4 py-5 transition hover:border-[#694aff]/60 hover:bg-[#694aff]/10"
+                      >
+                        <span className="text-3xl">{opt.emoji}</span>
+                        <span className="text-sm font-semibold text-white">{opt.label}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <h2
+                    className="mt-3 text-center text-2xl font-black tracking-tight text-white"
+                    style={{ fontFamily: 'var(--font-fraunces-genius), serif' }}
+                  >
+                    ¿Qué te pareció la dinámica?
+                  </h2>
+                  <p className="mt-2 text-center text-sm font-light text-white">
+                    Tu opinión nos ayuda a mejorar las conexiones en el festival.
+                  </p>
 
-            <label className="mt-6 block">
-              <span
-                className="mb-2 block text-[0.68rem] font-medium uppercase tracking-[0.12em] text-white/50"
-                style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
-              >
-                Comentario (opcional)
-              </span>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Cuéntanos qué funcionó o qué mejorarías…"
-                rows={4}
-                className="w-full resize-none rounded-xl border border-white/10 bg-[#141414] px-4 py-3 text-sm text-white placeholder:text-white/28 focus:border-[#694aff]/55 focus:outline-none focus:ring-2 focus:ring-[#694aff]/25"
-              />
-            </label>
+                  <div className="mt-8 flex justify-center gap-1 sm:gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <motion.button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#694aff] rounded-md"
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.96 }}
+                      >
+                        <Star
+                          size={44}
+                          className={`transition-colors sm:w-12 sm:h-12 ${
+                            star <= displayRating
+                              ? 'fill-[#694aff] text-[#694aff]'
+                              : 'fill-transparent text-white/22'
+                          }`}
+                          strokeWidth={1.35}
+                        />
+                      </motion.button>
+                    ))}
+                  </div>
 
-            {error ? (
-              <p className="mt-4 rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-center text-sm text-red-300">
-                {error}
-              </p>
-            ) : null}
+                  <p className="mt-4 text-center text-xs text-white/45">
+                    {rating > 0 ? `${rating} de 5 estrellas` : 'Toca las estrellas para calificar'}
+                  </p>
 
-            <button
-              type="button"
-              onClick={handleEnviar}
-              disabled={rating < 1 || loading}
-              className="mt-6 h-12 w-full rounded-xl border-2 border-[#161616] bg-white text-sm font-medium uppercase tracking-wide text-[#161616] shadow-[6px_6px_0_#694aff] transition hover:bg-white/95 disabled:opacity-40 disabled:shadow-none"
-            >
-              {loading ? <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#161616]" /> : 'Enviar'}
-            </button>
+                  <label className="mt-6 block">
+                    <span
+                      className="mb-2 block text-[0.68rem] font-medium uppercase tracking-[0.12em] text-white/50"
+                      style={{ fontFamily: 'var(--font-geist-mono), monospace' }}
+                    >
+                      Comentario (opcional)
+                    </span>
+                    <textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="Cuéntanos qué funcionó o qué mejorarías…"
+                      rows={3}
+                      className="w-full resize-none rounded-xl border border-white/10 bg-[#141414] px-4 py-3 text-sm text-white placeholder:text-white/28 focus:border-[#694aff]/55 focus:outline-none focus:ring-2 focus:ring-[#694aff]/25"
+                    />
+                  </label>
+
+                  {error ? (
+                    <p className="mt-4 rounded-xl border border-red-500/35 bg-red-500/10 px-3 py-2 text-center text-sm text-red-300">
+                      {error}
+                    </p>
+                  ) : null}
+
+                  <div className="mt-5 flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setStep(0)}
+                      className="h-12 w-12 shrink-0 rounded-xl border border-white/12 bg-transparent text-white/55 transition hover:border-white/25 hover:text-white"
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleEnviar}
+                      disabled={rating < 1 || loading}
+                      className="h-12 flex-1 rounded-xl border-2 border-[#161616] bg-white text-sm font-medium uppercase tracking-wide text-[#161616] shadow-[6px_6px_0_#694aff] transition hover:bg-white/95 disabled:opacity-40 disabled:shadow-none"
+                    >
+                      {loading ? <Loader2 className="mx-auto h-5 w-5 animate-spin text-[#161616]" /> : 'Enviar'}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </motion.div>
       )}

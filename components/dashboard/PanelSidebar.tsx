@@ -22,6 +22,7 @@ import {
   LayoutTemplate,
   Palette,
   ClipboardList,
+  Sparkles,
 } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -46,6 +47,7 @@ const defaultNavItems: NavItem[] = [
   { href: '/panel/networking-feedback', icon: Star, label: 'Feedback Networking', exact: false },
   { href: '/panel/ieee-networking', icon: Share2, label: 'IEEE · Matching', exact: false },
   { href: '/panel/hackathon', icon: Code2, label: 'Hackathon', exact: false },
+  { href: '/panel/evento', icon: Sparkles, label: 'Genius · Evento', exact: false },
 ]
 
 const eventosNavItems: NavItem[] = [

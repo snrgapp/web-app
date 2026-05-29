@@ -95,10 +95,26 @@ export async function getGeniusConexiones(
   return out
 }
 
+export async function registrarWaClick(
+  submissionId: string,
+  clickedSubmissionId: string,
+  ronda: 1 | 2
+): Promise<void> {
+  if (!submissionId || !clickedSubmissionId) return
+  const supabase = createAdminClient()
+  if (!supabase) return
+  await supabase.from('genius_networking_wa_clicks').insert({
+    submission_id: submissionId,
+    clicked_submission_id: clickedSubmissionId,
+    ronda,
+  })
+}
+
 export async function guardarFeedbackGeniusNetworking(
   submissionId: string,
   rating: number,
-  comment: string | null
+  comment: string | null,
+  conexionesCount: number | null
 ): Promise<{ ok: boolean; error?: string }> {
   const supabase = createAdminClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
@@ -112,8 +128,78 @@ export async function guardarFeedbackGeniusNetworking(
     submission_id: submissionId,
     rating,
     comment: trimmed.length > 0 ? trimmed.slice(0, 2000) : null,
+    conexiones_count: conexionesCount,
   })
 
   if (error) return { ok: false, error: error.message }
   return { ok: true }
+}
+
+export async function getGeniusDashboardData() {
+  const supabase = createAdminClient()
+  if (!supabase) return null
+
+  const [
+    { data: registros },
+    { data: matches },
+    { data: waClicks },
+    { data: feedbacks },
+  ] = await Promise.all([
+    supabase.from('genius_conecta_submissions').select('id, identidad, created_at'),
+    supabase.from('match_genius').select('id, ronda'),
+    supabase.from('genius_networking_wa_clicks').select('id, ronda, created_at'),
+    supabase.from('genius_networking_feedback').select('rating, conexiones_count, created_at'),
+  ])
+
+  const arquetipos: Record<string, number> = {}
+  for (const r of registros ?? []) {
+    arquetipos[r.identidad] = (arquetipos[r.identidad] ?? 0) + 1
+  }
+
+  const matchesPorRonda = { 1: 0, 2: 0 }
+  for (const m of matches ?? []) {
+    if (m.ronda === 1 || m.ronda === 2) matchesPorRonda[m.ronda]++
+  }
+
+  const clicksPorRonda = { 1: 0, 2: 0 }
+  for (const c of waClicks ?? []) {
+    if (c.ronda === 1 || c.ronda === 2) clicksPorRonda[c.ronda]++
+  }
+
+  const conexionesDist: Record<number, number> = { 0: 0, 1: 0, 2: 0, 3: 0 }
+  let totalConexiones = 0
+  let countConConexiones = 0
+  for (const f of feedbacks ?? []) {
+    if (f.conexiones_count !== null) {
+      const k = Math.min(f.conexiones_count, 3)
+      conexionesDist[k] = (conexionesDist[k] ?? 0) + 1
+      totalConexiones += f.conexiones_count
+      countConConexiones++
+    }
+  }
+
+  const registrosPorHora: Record<string, number> = {}
+  for (const r of registros ?? []) {
+    const h = new Date(r.created_at).toISOString().slice(0, 13) + ':00'
+    registrosPorHora[h] = (registrosPorHora[h] ?? 0) + 1
+  }
+
+  const avgRating =
+    (feedbacks ?? []).length > 0
+      ? (feedbacks ?? []).reduce((s, f) => s + f.rating, 0) / (feedbacks ?? []).length
+      : null
+
+  return {
+    totalRegistros: (registros ?? []).length,
+    totalMatches: (matches ?? []).length,
+    totalWaClicks: (waClicks ?? []).length,
+    totalFeedbacks: (feedbacks ?? []).length,
+    avgRating,
+    avgConexiones: countConConexiones > 0 ? totalConexiones / countConConexiones : null,
+    arquetipos,
+    matchesPorRonda,
+    clicksPorRonda,
+    conexionesDist,
+    registrosPorHora,
+  }
 }

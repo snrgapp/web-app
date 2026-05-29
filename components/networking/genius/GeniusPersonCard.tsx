@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Sparkles, Phone, MapPin } from 'lucide-react'
+import { registrarWaClick } from '@/app/actions/genius-networking'
 import type { GeniusConexionUsuario } from '@/app/actions/genius-networking'
 
 function whatsappPhoneParam(raw: string | null | undefined): string | null {
@@ -15,9 +16,11 @@ interface GeniusPersonCardProps {
   person: GeniusConexionUsuario
   index?: number
   miNombre?: string
+  miSubmissionId?: string
+  ronda?: 1 | 2
 }
 
-export function GeniusPersonCard({ person, index = 0, miNombre = '' }: GeniusPersonCardProps) {
+export function GeniusPersonCard({ person, index = 0, miNombre = '', miSubmissionId, ronda = 1 }: GeniusPersonCardProps) {
   const waParam = whatsappPhoneParam(person.telefono)
   const waMessage = `Hola estoy en Genius Fest y me gustaria conectar contigo. Me llamo ${miNombre || 'un asistente'}. ¿Donde te encuentas?☺️`
   const whatsappHref = waParam
@@ -66,7 +69,12 @@ export function GeniusPersonCard({ person, index = 0, miNombre = '' }: GeniusPer
               target="_blank"
               rel="noopener noreferrer"
               className="truncate text-xs font-medium text-white underline decoration-[#694aff]/85 underline-offset-2 hover:text-white/85"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (miSubmissionId) {
+                  registrarWaClick(miSubmissionId, person.id, ronda).catch(() => {})
+                }
+              }}
             >
               WhatsApp
             </a>
