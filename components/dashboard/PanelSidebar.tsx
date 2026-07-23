@@ -8,9 +8,7 @@ import {
   MessageCircle,
   Database,
   FileText,
-  Trophy,
   Star,
-  Share2,
   Code2,
   ChevronDown,
   Menu,
@@ -22,7 +20,6 @@ import {
   LayoutTemplate,
   Palette,
   ClipboardList,
-  Sparkles,
 } from 'lucide-react'
 import { LogoutButton } from './LogoutButton'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -43,11 +40,8 @@ const defaultNavItems: NavItem[] = [
   { href: '/panel/formularios', icon: FileText, label: 'Formularios', exact: false },
   { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },
   { href: '/panel/contacto', icon: MessageCircle, label: 'Mensajes', exact: false },
-  { href: '/panel/spotlight', icon: Trophy, label: 'Spotlight', exact: false },
   { href: '/panel/networking-feedback', icon: Star, label: 'Feedback Networking', exact: false },
-  { href: '/panel/ieee-networking', icon: Share2, label: 'IEEE · Matching', exact: false },
   { href: '/panel/hackathon', icon: Code2, label: 'Hackathon', exact: false },
-  { href: '/panel/evento', icon: Sparkles, label: 'Genius · Evento', exact: false },
 ]
 
 const eventosNavItems: NavItem[] = [

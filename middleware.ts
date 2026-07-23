@@ -9,18 +9,6 @@ const HACKATON_HOSTS = [
   'hackaton.localhost',
 ] // Mismo deploy Vercel: añadir hackaton.snrg.lat en Project → Domains
 
-const GENIUS_HOSTS = [
-  'genius.snrg.lat',
-  'www.genius.snrg.lat',
-  'genius.localhost',
-]
-
-const IEEE_HOSTS = [
-  'ieee.snrg.lat',
-  'www.ieee.snrg.lat',
-  'ieee.localhost',
-]
-
 const INSCRIPCION_HOSTS = [
   'inscripcion.snrg.lat',
   'www.inscripcion.snrg.lat',
@@ -56,12 +44,6 @@ function matchesHosts(req: NextRequest, hosts: string[]): boolean {
   return hosts.some(
     (h) => effectiveHost === h || effectiveHost.startsWith(h + ':')
   )
-}
-
-function getEffectiveHost(req: NextRequest): string {
-  const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
-  const host = req.headers.get('host') ?? ''
-  return (forwardedHost || host).replace(/:.*$/, '')
 }
 
 /** Extrae slug de org desde host (para header x-org-slug) */
@@ -187,41 +169,6 @@ export async function middleware(request: NextRequest) {
       const url = request.nextUrl.clone()
       url.pathname = '/hackaton.html'
       return NextResponse.rewrite(url)
-    }
-    return NextResponse.next({ request: { headers: requestHeaders } })
-  }
-
-  // Subdominio genius.snrg.lat — formulario Genius FEST
-  if (matchesHosts(request, GENIUS_HOSTS)) {
-    const effectiveHost = getEffectiveHost(request)
-    if (effectiveHost === 'genius.snrg.lat') {
-      const url = request.nextUrl.clone()
-      url.host = 'www.genius.snrg.lat'
-      return NextResponse.redirect(url, 308)
-    }
-
-    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
-      return NextResponse.next({ request: { headers: requestHeaders } })
-    }
-    if (pathname === '/' || pathname === '') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/genius.html'
-      return NextResponse.rewrite(url)
-    }
-    return NextResponse.next({ request: { headers: requestHeaders } })
-  }
-
-  // Subdominio ieee.snrg.lat — formulario IEEE networking
-  // Nota: no redirigir ieee → www.ieee; algunos resolvers ISP responden NXDOMAIN para el 4º nivel
-  // (www.ieee) aunque el apex ieee.snrg.lat resuelva. Servir el formulario en ambos hosts sin 308.
-  if (matchesHosts(request, IEEE_HOSTS)) {
-    if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
-      return NextResponse.next({ request: { headers: requestHeaders } })
-    }
-    if (pathname === '/' || pathname === '') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/ieee.html'
-      return NextResponse.rewrite(url, { request: { headers: requestHeaders } })
     }
     return NextResponse.next({ request: { headers: requestHeaders } })
   }

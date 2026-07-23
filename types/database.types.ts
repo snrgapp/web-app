@@ -259,110 +259,6 @@ export interface Database {
           }
         ]
       }
-      genius_conecta_submissions: {
-        Row: {
-          id: string
-          nombre_completo: string
-          telefono: string
-          identidad: string
-          motivacion: string
-          mundo: string | null
-          valor_humano: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          nombre_completo: string
-          telefono: string
-          identidad: string
-          motivacion: string
-          mundo?: string | null
-          valor_humano: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          nombre_completo?: string
-          telefono?: string
-          identidad?: string
-          motivacion?: string
-          mundo?: string
-          valor_humano?: string
-          created_at?: string
-        }
-        Relationships: []
-      }
-      genius_networking_feedback: {
-        Row: {
-          id: string
-          submission_id: string
-          rating: number
-          comment: string | null
-          conexiones_count: number | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          submission_id: string
-          rating: number
-          comment?: string | null
-          conexiones_count?: number | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          submission_id?: string
-          rating?: number
-          comment?: string | null
-          conexiones_count?: number | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'genius_networking_feedback_submission_id_fkey'
-            columns: ['submission_id']
-            referencedRelation: 'genius_conecta_submissions'
-            referencedColumns: ['id']
-          },
-        ]
-      }
-      genius_networking_wa_clicks: {
-        Row: {
-          id: string
-          submission_id: string
-          clicked_submission_id: string
-          ronda: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          submission_id: string
-          clicked_submission_id: string
-          ronda: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          submission_id?: string
-          clicked_submission_id?: string
-          ronda?: number
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'genius_wa_clicks_submission_id_fkey'
-            columns: ['submission_id']
-            referencedRelation: 'genius_conecta_submissions'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'genius_wa_clicks_clicked_submission_id_fkey'
-            columns: ['clicked_submission_id']
-            referencedRelation: 'genius_conecta_submissions'
-            referencedColumns: ['id']
-          },
-        ]
-      }
       hackaton_submissions: {
         Row: {
           id: string
@@ -421,110 +317,6 @@ export interface Database {
           },
         ]
       }
-      ieee_networking_feedback: {
-        Row: {
-          id: string
-          submission_id: string
-          rating: number
-          comment: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          submission_id: string
-          rating: number
-          comment?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          submission_id?: string
-          rating?: number
-          comment?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'ieee_networking_feedback_submission_id_fkey'
-            columns: ['submission_id']
-            referencedRelation: 'ieee_networking_submissions'
-            referencedColumns: ['id']
-          },
-        ]
-      }
-      ieee_networking_submissions: {
-        Row: {
-          id: string
-          nombre_completo: string
-          telefono: string
-          correo: string
-          areas_interes: string[]
-          habilidades_compartir: string
-          tipos_conexion: string[]
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          nombre_completo: string
-          telefono: string
-          correo: string
-          areas_interes: string[]
-          habilidades_compartir: string
-          tipos_conexion: string[]
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          nombre_completo?: string
-          telefono?: string
-          correo?: string
-          areas_interes?: string[]
-          habilidades_compartir?: string
-          tipos_conexion?: string[]
-          created_at?: string
-        }
-        Relationships: []
-      }
-      match_genius: {
-        Row: {
-          id: string
-          submission_id: string
-          matched_submission_id: string
-          ronda: number
-          razon: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          submission_id: string
-          matched_submission_id: string
-          ronda: number
-          razon?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          submission_id?: string
-          matched_submission_id?: string
-          ronda?: number
-          razon?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'match_genius_submission_id_fkey'
-            columns: ['submission_id']
-            referencedRelation: 'genius_conecta_submissions'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'match_genius_matched_submission_id_fkey'
-            columns: ['matched_submission_id']
-            referencedRelation: 'genius_conecta_submissions'
-            referencedColumns: ['id']
-          },
-        ]
-      }
       match_hackaton: {
         Row: {
           id: string
@@ -561,46 +353,6 @@ export interface Database {
             foreignKeyName: 'match_hackaton_matched_submission_id_fkey'
             columns: ['matched_submission_id']
             referencedRelation: 'hackaton_submissions'
-            referencedColumns: ['id']
-          },
-        ]
-      }
-      match_ieee: {
-        Row: {
-          id: string
-          submission_id: string
-          matched_submission_id: string
-          ronda: number
-          razon: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          submission_id: string
-          matched_submission_id: string
-          ronda: number
-          razon?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          submission_id?: string
-          matched_submission_id?: string
-          ronda?: number
-          razon?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'match_ieee_submission_id_fkey'
-            columns: ['submission_id']
-            referencedRelation: 'ieee_networking_submissions'
-            referencedColumns: ['id']
-          },
-          {
-            foreignKeyName: 'match_ieee_matched_submission_id_fkey'
-            columns: ['matched_submission_id']
-            referencedRelation: 'ieee_networking_submissions'
             referencedColumns: ['id']
           },
         ]
@@ -964,123 +716,6 @@ export interface Database {
             foreignKeyName: "form_submissions_form_id_fkey"
             columns: ["form_id"]
             referencedRelation: "forms"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      founders: {
-        Row: {
-          id: string
-          nombre: string
-          startup_nombre: string
-          image_url: string | null
-          pitch_order: number
-          activo: boolean
-          organizacion_id: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          nombre: string
-          startup_nombre: string
-          image_url?: string | null
-          pitch_order?: number
-          activo?: boolean
-          organizacion_id?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          nombre?: string
-          startup_nombre?: string
-          image_url?: string | null
-          pitch_order?: number
-          activo?: boolean
-          organizacion_id?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'founders_organizacion_id_fkey'
-            columns: ['organizacion_id']
-            referencedRelation: 'organizaciones'
-            referencedColumns: ['id']
-          }
-        ]
-      }
-      votantes: {
-        Row: {
-          id: string
-          whatsapp: string
-          nombre: string | null
-          categoria: 'espectador' | 'jurado'
-          organizacion_id: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          whatsapp: string
-          nombre?: string | null
-          categoria?: 'espectador' | 'jurado'
-          organizacion_id?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          whatsapp?: string
-          nombre?: string | null
-          categoria?: 'espectador' | 'jurado'
-          organizacion_id?: string | null
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: 'votantes_organizacion_id_fkey'
-            columns: ['organizacion_id']
-            referencedRelation: 'organizaciones'
-            referencedColumns: ['id']
-          }
-        ]
-      }
-      votos: {
-        Row: {
-          id: string
-          votante_id: string
-          founder_id: string
-          score_innovacion: number
-          score_claridad: number
-          score_qa: number
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          votante_id: string
-          founder_id: string
-          score_innovacion: number
-          score_claridad: number
-          score_qa: number
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          votante_id?: string
-          founder_id?: string
-          score_innovacion?: number
-          score_claridad?: number
-          score_qa?: number
-          created_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "votos_votante_id_fkey"
-            columns: ["votante_id"]
-            referencedRelation: "votantes"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "votos_founder_id_fkey"
-            columns: ["founder_id"]
-            referencedRelation: "founders"
             referencedColumns: ["id"]
           }
         ]
@@ -1508,10 +1143,6 @@ export type ExperienceFormRow = Database['public']['Tables']['experience_forms']
 export type ExperienceFormSubmissionRow = Database['public']['Tables']['experience_form_submissions']['Row']
 export type ExperienceTemplate = Database['public']['Tables']['experience_templates']['Row']
 export type TenantExperience = Database['public']['Tables']['tenant_experiences']['Row']
-export type GeniusConectaSubmission = Database['public']['Tables']['genius_conecta_submissions']['Row']
-export type MatchGenius = Database['public']['Tables']['match_genius']['Row']
-export type IeeeNetworkingSubmission = Database['public']['Tables']['ieee_networking_submissions']['Row']
-export type MatchIeee = Database['public']['Tables']['match_ieee']['Row']
 export type HackatonSubmission = Database['public']['Tables']['hackaton_submissions']['Row']
 export type HackatonNetworkingFeedback = Database['public']['Tables']['hackaton_networking_feedback']['Row']
 export type MatchHackaton = Database['public']['Tables']['match_hackaton']['Row']
@@ -1523,9 +1154,6 @@ export type Lead = Database['public']['Tables']['leads']['Row']
 export type Contacto = Database['public']['Tables']['contactos']['Row']
 export type FormRow = Database['public']['Tables']['forms']['Row']
 export type FormSubmissionRow = Database['public']['Tables']['form_submissions']['Row']
-export type Founder = Database['public']['Tables']['founders']['Row']
-export type Votante = Database['public']['Tables']['votantes']['Row']
-export type Voto = Database['public']['Tables']['votos']['Row']
 export type FeedbackNetworking = Database['public']['Tables']['feedback_networking']['Row']
 export type Member = Database['public']['Tables']['members']['Row']
 export type Connection = Database['public']['Tables']['connections']['Row']
