@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 
 const W = 220
 const H = 280
-const HALF = H / 2        // 140px — punto de corte
-const FS = 200            // font-size del dígito
-const LH = H              // line-height = alto total de la tarjeta
+const HALF = H / 2
+const FONT_SIZE = 200
 
 interface FlipCountdownProps {
   startFrom?: number
@@ -14,90 +13,63 @@ interface FlipCountdownProps {
   onComplete: () => void
 }
 
+type FlipPhase = {
+  /** Número que sale (mitad superior cayendo) */
+  outgoing: number
+  /** Número que entra (se revela debajo) */
+  incoming: number
+}
+
 /**
- * Flip-clock countdown (split-flap display).
+ * Split-flap countdown.
  *
- * Layout de 4 piezas (como un reloj flip real):
- *   1. Panel inferior estático   → mitad inferior del número ACTUAL
- *   2. Panel superior estático   → mitad superior del número ACTUAL  (queda debajo del flap)
- *   3. Flap frontal (anima)      → mitad superior del número ACTUAL, cae hacia abajo
- *   4. Flap trasero (anima)      → mitad superior del SIGUIENTE número, sube desde abajo
+ * Estado estático:
+ *   - Una sola fuente de verdad: `currentNumber`
+ *   - Mitad superior e inferior renderizan el MISMO dígito, solo recortado
  *
- * Al terminar la animación se actualiza el número y se resetean los flaps.
+ * Durante la transición:
+ *   - Se monta un par de solapas animadas (outgoing cayendo / incoming revelándose)
+ *   - Al terminar: se desmontan, currentNumber = incoming
  */
 export function FlipCountdown({
   startFrom = 5,
   intervalMs = 1000,
   onComplete,
 }: FlipCountdownProps) {
-  const [curr, setCurr]       = useState(startFrom)
-  const [next, setNext]       = useState(startFrom - 1)
-  const [flipping, setFlipping] = useState(false)
+  const [currentNumber, setCurrentNumber] = useState(startFrom)
+  const [flip, setFlip] = useState<FlipPhase | null>(null)
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
 
   useEffect(() => {
-    if (curr <= 1) {
-      // Mostramos el 1 durante un intervalo completo y luego completamos
+    // No iniciar otro flip mientras anima
+    if (flip) return
+
+    if (currentNumber <= 1) {
       const t = setTimeout(() => onCompleteRef.current(), intervalMs)
       return () => clearTimeout(t)
     }
 
     const t = setTimeout(() => {
-      setFlipping(true)
-      // Tras la animación (500ms) actualizamos el número y reseteamos
-      const done = setTimeout(() => {
-        setCurr(c => c - 1)
-        setNext(c => Math.max(0, c - 1))
-        setFlipping(false)
-      }, 520)
-      return () => clearTimeout(done)
+      // Definir saliente / entrante al iniciar el flip
+      setFlip({
+        outgoing: currentNumber,
+        incoming: currentNumber - 1,
+      })
     }, intervalMs)
 
     return () => clearTimeout(t)
-  }, [curr, intervalMs])
+  }, [currentNumber, flip, intervalMs])
 
-  // ─── helpers de estilo ────────────────────────────────────────────────────
-
-  /** Panel (top o bottom) que recorta el dígito a su mitad */
-  function panel(half: 'top' | 'bottom'): React.CSSProperties {
-    return {
-      position: 'absolute',
-      left: 0, right: 0,
-      height: HALF,
-      top: half === 'top' ? 0 : HALF,
-      overflow: 'hidden',
-      borderRadius: half === 'top' ? '20px 20px 0 0' : '0 0 20px 20px',
-      background: half === 'top'
-        ? 'linear-gradient(180deg,#2a2a2a 0%,#1e1e1e 100%)'
-        : 'linear-gradient(180deg,#1e1e1e 0%,#141414 100%)',
-      boxShadow: half === 'top'
-        ? 'inset 0 4px 12px rgba(0,0,0,0.4)'
-        : 'inset 0 -6px 14px rgba(0,0,0,0.6)',
-    }
-  }
-
-  /**
-   * El dígito ocupa toda la altura de la tarjeta (LH = 280px).
-   * - En el panel superior, lo anclamos en top:0 → se ve la mitad de arriba.
-   * - En el panel inferior, lo desplazamos -HALF para que la mitad de abajo
-   *   quede dentro del contenedor (que empieza en y=HALF).
-   */
-  function digit(half: 'top' | 'bottom'): React.CSSProperties {
-    return {
-      position: 'absolute',
-      left: 0, right: 0,
-      top: half === 'top' ? 0 : -HALF,
-      textAlign: 'center',
-      fontSize: FS,
-      lineHeight: `${LH}px`,
-      fontWeight: 900,
-      color: '#fff',
-      fontVariantNumeric: 'tabular-nums',
-      letterSpacing: '-0.02em',
-      userSelect: 'none',
-    }
-  }
+  // Cuando termina la animación CSS → comprometer el nuevo número y desmontar solapas
+  useEffect(() => {
+    if (!flip) return
+    const t = setTimeout(() => {
+      setCurrentNumber(flip.incoming)
+      setFlip(null)
+    }, 520)
+    return () => clearTimeout(t)
+  }, [flip])
 
   return (
     <div
@@ -110,7 +82,6 @@ export function FlipCountdown({
         background: '#09090b',
       }}
     >
-      {/* Label */}
       <p
         style={{
           color: '#52525b',
@@ -125,73 +96,45 @@ export function FlipCountdown({
         comenzando en
       </p>
 
-      {/* Tarjeta flip */}
-      <div style={{ position: 'relative', width: W, height: H }}>
+      <div
+        style={{
+          position: 'relative',
+          width: W,
+          height: H,
+          perspective: 800,
+        }}
+      >
+        {/* ── Base estática: AMBAS mitades usan currentNumber ── */}
+        <StaticHalf half="top" number={currentNumber} />
+        <StaticHalf half="bottom" number={currentNumber} />
 
-        {/* 1 ── Panel inferior estático (mitad baja del número ACTUAL) */}
-        <div style={panel('bottom')}>
-          <span style={digit('bottom')}>{curr}</span>
-        </div>
+        {/* ── Solapas de animación: solo montadas durante el flip ── */}
+        {flip && (
+          <>
+            {/* Capa revelada debajo: mitad superior del número entrante */}
+            <StaticHalf half="top" number={flip.incoming} zIndex={5} />
 
-        {/* 2 ── Panel superior estático (mitad alta del número ACTUAL)
-               queda visible solo cuando el flap ya ha caído */}
-        <div style={panel('top')}>
-          <span style={digit('top')}>{next < 1 ? '' : next}</span>
-        </div>
+            {/* Solapa que cae: mitad superior del número saliente */}
+            <FlippingFlap number={flip.outgoing} />
+          </>
+        )}
 
-        {/* 3 ── Flap frontal: mitad superior del número ACTUAL, cae hacia abajo */}
-        <div
-          style={{
-            ...panel('top'),
-            transformOrigin: 'bottom center',
-            transform: flipping
-              ? 'perspective(600px) rotateX(-180deg)'
-              : 'perspective(600px) rotateX(0deg)',
-            transition: flipping
-              ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)'
-              : 'none',
-            zIndex: 10,
-            // Sombra que se intensifica al caer
-            boxShadow: flipping
-              ? 'inset 0 -16px 32px rgba(0,0,0,0.95)'
-              : 'inset 0 4px 12px rgba(0,0,0,0.4)',
-          }}
-        >
-          <span style={digit('top')}>{curr}</span>
-        </div>
-
-        {/* 4 ── Flap trasero: mitad superior del SIGUIENTE número, surge al completar el giro */}
-        <div
-          style={{
-            ...panel('top'),
-            transformOrigin: 'bottom center',
-            transform: flipping
-              ? 'perspective(600px) rotateX(0deg)'
-              : 'perspective(600px) rotateX(180deg)',
-            transition: flipping
-              ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)'
-              : 'none',
-            zIndex: 9,
-          }}
-        >
-          <span style={digit('top')}>{next < 1 ? '' : next}</span>
-        </div>
-
-        {/* Línea divisoria central */}
+        {/* Línea divisoria */}
         <div
           style={{
             position: 'absolute',
-            left: 0, right: 0,
+            left: 0,
+            right: 0,
             top: HALF - 1,
             height: 3,
             background: 'rgba(0,0,0,0.95)',
-            zIndex: 20,
+            zIndex: 30,
             pointerEvents: 'none',
           }}
         />
 
-        {/* Goznes laterales */}
-        {(['left', 'right'] as const).map(side => (
+        {/* Goznes */}
+        {(['left', 'right'] as const).map((side) => (
           <div
             key={side}
             style={{
@@ -205,12 +148,12 @@ export function FlipCountdown({
                 'linear-gradient(135deg,#999 0%,#666 35%,#333 65%,#777 100%)',
               boxShadow:
                 '0 3px 8px rgba(0,0,0,0.85), inset 0 1px 2px rgba(255,255,255,0.2)',
-              zIndex: 30,
+              zIndex: 40,
             }}
           />
         ))}
 
-        {/* Sombra exterior de la tarjeta */}
+        {/* Sombra exterior */}
         <div
           style={{
             position: 'absolute',
@@ -222,6 +165,129 @@ export function FlipCountdown({
           }}
         />
       </div>
+    </div>
+  )
+}
+
+/* ─── Mitad estática: recorta un dígito al top o bottom ─── */
+
+function StaticHalf({
+  half,
+  number,
+  zIndex = 1,
+}: {
+  half: 'top' | 'bottom'
+  number: number
+  zIndex?: number
+}) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: half === 'top' ? 0 : HALF,
+        height: HALF,
+        overflow: 'hidden',
+        borderRadius: half === 'top' ? '20px 20px 0 0' : '0 0 20px 20px',
+        background:
+          half === 'top'
+            ? 'linear-gradient(180deg,#2a2a2a 0%,#1e1e1e 100%)'
+            : 'linear-gradient(180deg,#1e1e1e 0%,#141414 100%)',
+        boxShadow:
+          half === 'top'
+            ? 'inset 0 4px 12px rgba(0,0,0,0.4)'
+            : 'inset 0 -6px 14px rgba(0,0,0,0.6)',
+        zIndex,
+      }}
+    >
+      {/*
+        El glifo ocupa toda la altura H.
+        - top: anclado en 0 → overflow oculta la mitad inferior
+        - bottom: desplazado -HALF → overflow oculta la mitad superior
+      */}
+      <span
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: half === 'top' ? 0 : -HALF,
+          height: H,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: FONT_SIZE,
+          fontWeight: 900,
+          color: '#fff',
+          fontVariantNumeric: 'tabular-nums',
+          letterSpacing: '-0.02em',
+          userSelect: 'none',
+          lineHeight: 1,
+        }}
+      >
+        {number}
+      </span>
+    </div>
+  )
+}
+
+/* ─── Solapa animada: mitad superior del número saliente, cae con rotateX ─── */
+
+function FlippingFlap({ number }: { number: number }) {
+  const [rotated, setRotated] = useState(false)
+
+  // Disparar el flip en el siguiente frame (para que el browser pinte el estado inicial)
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => setRotated(true))
+    })
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        height: HALF,
+        overflow: 'hidden',
+        borderRadius: '20px 20px 0 0',
+        background: 'linear-gradient(180deg,#2a2a2a 0%,#1e1e1e 100%)',
+        transformOrigin: 'bottom center',
+        transform: rotated
+          ? 'rotateX(-180deg)'
+          : 'rotateX(0deg)',
+        transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+        backfaceVisibility: 'hidden',
+        boxShadow: rotated
+          ? 'inset 0 -16px 32px rgba(0,0,0,0.95)'
+          : 'inset 0 4px 12px rgba(0,0,0,0.4)',
+        zIndex: 20,
+      }}
+    >
+      <span
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: H,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: FONT_SIZE,
+          fontWeight: 900,
+          color: '#fff',
+          fontVariantNumeric: 'tabular-nums',
+          letterSpacing: '-0.02em',
+          userSelect: 'none',
+          lineHeight: 1,
+        }}
+      >
+        {number}
+      </span>
     </div>
   )
 }
