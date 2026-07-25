@@ -9,18 +9,16 @@ import './QuestionRevealDeck.css'
 
 /**
  * Mazo de fondo: offsets grandes + rotaciones fijas (-18°…+18°)
- * Distribución radial alrededor del centro (abanico).
+ * logo: 'top' = cabecera (cartas que asoman arriba); 'center' = centro
  */
-/** logo: 'top' = cabecera (cartas que asoman arriba); 'center' = centro */
 const BACK_CARDS = [
   { rotate: -15, x: -110, y: -95, z: 1, logo: 'top' as const },
   { rotate: -8, x: -15, y: -120, z: 2, logo: 'top' as const },
   { rotate: 12, x: 105, y: -90, z: 3, logo: 'top' as const },
   { rotate: 18, x: 125, y: 8, z: 4, logo: 'center' as const },
-  { rotate: 6, x: 100, y: 105, z: 5, logo: 'center' as const },
-  { rotate: -12, x: 10, y: 125, z: 6, logo: 'center' as const },
-  { rotate: -18, x: -105, y: 100, z: 7, logo: 'center' as const },
-  { rotate: 8, x: -130, y: 5, z: 8, logo: 'center' as const },
+  { rotate: 6, x: 100, y: 95, z: 5, logo: 'center' as const },
+  { rotate: -18, x: -105, y: 90, z: 6, logo: 'center' as const },
+  { rotate: 8, x: -130, y: 5, z: 7, logo: 'center' as const },
 ]
 
 export type QuestionRevealDeckProps = {
@@ -35,7 +33,6 @@ export type QuestionRevealDeckProps = {
  */
 export function QuestionRevealDeck({
   question,
-  categoryLabel,
   onGirar,
   onFinalizar,
 }: QuestionRevealDeckProps) {
@@ -43,7 +40,6 @@ export function QuestionRevealDeck({
 
   return (
     <div className="question-reveal">
-      {/* Header: finalizar */}
       <div className="question-reveal__header">
         <button
           type="button"
@@ -54,7 +50,6 @@ export function QuestionRevealDeck({
         </button>
       </div>
 
-      {/* Stage: mazo + tarjeta (tarjeta principal subida, fondo intacto) */}
       <div className="question-reveal__stage">
         {BACK_CARDS.map((card, i) => (
           <div
@@ -79,19 +74,13 @@ export function QuestionRevealDeck({
         ))}
 
         <div className="question-reveal__main-card">
-          <p className="question-reveal__prompt">
-            Responde la pregunta al grupo.
-          </p>
-
-          <p className="question-reveal__question">{question}</p>
-
-          <p className="question-reveal__footer">
-            {categoryLabel?.trim() || 'Synergy'}
-          </p>
+          <div className="question-reveal__body">
+            <p className="question-reveal__prompt">Responde la pregunta:</p>
+            <p className="question-reveal__question">{question}</p>
+          </div>
         </div>
       </div>
 
-      {/* Controles: tienes 3 min + iniciar + girar */}
       <div className="question-reveal__controls">
         <div className="question-reveal__timer-label">
           <svg
