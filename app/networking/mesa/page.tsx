@@ -58,8 +58,8 @@ function MesaContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-black" />
+      <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-white" />
       </div>
     )
   }
@@ -73,30 +73,36 @@ function MesaContent() {
   const mesaLabel = mesa ?? '?'
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
-      <div className="w-full p-4 sm:p-6 flex items-center justify-between border-b border-zinc-100">
+    <div className="min-h-screen bg-[#09090b] flex flex-col font-sans">
+      <div className="w-full p-4 sm:p-6 flex items-center justify-between border-b border-white/10">
         <button
           onClick={() => router.push(ronda === 1 ? '/networking' : '/networking/mesa?ronda=1')}
-          className="text-black"
+          className="text-white"
           aria-label="Volver"
         >
           <ArrowLeft size={24} />
         </button>
       </div>
 
-      <div className="flex-1 flex flex-col items-center bg-[#f2f2f2] px-4 sm:px-6 py-8">
+      <div className="flex-1 flex flex-col items-center bg-[#09090b] px-4 sm:px-6 py-8">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center gap-2 mb-8"
         >
           <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="" width={24} height={24} />
-            <span className="text-zinc-500 text-sm">
+            <Image
+              src="/logowhite.png"
+              alt=""
+              width={24}
+              height={24}
+              className="opacity-80"
+            />
+            <span className="text-zinc-400 text-sm">
               {ronda === 1 ? 'Primera Ronda' : 'Segunda Ronda'}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-light text-black tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-light text-white tracking-tight">
             La mesa {mesaLabel}
           </h1>
         </motion.div>
@@ -105,10 +111,10 @@ function MesaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-4xl grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+          className="w-full max-w-xl flex flex-col gap-3"
         >
           {compañeros.length === 0 ? (
-            <p className="col-span-2 md:col-span-3 text-center text-zinc-500 py-8">
+            <p className="text-center text-zinc-500 py-8">
               No hay asistentes asignados a esta mesa aún.
             </p>
           ) : (
@@ -126,7 +132,7 @@ function MesaContent() {
         >
           <button
             onClick={handleComenzar}
-            className="bg-black text-white rounded-full py-3.5 px-10 font-medium text-lg hover:bg-zinc-800 transition-colors active:scale-[0.98]"
+            className="bg-white text-[#09090b] rounded-full py-3.5 px-10 font-medium text-lg hover:bg-zinc-200 transition-colors active:scale-[0.98]"
           >
             Comenzar
           </button>
@@ -138,11 +144,13 @@ function MesaContent() {
 
 export default function NetworkingMesaPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-black" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#09090b] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-white" />
+        </div>
+      }
+    >
       <MesaContent />
     </Suspense>
   )

@@ -9,6 +9,11 @@ interface MesaCardProps {
   index?: number
 }
 
+function whatsappHref(telefono: string): string {
+  const digits = telefono.replace(/\D/g, '')
+  return `https://wa.me/${digits}`
+}
+
 export function MesaCard({ asistente, index = 0 }: MesaCardProps) {
   const nombreCompleto =
     [asistente.nombre, asistente.apellido].filter(Boolean).join(' ') || 'Sin nombre'
@@ -20,39 +25,36 @@ export function MesaCard({ asistente, index = 0 }: MesaCardProps) {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.08 * index }}
-      className="relative rounded-[24px] border border-zinc-200 bg-white px-4 py-3 shadow-none"
+      className="relative w-full rounded-2xl border border-white/10 bg-[#1a1a1c] px-5 py-4 shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
     >
-      {/* Icono verificado - esquina superior derecha */}
-      <div className="absolute right-3 top-3">
-        <CheckCircle className="h-5 w-5 text-[#262626]" strokeWidth={1.5} fill="none" />
+      <div className="absolute right-4 top-4">
+        <CheckCircle className="h-5 w-5 text-zinc-400" strokeWidth={1.5} fill="none" />
       </div>
 
-      {/* Contenido principal */}
-      <div className="space-y-2 pr-6">
-        {/* Nombre con icono */}
-        <div className="flex items-start gap-2">
-          <User className="mt-0.5 h-4 w-4 shrink-0 text-[#262626]" strokeWidth={1.5} />
-          <div className="min-w-0 flex-1">
-            <p className="font-bold text-[#262626] text-sm md:text-base leading-tight truncate">
+      <div className="flex flex-row items-center gap-4 pr-9 sm:gap-8 sm:pr-10">
+        <div className="flex min-w-0 flex-[1.2] items-start gap-2">
+          <User className="mt-0.5 h-4 w-4 shrink-0 text-zinc-300" strokeWidth={1.5} />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold leading-tight text-white sm:text-base">
               {nombreCompleto}
             </p>
-            <div className="mt-1 h-px w-2/3 bg-[#A0A0A0]" />
+            <div className="mt-1.5 h-px w-14 bg-zinc-600" />
           </div>
         </div>
 
-        {/* Empresa con icono */}
-        <div className="flex items-center gap-2">
-          <Building2 className="h-4 w-4 shrink-0 text-[#262626]" strokeWidth={1.5} />
-          <p className="text-[#262626] text-xs md:text-sm truncate">{empresa}</p>
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <Building2 className="h-4 w-4 shrink-0 text-zinc-300" strokeWidth={1.5} />
+          <p className="truncate text-xs text-zinc-300 sm:text-sm">{empresa}</p>
         </div>
 
-        {/* Teléfono con icono - visible y destacado */}
         {telefono && (
-          <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4 shrink-0 text-[#262626]" strokeWidth={1.5} />
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <Phone className="h-4 w-4 shrink-0 text-zinc-300" strokeWidth={1.5} />
             <a
-              href={`tel:${telefono}`}
-              className="text-[#262626] text-xs md:text-sm hover:underline truncate"
+              href={whatsappHref(telefono)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="truncate text-xs text-zinc-200 underline-offset-2 hover:text-white hover:underline sm:text-sm"
               onClick={(e) => e.stopPropagation()}
             >
               {telefono}
