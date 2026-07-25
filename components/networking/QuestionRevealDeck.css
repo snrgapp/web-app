@@ -73,12 +73,11 @@
 }
 
 .question-reveal__back-logo {
-  width: min(72px, 18vw);
+  width: min(88px, 22vw);
   height: auto;
   object-fit: contain;
-  /* Sutil pero legible en todas las cartas plomo */
-  opacity: 0.48;
-  filter: brightness(1.45) contrast(1.08);
+  opacity: 0.62;
+  filter: brightness(1.35) contrast(1.05);
 }
 
 /* Tarjeta blanca alineada con el mazo (ya bajado en el stage) */

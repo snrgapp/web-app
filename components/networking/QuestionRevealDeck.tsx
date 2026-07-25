@@ -11,21 +11,15 @@ import './QuestionRevealDeck.css'
  * Mazo de fondo: offsets grandes + rotaciones fijas (-18°…+18°)
  * Distribución radial alrededor del centro (abanico).
  */
-/** logoY: desplaza el logo dentro de la carta para que asome en la zona visible */
 const BACK_CARDS = [
-  // Arriba / laterales — logo un poco arriba para que asome por el borde
-  { rotate: -15, x: -110, y: -88, z: 1, logoY: '-18%' },
-  { rotate: -8, x: -20, y: -110, z: 2, logoY: '-22%' },
-  { rotate: 12, x: 105, y: -82, z: 3, logoY: '-18%' },
-  { rotate: 18, x: 122, y: 12, z: 4, logoY: '0%' },
-  { rotate: 8, x: -128, y: 10, z: 5, logoY: '0%' },
-  // Inferior — logo más abajo para que se vea bajo la tarjeta blanca
-  { rotate: 6, x: 95, y: 118, z: 6, logoY: '22%' },
-  { rotate: -12, x: -8, y: 138, z: 7, logoY: '28%' },
-  { rotate: -18, x: -100, y: 112, z: 8, logoY: '22%' },
-  { rotate: 14, x: 55, y: 155, z: 9, logoY: '30%' },
-  { rotate: -10, x: -60, y: 158, z: 10, logoY: '30%' },
-  { rotate: 4, x: 20, y: 168, z: 11, logoY: '32%' },
+  { rotate: -15, x: -110, y: -95, z: 1 },
+  { rotate: -8, x: -15, y: -120, z: 2 },
+  { rotate: 12, x: 105, y: -90, z: 3 },
+  { rotate: 18, x: 125, y: 8, z: 4 },
+  { rotate: 6, x: 100, y: 105, z: 5 },
+  { rotate: -12, x: 10, y: 125, z: 6 },
+  { rotate: -18, x: -105, y: 100, z: 7 },
+  { rotate: 8, x: -130, y: 5, z: 8 },
 ] as const
 
 export type QuestionRevealDeckProps = {
@@ -78,8 +72,7 @@ export function QuestionRevealDeck({
               width={96}
               height={96}
               className="question-reveal__back-logo"
-              style={{ transform: `translateY(${card.logoY})` }}
-              priority={i < 4}
+              priority={i < 3}
             />
           </div>
         ))}
