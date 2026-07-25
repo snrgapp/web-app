@@ -1,48 +1,74 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { FlipCountdown } from '@/components/networking/FlipCountdown'
 import { QuestionRevealDeck } from '@/components/networking/QuestionRevealDeck'
 import { getRandomQuestions } from '@/app/actions/questions'
+import type { QuestionWithCategory } from '@/types/database.types'
 
 type Phase = 'countdown' | 'loading' | 'reveal'
 
-export default function NetworkingCountdownPage() {
+function CountdownContent() {
   const router = useRouter()
-  const [ronda, setRonda] = useState('1')
+  const searchParams = useSearchParams()
+  const [ronda, setRonda] = useState(1 as 1 | 2)
   const [phase, setPhase] = useState<Phase>('countdown')
-  const [question, setQuestion] = useState('')
-  const [categoryLabel, setCategoryLabel] = useState<string | null>(null)
+  const [questions, setQuestions] = useState<QuestionWithCategory[]>([])
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
   useEffect(() => {
+    const fromUrl = searchParams.get('ronda')
     const stored =
+      fromUrl ??
       sessionStorage.getItem('networking_ronda_actual') ??
       localStorage.getItem('networking_ronda_actual') ??
       '1'
-    setRonda(stored)
-  }, [])
+    const r = stored === '2' ? 2 : 1
+    setRonda(r)
+    sessionStorage.setItem('networking_ronda_actual', String(r))
+    localStorage.setItem('networking_ronda_actual', String(r))
+
+    const asistenteId =
+      sessionStorage.getItem('asistente_id') ?? localStorage.getItem('asistente_id')
+    if (!asistenteId) {
+      router.replace('/networking/verify')
+    }
+  }, [router, searchParams])
 
   const handleComplete = useCallback(async () => {
     setPhase('loading')
-    const questions = await getRandomQuestions(10)
-    if (questions.length === 0) {
-      router.push(`/networking/questions?ronda=${ronda}`)
+    const list = await getRandomQuestions(10)
+    if (list.length === 0) {
+      setQuestions([])
+      setPhase('reveal')
       return
     }
-    const pick = questions[Math.floor(Math.random() * questions.length)]
-    setQuestion(pick.content)
-    setCategoryLabel(pick.category?.name ?? null)
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('networking_reveal_done', '1')
-    }
+    const start = Math.floor(Math.random() * list.length)
+    setQuestions(list)
+    setSelectedIndex(start)
     setPhase('reveal')
-  }, [ronda, router])
+  }, [])
 
-  function handleContinue() {
-    router.push(`/networking/questions?ronda=${ronda}`)
+  function handleGirar() {
+    if (questions.length <= 1) return
+    let next = Math.floor(Math.random() * questions.length)
+    if (next === selectedIndex) {
+      next = (next + 1) % questions.length
+    }
+    setSelectedIndex(next)
   }
+
+  function handleFinalizar() {
+    if (ronda === 1) {
+      router.push('/networking/mesa?ronda=2')
+    } else {
+      router.push('/networking/feedback')
+    }
+  }
+
+  const current = questions[selectedIndex]
 
   return (
     <div style={{ minHeight: '100vh', background: '#09090b', position: 'relative' }}>
@@ -65,10 +91,7 @@ export default function NetworkingCountdownPage() {
             animate={{ opacity: 1, filter: 'blur(8px)' }}
             exit={{ opacity: 0, filter: 'blur(16px)' }}
             transition={{ duration: 0.35 }}
-            style={{
-              minHeight: '100vh',
-              background: '#09090b',
-            }}
+            style={{ minHeight: '100vh', background: '#09090b' }}
           />
         )}
 
@@ -79,14 +102,43 @@ export default function NetworkingCountdownPage() {
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <QuestionRevealDeck
-              question={question}
-              categoryLabel={categoryLabel}
-              onContinue={handleContinue}
-            />
+            {current ? (
+              <QuestionRevealDeck
+                question={current.content}
+                categoryLabel={current.category?.name ?? null}
+                onGirar={handleGirar}
+                onFinalizar={handleFinalizar}
+              />
+            ) : (
+              <div
+                style={{
+                  minHeight: '100vh',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#a1a1aa',
+                  padding: 24,
+                  textAlign: 'center',
+                }}
+              >
+                No hay preguntas disponibles en la base de datos.
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
     </div>
+  )
+}
+
+export default function NetworkingCountdownPage() {
+  return (
+    <Suspense
+      fallback={
+        <div style={{ minHeight: '100vh', background: '#09090b' }} />
+      }
+    >
+      <CountdownContent />
+    </Suspense>
   )
 }

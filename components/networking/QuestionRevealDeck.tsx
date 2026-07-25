@@ -1,6 +1,10 @@
 'use client'
 
 import Image from 'next/image'
+import { motion } from 'framer-motion'
+import Timer from '@/components/Timer'
+import TimeUpNotification from '@/components/TimeUpNotification'
+import { useState } from 'react'
 import './QuestionRevealDeck.css'
 
 /**
@@ -21,20 +25,35 @@ const BACK_CARDS = [
 export type QuestionRevealDeckProps = {
   question: string
   categoryLabel?: string | null
-  onContinue?: () => void
+  onGirar: () => void
+  onFinalizar: () => void
 }
 
 /**
- * Pantalla post-countdown: mazo de cartas + tarjeta blanca con la pregunta.
- * Entrada: blur suave (sin stagger/flash por carta).
+ * Pantalla de pregunta: mazo 3D + tarjeta blanca + timer / girar / finalizar.
  */
 export function QuestionRevealDeck({
   question,
   categoryLabel,
-  onContinue,
+  onGirar,
+  onFinalizar,
 }: QuestionRevealDeckProps) {
+  const [showTimeUp, setShowTimeUp] = useState(false)
+
   return (
     <div className="question-reveal">
+      {/* Header: finalizar */}
+      <div className="question-reveal__header">
+        <button
+          type="button"
+          className="question-reveal__finalizar"
+          onClick={onFinalizar}
+        >
+          finalizar
+        </button>
+      </div>
+
+      {/* Stage: mazo + tarjeta (tarjeta principal subida, fondo intacto) */}
       <div className="question-reveal__stage">
         {BACK_CARDS.map((card, i) => (
           <div
@@ -47,7 +66,6 @@ export function QuestionRevealDeck({
               transform: `translate(calc(-50% + ${card.x}px), calc(-50% + ${card.y}px)) rotate(${card.rotate}deg)`,
             }}
           >
-            {/* public/logowhite.png */}
             <Image
               src="/logowhite.png"
               alt=""
@@ -79,15 +97,48 @@ export function QuestionRevealDeck({
         </div>
       </div>
 
-      {onContinue && (
-        <button
-          type="button"
-          className="question-reveal__cta"
-          onClick={onContinue}
-        >
-          continuar
-        </button>
-      )}
+      {/* Controles: tienes 3 min + iniciar + girar */}
+      <div className="question-reveal__controls">
+        <div className="question-reveal__timer-label">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="shrink-0"
+            aria-hidden
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span>tienes 3 min</span>
+        </div>
+
+        <div className="question-reveal__actions">
+          <Timer
+            initialMinutes={3}
+            dark
+            hideLabel
+            onComplete={() => setShowTimeUp(true)}
+          />
+          <motion.button
+            type="button"
+            onClick={onGirar}
+            className="question-reveal__girar"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            girar
+          </motion.button>
+        </div>
+      </div>
+
+      <TimeUpNotification
+        isOpen={showTimeUp}
+        onClose={() => setShowTimeUp(false)}
+      />
     </div>
   )
 }

@@ -43,7 +43,7 @@ export default function NetworkingCategorySelection() {
     setTimeout(() => {
       setIsShuffling(false)
       setTimeout(() => {
-        router.push(`/networking/questions?category=${selectedCategory}&ronda=${ronda}`)
+        router.push(`/networking/countdown?ronda=${ronda}`)
       }, 500)
     }, 3000)
   }
