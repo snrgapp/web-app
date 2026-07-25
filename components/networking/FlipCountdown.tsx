@@ -2,6 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+const W = 220
+const H = 280
+const HALF = H / 2        // 140px — punto de corte
+const FS = 200            // font-size del dígito
+const LH = H              // line-height = alto total de la tarjeta
+
 interface FlipCountdownProps {
   startFrom?: number
   intervalMs?: number
@@ -9,223 +15,213 @@ interface FlipCountdownProps {
 }
 
 /**
- * Flip-clock countdown component.
- * Renders a split-flap display that counts down from `startFrom` to 1,
- * then calls `onComplete`.
+ * Flip-clock countdown (split-flap display).
+ *
+ * Layout de 4 piezas (como un reloj flip real):
+ *   1. Panel inferior estático   → mitad inferior del número ACTUAL
+ *   2. Panel superior estático   → mitad superior del número ACTUAL  (queda debajo del flap)
+ *   3. Flap frontal (anima)      → mitad superior del número ACTUAL, cae hacia abajo
+ *   4. Flap trasero (anima)      → mitad superior del SIGUIENTE número, sube desde abajo
+ *
+ * Al terminar la animación se actualiza el número y se resetean los flaps.
  */
 export function FlipCountdown({
   startFrom = 5,
   intervalMs = 1000,
   onComplete,
 }: FlipCountdownProps) {
-  const [current, setCurrent] = useState(startFrom)
-  const [next, setNext] = useState(startFrom - 1)
+  const [curr, setCurr]       = useState(startFrom)
+  const [next, setNext]       = useState(startFrom - 1)
   const [flipping, setFlipping] = useState(false)
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
 
   useEffect(() => {
-    if (current <= 1) {
-      // last digit shown — wait one interval then complete
+    if (curr <= 1) {
+      // Mostramos el 1 durante un intervalo completo y luego completamos
       const t = setTimeout(() => onCompleteRef.current(), intervalMs)
       return () => clearTimeout(t)
     }
 
     const t = setTimeout(() => {
-      // trigger flip animation
       setFlipping(true)
-      // after animation finishes, commit the new number
-      const anim = setTimeout(() => {
-        setCurrent((c) => c - 1)
-        setNext((c) => c - 2)
+      // Tras la animación (500ms) actualizamos el número y reseteamos
+      const done = setTimeout(() => {
+        setCurr(c => c - 1)
+        setNext(c => Math.max(0, c - 1))
         setFlipping(false)
-      }, 500)
-      return () => clearTimeout(anim)
+      }, 520)
+      return () => clearTimeout(done)
     }, intervalMs)
 
     return () => clearTimeout(t)
-  }, [current, intervalMs])
+  }, [curr, intervalMs])
+
+  // ─── helpers de estilo ────────────────────────────────────────────────────
+
+  /** Panel (top o bottom) que recorta el dígito a su mitad */
+  function panel(half: 'top' | 'bottom'): React.CSSProperties {
+    return {
+      position: 'absolute',
+      left: 0, right: 0,
+      height: HALF,
+      top: half === 'top' ? 0 : HALF,
+      overflow: 'hidden',
+      borderRadius: half === 'top' ? '20px 20px 0 0' : '0 0 20px 20px',
+      background: half === 'top'
+        ? 'linear-gradient(180deg,#2a2a2a 0%,#1e1e1e 100%)'
+        : 'linear-gradient(180deg,#1e1e1e 0%,#141414 100%)',
+      boxShadow: half === 'top'
+        ? 'inset 0 4px 12px rgba(0,0,0,0.4)'
+        : 'inset 0 -6px 14px rgba(0,0,0,0.6)',
+    }
+  }
+
+  /**
+   * El dígito ocupa toda la altura de la tarjeta (LH = 280px).
+   * - En el panel superior, lo anclamos en top:0 → se ve la mitad de arriba.
+   * - En el panel inferior, lo desplazamos -HALF para que la mitad de abajo
+   *   quede dentro del contenedor (que empieza en y=HALF).
+   */
+  function digit(half: 'top' | 'bottom'): React.CSSProperties {
+    return {
+      position: 'absolute',
+      left: 0, right: 0,
+      top: half === 'top' ? 0 : -HALF,
+      textAlign: 'center',
+      fontSize: FS,
+      lineHeight: `${LH}px`,
+      fontWeight: 900,
+      color: '#fff',
+      fontVariantNumeric: 'tabular-nums',
+      letterSpacing: '-0.02em',
+      userSelect: 'none',
+    }
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-950">
-      {/* Subtle label */}
-      <p className="text-zinc-500 text-sm font-medium tracking-[0.25em] uppercase mb-10 select-none">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: '#09090b',
+      }}
+    >
+      {/* Label */}
+      <p
+        style={{
+          color: '#52525b',
+          fontSize: 11,
+          fontWeight: 500,
+          letterSpacing: '0.25em',
+          textTransform: 'uppercase',
+          marginBottom: 40,
+          userSelect: 'none',
+        }}
+      >
         comenzando en
       </p>
 
-      {/* Flip card */}
-      <div
-        className="relative select-none"
-        style={{ width: 220, height: 280 }}
-      >
-        {/* ── Static bottom half (shows next number) ── */}
-        <div
-          className="absolute inset-x-0 bottom-0 overflow-hidden"
-          style={{
-            height: '50%',
-            borderRadius: '0 0 20px 20px',
-            background: 'linear-gradient(to bottom, #1a1a1a, #111)',
-            boxShadow: 'inset 0 -6px 18px rgba(0,0,0,0.6)',
-          }}
-        >
-          {/* clip: show only bottom half of the digit */}
-          <div
-            className="absolute inset-x-0"
-            style={{
-              bottom: 0,
-              height: '100%',
-              display: 'flex',
-              alignItems: 'flex-start', // align so digit top is at clip boundary
-            }}
-          >
-            <span
-              className="w-full text-center font-black text-white"
-              style={{
-                fontSize: 220,
-                lineHeight: '280px',
-                marginTop: '-140px', // shift so the bottom half of the digit is visible
-                fontVariantNumeric: 'tabular-nums',
-                textShadow: '0 2px 20px rgba(0,0,0,0.8)',
-              }}
-            >
-              {next < 1 ? '' : next}
-            </span>
-          </div>
+      {/* Tarjeta flip */}
+      <div style={{ position: 'relative', width: W, height: H }}>
+
+        {/* 1 ── Panel inferior estático (mitad baja del número ACTUAL) */}
+        <div style={panel('bottom')}>
+          <span style={digit('bottom')}>{curr}</span>
         </div>
 
-        {/* ── Static top half (shows current number) ── */}
-        <div
-          className="absolute inset-x-0 top-0 overflow-hidden"
-          style={{
-            height: '50%',
-            borderRadius: '20px 20px 0 0',
-            background: 'linear-gradient(to bottom, #222, #181818)',
-            boxShadow: 'inset 0 6px 18px rgba(0,0,0,0.5)',
-          }}
-        >
-          <span
-            className="absolute inset-x-0 text-center font-black text-white"
-            style={{
-              top: 0,
-              fontSize: 220,
-              lineHeight: '280px',
-              fontVariantNumeric: 'tabular-nums',
-              textShadow: '0 2px 20px rgba(0,0,0,0.6)',
-            }}
-          >
-            {current}
-          </span>
+        {/* 2 ── Panel superior estático (mitad alta del número ACTUAL)
+               queda visible solo cuando el flap ya ha caído */}
+        <div style={panel('top')}>
+          <span style={digit('top')}>{next < 1 ? '' : next}</span>
         </div>
 
-        {/* ── Animated flap (top half that flips down) ── */}
+        {/* 3 ── Flap frontal: mitad superior del número ACTUAL, cae hacia abajo */}
         <div
-          className="absolute inset-x-0 top-0 overflow-hidden"
           style={{
-            height: '50%',
+            ...panel('top'),
             transformOrigin: 'bottom center',
-            transform: flipping ? 'rotateX(-180deg)' : 'rotateX(0deg)',
+            transform: flipping
+              ? 'perspective(600px) rotateX(-180deg)'
+              : 'perspective(600px) rotateX(0deg)',
             transition: flipping
-              ? 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)'
               : 'none',
-            perspective: 600,
-            borderRadius: '20px 20px 0 0',
-            background: 'linear-gradient(to bottom, #252525, #1c1c1c)',
             zIndex: 10,
-            // progressive shadow as it falls
+            // Sombra que se intensifica al caer
             boxShadow: flipping
-              ? 'inset 0 -8px 24px rgba(0,0,0,0.9)'
-              : 'inset 0 6px 18px rgba(0,0,0,0.5)',
+              ? 'inset 0 -16px 32px rgba(0,0,0,0.95)'
+              : 'inset 0 4px 12px rgba(0,0,0,0.4)',
           }}
         >
-          <span
-            className="absolute inset-x-0 text-center font-black text-white"
-            style={{
-              top: 0,
-              fontSize: 220,
-              lineHeight: '280px',
-              fontVariantNumeric: 'tabular-nums',
-              textShadow: '0 2px 20px rgba(0,0,0,0.6)',
-            }}
-          >
-            {current}
-          </span>
+          <span style={digit('top')}>{curr}</span>
         </div>
 
-        {/* ── Back of flap (shows next number on the flip) ── */}
+        {/* 4 ── Flap trasero: mitad superior del SIGUIENTE número, surge al completar el giro */}
         <div
-          className="absolute inset-x-0 top-0 overflow-hidden"
           style={{
-            height: '50%',
+            ...panel('top'),
             transformOrigin: 'bottom center',
-            transform: flipping ? 'rotateX(0deg)' : 'rotateX(180deg)',
+            transform: flipping
+              ? 'perspective(600px) rotateX(0deg)'
+              : 'perspective(600px) rotateX(180deg)',
             transition: flipping
-              ? 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
+              ? 'transform 0.5s cubic-bezier(0.4,0,0.2,1)'
               : 'none',
-            perspective: 600,
-            borderRadius: '20px 20px 0 0',
-            background: 'linear-gradient(to bottom, #1c1c1c, #141414)',
             zIndex: 9,
-            backfaceVisibility: 'hidden',
           }}
         >
-          <span
-            className="absolute inset-x-0 text-center font-black text-white"
-            style={{
-              top: 0,
-              fontSize: 220,
-              lineHeight: '280px',
-              fontVariantNumeric: 'tabular-nums',
-              textShadow: '0 2px 20px rgba(0,0,0,0.6)',
-            }}
-          >
-            {next < 1 ? '' : next}
-          </span>
+          <span style={digit('top')}>{next < 1 ? '' : next}</span>
         </div>
 
-        {/* ── Centre divider line ── */}
+        {/* Línea divisoria central */}
         <div
-          className="absolute inset-x-0 z-20 pointer-events-none"
           style={{
-            top: '50%',
+            position: 'absolute',
+            left: 0, right: 0,
+            top: HALF - 1,
             height: 3,
-            background: 'rgba(0,0,0,0.85)',
-            boxShadow: '0 1px 0 rgba(255,255,255,0.04)',
+            background: 'rgba(0,0,0,0.95)',
+            zIndex: 20,
+            pointerEvents: 'none',
           }}
         />
 
-        {/* ── Left hinge ── */}
-        <Hinge side="left" />
-        {/* ── Right hinge ── */}
-        <Hinge side="right" />
+        {/* Goznes laterales */}
+        {(['left', 'right'] as const).map(side => (
+          <div
+            key={side}
+            style={{
+              position: 'absolute',
+              top: HALF - 9,
+              [side]: -11,
+              width: 22,
+              height: 18,
+              borderRadius: 5,
+              background:
+                'linear-gradient(135deg,#999 0%,#666 35%,#333 65%,#777 100%)',
+              boxShadow:
+                '0 3px 8px rgba(0,0,0,0.85), inset 0 1px 2px rgba(255,255,255,0.2)',
+              zIndex: 30,
+            }}
+          />
+        ))}
 
-        {/* ── Outer card shadow ── */}
+        {/* Sombra exterior de la tarjeta */}
         <div
-          className="absolute inset-0 pointer-events-none rounded-[20px]"
           style={{
+            position: 'absolute',
+            inset: 0,
+            borderRadius: 20,
+            pointerEvents: 'none',
             boxShadow:
-              '0 32px 80px rgba(0,0,0,0.7), 0 8px 24px rgba(0,0,0,0.5)',
+              '0 40px 100px rgba(0,0,0,0.8), 0 12px 32px rgba(0,0,0,0.6)',
           }}
         />
       </div>
     </div>
-  )
-}
-
-function Hinge({ side }: { side: 'left' | 'right' }) {
-  return (
-    <div
-      className="absolute z-30 pointer-events-none"
-      style={{
-        top: 'calc(50% - 9px)',
-        [side]: -10,
-        width: 20,
-        height: 18,
-        borderRadius: 4,
-        background:
-          'linear-gradient(135deg, #888 0%, #555 40%, #333 70%, #666 100%)',
-        boxShadow:
-          '0 2px 6px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.25)',
-      }}
-    />
   )
 }
