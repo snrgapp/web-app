@@ -111,7 +111,7 @@ function MesaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-xl flex flex-col gap-3"
+          className="w-full max-w-[520px] flex flex-col items-center gap-3"
         >
           {compañeros.length === 0 ? (
             <p className="text-center text-zinc-500 py-8">
