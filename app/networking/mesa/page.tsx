@@ -53,7 +53,7 @@ function MesaContent() {
       sessionStorage.setItem('networking_ronda_actual', String(ronda))
       localStorage.setItem('networking_ronda_actual', String(ronda))
     }
-    router.push('/networking/categories')
+    router.push('/networking/countdown')
   }
 
   if (loading) {
