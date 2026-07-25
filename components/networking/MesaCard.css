@@ -1,4 +1,5 @@
-/* Tarjeta de contacto — proporciones tipo presentación horizontal */
+/* Tarjeta de contacto — misma familia visual que FlipCountdown */
+@import './snrg-metal-theme.css';
 
 .mesa-contact-card {
   display: flex;
@@ -11,10 +12,12 @@
   aspect-ratio: 3.2 / 1;
   box-sizing: border-box;
   padding: clamp(20px, 3.5vw, 32px) clamp(22px, 4vw, 32px);
-  border: 1.5px solid #1a1a1a;
   border-radius: 28px;
-  background: #ffffff;
-  box-shadow: none;
+  border: var(--snrg-metal-border);
+  background: var(--snrg-metal-gradient);
+  box-shadow:
+    var(--snrg-metal-shadow-out),
+    var(--snrg-metal-shadow-in);
 }
 
 /* Columna izquierda ~42% */
@@ -31,12 +34,12 @@
 .mesa-contact-card__name-line {
   display: block;
   width: 100%;
-  font-family: inherit;
-  font-weight: 900;
+  font-family: var(--snrg-font-display);
+  font-weight: var(--snrg-font-display-weight);
   font-size: clamp(1.35rem, 4.2vw, 2rem);
   line-height: 0.95;
-  letter-spacing: -0.03em;
-  color: #0a0a0a;
+  letter-spacing: var(--snrg-font-display-tracking);
+  color: var(--snrg-fg);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,14 +77,15 @@
   width: 26px;
   height: 26px;
   flex-shrink: 0;
-  color: #0a0a0a;
+  color: var(--snrg-fg-soft);
+  opacity: 0.88;
 }
 
 .mesa-contact-card__text {
   font-size: clamp(0.75rem, 2vw, 0.9rem);
   font-weight: 400;
   line-height: 1.25;
-  color: #1a1a1a;
+  color: var(--snrg-fg-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

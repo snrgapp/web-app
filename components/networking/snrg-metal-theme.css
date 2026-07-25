@@ -1,0 +1,37 @@
+/**
+ * Tokens visuales compartidos — familia FlipCountdown / mesa / reveal.
+ * Fuente de verdad: mismos valores que FlipCountdown.css
+ */
+:root {
+  --snrg-page-bg: #09090b;
+
+  --snrg-metal-top: #2a2a2a;
+  --snrg-metal-mid: #1e1e1e;
+  --snrg-metal-bottom: #141414;
+  --snrg-metal-gradient: linear-gradient(
+    180deg,
+    var(--snrg-metal-top) 0%,
+    var(--snrg-metal-mid) 45%,
+    var(--snrg-metal-bottom) 100%
+  );
+
+  --snrg-metal-shadow-out:
+    0 40px 100px rgba(0, 0, 0, 0.8),
+    0 12px 32px rgba(0, 0, 0, 0.6);
+
+  --snrg-metal-shadow-in:
+    inset 0 4px 12px rgba(0, 0, 0, 0.4),
+    inset 0 -6px 14px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+
+  --snrg-metal-border: 1px solid rgba(255, 255, 255, 0.1);
+
+  --snrg-fg: #ffffff;
+  --snrg-fg-soft: #f5f5f5;
+  --snrg-fg-muted: rgba(245, 245, 245, 0.88);
+
+  /* Misma tipografía del dígito del FlipCountdown */
+  --snrg-font-display: inherit;
+  --snrg-font-display-weight: 900;
+  --snrg-font-display-tracking: -0.02em;
+}
