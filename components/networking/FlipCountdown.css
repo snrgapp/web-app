@@ -1,0 +1,182 @@
+/* ─── FlipCountdown: split-flap simétrico ─── */
+
+.flip-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #09090b;
+}
+
+.flip-countdown__label {
+  color: #52525b;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  user-select: none;
+}
+
+/* Contenedor con perspectiva 3D */
+.flip-card {
+  --flip-w: 220px;
+  --flip-h: 280px;
+  --flip-half: 140px;
+  --flip-fs: 200px;
+  --flip-ms: 280ms; /* duración de CADA fase (= TOTAL/2) */
+
+  position: relative;
+  width: var(--flip-w);
+  height: var(--flip-h);
+  perspective: 800px;
+  transform-style: preserve-3d;
+  border-radius: 20px;
+  box-shadow:
+    0 40px 100px rgba(0, 0, 0, 0.8),
+    0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Mitades estáticas ── */
+
+.flip-card__half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--flip-half);
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card__half--top {
+  top: 0;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1e1e1e 100%);
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.flip-card__half--bottom {
+  top: var(--flip-half);
+  border-radius: 0 0 20px 20px;
+  background: linear-gradient(180deg, #1e1e1e 0%, #141414 100%);
+  box-shadow: inset 0 -6px 14px rgba(0, 0, 0, 0.6);
+  z-index: 1;
+}
+
+/* Dígito completo (alto = tarjeta); cada mitad lo recorta */
+.flip-card__digit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: var(--flip-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--flip-fs);
+  font-weight: 900;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  user-select: none;
+}
+
+/* En la mitad inferior: desplazar el glifo hacia arriba para mostrar solo la parte baja */
+.flip-card__digit--bottom {
+  top: calc(var(--flip-half) * -1);
+}
+
+/* ── Solapas animadas (solo montadas durante su fase) ── */
+
+.flip-card__flap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--flip-half);
+  overflow: hidden;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  z-index: 10;
+  will-change: transform;
+}
+
+/* FASE 1: solapa superior — número VIEJO — cae de canto */
+.flip-card__flap--top-out {
+  top: 0;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(180deg, #2a2a2a 0%, #1e1e1e 100%);
+  box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform-origin: bottom center;
+  animation: flip-top-out var(--flip-ms) ease-in forwards;
+}
+
+/* FASE 2: solapa inferior — número NUEVO — cae desde canto */
+.flip-card__flap--bottom-in {
+  top: var(--flip-half);
+  border-radius: 0 0 20px 20px;
+  background: linear-gradient(180deg, #1e1e1e 0%, #141414 100%);
+  box-shadow: inset 0 -6px 14px rgba(0, 0, 0, 0.6);
+  transform-origin: top center;
+  animation: flip-bottom-in var(--flip-ms) ease-out forwards;
+}
+
+/* Keyframes: mismas duraciones, fases espejo */
+
+@keyframes flip-top-out {
+  0% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
+  100% {
+    transform: rotateX(-90deg);
+    filter: brightness(0.35);
+  }
+}
+
+@keyframes flip-bottom-in {
+  0% {
+    transform: rotateX(90deg);
+    filter: brightness(0.35);
+  }
+  100% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
+}
+
+/* ── Bisagra visual ── */
+
+.flip-card__hinge-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--flip-half) - 1px);
+  height: 3px;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 30;
+  pointer-events: none;
+}
+
+.flip-card__hinge {
+  position: absolute;
+  top: calc(var(--flip-half) - 9px);
+  width: 22px;
+  height: 18px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #999 0%, #666 35%, #333 65%, #777 100%);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.85),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  z-index: 40;
+}
+
+.flip-card__hinge--left {
+  left: -11px;
+}
+
+.flip-card__hinge--right {
+  right: -11px;
+}
