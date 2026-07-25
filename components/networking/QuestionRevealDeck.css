@@ -16,9 +16,10 @@
   max-width: 480px;
   display: flex;
   justify-content: flex-end;
-  padding: 8px 8px 0;
+  padding: 12px 12px 0;
   z-index: 50;
   flex-shrink: 0;
+  min-height: 52px;
 }
 
 .question-reveal__finalizar {
@@ -36,18 +37,20 @@
   background: rgba(255, 255, 255, 0.08);
 }
 
-/* Escenario: espacio para el mazo; la tarjeta blanca se sube sola */
+/* Escenario bajado hacia el centro — deja aire al botón finalizar */
 .question-reveal__stage {
   position: relative;
   width: min(420px, 96vw);
-  height: min(480px, 58vh);
-  margin-top: 4px;
-  margin-bottom: 8px;
+  height: min(460px, 54vh);
+  margin-top: 28px;
+  margin-bottom: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
   flex-shrink: 0;
+  /* Baja todo el mazo + tarjeta blanca un poco al centro */
+  transform: translateY(28px);
 }
 
 /* Cartas volteadas — posición fija en el centro del stage (efecto 3D intacto) */
@@ -70,14 +73,15 @@
 }
 
 .question-reveal__back-logo {
-  width: min(88px, 22vw);
+  width: min(72px, 18vw);
   height: auto;
   object-fit: contain;
-  opacity: 0.62;
-  filter: brightness(1.35) contrast(1.05);
+  /* Sutil pero legible en todas las cartas plomo */
+  opacity: 0.48;
+  filter: brightness(1.45) contrast(1.08);
 }
 
-/* Tarjeta blanca: mismo tamaño/fuente, solo desplazada hacia arriba */
+/* Tarjeta blanca alineada con el mazo (ya bajado en el stage) */
 .question-reveal__main-card {
   position: relative;
   z-index: 30;
@@ -94,8 +98,6 @@
   justify-content: space-between;
   padding: 28px 22px 22px;
   box-sizing: border-box;
-  /* Sube la tarjeta blanca sin mover el mazo de fondo */
-  transform: translateY(-48px);
 }
 
 .question-reveal__main-logo {
