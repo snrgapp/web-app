@@ -1,0 +1,149 @@
+@import '../../../components/networking/snrg-metal-theme.css';
+
+.verify-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  box-sizing: border-box;
+  background: var(--snrg-page-bg);
+  font-family: inherit;
+  position: relative;
+}
+
+.verify-page--loading {
+  justify-content: center;
+}
+
+.verify-page__back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 16px;
+}
+
+.verify-page__back-btn {
+  color: var(--snrg-fg);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.verify-page__logo {
+  margin-bottom: 28px;
+}
+
+.verify-page__content {
+  width: 100%;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.verify-page__copy {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.verify-page__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: var(--snrg-font-display-weight);
+  letter-spacing: var(--snrg-font-display-tracking);
+  color: var(--snrg-fg);
+  line-height: 1.2;
+}
+
+.verify-page__desc {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--snrg-fg-muted);
+  line-height: 1.4;
+}
+
+.verify-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.verify-page__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--snrg-fg-muted);
+  margin-bottom: 8px;
+}
+
+.verify-page__input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  border-radius: 14px;
+  border: var(--snrg-metal-border);
+  background: var(--snrg-metal-gradient);
+  box-shadow: var(--snrg-metal-shadow-in);
+  color: var(--snrg-fg);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.verify-page__input::placeholder {
+  color: rgba(245, 245, 245, 0.35);
+}
+
+.verify-page__input:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.verify-page__error {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.35);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+/* Botón Ingresar — mismo estilo 3D metálico de MesaCard */
+.verify-page__submit {
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  border: var(--snrg-metal-border);
+  background: var(--snrg-metal-gradient);
+  box-shadow:
+    var(--snrg-metal-shadow-out),
+    var(--snrg-metal-shadow-in);
+  color: var(--snrg-fg);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.verify-page__submit:hover:not(:disabled) {
+  opacity: 0.95;
+}
+
+.verify-page__submit:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.verify-page__submit:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
