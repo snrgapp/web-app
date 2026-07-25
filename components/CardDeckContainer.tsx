@@ -39,46 +39,25 @@ export default function CardDeckContainer({ questions, categorySlug, ronda = 1 }
   }
 
   const handleVolver = () => {
-    router.push('/networking/categories')
+    router.push(`/networking/mesa?ronda=${ronda}`)
   }
-  const [countdown, setCountdown] = useState<number | null>(null)
   const [selectedCardIndex, setSelectedCardIndex] = useState<number | null>(null)
-  const [backgroundColor, setBackgroundColor] = useState<'yellow' | 'dark'>('yellow')
+  const [backgroundColor, setBackgroundColor] = useState<'yellow' | 'dark'>(
+    categorySlug === 'founder' ? 'yellow' : 'dark'
+  )
   const [showTimeUpNotification, setShowTimeUpNotification] = useState(false)
-  
-  // Seleccionar una pregunta aleatoria
+
+  // El flip-countdown + reveal ya corrieron antes; aquí arrancamos directo con una pregunta
+  useEffect(() => {
+    if (questions.length === 0) return
+    setSelectedCardIndex(Math.floor(Math.random() * questions.length))
+    setBackgroundColor(categorySlug === 'founder' ? 'yellow' : 'dark')
+  }, [questions.length, categorySlug])
+
   const selectedQuestion = useMemo(() => {
-    if (questions.length === 0) return null
-    if (selectedCardIndex === null) return null
+    if (questions.length === 0 || selectedCardIndex === null) return null
     return questions[selectedCardIndex]
   }, [questions, selectedCardIndex])
-  
-  // Conteo regresivo de 3 segundos; fondo y tarjetas según categoría elegida
-  useEffect(() => {
-    setCountdown(3)
-    
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === null) return null
-        
-        setBackgroundColor((currentColor) => 
-          currentColor === 'yellow' ? 'dark' : 'yellow'
-        )
-        
-        if (prev <= 1) {
-          const randomIndex = Math.floor(Math.random() * questions.length)
-          setSelectedCardIndex(randomIndex)
-          setBackgroundColor(categorySlug === 'founder' ? 'yellow' : 'dark')
-          clearInterval(interval)
-          return null
-        }
-        
-        return prev - 1
-      })
-    }, 1000)
-    
-    return () => clearInterval(interval)
-  }, [questions.length, categorySlug])
   
   // Si no hay preguntas suficientes, mostrar mensaje
   if (questions.length === 0) {
@@ -130,20 +109,7 @@ export default function CardDeckContainer({ questions, categorySlug, ronda = 1 }
       <div className="relative w-full flex-1 flex flex-col min-h-0 px-4 sm:px-6 pb-20 sm:pb-28">
         {/* Contador regresivo o tarjeta: centrado en el resto de la pantalla */}
         <div className="relative w-full flex-1 flex justify-center items-center min-h-0 z-10 px-2 sm:px-6 py-2">
-          {countdown !== null ? (
-            <motion.div
-              key={countdown}
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.5, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`text-9xl sm:text-[12rem] md:text-[15rem] font-black ${
-                backgroundColor === 'yellow' ? 'text-black' : 'text-white'
-              }`}
-            >
-              {countdown}
-            </motion.div>
-          ) : selectedQuestion ? (
+          {selectedQuestion ? (
             <motion.div
               initial={{ scale: 0.8, opacity: 0, y: 50 }}
               animate={{ scale: 1.4, opacity: 1, y: -20 }}
