@@ -5,14 +5,14 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: clamp(20px, 4vw, 36px);
+  gap: clamp(14px, 3vw, 24px);
   width: 100%;
-  max-width: 520px;
-  min-height: clamp(112px, 18vw, 140px);
-  aspect-ratio: 3.2 / 1;
+  max-width: 420px;
+  min-height: 72px;
+  aspect-ratio: auto;
   box-sizing: border-box;
-  padding: clamp(20px, 3.5vw, 32px) clamp(22px, 4vw, 32px);
-  border-radius: 28px;
+  padding: 14px 20px;
+  border-radius: 22px;
   border: var(--snrg-metal-border);
   background: var(--snrg-metal-gradient);
   box-shadow:
@@ -36,7 +36,7 @@
   width: 100%;
   font-family: var(--snrg-font-display);
   font-weight: var(--snrg-font-display-weight);
-  font-size: clamp(1.35rem, 4.2vw, 2rem);
+  font-size: clamp(1.05rem, 3.2vw, 1.35rem);
   line-height: 0.95;
   letter-spacing: var(--snrg-font-display-tracking);
   color: var(--snrg-fg);
@@ -52,7 +52,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 14px;
+  gap: 8px;
 }
 
 .mesa-contact-card__row {
@@ -74,17 +74,17 @@
 }
 
 .mesa-contact-card__icon {
-  width: 26px;
-  height: 26px;
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
   color: var(--snrg-fg-soft);
   opacity: 0.88;
 }
 
 .mesa-contact-card__text {
-  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
   font-weight: 400;
-  line-height: 1.25;
+  line-height: 1.2;
   color: var(--snrg-fg-muted);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -94,10 +94,10 @@
 
 @media (max-width: 380px) {
   .mesa-contact-card {
-    aspect-ratio: auto;
-    min-height: 100px;
-    border-radius: 22px;
-    gap: 14px;
+    min-height: 64px;
+    padding: 12px 16px;
+    border-radius: 18px;
+    gap: 12px;
   }
 
   .mesa-contact-card__name {
@@ -106,11 +106,11 @@
   }
 
   .mesa-contact-card__icon {
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
   }
 
   .mesa-contact-card__meta {
-    gap: 12px;
+    gap: 6px;
   }
 }

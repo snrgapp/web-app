@@ -88,7 +88,7 @@ function MesaContent() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center gap-2 mb-8"
+          className="flex flex-col items-center gap-2 mb-5"
         >
           <div className="flex items-center gap-2">
             <Image
@@ -102,8 +102,8 @@ function MesaContent() {
               {ronda === 1 ? 'Primera Ronda' : 'Segunda Ronda'}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-light text-white tracking-tight">
-            La mesa {mesaLabel}
+          <h1 className="text-3xl sm:text-4xl font-light text-white tracking-tight lowercase">
+            mesa {mesaLabel}
           </h1>
         </motion.div>
 
@@ -111,7 +111,7 @@ function MesaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-[520px] flex flex-col items-center gap-3"
+          className="w-full max-w-[420px] flex flex-col items-center gap-2.5"
         >
           {compañeros.length === 0 ? (
             <p className="text-center text-zinc-500 py-8">
@@ -128,7 +128,7 @@ function MesaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-10"
+          className="mt-6"
         >
           <button
             onClick={handleComenzar}
