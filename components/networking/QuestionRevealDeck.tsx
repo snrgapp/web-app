@@ -79,16 +79,9 @@ export function QuestionRevealDeck({
         ))}
 
         <div className="question-reveal__main-card">
-          <div className="question-reveal__main-logo">
-            <Image
-              src="/logo.png"
-              alt="Synergy"
-              width={28}
-              height={28}
-              className="object-contain"
-              priority
-            />
-          </div>
+          <p className="question-reveal__prompt">
+            Responde la pregunta al grupo.
+          </p>
 
           <p className="question-reveal__question">{question}</p>
 

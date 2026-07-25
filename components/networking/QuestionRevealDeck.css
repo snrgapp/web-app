@@ -112,12 +112,15 @@
   box-sizing: border-box;
 }
 
-.question-reveal__main-logo {
+.question-reveal__prompt {
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 28px;
+  margin: 0;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+  color: #71717a;
 }
 
 .question-reveal__question {
