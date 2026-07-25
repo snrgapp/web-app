@@ -29,7 +29,7 @@ type FlipState =
  *   — easing ease-out, transform-origin: top
  */
 export function FlipCountdown({
-  startFrom = 5,
+  startFrom = 3,
   intervalMs = 1000,
   onComplete,
 }: FlipCountdownProps) {

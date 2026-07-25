@@ -20,5 +20,5 @@ export default function NetworkingCountdownPage() {
     router.push(`/networking/questions?ronda=${ronda}`)
   }
 
-  return <FlipCountdown startFrom={5} onComplete={handleComplete} />
+  return <FlipCountdown startFrom={3} onComplete={handleComplete} />
 }
