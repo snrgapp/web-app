@@ -4,16 +4,19 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import './QuestionRevealDeck.css'
 
-/** Ángulos y offsets fijos (pseudo-aleatorios) para el mazo de fondo */
+/**
+ * Mazo de fondo: offsets grandes + rotaciones fijas (-18°…+18°)
+ * Distribución radial alrededor del centro (abanico).
+ */
 const BACK_CARDS = [
-  { rotate: -12, x: -72, y: -28, z: 1 },
-  { rotate: 10, x: 78, y: -18, z: 2 },
-  { rotate: -7, x: -48, y: 36, z: 3 },
-  { rotate: 14, x: 58, y: 42, z: 4 },
-  { rotate: -15, x: -18, y: -52, z: 5 },
-  { rotate: 8, x: 24, y: 58, z: 6 },
-  { rotate: -4, x: -88, y: 8, z: 7 },
-  { rotate: 6, x: 92, y: 12, z: 8 },
+  { rotate: -15, x: -110, y: -95, z: 1 }, // arriba-izquierda
+  { rotate: -8, x: -15, y: -120, z: 2 }, // arriba
+  { rotate: 12, x: 105, y: -90, z: 3 }, // arriba-derecha
+  { rotate: 18, x: 125, y: 8, z: 4 }, // derecha
+  { rotate: 6, x: 100, y: 105, z: 5 }, // abajo-derecha
+  { rotate: -12, x: 10, y: 125, z: 6 }, // abajo
+  { rotate: -18, x: -105, y: 100, z: 7 }, // abajo-izquierda
+  { rotate: 8, x: -130, y: 5, z: 8 }, // izquierda
 ] as const
 
 export type QuestionRevealDeckProps = {
@@ -38,43 +41,47 @@ export function QuestionRevealDeck({
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="question-reveal__stage">
-        {/* Cartas de fondo (boca abajo) */}
         {BACK_CARDS.map((card, i) => (
           <motion.div
             key={i}
             className="question-reveal__back-card"
-            style={{ zIndex: card.z }}
-            initial={{ opacity: 0, scale: 0.7, rotate: 0, x: 0, y: 0 }}
+            style={{ zIndex: card.z, left: '50%', top: '50%' }}
+            initial={{
+              opacity: 0,
+              scale: 0.75,
+              rotate: 0,
+              x: '-50%',
+              y: '-50%',
+            }}
             animate={{
               opacity: 1,
               scale: 1,
               rotate: card.rotate,
-              x: card.x,
-              y: card.y,
+              x: `calc(-50% + ${card.x}px)`,
+              y: `calc(-50% + ${card.y}px)`,
             }}
             transition={{
-              duration: 0.5,
-              delay: 0.08 + i * 0.05,
+              duration: 0.55,
+              delay: 0.06 + i * 0.055,
               ease: [0.22, 1, 0.36, 1],
             }}
           >
             <Image
               src="/logowhite.png"
               alt=""
-              width={72}
-              height={72}
+              width={96}
+              height={96}
               className="question-reveal__back-logo"
-              priority={i < 2}
+              priority={i < 3}
             />
           </motion.div>
         ))}
 
-        {/* Tarjeta principal */}
         <motion.div
           className="question-reveal__main-card"
           initial={{ opacity: 0, scale: 0.85, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.55, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
         >
           <div className="question-reveal__main-logo">
             <Image
@@ -102,7 +109,7 @@ export function QuestionRevealDeck({
           onClick={onContinue}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.4 }}
+          transition={{ delay: 0.75, duration: 0.4 }}
         >
           continuar
         </motion.button>

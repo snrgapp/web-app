@@ -7,30 +7,35 @@
   justify-content: center;
   min-height: 100vh;
   background: #09090b;
-  padding: 32px 20px 48px;
+  padding: 24px 12px 40px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
+/* Escenario amplio para que las cartas asomen por los bordes */
 .question-reveal__stage {
   position: relative;
-  width: min(280px, 72vw);
-  height: min(420px, 62vh);
+  width: min(420px, 96vw);
+  height: min(560px, 72vh);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
-/* Cartas volteadas de fondo */
+/* Cartas volteadas de fondo — centradas en el stage, luego offset con framer */
 .question-reveal__back-card {
   position: absolute;
-  width: min(168px, 48vw);
-  height: min(252px, 36vh);
+  width: min(175px, 46vw);
+  height: min(262px, 38vh);
   border-radius: 22px;
-  background: linear-gradient(160deg, #2a2a2a 0%, #1a1a1a 45%, #121212 100%);
+  background: linear-gradient(155deg, #3a3a3c 0%, #252528 42%, #1a1a1c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.55),
-    0 4px 12px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    0 22px 48px rgba(0, 0, 0, 0.65),
+    0 6px 16px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -38,19 +43,19 @@
 }
 
 .question-reveal__back-logo {
-  width: 56px;
+  width: min(88px, 22vw);
   height: auto;
   object-fit: contain;
-  opacity: 0.28;
-  filter: brightness(1.1);
+  opacity: 0.62;
+  filter: brightness(1.35) contrast(1.05);
 }
 
 /* Tarjeta blanca principal */
 .question-reveal__main-card {
   position: relative;
-  z-index: 20;
-  width: min(220px, 62vw);
-  height: min(340px, 50vh);
+  z-index: 30;
+  width: min(220px, 58vw);
+  height: min(340px, 48vh);
   border-radius: 26px;
   background: #ffffff;
   box-shadow:
@@ -100,7 +105,7 @@
 }
 
 .question-reveal__cta {
-  margin-top: 40px;
+  margin-top: 36px;
   min-width: 200px;
   padding: 14px 28px;
   border: none;
@@ -112,6 +117,7 @@
   cursor: pointer;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   transition: transform 0.15s ease, opacity 0.15s ease;
+  z-index: 40;
 }
 
 .question-reveal__cta:active {
