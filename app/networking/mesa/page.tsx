@@ -70,7 +70,9 @@ function MesaContent() {
       : asistente.mesa_ronda2
     : null
 
-  const mesaLabel = mesa ?? '?'
+  // Si en BD viene "mesa 7" / "Mesa 7", dejamos solo el número
+  const mesaNumero =
+    mesa?.replace(/^\s*mesa\s*/i, '').trim() || mesa || '?'
 
   return (
     <div className="min-h-screen bg-[#09090b] flex flex-col font-sans">
@@ -103,7 +105,7 @@ function MesaContent() {
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl font-light text-white tracking-tight lowercase">
-            mesa {mesaLabel}
+            mesa {mesaNumero}
           </h1>
         </motion.div>
 
