@@ -10,13 +10,22 @@ import type { QuestionWithCategory } from '@/types/database.types'
 
 type Phase = 'countdown' | 'loading' | 'reveal'
 
+function shuffleDeck<T>(items: T[]): T[] {
+  const arr = [...items]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
 function CountdownContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [ronda, setRonda] = useState(1 as 1 | 2)
   const [phase, setPhase] = useState<Phase>('countdown')
-  const [questions, setQuestions] = useState<QuestionWithCategory[]>([])
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [deck, setDeck] = useState<QuestionWithCategory[]>([])
+  const [cursor, setCursor] = useState(0)
 
   useEffect(() => {
     const fromUrl = searchParams.get('ronda')
@@ -39,25 +48,39 @@ function CountdownContent() {
 
   const handleComplete = useCallback(async () => {
     setPhase('loading')
-    const list = await getRandomQuestions(10)
+    // Pool completo mezclado (sin repetir hasta agotar)
+    const list = await getRandomQuestions(100, 'networking')
     if (list.length === 0) {
-      setQuestions([])
+      // Fallback: cualquier categoría de la org
+      const fallback = await getRandomQuestions(100)
+      setDeck(fallback)
+      setCursor(0)
       setPhase('reveal')
       return
     }
-    const start = Math.floor(Math.random() * list.length)
-    setQuestions(list)
-    setSelectedIndex(start)
+    setDeck(list)
+    setCursor(0)
     setPhase('reveal')
   }, [])
 
   function handleGirar() {
-    if (questions.length <= 1) return
-    let next = Math.floor(Math.random() * questions.length)
-    if (next === selectedIndex) {
-      next = (next + 1) % questions.length
+    if (deck.length <= 1) return
+
+    // Siguiente sin repetir hasta agotar el mazo
+    if (cursor + 1 < deck.length) {
+      setCursor(cursor + 1)
+      return
     }
-    setSelectedIndex(next)
+
+    // Mazo agotado: remezclar evitando empezar con la misma pregunta
+    const current = deck[cursor]
+    let reshuffled = shuffleDeck(deck)
+    if (reshuffled[0]?.id === current.id && reshuffled.length > 1) {
+      const swapWith = 1 + Math.floor(Math.random() * (reshuffled.length - 1))
+      ;[reshuffled[0], reshuffled[swapWith]] = [reshuffled[swapWith], reshuffled[0]]
+    }
+    setDeck(reshuffled)
+    setCursor(0)
   }
 
   function handleFinalizar() {
@@ -68,7 +91,7 @@ function CountdownContent() {
     }
   }
 
-  const current = questions[selectedIndex]
+  const current = deck[cursor]
 
   return (
     <div style={{ minHeight: '100vh', background: '#09090b', position: 'relative' }}>
