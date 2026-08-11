@@ -1,30 +1,37 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import '@/components/recursos/recursos-shelf.css'
 
-const CompleteShelf = dynamic(
+const ProgressLibrary = dynamic(
   () =>
-    import('@/components/recursos/CompleteShelf').then((m) => m.CompleteShelf),
+    import('@/components/recursos/complete-shelf/ProgressLibrary').then(
+      (m) => m.ProgressLibrary
+    ),
   {
     ssr: false,
     loading: () => (
-      <div
-        style={{
-          minHeight: '100vh',
-          background: '#F3EEE4',
-          display: 'grid',
-          placeItems: 'center',
-          color: '#5c5348',
-          fontFamily: 'Georgia, serif',
-        }}
-      >
-        Abriendo la estantería…
+      <div className="recursos-shelf-root">
+        <div
+          style={{
+            minHeight: '100dvh',
+            display: 'grid',
+            placeItems: 'center',
+            color: 'rgba(37, 35, 31, 0.62)',
+            fontFamily: '"Newsreader Variable", Georgia, serif',
+            letterSpacing: '0.04em',
+          }}
+        >
+          Abriendo la estantería…
+        </div>
       </div>
     ),
   }
 )
 
 export default function RecursosPage() {
-  return <CompleteShelf />
+  return (
+    <div className="recursos-shelf-root">
+      <ProgressLibrary />
+    </div>
+  )
 }

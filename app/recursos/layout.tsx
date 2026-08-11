@@ -1,10 +1,21 @@
-import type { Metadata } from 'next'
-import Navbar from '@/components/Navbar'
+import type { Metadata, Viewport } from 'next'
+import '@fontsource-variable/newsreader'
+import '@fontsource-variable/inter'
+import '@/components/recursos/complete-shelf/globals.css'
+import { siteConfig } from '@/components/recursos/complete-shelf/site-config'
 
 export const metadata: Metadata = {
   title: 'Recursos',
-  description:
-    'The Complete Shelf: biblioteca editorial 3D para explorar recursos de Synergy.',
+  description: siteConfig.description,
+  applicationName: siteConfig.applicationName,
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  themeColor: '#eee8db',
+  colorScheme: 'light',
 }
 
 export default function RecursosLayout({
@@ -12,10 +23,5 @@ export default function RecursosLayout({
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <div className="min-h-screen bg-[#F3EEE4] font-[family-name:var(--font-playfair-display)]">
-      <Navbar />
-      {children}
-    </div>
-  )
+  return children
 }
