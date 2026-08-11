@@ -1280,6 +1280,29 @@ export class ShelfEngine {
         8,
         this.renderer.capabilities.getMaxAnisotropy(),
       );
+      texture.wrapS = THREE.ClampToEdgeWrapping;
+      texture.wrapT = THREE.ClampToEdgeWrapping;
+
+      // Cover-fit the image to the portrait front plane without stretching.
+      const image = texture.image as { width?: number; height?: number };
+      const imageWidth = image.width ?? 1;
+      const imageHeight = image.height ?? 1;
+      const parameters = runtime.frontSurface.geometry.parameters as {
+        width: number;
+        height: number;
+      };
+      const planeAspect = parameters.width / parameters.height;
+      const imageAspect = imageWidth / Math.max(1, imageHeight);
+      if (imageAspect > planeAspect) {
+        const repeatX = planeAspect / imageAspect;
+        texture.repeat.set(repeatX, 1);
+        texture.offset.set((1 - repeatX) * 0.5, 0);
+      } else {
+        const repeatY = imageAspect / planeAspect;
+        texture.repeat.set(1, repeatY);
+        texture.offset.set(0, (1 - repeatY) * 0.5);
+      }
+      texture.needsUpdate = true;
 
       const material = runtime.frontSurface.material;
       const proceduralTexture = material.map;
