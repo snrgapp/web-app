@@ -4,12 +4,13 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Ticket, Mail, UserPlus } from 'lucide-react'
+import { Menu, X, Ticket, Mail, UserPlus, BookOpen } from 'lucide-react'
 import { SNRG_SHOW_PUBLIC_EVENTOS_NAV } from '@/lib/snrg-public-flags'
 
 const navLinksAll = [
   { href: '/inicio#unete-red', label: 'únete a la red', icon: UserPlus },
   { href: '/eventos', label: 'eventos', icon: Ticket },
+  { href: '/recursos', label: 'recursos', icon: BookOpen },
   { href: '/contacto', label: 'contacto', icon: Mail },
 ]
 
