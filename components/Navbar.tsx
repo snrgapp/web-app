@@ -4,19 +4,23 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Menu, X, Ticket, Mail, UserPlus, BookOpen } from 'lucide-react'
-import { SNRG_SHOW_PUBLIC_EVENTOS_NAV } from '@/lib/snrg-public-flags'
+import { Menu, X, Ticket, Mail, BookOpen } from 'lucide-react'
+import {
+  SNRG_SHOW_PUBLIC_EVENTOS_NAV,
+  SNRG_SHOW_PUBLIC_RECURSOS_NAV,
+} from '@/lib/snrg-public-flags'
 
 const navLinksAll = [
-  { href: '/inicio#unete-red', label: 'únete a la red', icon: UserPlus },
   { href: '/eventos', label: 'eventos', icon: Ticket },
   { href: '/recursos', label: 'recursos', icon: BookOpen },
   { href: '/contacto', label: 'contacto', icon: Mail },
 ]
 
-const navLinks = SNRG_SHOW_PUBLIC_EVENTOS_NAV
-  ? navLinksAll
-  : navLinksAll.filter((link) => link.href !== '/eventos')
+const navLinks = navLinksAll.filter((link) => {
+  if (link.href === '/eventos' && !SNRG_SHOW_PUBLIC_EVENTOS_NAV) return false
+  if (link.href === '/recursos' && !SNRG_SHOW_PUBLIC_RECURSOS_NAV) return false
+  return true
+})
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -48,14 +52,6 @@ export default function Navbar() {
               const Icon = link.icon
               const className =
                 'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
-              if (link.href.includes('#')) {
-                return (
-                  <a key={link.href} href={link.href} className={className}>
-                    <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
-                    {link.label}
-                  </a>
-                )
-              }
               return (
                 <Link key={link.href} href={link.href} className={className}>
                   <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
@@ -96,14 +92,6 @@ export default function Navbar() {
                 const Icon = link.icon
                 const className =
                   'flex items-center gap-2 py-3 px-2 text-base font-light text-[#1a1a1a] lowercase tracking-wide hover:bg-black/5 rounded-lg transition-colors'
-                if (link.href.includes('#')) {
-                  return (
-                    <a key={link.href} href={link.href} onClick={closeMenu} className={className}>
-                      <Icon className="h-5 w-5 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
-                      {link.label}
-                    </a>
-                  )
-                }
                 return (
                   <Link key={link.href} href={link.href} onClick={closeMenu} className={className}>
                     <Icon className="h-5 w-5 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />

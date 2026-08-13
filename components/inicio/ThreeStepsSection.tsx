@@ -252,7 +252,9 @@ export default function ThreeStepsSection() {
 
         <div className="mt-12 flex justify-center px-6">
           <a
-            href="/inicio#unete-red"
+            href="https://luma.com/snrg"
+            target="_blank"
+            rel="noopener noreferrer"
             className={cn(
               'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-[#1a1a1a] px-7 py-3.5',
               'text-sm font-semibold text-white transition-colors hover:bg-[#2d2d2d] sm:w-auto',

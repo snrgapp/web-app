@@ -10,7 +10,6 @@ import ThreeStepsSection from '@/components/inicio/ThreeStepsSection'
 import ReviewsCarousel from '@/components/inicio/ReviewsCarousel'
 import ExperiencesPortfolioSection from '@/components/inicio/ExperiencesPortfolioSection'
 import PhotoGallery from '@/components/inicio/PhotoGallery'
-import JoinFormSection from '@/components/inicio/JoinFormSection'
 import CommunityMapSection from '@/components/inicio/CommunityMapSection'
 import Footer from '@/components/Footer'
 import FaqSection from '@/components/inicio/FaqSection'
@@ -33,7 +32,6 @@ export default function InicioPage() {
       <CommunityMapSection />
       <ExperiencesPortfolioSection />
       <PhotoGallery />
-      <JoinFormSection />
       <ReviewsCarousel />
       <FaqSection />
       {/* <TarjetasSection /> */}
