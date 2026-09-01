@@ -72,7 +72,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
       )}
       <CardHeader>
-        <h3 className="font-semibold text-zinc-800">{event.titulo}</h3>
+        <h1 className="font-semibold text-zinc-800">{event.titulo}</h1>
         {event.fecha_inicio && (
           <div className="flex items-center gap-2 text-sm text-zinc-500">
             <Calendar className="w-4 h-4" />

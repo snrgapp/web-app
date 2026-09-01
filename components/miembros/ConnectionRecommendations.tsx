@@ -65,7 +65,7 @@ export function ConnectionRecommendations() {
     <>
       <Card>
         <CardHeader>
-          <h3 className="text-sm font-semibold text-zinc-700">Conexiones de tu última reunión</h3>
+          <h1 className="text-sm font-semibold text-zinc-700">Conexiones de tu última reunión</h1>
         </CardHeader>
         <CardContent>
           {recommendations.length === 0 ? (

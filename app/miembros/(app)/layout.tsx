@@ -1,8 +1,6 @@
-import { Inter } from 'next/font/google'
 import { MembersSidebar } from '@/components/miembros/MembersSidebar'
-import { MembersTopBar } from '@/components/miembros/MembersTopBar'
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-members' })
+import { MembersBottomNav } from '@/components/miembros/MembersBottomNav'
+import { MembersDesktopHeader } from '@/components/miembros/MembersDesktopHeader'
 
 export default function MiembrosAppLayout({
   children,
@@ -10,19 +8,13 @@ export default function MiembrosAppLayout({
   children: React.ReactNode
 }) {
   return (
-    <div
-      className={`min-h-screen bg-zinc-50 ${inter.variable}`}
-      style={{ fontFamily: 'var(--font-members), Inter, system-ui, sans-serif' }}
-    >
-      <div className="flex flex-col lg:flex-row min-h-screen">
-        <MembersSidebar />
-        <div className="flex-1 min-w-0 flex flex-col transition-all duration-300 ease-out">
-          <MembersTopBar />
-          <main className="flex-1 overflow-auto transition-all duration-300 ease-out">
-            {children}
-          </main>
-        </div>
+    <div className="min-h-screen bg-members-background text-members-on-surface">
+      <MembersSidebar />
+      <div className="flex min-h-screen flex-col md:ml-[240px]">
+        <MembersDesktopHeader />
+        <main className="flex-1 overflow-auto pb-20 md:pb-0">{children}</main>
       </div>
+      <MembersBottomNav />
     </div>
   )
 }

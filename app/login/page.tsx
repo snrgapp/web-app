@@ -2,10 +2,12 @@
 
 import { useFormState } from 'react-dom'
 import { useFormStatus } from 'react-dom'
+import { useSearchParams } from 'next/navigation'
 import { Mail, Lock, AlertTriangle } from 'lucide-react'
 import { login, type LoginState } from '../actions/auth'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
+import { Suspense } from 'react'
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -20,8 +22,10 @@ function SubmitButton() {
   )
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const [state, formAction] = useFormState<LoginState, FormData>(login, null)
+  const searchParams = useSearchParams()
+  const from = searchParams.get('from') || '/panel'
 
   return (
     <div className="min-h-screen bg-zinc-100 flex items-center justify-center p-4 sm:p-6">
@@ -65,6 +69,7 @@ export default function LoginPage() {
           </p>
 
           <form action={formAction} className="space-y-4">
+            <input type="hidden" name="from" value={from} />
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
                 <Mail size={18} />
@@ -100,5 +105,13 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }

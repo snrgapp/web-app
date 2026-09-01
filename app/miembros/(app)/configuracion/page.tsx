@@ -46,7 +46,7 @@ export default function ConfiguracionPage() {
 
       <Card className="max-w-md">
         <CardHeader>
-          <h2 className="font-semibold text-zinc-800">Datos personales</h2>
+          <h1 className="font-semibold text-zinc-800">Datos personales</h1>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>

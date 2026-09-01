@@ -60,7 +60,36 @@ const config: Config = {
   				'5': 'hsl(var(--chart-5))'
   			},
   			'pure-dark': '#050505',
-  			'neon-lime': '#BFFF00'
+  			'neon-lime': '#BFFF00',
+			members: {
+				background: '#000000',
+				surface: '#121212',
+				'surface-container': '#1f1f28',
+				'surface-container-low': '#1b1b24',
+				'surface-container-high': '#2a2933',
+				'surface-bright': '#393842',
+				'surface-variant': '#35343e',
+				'on-surface': '#e4e1ee',
+				'on-surface-variant': '#c7c4d8',
+				primary: '#c3c0ff',
+				'primary-container': '#4f46e5',
+				secondary: '#4edea3',
+				'secondary-container': '#00a572',
+				success: '#10B981',
+				tertiary: '#ffb695',
+				outline: '#918fa1',
+				'outline-variant': '#464555',
+				border: '#262626',
+				hover: '#1A1A1A',
+				'hover-border': '#333333',
+				input: '#080808',
+				'admin-surface': '#13121b',
+				'admin-surface-container': '#1b1b24',
+				'surface-container-lowest': '#0e0d16',
+				'surface-container-highest': '#35343e',
+				'on-primary-container': '#dad7ff',
+				pending: '#f59e0b',
+			}
   		},
   		fontWeight: {
   			hero: '900'
@@ -86,10 +115,15 @@ const config: Config = {
   				'0%': { transform: 'translateX(-50%)' },
   				'100%': { transform: 'translateX(0)' },
   			},
+  			'members-pulse': {
+  				'0%, 100%': { opacity: '1', transform: 'scale(1)' },
+  				'50%': { opacity: '.5', transform: 'scale(1.1)' },
+  			},
   		},
   		animation: {
   			'reviews-scroll-left': 'reviews-scroll-left 38s linear infinite',
   			'reviews-scroll-right': 'reviews-scroll-right 44s linear infinite',
+  			'members-pulse': 'members-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
   		},
   	}
   },

@@ -79,19 +79,23 @@ export async function middleware(request: NextRequest) {
     if (pathname.startsWith('/api') || pathname.startsWith('/_next')) {
       return NextResponse.next({ request: { headers: requestHeaders } })
     }
-    const isLoginPath = pathname === '/login' || pathname === '/miembros/login'
-    const protectedPaths = ['/', '/inicio', '/red-contactos', '/eventos', '/recursos', '/asesorias', '/beneficios', '/notificaciones', '/configuracion']
+    const isPublicAuthPath =
+      pathname === '/login' ||
+      pathname === '/miembros/login' ||
+      pathname === '/registro' ||
+      pathname === '/miembros/registro'
+    const protectedPaths = ['/', '/inicio', '/red-contactos', '/eventos', '/recursos', '/asesorias', '/beneficios', '/notificaciones', '/configuracion', '/coffee-meets', '/lets-connect', '/aprendizaje', '/upgrade', '/analitica']
     const isProtectedPath =
       pathname === '/' ||
       protectedPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`)) ||
-      (pathname.startsWith('/miembros') && !isLoginPath)
+      (pathname.startsWith('/miembros') && !isPublicAuthPath)
     // Bypass auth solo en desarrollo local (NODE_ENV=development + host localhost)
     const devHost =
       (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '').replace(/:.*$/, '')
     const isLocalDev =
       process.env.NODE_ENV === 'development' && devHost.includes('localhost')
 
-    if (isProtectedPath && !isLoginPath && !isLocalDev) {
+    if (isProtectedPath && !isPublicAuthPath && !isLocalDev) {
       const cookieName = getCookieName()
       const token = request.cookies.get(cookieName)?.value
       if (!token || !hasValidSessionFormat(token)) {
@@ -107,6 +111,7 @@ export async function middleware(request: NextRequest) {
       const rewriteMap: Record<string, string> = {
         '/': '/miembros',
         '/login': '/miembros/login',
+        '/registro': '/miembros/registro',
         '/inicio': '/miembros',
         '/red-contactos': '/miembros/red-contactos',
         '/eventos': '/miembros/eventos',
@@ -115,6 +120,11 @@ export async function middleware(request: NextRequest) {
         '/beneficios': '/miembros/beneficios',
         '/notificaciones': '/miembros/notificaciones',
         '/configuracion': '/miembros/configuracion',
+        '/coffee-meets': '/miembros/coffee-meets',
+        '/lets-connect': '/miembros/lets-connect',
+        '/aprendizaje': '/miembros/aprendizaje',
+        '/upgrade': '/miembros/upgrade',
+        '/analitica': '/miembros/analitica',
       }
       newPath =
         rewriteMap[pathname] ??
@@ -138,10 +148,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
-  // Proteger /panel: requiere sesión Supabase Auth (solo cuando NO es subdominio miembros)
+  // Proteger /panel y /admin-miembros: sesión Supabase Auth (no aplica en miembros.*)
   if (
-    pathname.startsWith('/panel') &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL
+    (pathname.startsWith('/panel') || pathname.startsWith('/admin-miembros')) &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NODE_ENV !== 'development'
   ) {
     try {
       const reqWithOrg = new NextRequest(request.url, { headers: requestHeaders })

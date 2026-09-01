@@ -21,7 +21,7 @@ export function RankingCard({ title, entries, emptyMessage = 'Aún no hay datos'
   return (
     <Card>
       <CardHeader className="pb-2">
-        <h3 className="text-sm font-semibold text-zinc-700">{title}</h3>
+        <h1 className="text-sm font-semibold text-zinc-700">{title}</h1>
       </CardHeader>
       <CardContent className="space-y-3">
         {topThree.length === 0 ? (

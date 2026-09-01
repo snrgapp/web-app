@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Bell, Coffee, Calendar, Megaphone, ChevronRight } from 'lucide-react'
+import { membersBasePath, membersHref } from '@/lib/miembros/nav'
 
 const MAX_VISIBLE = 3
 
@@ -21,7 +23,13 @@ interface Notification {
   created_at: string
 }
 
-export function NotificationsBubble() {
+export function NotificationsBubble({
+  variant = 'light',
+}: {
+  variant?: 'light' | 'dark'
+}) {
+  const pathname = usePathname()
+  const notificationsHref = membersHref('/notificaciones', membersBasePath(pathname))
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [loading, setLoading] = useState(false)
@@ -65,7 +73,11 @@ export function NotificationsBubble() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-lg text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+        className={
+          variant === 'dark'
+            ? 'relative rounded-lg p-2 text-members-primary transition-colors hover:bg-members-surface-bright/10 active:opacity-80'
+            : 'relative p-2 rounded-lg text-zinc-500 hover:text-zinc-700 hover:bg-zinc-100 transition-colors'
+        }
         aria-label="Notificaciones"
         aria-expanded={open}
       >
@@ -76,9 +88,29 @@ export function NotificationsBubble() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 rounded-xl border border-zinc-200 bg-white shadow-lg z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b border-zinc-100">
-            <h3 className="text-sm font-semibold text-zinc-800">Notificaciones</h3>
+        <div
+          className={
+            variant === 'dark'
+              ? 'absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-xl border border-members-border bg-members-surface-container shadow-lg'
+              : 'absolute right-0 top-full mt-2 w-80 rounded-xl border border-zinc-200 bg-white shadow-lg z-50 overflow-hidden'
+          }
+        >
+          <div
+            className={
+              variant === 'dark'
+                ? 'border-b border-members-outline-variant px-4 py-3'
+                : 'px-4 py-3 border-b border-zinc-100'
+            }
+          >
+            <h1
+              className={
+                variant === 'dark'
+                  ? 'text-sm font-semibold text-members-on-surface'
+                  : 'text-sm font-semibold text-zinc-800'
+              }
+            >
+              Notificaciones
+            </h1>
           </div>
 
           <div className="max-h-[320px] overflow-y-auto">
@@ -126,7 +158,7 @@ export function NotificationsBubble() {
 
             {hasMore && (
               <Link
-                href="/notificaciones"
+                href={notificationsHref}
                 onClick={() => setOpen(false)}
                 className="block px-4 py-3 text-xs font-medium text-amber-600 hover:bg-amber-50 border-t border-zinc-100"
               >

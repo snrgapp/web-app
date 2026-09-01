@@ -2,74 +2,50 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard,
-  Users,
-  Calendar,
-  FolderOpen,
-  Lightbulb,
-  Gift,
-  Settings,
-  HelpCircle,
-  LogOut,
-  Menu,
-  X,
-  ChevronRight,
-} from 'lucide-react'
+import { LogOut, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
-
-const navItems = [
-  { href: '/', icon: LayoutDashboard, label: 'Dashboard', exact: true },
-  { href: '/red-contactos', icon: Users, label: 'Red', exact: false },
-  { href: '/eventos', icon: Calendar, label: 'Eventos', exact: false },
-  { href: '/recursos', icon: FolderOpen, label: 'Recursos', exact: false },
-  { href: '/asesorias', icon: Lightbulb, label: 'Asesorías', exact: false },
-  { href: '/beneficios', icon: Gift, label: 'Beneficios', exact: false },
-]
-
-const footerItems = [
-  { href: '/configuracion', icon: Settings, label: 'Configuración' },
-  { href: '/contacto', icon: HelpCircle, label: 'Centro de ayuda' },
-]
+import {
+  isMembersRouteActive,
+  membersBasePath,
+  membersFooterItems,
+  membersHref,
+  membersNavItems,
+} from '@/lib/miembros/nav'
+import { NotificationsBubble } from './NotificationsBubble'
 
 function NavLink({
   href,
   icon: Icon,
   label,
   exact,
-  collapsed,
   onClick,
 }: {
   href: string
   icon: React.ElementType
   label: string
   exact: boolean
-  collapsed?: boolean
   onClick?: () => void
 }) {
   const pathname = usePathname()
-  const isActive = exact ? pathname === href : pathname === href || pathname.startsWith(href + '/')
+  const basePath = membersBasePath(pathname)
+  const to = membersHref(href, basePath)
+  const isActive = isMembersRouteActive(pathname, href, exact, basePath)
 
   return (
     <Link
-      href={href}
+      href={to}
       onClick={onClick}
-      title={collapsed ? label : undefined}
       className={cn(
-        'flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-light transition-colors',
-        collapsed ? 'justify-center px-2' : 'justify-between',
+        'flex items-center gap-3 rounded-lg p-3 text-sm font-semibold tracking-wide transition-all duration-200',
         isActive
-          ? 'bg-amber-100 text-amber-900'
-          : 'text-zinc-600 hover:text-black hover:bg-zinc-50'
+          ? 'border-r-2 border-members-primary bg-members-surface-bright/10 font-semibold text-members-primary'
+          : 'text-members-on-surface-variant hover:bg-members-surface-bright/10 hover:text-members-on-surface'
       )}
     >
-      <div className={cn('flex items-center gap-2.5', collapsed && 'justify-center')}>
-        <Icon className="w-4 h-4 flex-shrink-0" />
-        {!collapsed && label}
-      </div>
-      {!collapsed && isActive && <ChevronRight className="w-4 h-4" />}
+      <Icon className="h-5 w-5 shrink-0" strokeWidth={isActive ? 2.2 : 1.75} />
+      {label}
     </Link>
   )
 }
@@ -79,193 +55,144 @@ async function doLogout() {
   window.location.href = '/login'
 }
 
+function BrandMark() {
+  return (
+    <div className="flex items-center gap-3 px-2">
+      <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-members-primary-container">
+        <Image src="/logo.png" alt="Synergy" width={28} height={28} className="h-7 w-7 object-contain brightness-0 invert" />
+      </div>
+      <div>
+        <div className="text-lg font-semibold leading-tight text-members-on-surface">Synergy</div>
+        <div className="text-xs text-members-on-surface-variant">Founders & Makers</div>
+      </div>
+    </div>
+  )
+}
+
 export function MembersSidebar() {
+  const pathname = usePathname()
+  const basePath = membersBasePath(pathname)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [member, setMember] = useState<{ nombre?: string | null; phone?: string } | null>(null)
-  const [collapsed, setCollapsed] = useState(false)
-  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  useEffect(() => {
-    fetch('/api/miembros/auth/session')
-      .then((r) => (r.ok ? r.json() : null))
-      .then(setMember)
-      .catch(() => setMember(null))
-  }, [])
-
-  const fullName = member?.nombre || 'miembro'
-  const firstName = fullName.split(/\s+/)[0] || 'miembro'
-
-  function clearCollapseTimer() {
-    if (collapseTimerRef.current) {
-      clearTimeout(collapseTimerRef.current)
-      collapseTimerRef.current = null
-    }
-  }
-
-  const scheduleCollapse = useCallback(() => {
-    if (collapseTimerRef.current) {
-      clearTimeout(collapseTimerRef.current)
-      collapseTimerRef.current = null
-    }
-    collapseTimerRef.current = setTimeout(() => setCollapsed(true), 3000)
-  }, [])
-
-  useEffect(() => {
-    scheduleCollapse()
-    return () => {
-      if (collapseTimerRef.current) {
-        clearTimeout(collapseTimerRef.current)
-        collapseTimerRef.current = null
-      }
-    }
-  }, [scheduleCollapse])
 
   return (
     <>
-      {/* Mobile: Header con hamburger */}
-      <header className="lg:hidden sticky top-0 z-50 flex items-center justify-between h-14 px-4 bg-white border-b border-zinc-200">
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="p-2 -ml-2 rounded-lg text-zinc-600 hover:bg-zinc-100"
-          aria-label="Abrir menú"
-        >
-          <Menu className="w-6 h-6" />
-        </button>
-        <div className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Snergy" width={28} height={28} />
-          <span className="font-semibold text-black">Snergy</span>
+      <header className="sticky top-0 z-50 flex h-16 w-full items-center justify-between border-b border-members-border bg-members-surface px-4 md:hidden">
+        <div className="text-xl font-semibold text-members-primary">Synergy</div>
+        <div className="flex items-center gap-1">
+          <NotificationsBubble variant="dark" />
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            className="rounded-lg p-2 text-members-primary active:opacity-80"
+            aria-label="Abrir menú"
+          >
+            <Menu className="h-6 w-6" />
+          </button>
         </div>
-        <div className="w-10" />
       </header>
 
-      {/* Mobile: Drawer overlay */}
-      {mobileOpen && (
+      {mobileOpen ? (
         <>
           <div
-            className="lg:hidden fixed inset-0 z-50 bg-black/20 backdrop-blur-sm"
+            className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm md:hidden"
             onClick={() => setMobileOpen(false)}
             aria-hidden
           />
-          <aside className="lg:hidden fixed inset-y-0 left-0 z-50 w-[240px] bg-white border-r border-zinc-200 flex flex-col shadow-xl">
-            <div className="flex items-center justify-between p-4 border-b border-zinc-200">
-              <div className="flex items-center gap-2">
-                <Image src="/logo.png" alt="" width={28} height={28} />
-                <span className="font-semibold text-black">Snergy</span>
-              </div>
+          <aside className="fixed inset-y-0 left-0 z-50 flex w-[240px] flex-col border-r border-members-border bg-members-surface px-4 py-6 shadow-[0_20px_40px_rgba(0,0,0,0.8)] md:hidden">
+            <div className="mb-8 flex items-center justify-between">
+              <BrandMark />
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
-                className="p-2 rounded-lg text-zinc-500 hover:bg-zinc-200"
+                className="rounded-lg p-2 text-members-on-surface-variant hover:bg-members-surface-bright/10"
+                aria-label="Cerrar menú"
               >
-                <X className="w-5 h-5" />
+                <X className="h-5 w-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-1">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.href}
-                  {...item}
-                  onClick={() => setMobileOpen(false)}
-                />
+            <nav className="flex flex-1 flex-col gap-2 overflow-y-auto">
+              {membersNavItems.map((item) => (
+                <NavLink key={item.href} {...item} onClick={() => setMobileOpen(false)} />
               ))}
-            </div>
-            <div className="p-4 border-t border-zinc-200 space-y-1">
-              {footerItems.map((item) => (
+            </nav>
+            <Link
+              href={membersHref('/upgrade', basePath)}
+              onClick={() => setMobileOpen(false)}
+              className={cn(
+                'mb-4 mt-4 w-full rounded-lg bg-members-primary-container py-2.5 text-center text-sm font-semibold text-white shadow-[0_0_15px_rgba(79,70,229,0.2)] transition-colors hover:brightness-110',
+                isMembersRouteActive(pathname, '/upgrade', false, basePath) && 'ring-2 ring-members-primary/40'
+              )}
+            >
+              Upgrade a Pro
+            </Link>
+            <div className="mt-auto flex flex-col gap-1 border-t border-members-outline-variant pt-4">
+              {membersFooterItems.map((item) => (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={membersHref(item.href, basePath)}
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
+                  className="flex items-center gap-3 rounded-lg p-2 text-sm font-semibold text-members-on-surface-variant hover:bg-members-surface-bright/10 hover:text-members-on-surface"
                 >
-                  <item.icon className="w-4 h-4" />
+                  <item.icon className="h-5 w-5" />
                   {item.label}
                 </Link>
               ))}
               <button
                 type="button"
-                onClick={() => { doLogout(); setMobileOpen(false) }}
-                className="flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50"
+                onClick={() => {
+                  void doLogout()
+                  setMobileOpen(false)
+                }}
+                className="flex w-full items-center gap-3 rounded-lg p-2 text-sm font-semibold text-members-on-surface-variant hover:bg-members-surface-bright/10 hover:text-members-on-surface"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="h-5 w-5" />
                 Cerrar sesión
               </button>
             </div>
           </aside>
         </>
-      )}
+      ) : null}
 
-      {/* Desktop: Sidebar tarjeta única */}
-      <aside
-        className={cn(
-          'hidden lg:flex lg:flex-col lg:flex-shrink-0 lg:bg-transparent lg:p-3 transition-[width] duration-300 ease-out',
-          collapsed ? 'lg:w-24' : 'lg:w-52'
-        )}
-        onMouseEnter={() => {
-          clearCollapseTimer()
-          setCollapsed(false)
-        }}
-        onMouseLeave={() => {
-          scheduleCollapse()
-        }}
-      >
-        <div className="flex flex-col min-h-0 flex-1 rounded-xl border border-zinc-200 bg-white shadow-sm transition-all duration-300 ease-out">
-          <div className="p-4">
-            <div className={cn('flex items-center gap-2', collapsed && 'justify-center')}>
-              <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-600 font-medium text-xs">
-                {firstName.charAt(0).toUpperCase()}
-              </div>
-              {!collapsed && (
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-light text-black">Hola, {firstName}</p>
-                  <button
-                    type="button"
-                    className="text-xs text-zinc-500 hover:text-zinc-700 flex items-center gap-0.5"
-                    aria-label="Editar perfil"
-                  >
-                    Editar
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <nav className="flex-1 p-3 pt-0 space-y-0.5 overflow-y-auto">
-            {navItems.map((item) => (
-              <NavLink key={item.href} {...item} collapsed={collapsed} />
-            ))}
-          </nav>
-
-          <div className="p-3 pt-0 space-y-0.5 border-t border-zinc-200">
-            {footerItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                title={collapsed ? item.label : undefined}
-                className={cn(
-                  'flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50',
-                  collapsed && 'justify-center px-2'
-                )}
-              >
-                <item.icon className="w-4 h-4" />
-                {!collapsed && item.label}
-              </Link>
-            ))}
-            <button
-              type="button"
-              onClick={doLogout}
-              title={collapsed ? 'Cerrar sesión' : undefined}
-              className={cn(
-                'flex w-full items-center gap-2.5 px-2.5 py-2 rounded-lg text-xs font-light text-zinc-600 hover:text-black hover:bg-zinc-50',
-                collapsed && 'justify-center px-2'
-              )}
-            >
-              <LogOut className="w-4 h-4" />
-              {!collapsed && 'Cerrar sesión'}
-            </button>
-          </div>
+      <nav className="fixed left-0 top-0 z-40 hidden h-full w-[240px] flex-col gap-4 border-r border-members-border bg-members-surface px-4 py-6 text-members-primary md:flex">
+        <div className="mb-8">
+          <BrandMark />
         </div>
-      </aside>
+        <div className="flex flex-1 flex-col gap-2 overflow-y-auto">
+          {membersNavItems.map((item) => (
+            <NavLink key={item.href} {...item} />
+          ))}
+        </div>
+        <Link
+          href={membersHref('/upgrade', basePath)}
+          className={cn(
+            'mb-2 w-full rounded-lg bg-members-primary-container py-2.5 text-center text-sm font-semibold text-white shadow-[0_0_15px_rgba(79,70,229,0.2)] transition-colors hover:brightness-110',
+            isMembersRouteActive(pathname, '/upgrade', false, basePath) && 'ring-2 ring-members-primary/40'
+          )}
+        >
+          Upgrade a Pro
+        </Link>
+        <div className="mt-auto flex flex-col gap-1">
+          <div className="my-2 h-px w-full bg-members-outline-variant" />
+          {membersFooterItems.map((item) => (
+            <Link
+              key={item.href}
+              href={membersHref(item.href, basePath)}
+              className="flex items-center gap-3 rounded-lg p-2 text-sm font-semibold text-members-on-surface-variant hover:bg-members-surface-bright/10 hover:text-members-on-surface"
+            >
+              <item.icon className="h-5 w-5" />
+              {item.label}
+            </Link>
+          ))}
+          <button
+            type="button"
+            onClick={() => void doLogout()}
+            className="flex w-full items-center gap-3 rounded-lg p-2 text-sm font-semibold text-members-on-surface-variant hover:bg-members-surface-bright/10 hover:text-members-on-surface"
+          >
+            <LogOut className="h-5 w-5" />
+            Cerrar sesión
+          </button>
+        </div>
+      </nav>
     </>
   )
 }

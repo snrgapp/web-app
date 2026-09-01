@@ -59,9 +59,9 @@ export function InviteCafeModal({ nombre, empresa, onClose, onConfirm }: InviteC
         className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl bg-zinc-100 p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-center text-base font-bold text-zinc-800 mb-4">
+        <h1 className="text-center text-base font-bold text-zinc-800 mb-4">
           Quiero invitar un café a :
-        </h2>
+        </h1>
 
         <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
           <div>
@@ -93,7 +93,7 @@ export function InviteCafeModal({ nombre, empresa, onClose, onConfirm }: InviteC
         </div>
 
         <div className="mb-6">
-          <h3 className="text-sm font-semibold text-zinc-700 mb-3">Cafetería</h3>
+          <h1 className="text-sm font-semibold text-zinc-700 mb-3">Cafetería</h1>
           <div className="grid grid-cols-2 gap-3">
             {CAFETERIAS.map((cafe) => (
               <label

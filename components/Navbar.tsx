@@ -22,10 +22,16 @@ const navLinks = navLinksAll.filter((link) => {
   return true
 })
 
+const primaryLinks = navLinks.filter((link) => link.href !== '/contacto')
+const contactLink = navLinks.find((link) => link.href === '/contacto')
+const linkClassName =
+  'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const closeMenu = () => setMobileMenuOpen(false)
+  const ContactIcon = contactLink?.icon
 
   return (
     <motion.nav
@@ -34,8 +40,8 @@ export default function Navbar() {
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 bg-[#f2f2f2]/95 backdrop-blur-sm border-b border-black/5"
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <div className="flex min-w-0 flex-1 items-center gap-6 md:gap-8 lg:gap-10">
+      <div className="flex h-16 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex min-w-0 items-center gap-6 md:gap-8 lg:gap-10">
           <Link href="/inicio" className="shrink-0">
             <Image
               src="/logo.png"
@@ -46,14 +52,12 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Desktop: enlaces a la derecha del logo */}
+          {/* Desktop: enlaces junto al logo */}
           <div className="hidden min-w-0 items-center gap-6 md:flex lg:gap-8">
-            {navLinks.map((link) => {
+            {primaryLinks.map((link) => {
               const Icon = link.icon
-              const className =
-                'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
               return (
-                <Link key={link.href} href={link.href} className={className}>
+                <Link key={link.href} href={link.href} className={linkClassName}>
                   <Icon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
                   {link.label}
                 </Link>
@@ -61,6 +65,16 @@ export default function Navbar() {
             })}
           </div>
         </div>
+
+        {contactLink && ContactIcon ? (
+          <Link
+            href={contactLink.href}
+            className={`hidden md:flex ${linkClassName}`}
+          >
+            <ContactIcon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
+            {contactLink.label}
+          </Link>
+        ) : null}
 
         {/* Mobile: botón hamburguesa */}
         <button

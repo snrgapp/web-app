@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
+  Users,
   Calendar,
   MessageCircle,
   Database,
@@ -36,6 +37,7 @@ type NavItem = {
 
 const defaultNavItems: NavItem[] = [
   { href: '/panel', icon: LayoutDashboard, label: 'Dashboard', exact: true },
+  { href: '/admin-miembros/inicio', icon: Users, label: 'Panel miembros', exact: false },
   { href: '/panel/eventos', icon: Calendar, label: 'Eventos', exact: false },
   { href: '/panel/formularios', icon: FileText, label: 'Formularios', exact: false },
   { href: '/panel/base-datos', icon: Database, label: 'Base de Datos', exact: false },

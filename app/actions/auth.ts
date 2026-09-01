@@ -84,7 +84,10 @@ export async function login(
     await bootstrapAdmin(authData.user.id, email)
   }
 
-  redirect('/panel')
+  const from = String(formData.get('from') || '')
+  const safeFrom =
+    from.startsWith('/admin-miembros') || from.startsWith('/panel') ? from : '/panel'
+  redirect(safeFrom)
 }
 
 async function bootstrapAdmin(userId: string, email?: string): Promise<void> {

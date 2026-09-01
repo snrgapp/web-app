@@ -65,7 +65,7 @@ export function MiniCalendar({ events = [] }: MiniCalendarProps) {
   return (
     <div className="rounded-xl border border-zinc-200 bg-white p-4">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-black">Calendario</h3>
+        <h1 className="text-sm font-bold text-black">Calendario</h1>
         <div className="flex items-center gap-1">
           <button
             type="button"

@@ -90,6 +90,12 @@ function MiembrosLoginForm() {
                 {loading ? 'Entrando...' : 'Entrar'}
               </Button>
             </div>
+            <p className="text-center text-sm text-zinc-500">
+              ¿Primera vez?{' '}
+              <a href="/miembros/registro" className="font-medium text-black hover:underline">
+                Crea tu cuenta
+              </a>
+            </p>
           </form>
         </div>
       </div>

@@ -28,7 +28,7 @@ export function LatestConnections({ connections }: LatestConnectionsProps) {
     <Card>
       <CardHeader className="pb-2 flex flex-row items-center gap-2">
         <MessageCircle className="w-4 h-4 text-zinc-500" />
-        <h3 className="text-sm font-semibold text-zinc-700">Últimas conexiones</h3>
+        <h1 className="text-sm font-semibold text-zinc-700">Últimas conexiones</h1>
       </CardHeader>
       <CardContent className="space-y-3">
         {connections.length === 0 ? (

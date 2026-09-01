@@ -108,7 +108,7 @@ export default function RedContactosPage() {
           </div>
 
           <div>
-            <h2 className="text-lg font-medium text-zinc-800 mb-4">Tus conexiones</h2>
+            <h1 className="text-lg font-medium text-zinc-800 mb-4">Tus conexiones</h1>
             {loading ? (
               <div className="h-48 rounded-xl border border-zinc-200 bg-white animate-pulse" />
             ) : (
@@ -131,7 +131,7 @@ export default function RedContactosPage() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="p-4 border-b border-zinc-200 flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-zinc-800">Detalle del miembro</h3>
+                <h1 className="text-sm font-semibold text-zinc-800">Detalle del miembro</h1>
                 <button
                   type="button"
                   onClick={() => setSelectedMember(null)}
