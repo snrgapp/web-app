@@ -594,6 +594,73 @@ export interface Database {
           }
         ]
       }
+      lista_espera_ciudades: {
+        Row: {
+          id: string
+          organizacion_id: string | null
+          nombre: string
+          email: string
+          telefono: string
+          empresa: string
+          tipo_empresa: string
+          instagram: string | null
+          linkedin: string | null
+          website: string | null
+          arquetipo: string
+          buscando: string[]
+          camara_comercio: string
+          ciudad: string
+          canales_venta: string[]
+          empleados: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          organizacion_id?: string | null
+          nombre: string
+          email: string
+          telefono: string
+          empresa: string
+          tipo_empresa: string
+          instagram?: string | null
+          linkedin?: string | null
+          website?: string | null
+          arquetipo: string
+          buscando?: string[]
+          camara_comercio: string
+          ciudad: string
+          canales_venta?: string[]
+          empleados: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          organizacion_id?: string | null
+          nombre?: string
+          email?: string
+          telefono?: string
+          empresa?: string
+          tipo_empresa?: string
+          instagram?: string | null
+          linkedin?: string | null
+          website?: string | null
+          arquetipo?: string
+          buscando?: string[]
+          camara_comercio?: string
+          ciudad?: string
+          canales_venta?: string[]
+          empleados?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: 'lista_espera_ciudades_organizacion_id_fkey'
+            columns: ['organizacion_id']
+            referencedRelation: 'organizaciones'
+            referencedColumns: ['id']
+          }
+        ]
+      }
       contactos: {
         Row: {
           id: string
