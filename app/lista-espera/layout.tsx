@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { absoluteUrl } from '@/lib/site'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Lista de espera',
   description:

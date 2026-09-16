@@ -591,7 +591,7 @@ export async function deleteEvent(id: string) {
   return { ok: true }
 }
 
-export async function listPairings() {
+export async function listPairings(): Promise<{ data: CmsPairing[]; error?: string }> {
   const db = cmsDb()
   if (!db) return { data: [] as CmsPairing[], ...missingDb() }
   const { data, error } = await db
