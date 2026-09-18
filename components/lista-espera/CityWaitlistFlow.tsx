@@ -285,30 +285,28 @@ export default function CityWaitlistFlow() {
     <main className="synergy-page-dots relative flex min-h-screen items-center justify-center px-3 py-4 text-white md:px-6 md:py-8">
       <div className="flex min-h-[calc(100vh-2rem)] w-full max-w-[440px] flex-col overflow-hidden bg-black text-white md:min-h-[720px] md:rounded-[32px] md:border md:border-white/10 md:shadow-[0_24px_70px_rgba(0,0,0,0.55)]">
         <header className="shrink-0 px-5 pb-3 pt-5">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 grid grid-cols-3 items-center">
             <button
               type="button"
               aria-label="Volver"
               onClick={() => go(step - 1)}
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition active:scale-90',
+                'flex h-9 w-9 items-center justify-center justify-self-start rounded-full border border-white/15 bg-white/10 text-white transition active:scale-90',
                 showBack ? 'opacity-100' : 'pointer-events-none opacity-0'
               )}
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
-            <div className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Synergy" width={28} height={28} className="h-7 w-7 object-contain brightness-0 invert" />
-              <span className="font-[family-name:var(--font-playfair-display)] text-lg font-bold tracking-wide text-white">
-                SYNERGY
-              </span>
-              <span className="rounded bg-[#FFE100] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-black">
-                Caribe
-              </span>
-            </div>
+            <Image
+              src="/logo.png"
+              alt="Synergy"
+              width={40}
+              height={40}
+              className="h-10 w-10 justify-self-center object-contain brightness-0 invert"
+            />
             <div
               className={cn(
-                'rounded-full border border-white/15 bg-white/10 px-2.5 py-1 font-mono text-xs text-white/60',
+                'justify-self-end rounded-full border border-white/15 bg-white/10 px-2.5 py-1 font-mono text-xs text-white/60',
                 showProgress ? 'opacity-100' : 'opacity-0'
               )}
             >
@@ -340,7 +338,7 @@ export default function CityWaitlistFlow() {
                   pill="Primer contacto"
                   title={
                     <>
-                      Antes de todo,
+                      Queremos conocerte.
                       <br />
                       <span className="font-[family-name:var(--font-playfair-display)]">
                         ¿cómo te llamas?
