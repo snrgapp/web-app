@@ -99,8 +99,8 @@ function isLaunchCity(city: string) {
   return LAUNCH_CITIES.some((c) => c.toLowerCase() === n)
 }
 
-const selectCard = 'border-black bg-[#FFE100]/25'
-const idleCard = 'border-black/10 bg-white hover:border-black/25'
+const selectCard = 'border-[#FFE100] bg-[#FFE100] text-black'
+const idleCard = 'border-white/15 bg-white/5 text-white hover:border-white/40'
 
 function PrimaryButton({
   children,
@@ -116,7 +116,7 @@ function PrimaryButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-4 text-base font-semibold text-white transition active:scale-[0.98] hover:bg-black/90 disabled:cursor-not-allowed disabled:bg-black/10 disabled:text-black/30"
+      className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#FFE100] py-4 text-base font-semibold text-black transition active:scale-[0.98] hover:bg-[#ffe44d] disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-white/35"
     >
       {children}
     </button>
@@ -125,7 +125,7 @@ function PrimaryButton({
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="block text-xs font-semibold uppercase tracking-wider text-black/50">
+    <label className="block text-xs font-semibold uppercase tracking-wider text-white/55">
       {children}
     </label>
   )
@@ -149,12 +149,12 @@ function TextInput({
   return (
     <div className="relative">
       {icon ? (
-        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-black/35">
+        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
           {icon}
         </span>
       ) : null}
       {prefix ? (
-        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-black/35">
+        <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-white/40">
           {prefix}
         </span>
       ) : null}
@@ -164,7 +164,7 @@ function TextInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={cn(
-          'w-full rounded-2xl border border-black/10 bg-white py-3.5 pr-4 text-sm text-[#1a1a1a] placeholder:text-black/30 focus:border-black focus:outline-none focus:ring-2 focus:ring-[#FFE100]',
+          'w-full rounded-2xl border border-white/15 bg-white/10 py-3.5 pr-4 text-sm text-white placeholder:text-white/35 focus:border-[#FFE100] focus:outline-none focus:ring-2 focus:ring-[#FFE100]/40',
           icon || prefix ? 'pl-11' : 'px-4'
         )}
       />
@@ -282,8 +282,8 @@ export default function CityWaitlistFlow() {
   const arch = ARCHETYPES[archetype]
 
   return (
-    <main className="synergy-page-dots relative flex min-h-screen items-center justify-center px-0 py-0 text-[#1a1a1a] md:px-6 md:py-8">
-      <div className="flex min-h-screen w-full max-w-[440px] flex-col overflow-hidden bg-[#f2f2f2] md:min-h-[720px] md:rounded-[32px] md:border md:border-black/10 md:bg-white md:shadow-[0_24px_70px_rgba(0,0,0,0.12)]">
+    <main className="synergy-page-dots relative flex min-h-screen items-center justify-center px-3 py-4 text-white md:px-6 md:py-8">
+      <div className="flex min-h-[calc(100vh-2rem)] w-full max-w-[440px] flex-col overflow-hidden bg-black text-white md:min-h-[720px] md:rounded-[32px] md:border md:border-white/10 md:shadow-[0_24px_70px_rgba(0,0,0,0.55)]">
         <header className="shrink-0 px-5 pb-3 pt-5">
           <div className="mb-4 flex items-center justify-between">
             <button
@@ -291,32 +291,32 @@ export default function CityWaitlistFlow() {
               aria-label="Volver"
               onClick={() => go(step - 1)}
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white text-[#1a1a1a] transition active:scale-90',
+                'flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition active:scale-90',
                 showBack ? 'opacity-100' : 'pointer-events-none opacity-0'
               )}
             >
               <ArrowLeft className="h-4 w-4" />
             </button>
             <div className="flex items-center gap-2">
-              <Image src="/logo.png" alt="Synergy" width={28} height={28} className="h-7 w-7 object-contain" />
-              <span className="font-[family-name:var(--font-playfair-display)] text-lg font-bold tracking-wide">
+              <Image src="/logo.png" alt="Synergy" width={28} height={28} className="h-7 w-7 object-contain brightness-0 invert" />
+              <span className="font-[family-name:var(--font-playfair-display)] text-lg font-bold tracking-wide text-white">
                 SYNERGY
               </span>
-              <span className="rounded bg-[#FFE100] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
+              <span className="rounded bg-[#FFE100] px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-black">
                 Caribe
               </span>
             </div>
             <div
               className={cn(
-                'rounded-full border border-black/10 bg-white px-2.5 py-1 font-mono text-xs text-black/50',
+                'rounded-full border border-white/15 bg-white/10 px-2.5 py-1 font-mono text-xs text-white/60',
                 showProgress ? 'opacity-100' : 'opacity-0'
               )}
             >
-              <span className="font-bold text-black">{Math.min(step, 9)}</span>/9
+              <span className="font-bold text-white">{Math.min(step, 9)}</span>/9
             </div>
           </div>
           {showProgress ? (
-            <div className="h-1.5 w-full overflow-hidden rounded-full border border-black/10 bg-black/5">
+            <div className="h-1.5 w-full overflow-hidden rounded-full border border-white/10 bg-white/10">
               <div
                 className="h-full rounded-full bg-[#FFE100] transition-all duration-300"
                 style={{ width: `${progressPct}%` }}
@@ -377,7 +377,7 @@ export default function CityWaitlistFlow() {
                         icon={<User className="h-4 w-4" />}
                       />
                       {nameError ? (
-                        <p className="text-xs text-red-600">Escribe al menos nombre y apellido.</p>
+                        <p className="text-xs text-red-400">Escribe al menos nombre y apellido.</p>
                       ) : null}
                     </div>
                     <div className="space-y-1.5">
@@ -437,7 +437,7 @@ export default function CityWaitlistFlow() {
                             )}
                           >
                             <div className="text-xs font-semibold">{opt.title}</div>
-                            <div className="text-[11px] text-black/45">{opt.hint}</div>
+                            <div className="text-[11px] opacity-70">{opt.hint}</div>
                           </button>
                         ))}
                       </div>
@@ -500,7 +500,7 @@ export default function CityWaitlistFlow() {
                   title={
                     <>
                       El networking correcto no se trata de conocer a más personas — se trata de{' '}
-                      <span className="bg-[#FFE100] px-1">conocer a las correctas</span>.
+                      <span className="bg-[#FFE100] px-1 text-black">conocer a las correctas</span>.
                     </>
                   }
                   subtitle="Founders que construyen relaciones con intención crecen más rápido: encuentran clientes, socios y mentores en conversaciones que de otra forma nunca habrían pasado."
@@ -510,9 +510,9 @@ export default function CityWaitlistFlow() {
                     </PrimaryButton>
                   }
                 >
-                  <div className="flex items-start gap-3 rounded-xl border border-black/10 bg-white p-3.5">
+                  <div className="flex items-start gap-3 rounded-xl border border-white/15 bg-white/5 p-3.5">
                     <BadgeCheck className="mt-0.5 h-5 w-5 shrink-0" />
-                    <p className="text-xs leading-relaxed text-black/55">
+                    <p className="text-xs leading-relaxed text-white/70">
                       Las siguientes preguntas calibran tu perfil para conectarte con las personas
                       correctas desde el primer encuentro.
                     </p>
@@ -552,22 +552,22 @@ export default function CityWaitlistFlow() {
                             form.archetype === key ? selectCard : idleCard
                           )}
                         >
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-black/10 bg-white">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10">
                             <Icon className="h-5 w-5" />
                           </div>
                           <div className="flex-1">
                             <div className="flex items-center gap-1.5 text-sm font-bold">
                               {key}
-                              <span className="rounded bg-black/5 px-1.5 py-0.5 text-[10px] font-semibold uppercase">
+                              <span className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase">
                                 {item.tag}
                               </span>
                             </div>
-                            <div className="mt-0.5 text-xs text-black/45">{item.blurb}</div>
+                            <div className="mt-0.5 text-xs opacity-70">{item.blurb}</div>
                           </div>
                           <span
                             className={cn(
                               'flex h-5 w-5 items-center justify-center rounded-full border',
-                              form.archetype === key ? 'border-black bg-black' : 'border-black/20'
+                              form.archetype === key ? 'border-black bg-black' : 'border-white/30'
                             )}
                           >
                             {form.archetype === key ? (
@@ -646,7 +646,7 @@ export default function CityWaitlistFlow() {
                       >
                         <div>
                           <div className="text-sm font-bold">{opt.title}</div>
-                          <div className="text-xs text-black/45">{opt.hint}</div>
+                          <div className="text-xs opacity-70">{opt.hint}</div>
                         </div>
                         {form.camara === opt.value ? <Check className="h-5 w-5" /> : null}
                       </button>
@@ -674,7 +674,7 @@ export default function CityWaitlistFlow() {
                       icon={<Search className="h-4 w-4" />}
                     />
                     <div>
-                      <span className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-black/45">
+                      <span className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-white/55">
                         Ciudades con lanzamiento confirmado
                       </span>
                       <div className="flex flex-wrap gap-2">
@@ -695,7 +695,7 @@ export default function CityWaitlistFlow() {
                       </div>
                     </div>
                     {form.city.trim() && !isLaunchCity(form.city) ? (
-                      <p className="rounded-xl border border-black/10 bg-white p-3.5 text-xs leading-snug text-black/60">
+                      <p className="rounded-xl border border-white/15 bg-white/5 p-3.5 text-xs leading-snug text-white/70">
                         Aún no tenemos fecha confirmada para tu ciudad, pero te avisaremos apenas
                         abramos convocatoria local.
                       </p>
@@ -707,7 +707,7 @@ export default function CityWaitlistFlow() {
               {step === 9 && (
                 <StepShell
                   pill="Tracción comercial"
-                  extra={<span className="text-[11px] font-medium text-black/45">Última pregunta clave</span>}
+                  extra={<span className="text-[11px] font-medium text-white/55">Última pregunta clave</span>}
                   title="¿Cómo consigues clientes hoy?"
                   subtitle="Selecciona todos tus canales activos (mínimo 1)."
                   action={
@@ -731,7 +731,7 @@ export default function CityWaitlistFlow() {
                           )}
                         >
                           <div className="text-xs font-semibold">{opt.title}</div>
-                          <div className="text-[10px] text-black/45">{opt.hint}</div>
+                          <div className="text-[10px] opacity-70">{opt.hint}</div>
                         </button>
                       )
                     })}
@@ -749,26 +749,26 @@ export default function CityWaitlistFlow() {
                     </PrimaryButton>
                   }
                 >
-                  <div className="rounded-3xl border border-black/10 bg-white p-5">
+                  <div className="rounded-3xl border border-white/15 bg-white/5 p-5">
                     <div className="mb-3 flex items-center gap-3.5">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFE100]">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#FFE100] text-black">
                         <CircleDot className="h-7 w-7" />
                       </div>
                       <div>
-                        <span className="block font-mono text-xs uppercase tracking-widest text-black/40">
+                        <span className="block font-mono text-xs uppercase tracking-widest text-white/50">
                           Arquetipo revelado
                         </span>
-                        <h3 className="font-[family-name:var(--font-playfair-display)] text-2xl font-bold">
+                        <h3 className="font-[family-name:var(--font-playfair-display)] text-2xl font-bold text-white">
                           {archetype}
                         </h3>
                       </div>
                     </div>
-                    <p className="text-sm leading-relaxed text-black/60">{arch.desc}</p>
-                    <div className="mt-4 border-t border-black/10 pt-4">
-                      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide">
+                    <p className="text-sm leading-relaxed text-white/70">{arch.desc}</p>
+                    <div className="mt-4 border-t border-white/15 pt-4">
+                      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-white">
                         Así te ayudamos en Synergy
                       </div>
-                      <p className="rounded-xl bg-[#f2f2f2] p-3 text-sm leading-relaxed">{arch.benefit}</p>
+                      <p className="rounded-xl bg-white/10 p-3 text-sm leading-relaxed text-white">{arch.benefit}</p>
                     </div>
                   </div>
                 </StepShell>
@@ -798,7 +798,7 @@ export default function CityWaitlistFlow() {
                       >
                         <div>
                           <div className="text-sm font-bold">{opt.title}</div>
-                          <div className="text-xs text-black/45">{opt.hint}</div>
+                          <div className="text-xs opacity-70">{opt.hint}</div>
                         </div>
                         {form.employees === opt.value ? <Users className="h-4 w-4" /> : null}
                       </button>
@@ -815,7 +815,7 @@ export default function CityWaitlistFlow() {
                   action={
                     <div className="space-y-2">
                       {submitError ? (
-                        <p className="text-center text-xs text-red-600">{submitError}</p>
+                        <p className="text-center text-xs text-red-400">{submitError}</p>
                       ) : null}
                       <PrimaryButton disabled={submitting} onClick={() => void startLoading()}>
                         Finalizar registro <BadgeCheck className="h-4 w-4" />
@@ -825,17 +825,17 @@ export default function CityWaitlistFlow() {
                 >
                   <div className="space-y-3">
                     {WAITLIST_REVIEWS.map((r) => (
-                      <div key={r.initials} className="rounded-2xl border border-black/10 bg-white p-3.5">
+                      <div key={r.initials} className="rounded-2xl border border-white/15 bg-white/5 p-3.5">
                         <div className="mb-2 flex items-center gap-2.5">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFE100] text-xs font-bold">
+                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FFE100] text-xs font-bold text-black">
                             {r.initials}
                           </div>
                           <div>
                             <h4 className="text-xs font-bold">{r.name}</h4>
-                            <span className="text-[10px] text-black/45">{r.role}</span>
+                            <span className="text-[10px] text-white/55">{r.role}</span>
                           </div>
                         </div>
-                        <p className="text-xs italic leading-snug text-black/65">“{r.quote}”</p>
+                        <p className="text-xs italic leading-snug text-white/75">“{r.quote}”</p>
                       </div>
                     ))}
                   </div>
@@ -844,16 +844,16 @@ export default function CityWaitlistFlow() {
 
               {step === 13 && (
                 <div className="flex flex-1 flex-col items-center justify-center py-12 text-center">
-                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-black/10 bg-white">
+                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl border border-white/15 bg-white/10">
                     <Loader2 className="h-8 w-8 animate-spin" />
                   </div>
                   <h3 className="mb-2 font-[family-name:var(--font-playfair-display)] text-xl font-bold">
                     Estamos preparando tu perfil en Synergy...
                   </h3>
-                  <p className="max-w-xs text-sm text-black/50">
+                  <p className="max-w-xs text-sm text-white/60">
                     Calibrando afinidades y reservando tu prioridad en la lista de espera local.
                   </p>
-                  <div className="mt-8 rounded-full border border-black/10 bg-white px-4 py-2.5 font-mono text-xs">
+                  <div className="mt-8 rounded-full border border-white/15 bg-white/10 px-4 py-2.5 font-mono text-xs text-white">
                     {loadingMsg}
                   </div>
                 </div>
@@ -862,7 +862,7 @@ export default function CityWaitlistFlow() {
               {step === 14 && (
                 <div className="flex flex-1 flex-col justify-between pt-4 text-center">
                   <div className="flex flex-col items-center space-y-5">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#FFE100]">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-[#FFE100] text-black">
                       <BadgeCheck className="h-10 w-10" />
                     </div>
                     <div className="space-y-2">
@@ -871,27 +871,27 @@ export default function CityWaitlistFlow() {
                       </h2>
                       <p className="text-base font-semibold">
                         Ya haces parte de la lista de espera de Synergy en{' '}
-                        <span className="bg-[#FFE100] px-1">{form.city || 'tu ciudad'}</span>.
+                        <span className="bg-[#FFE100] px-1 text-black">{form.city || 'tu ciudad'}</span>.
                       </p>
-                      <p className="mx-auto max-w-sm pt-1 text-xs leading-relaxed text-black/50">
+                      <p className="mx-auto max-w-sm pt-1 text-xs leading-relaxed text-white/60">
                         Te escribiremos a {form.email || 'tu correo'} con los próximos pasos para el
                         evento de apertura de tu ciudad.
                       </p>
                     </div>
-                    <div className="w-full space-y-3 rounded-2xl border border-black/10 bg-white p-4 text-left text-xs">
+                    <div className="w-full space-y-3 rounded-2xl border border-white/15 bg-white/5 p-4 text-left text-xs">
                       <div className="flex items-center justify-between">
-                        <span className="text-black/45">Estado</span>
-                        <span className="rounded-full bg-[#FFE100] px-2.5 py-0.5 font-semibold">
+                        <span className="text-white/55">Estado</span>
+                        <span className="rounded-full bg-[#FFE100] px-2.5 py-0.5 font-semibold text-black">
                           Confirmado
                         </span>
                       </div>
-                      <div className="flex items-center justify-between border-t border-black/10 pt-2">
-                        <span className="text-black/45">Arquetipo</span>
+                      <div className="flex items-center justify-between border-t border-white/15 pt-2">
+                        <span className="text-white/55">Arquetipo</span>
                         <span className="font-semibold">{archetype}</span>
                       </div>
                     </div>
                     <div className="w-full pt-1">
-                      <span className="mb-3 block text-xs font-semibold uppercase tracking-wider text-black/45">
+                      <span className="mb-3 block text-xs font-semibold uppercase tracking-wider text-white/55">
                         Mientras tanto, síguenos
                       </span>
                       <div className="grid grid-cols-2 gap-2">
@@ -899,7 +899,7 @@ export default function CityWaitlistFlow() {
                           href={INSTAGRAM_URL}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white py-3 text-xs font-semibold hover:border-black"
+                          className="flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3 text-xs font-semibold text-white hover:border-[#FFE100]"
                         >
                           <Instagram className="h-3.5 w-3.5" /> Instagram
                         </a>
@@ -907,7 +907,7 @@ export default function CityWaitlistFlow() {
                           href={LINKEDIN_URL}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center justify-center gap-2 rounded-xl border border-black/10 bg-white py-3 text-xs font-semibold hover:border-black"
+                          className="flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 py-3 text-xs font-semibold text-white hover:border-[#FFE100]"
                         >
                           <Linkedin className="h-3.5 w-3.5" /> LinkedIn
                         </a>
@@ -920,7 +920,7 @@ export default function CityWaitlistFlow() {
                       setForm(emptyState)
                       go(1)
                     }}
-                    className="pt-6 text-xs text-black/40 underline underline-offset-4 hover:text-black/70"
+                    className="pt-6 text-xs text-white/50 underline underline-offset-4 hover:text-white"
                   >
                     Volver a empezar
                   </button>
@@ -955,7 +955,7 @@ function StepShell({
         {(pill || extra) && (
           <div className="flex items-center justify-between">
             {pill ? (
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white px-3 py-1 text-xs font-semibold">
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-white">
                 <Briefcase className="h-3.5 w-3.5" />
                 {pill}
               </div>
@@ -967,7 +967,7 @@ function StepShell({
         )}
         <div>
           <h2 className="text-2xl font-bold leading-tight tracking-tight">{title}</h2>
-          {subtitle ? <p className="mt-2 text-sm text-black/50">{subtitle}</p> : null}
+          {subtitle ? <p className="mt-2 text-sm text-white/60">{subtitle}</p> : null}
         </div>
         {children}
       </div>
