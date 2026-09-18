@@ -100,7 +100,7 @@ function isLaunchCity(city: string) {
 }
 
 const selectCard = 'border-[#FFE100] bg-[#FFE100] text-black'
-const idleCard = 'border-white/15 bg-white/5 text-white hover:border-white/40'
+const idleCard = 'border-white/12 bg-[#2a2a2a] text-white hover:border-white/35'
 
 function PrimaryButton({
   children,
@@ -164,7 +164,7 @@ function TextInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         className={cn(
-          'w-full rounded-2xl border border-white/15 bg-white/10 py-3.5 pr-4 text-sm text-white placeholder:text-white/35 focus:border-[#FFE100] focus:outline-none focus:ring-2 focus:ring-[#FFE100]/40',
+          'w-full rounded-2xl border border-white/10 bg-[#2a2a2a] py-3.5 pr-4 text-sm text-white placeholder:text-white/40 focus:border-[#FFE100] focus:outline-none focus:ring-2 focus:ring-[#FFE100]/40',
           icon || prefix ? 'pl-11' : 'px-4'
         )}
       />
@@ -282,8 +282,8 @@ export default function CityWaitlistFlow() {
   const arch = ARCHETYPES[archetype]
 
   return (
-    <main className="synergy-page-dots relative flex min-h-screen items-center justify-center px-3 py-4 text-white md:px-6 md:py-8">
-      <div className="flex min-h-[calc(100vh-2rem)] w-full max-w-[440px] flex-col overflow-hidden bg-black text-white md:min-h-[720px] md:rounded-[32px] md:border md:border-white/10 md:shadow-[0_24px_70px_rgba(0,0,0,0.55)]">
+    <main className="synergy-page-dots-dark relative flex min-h-screen items-center justify-center px-3 py-4 text-white md:px-6 md:py-8">
+      <div className="flex min-h-[calc(100vh-2rem)] w-full max-w-[440px] flex-col overflow-hidden bg-[#141414] text-white md:min-h-[720px] md:rounded-[32px] md:border md:border-white/10 md:shadow-[0_24px_70px_rgba(0,0,0,0.65)]">
         <header className="shrink-0 px-5 pb-3 pt-5">
           <div className="mb-4 grid grid-cols-3 items-center">
             <button
@@ -338,7 +338,7 @@ export default function CityWaitlistFlow() {
                   pill="Primer contacto"
                   title={
                     <>
-                      Queremos conocerte.
+                      Empecemos a conocerte.
                       <br />
                       <span className="font-[family-name:var(--font-playfair-display)]">
                         ¿cómo te llamas?
@@ -371,7 +371,7 @@ export default function CityWaitlistFlow() {
                           patch({ name: v })
                           if (nameError && wordCount(v) >= 2) setNameError(false)
                         }}
-                        placeholder="Jesús Prieto"
+                        placeholder="Nombre y apellido"
                         icon={<User className="h-4 w-4" />}
                       />
                       {nameError ? (
