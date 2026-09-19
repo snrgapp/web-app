@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Cloud,
   Download,
+  ExternalLink,
   FolderKanban,
   MapPin,
   Rocket,
@@ -22,7 +23,9 @@ import { cn } from '@/lib/utils'
 import {
   CONVOCATORIAS,
   FUNDING_FILTERS,
+  RADAR_REVIEWED_AT,
   REGIONS,
+  isOpenToday,
   matchesRegion,
   type Convocatoria,
   type FundingType,
@@ -31,8 +34,17 @@ import {
 const selectClass =
   'w-full appearance-none rounded-xl border border-white/10 bg-[#2a2a2a] px-3 py-2.5 text-sm text-white outline-none focus:border-[#FFD60A]'
 
+function officialHost(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
+
 function urgencyClass(urgency: Convocatoria['urgency']) {
   if (urgency === 'urgent') return 'bg-red-500/15 text-red-300'
+  if (urgency === 'closed') return 'bg-white/10 text-white/55'
   if (urgency === 'upcoming') return 'bg-white/10 text-white/70'
   if (urgency === 'continuous') return 'bg-white/10 text-white/70'
   return 'bg-[#FFD60A]/15 text-[#FFD60A]'
@@ -58,7 +70,7 @@ export default function RadarConvocatoriasPage() {
       if (stage !== 'all' && item.stage !== 'ambas' && item.stage !== stage) return false
       if (sector !== 'all' && item.sector !== 'multi' && item.sector !== sector) return false
       if (!matchesRegion(item, region)) return false
-      if (openOnly && item.urgency === 'upcoming') return false
+      if (openOnly && !isOpenToday(item)) return false
       if (
         q &&
         !`${item.entity} ${item.title} ${item.keywords} ${item.tags.join(' ')}`
@@ -100,12 +112,12 @@ export default function RadarConvocatoriasPage() {
   }
 
   async function share(item: Convocatoria) {
-    const url = `${window.location.origin}/radar-convocatorias#${item.id}`
+    const text = `${item.entity} — ${item.title}\nFuente oficial: ${item.basesUrl}`
     if (navigator.share) {
-      await navigator.share({ title: item.title, text: item.entity, url }).catch(() => {})
+      await navigator.share({ title: item.title, text, url: item.basesUrl }).catch(() => {})
       return
     }
-    await navigator.clipboard.writeText(url)
+    await navigator.clipboard.writeText(item.basesUrl)
   }
 
   return (
@@ -134,8 +146,12 @@ export default function RadarConvocatoriasPage() {
         </p>
 
         <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-2 md:grid-cols-4">
-          <Metric icon={<Rocket className="h-5 w-5" />} title="6 convocatorias" sub="Semilla inicial" />
-          <Metric icon={<Wallet className="h-5 w-5" />} title="$14.200 M COP" sub="Fondos de referencia" />
+          <Metric
+            icon={<Rocket className="h-5 w-5" />}
+            title={`${CONVOCATORIAS.filter(isOpenToday).length} abiertas`}
+            sub={`${CONVOCATORIAS.length} fichas · ${RADAR_REVIEWED_AT}`}
+          />
+          <Metric icon={<Wallet className="h-5 w-5" />} title="Portales oficiales" sub="SENA, iNNpulsa, MinCiencias…" />
           <Metric icon={<Cloud className="h-5 w-5 text-[#FFD60A]" />} title="100% multisectorial" sub="Todos los rubros" />
           <Metric icon={<MapPin className="h-5 w-5" />} title="Cobertura total" sub="32 departamentos" />
         </div>
@@ -264,7 +280,7 @@ export default function RadarConvocatoriasPage() {
           <div>
             <h2 className="text-2xl font-bold">Convocatorias abiertas destacadas</h2>
             <p className="text-sm text-white/50">
-              Semilla inicial verificada. Los filtros aplican sobre estas fichas.
+              Revisadas el {RADAR_REVIEWED_AT}. Cada ficha abre la convocatoria oficial para que puedas contrastar título, monto y cierre.
             </p>
           </div>
           <span className="hidden rounded-full bg-[#2a2a2a] px-3 py-1 text-[11px] text-white/60 sm:inline-block">
@@ -313,7 +329,17 @@ export default function RadarConvocatoriasPage() {
                       {item.urgencyLabel}
                     </span>
                   </div>
-                  <h3 className="mb-2 text-lg font-bold leading-snug">{item.title}</h3>
+                  <h3 className="mb-2 text-lg font-bold leading-snug">
+                    <a
+                      href={item.basesUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-start gap-1.5 text-white hover:text-[#FFD60A] hover:underline"
+                    >
+                      <span>{item.title}</span>
+                      <ExternalLink className="mt-1 h-4 w-4 flex-shrink-0" aria-hidden />
+                    </a>
+                  </h3>
                   <div className="mb-3 flex flex-wrap gap-1.5">
                     {item.tags.map((tag) => (
                       <span
@@ -332,14 +358,25 @@ export default function RadarConvocatoriasPage() {
                     ) : null}
                   </div>
                   <p className="mb-3 line-clamp-3 text-sm text-white/55">{item.summary}</p>
-                  <p className="mb-4 text-xs text-white/45">Requisito: {item.requirement}</p>
+                  <p className="mb-3 text-xs text-white/45">Requisito: {item.requirement}</p>
+                  <a
+                    href={item.basesUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mb-4 block truncate rounded-lg border border-white/10 bg-[#1a1a1a] px-3 py-2 text-left text-[11px] text-[#FFD60A] hover:underline"
+                  >
+                    Fuente oficial: {officialHost(item.basesUrl)}
+                  </a>
                 </div>
                 <div className="-mx-5 -mb-5 flex items-center gap-2 rounded-b-2xl bg-[#1a1a1a] px-5 py-3">
                   <a
-                    href={`#${item.id}`}
-                    className="flex-1 rounded-lg bg-[#FFD60A] py-2.5 text-center text-sm font-semibold text-black"
+                    href={item.basesUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#FFD60A] py-2.5 text-center text-sm font-semibold text-black"
                   >
-                    Ver bases y requisitos
+                    Abrir convocatoria oficial
+                    <ExternalLink className="h-4 w-4" aria-hidden />
                   </a>
                   <button
                     type="button"
