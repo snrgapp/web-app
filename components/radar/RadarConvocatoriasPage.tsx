@@ -280,7 +280,7 @@ export default function RadarConvocatoriasPage() {
           <div>
             <h2 className="text-2xl font-bold">Convocatorias abiertas destacadas</h2>
             <p className="text-sm text-white/50">
-              Revisadas el {RADAR_REVIEWED_AT} en listados públicos. El botón abre términos o ficha oficial.
+              Revisadas el {RADAR_REVIEWED_AT}. Cada ficha abre la convocatoria oficial para que puedas contrastar título, monto y cierre.
             </p>
           </div>
           <span className="hidden rounded-full bg-[#2a2a2a] px-3 py-1 text-[11px] text-white/60 sm:inline-block">
