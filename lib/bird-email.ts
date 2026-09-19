@@ -9,7 +9,7 @@
  *   BIRD_SENDER_NAME      default Synergy
  */
 
-function apiHost(apiKey: string) {
+export function birdApiHost(apiKey: string) {
   if (process.env.BIRD_API_URL) return process.env.BIRD_API_URL.replace(/\/+$/, '')
   if (apiKey.startsWith('bk_eu1_') || apiKey.startsWith('bkeu1')) {
     return 'https://eu1.platform.bird.com'
@@ -42,7 +42,7 @@ export async function sendBirdEmail(input: {
   const useTemplate = Boolean(input.template?.slug || input.template?.id)
 
   try {
-    const response = await fetch(`${apiHost(apiKey)}/v1/email/messages`, {
+    const response = await fetch(`${birdApiHost(apiKey)}/v1/email/messages`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -67,8 +67,15 @@ export async function sendBirdEmail(input: {
               text: input.text,
             }),
         category: input.category ?? 'transactional',
-        tags: input.tags,
-        headers: input.headers,
+        ...(input.tags
+          ? {
+              tags: Object.entries(input.tags).map(([name, value]) => ({
+                name,
+                value,
+              })),
+            }
+          : {}),
+        ...(input.headers ? { headers: input.headers } : {}),
       }),
     })
 

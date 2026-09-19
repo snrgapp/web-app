@@ -2,6 +2,7 @@
 
 import { createClient } from '@supabase/supabase-js'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { addRadarAudienceContact } from '@/lib/bird-audience'
 import { sendBirdEmail } from '@/lib/bird-email'
 import { confirmationEmailHtml } from '@/lib/radar-emails'
 import { absoluteUrl } from '@/lib/site'
@@ -89,6 +90,11 @@ export async function subscribeRadarAlertasAction(input: {
   if (error || !token) {
     console.error('radar_alertas upsert', error)
     return { success: false, error: 'No se pudo guardar la alerta.' }
+  }
+
+  const audience = await addRadarAudienceContact({ email, phone: telefono })
+  if (!audience.success) {
+    console.error('radar audience', audience.error)
   }
 
   if (email) {

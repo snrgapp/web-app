@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/utils/supabase/admin'
+import { removeRadarAudienceContact } from '@/lib/bird-audience'
 
 export const dynamic = 'force-dynamic'
 
@@ -12,11 +13,14 @@ export default async function RadarBajaPage({
   if (token) {
     const admin = createAdminClient()
     if (admin) {
-      const { error } = await admin
+      const { data, error } = await admin
         .from('radar_alertas')
         .update({ active: false })
         .eq('unsubscribe_token', token)
-      ok = !error
+        .select('email')
+        .maybeSingle()
+      ok = !error && Boolean(data)
+      if (data?.email) await removeRadarAudienceContact(data.email)
     }
   }
 
