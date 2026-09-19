@@ -24,11 +24,11 @@ function radarDb() {
   })
 }
 
-async function sendRadarConfirmation(email: string, token: string) {
+async function sendRadarConfirmation(email: string, nombre: string, token: string) {
   const confirmUrl = absoluteUrl(`/radar-convocatorias/confirmar?token=${token}`)
   const unsubscribeUrl = absoluteUrl(`/radar-convocatorias/baja?token=${token}`)
   let mail = await sendBirdEmail({
-    to: [{ email }],
+    to: [{ email, name: nombre }],
     template: {
       slug: RADAR_CONFIRM_TEMPLATE,
       parameters: {
@@ -42,7 +42,7 @@ async function sendRadarConfirmation(email: string, token: string) {
   if (!mail.success) {
     console.error('radar confirmation template', mail.error)
     mail = await sendBirdEmail({
-      to: [{ email }],
+      to: [{ email, name: nombre }],
       subject: 'Confirma tu alerta del Radar Synergy',
       html: confirmationEmailHtml(token),
       text: `Confirma tu correo: ${confirmUrl}`,
@@ -57,24 +57,19 @@ async function sendRadarConfirmation(email: string, token: string) {
 }
 
 export async function subscribeRadarAlertasAction(input: {
-  contact: string
-  departamento: string
-  canal: string
+  nombre: string
+  email: string
 }): Promise<{ success: boolean; error?: string }> {
-  const raw = input.contact.trim()
-  const departamento = input.departamento.trim() || 'bogota'
-  const canal = input.canal.trim() || 'email'
+  const nombre = input.nombre.trim()
+  const email = input.email.trim().toLowerCase()
+  const departamento = 'bogota'
+  const canal = 'email'
 
-  const isEmail = EMAIL_RE.test(raw)
-  const phone = raw.replace(/\D/g, '')
-  const email = isEmail ? raw.toLowerCase() : null
-  const telefono = !isEmail && phone.length >= 10 ? raw : null
-
-  if (canal !== 'whatsapp' && !email) {
-    return { success: false, error: 'Para correo necesitamos un email válido.' }
+  if (nombre.length < 2) {
+    return { success: false, error: 'Escribe tu nombre.' }
   }
-  if (canal === 'whatsapp' && !telefono && !email) {
-    return { success: false, error: 'Escribe un celular o un correo.' }
+  if (!EMAIL_RE.test(email)) {
+    return { success: false, error: 'Necesitamos un correo válido.' }
   }
 
   const supabase = radarDb()
@@ -82,9 +77,10 @@ export async function subscribeRadarAlertasAction(input: {
 
   const { data: token, error } = await supabase.rpc('upsert_radar_alerta', {
     p_email: email,
-    p_telefono: telefono,
+    p_telefono: null,
     p_departamento: departamento,
     p_canal: canal,
+    p_nombre: nombre,
   })
 
   if (error || !token) {
@@ -92,13 +88,16 @@ export async function subscribeRadarAlertasAction(input: {
     return { success: false, error: 'No se pudo guardar la alerta.' }
   }
 
-  const audience = await addRadarAudienceContact({ email, phone: telefono })
+  const audience = await addRadarAudienceContact({
+    email,
+    firstName: nombre,
+  })
   if (!audience.success) {
     console.error('radar audience', audience.error)
   }
 
   if (email) {
-    const mail = await sendRadarConfirmation(email, token)
+    const mail = await sendRadarConfirmation(email, nombre, token)
     if (!mail.success) {
       return {
         success: false,

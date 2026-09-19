@@ -24,22 +24,38 @@ function toE164(phone: string | null | undefined) {
 export async function addRadarAudienceContact(input: {
   email?: string | null
   phone?: string | null
+  firstName?: string | null
 }): Promise<{ success: boolean; error?: string }> {
   const apiKey = process.env.BIRD_API_KEY ?? null
   if (!apiKey) return { success: false, error: 'BIRD_API_KEY no configurada' }
 
   const email = input.email?.trim().toLowerCase() || null
   const phone_number = toE164(input.phone)
+  const first_name = input.firstName?.trim() || null
   if (!email && !phone_number) {
     return { success: false, error: 'Sin email ni teléfono' }
   }
+
+  const contact: {
+    email?: string
+    phone_number?: string
+    first_name?: string
+    data: Record<string, string>
+  } = {
+    data: {
+      origen: 'radar',
+    },
+  }
+  if (email) contact.email = email
+  if (phone_number) contact.phone_number = phone_number
+  if (first_name) contact.first_name = first_name
 
   try {
     const response = await fetch(`${birdApiHost(apiKey)}/v1/contacts/batch`, {
       method: 'POST',
       headers: birdHeaders(apiKey),
       body: JSON.stringify({
-        contacts: [{ email, phone_number }],
+        contacts: [contact],
         audience_ids: [RADAR_AUDIENCE_ID],
         match_on: email ? 'email' : 'phone_number',
       }),

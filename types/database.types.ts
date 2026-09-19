@@ -638,6 +638,7 @@ export interface Database {
           id: string
           email: string | null
           telefono: string | null
+          nombre: string | null
           departamento: string
           canal: string
           unsubscribe_token: string
@@ -651,6 +652,7 @@ export interface Database {
           id?: string
           email?: string | null
           telefono?: string | null
+          nombre?: string | null
           departamento?: string
           canal?: string
           unsubscribe_token?: string
@@ -664,6 +666,7 @@ export interface Database {
           id?: string
           email?: string | null
           telefono?: string | null
+          nombre?: string | null
           departamento?: string
           canal?: string
           unsubscribe_token?: string

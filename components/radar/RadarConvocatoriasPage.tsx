@@ -63,9 +63,9 @@ export default function RadarConvocatoriasPage({
   const [saved, setSaved] = useState<string[]>([])
   const [alertOk, setAlertOk] = useState(false)
   const [alertError, setAlertError] = useState('')
+  const [firstName, setFirstName] = useState('')
   const [contact, setContact] = useState('')
-  const [alertRegion, setAlertRegion] = useState('bogota')
-  const [alertChannel, setAlertChannel] = useState('email')
+  const [showAll, setShowAll] = useState(false)
   const [pendingAlert, startAlert] = useTransition()
 
   const filtered = useMemo(() => {
@@ -94,6 +94,8 @@ export default function RadarConvocatoriasPage({
     }
     return list
   }, [items, query, region, funding, stage, sector, openOnly, sort])
+
+  const visible = showAll ? filtered : filtered.slice(0, 9)
 
   const counts = useMemo(() => {
     const base = items.filter((item) => matchesRegion(item, region))
@@ -289,7 +291,7 @@ export default function RadarConvocatoriasPage({
             </p>
           </div>
           <span className="hidden rounded-full bg-[#2a2a2a] px-3 py-1 text-[11px] text-white/60 sm:inline-block">
-            Mostrando {filtered.length} de {items.length}
+            Mostrando {visible.length} de {filtered.length}
           </span>
         </div>
 
@@ -299,7 +301,7 @@ export default function RadarConvocatoriasPage({
           </p>
         ) : (
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((item) => (
+            {visible.map((item) => (
               <article
                 key={item.id}
                 id={item.id}
@@ -412,6 +414,17 @@ export default function RadarConvocatoriasPage({
             ))}
           </div>
         )}
+        {filtered.length > 9 && !showAll ? (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="rounded-full border border-white/15 bg-[#141414] px-5 py-2.5 text-sm font-semibold text-white hover:border-[#FFD60A] hover:text-[#FFD60A]"
+            >
+              Ver más ({filtered.length - 9})
+            </button>
+          </div>
+        ) : null}
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-16 md:px-8">
@@ -431,71 +444,48 @@ export default function RadarConvocatoriasPage({
               </p>
             </div>
             <form
-              className="space-y-3 rounded-2xl border border-white/10 bg-[#141414] p-6 lg:col-span-6"
+              className="space-y-3 rounded-2xl border border-white/10 bg-[#141414] p-5 sm:p-6 lg:col-span-6"
               onSubmit={(e) => {
                 e.preventDefault()
                 setAlertError('')
                 startAlert(async () => {
                   const result = await subscribeRadarAlertasAction({
-                    contact,
-                    departamento: alertRegion,
-                    canal: alertChannel,
+                    nombre: firstName,
+                    email: contact,
                   })
                   if (result.success) setAlertOk(true)
                   else setAlertError(result.error || 'No se pudo activar.')
                 })
               }}
             >
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <label className="block text-left">
-                  <span className="mb-1 block text-[11px] font-bold text-white/45">Departamento</span>
-                  <select
-                    value={alertRegion}
-                    onChange={(e) => setAlertRegion(e.target.value)}
-                    className={selectClass}
-                  >
-                    <option value="bogota">Bogotá D.C.</option>
-                    <option value="antioquia">Antioquia</option>
-                    <option value="valle">Valle del Cauca</option>
-                    <option value="caribe">Atlántico / Bolívar</option>
-                    <option value="santander">Santander</option>
-                    <option value="eje">Caldas / Risaralda / Quindío</option>
-                    <option value="otro">Otro departamento</option>
-                  </select>
-                </label>
-                <label className="block text-left">
-                  <span className="mb-1 block text-[11px] font-bold text-white/45">Canal preferido</span>
-                  <select
-                    value={alertChannel}
-                    onChange={(e) => setAlertChannel(e.target.value)}
-                    className={selectClass}
-                  >
-                    <option value="email">Correo electrónico</option>
-                    <option value="whatsapp">WhatsApp / SMS</option>
-                    <option value="ambos">Ambos canales</option>
-                  </select>
-                </label>
-              </div>
               <label className="block text-left">
-                <span className="mb-1 block text-[11px] font-bold text-white/45">
-                  Correo electrónico o celular
-                </span>
-                <div className="flex gap-2">
-                  <input
-                    value={contact}
-                    onChange={(e) => setContact(e.target.value)}
-                    className="flex-1 rounded-xl border border-white/10 bg-[#2a2a2a] px-4 py-2.5 text-sm outline-none placeholder:text-white/35 focus:border-[#FFD60A]"
-                    placeholder="ejemplo@emprendimiento.co o 310..."
-                  />
-                  <button
-                    type="submit"
-                    disabled={pendingAlert}
-                    className="flex-shrink-0 rounded-xl bg-[#FFD60A] px-4 py-2.5 text-sm font-semibold text-black disabled:opacity-60"
-                  >
-                    {pendingAlert ? 'Activando…' : 'Activar alertas'}
-                  </button>
-                </div>
+                <span className="mb-1 block text-[11px] font-bold text-white/45">Nombre</span>
+                <input
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  autoComplete="given-name"
+                  className="w-full rounded-xl border border-white/10 bg-[#2a2a2a] px-4 py-3 text-sm outline-none placeholder:text-white/35 focus:border-[#FFD60A]"
+                  placeholder="Tu nombre"
+                />
               </label>
+              <label className="block text-left">
+                <span className="mb-1 block text-[11px] font-bold text-white/45">Correo</span>
+                <input
+                  type="email"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
+                  autoComplete="email"
+                  className="w-full rounded-xl border border-white/10 bg-[#2a2a2a] px-4 py-3 text-sm outline-none placeholder:text-white/35 focus:border-[#FFD60A]"
+                  placeholder="ejemplo@emprendimiento.co"
+                />
+              </label>
+              <button
+                type="submit"
+                disabled={pendingAlert}
+                className="w-full rounded-xl bg-[#FFD60A] px-4 py-3 text-sm font-semibold text-black disabled:opacity-60"
+              >
+                {pendingAlert ? 'Activando…' : 'Activar alertas'}
+              </button>
               {alertOk ? (
                 <p className="text-xs text-[#FFD60A]">
                   Listo. Si dejaste un correo, te acaba de llegar la confirmación.
