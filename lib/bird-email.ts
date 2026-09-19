@@ -5,7 +5,7 @@
  * Env:
  *   BIRD_API_KEY          clave bk_us1_... / bk_eu1_...
  *   BIRD_API_URL          opcional, default según el prefijo de la clave
- *   BIRD_SENDER_EMAIL     default hola@snrg.lat
+ *   BIRD_SENDER_EMAIL     default hello@snrg.lat
  *   BIRD_SENDER_NAME      default Synergy
  */
 
@@ -31,7 +31,7 @@ export async function sendBirdEmail(input: {
     return { success: false, error: 'BIRD_API_KEY no configurada' }
   }
 
-  const senderEmail = process.env.BIRD_SENDER_EMAIL || 'hola@snrg.lat'
+  const senderEmail = process.env.BIRD_SENDER_EMAIL || 'hello@snrg.lat'
   const senderName = process.env.BIRD_SENDER_NAME || 'Synergy'
 
   try {
