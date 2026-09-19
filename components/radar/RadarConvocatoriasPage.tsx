@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Cloud,
   Download,
+  ExternalLink,
   FolderKanban,
   MapPin,
   Rocket,
@@ -32,6 +33,14 @@ import {
 
 const selectClass =
   'w-full appearance-none rounded-xl border border-white/10 bg-[#2a2a2a] px-3 py-2.5 text-sm text-white outline-none focus:border-[#FFD60A]'
+
+function officialHost(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '')
+  } catch {
+    return url
+  }
+}
 
 function urgencyClass(urgency: Convocatoria['urgency']) {
   if (urgency === 'urgent') return 'bg-red-500/15 text-red-300'
@@ -103,12 +112,12 @@ export default function RadarConvocatoriasPage() {
   }
 
   async function share(item: Convocatoria) {
-    const url = `${window.location.origin}/radar-convocatorias#${item.id}`
+    const text = `${item.entity} — ${item.title}\nFuente oficial: ${item.basesUrl}`
     if (navigator.share) {
-      await navigator.share({ title: item.title, text: item.entity, url }).catch(() => {})
+      await navigator.share({ title: item.title, text, url: item.basesUrl }).catch(() => {})
       return
     }
-    await navigator.clipboard.writeText(url)
+    await navigator.clipboard.writeText(item.basesUrl)
   }
 
   return (
@@ -320,7 +329,17 @@ export default function RadarConvocatoriasPage() {
                       {item.urgencyLabel}
                     </span>
                   </div>
-                  <h3 className="mb-2 text-lg font-bold leading-snug">{item.title}</h3>
+                  <h3 className="mb-2 text-lg font-bold leading-snug">
+                    <a
+                      href={item.basesUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-start gap-1.5 text-white hover:text-[#FFD60A] hover:underline"
+                    >
+                      <span>{item.title}</span>
+                      <ExternalLink className="mt-1 h-4 w-4 flex-shrink-0" aria-hidden />
+                    </a>
+                  </h3>
                   <div className="mb-3 flex flex-wrap gap-1.5">
                     {item.tags.map((tag) => (
                       <span
@@ -339,16 +358,25 @@ export default function RadarConvocatoriasPage() {
                     ) : null}
                   </div>
                   <p className="mb-3 line-clamp-3 text-sm text-white/55">{item.summary}</p>
-                  <p className="mb-4 text-xs text-white/45">Requisito: {item.requirement}</p>
+                  <p className="mb-3 text-xs text-white/45">Requisito: {item.requirement}</p>
+                  <a
+                    href={item.basesUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mb-4 block truncate rounded-lg border border-white/10 bg-[#1a1a1a] px-3 py-2 text-left text-[11px] text-[#FFD60A] hover:underline"
+                  >
+                    Fuente oficial: {officialHost(item.basesUrl)}
+                  </a>
                 </div>
                 <div className="-mx-5 -mb-5 flex items-center gap-2 rounded-b-2xl bg-[#1a1a1a] px-5 py-3">
                   <a
                     href={item.basesUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 rounded-lg bg-[#FFD60A] py-2.5 text-center text-sm font-semibold text-black"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#FFD60A] py-2.5 text-center text-sm font-semibold text-black"
                   >
-                    Ver bases y requisitos
+                    Abrir convocatoria oficial
+                    <ExternalLink className="h-4 w-4" aria-hidden />
                   </a>
                   <button
                     type="button"
