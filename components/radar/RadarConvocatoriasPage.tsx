@@ -488,7 +488,7 @@ export default function RadarConvocatoriasPage({
               </button>
               {alertOk ? (
                 <p className="text-xs text-[#FFD60A]">
-                  Listo. Si dejaste un correo, te acaba de llegar la confirmación.
+                  Listo, revisa tu bandeja de correos
                 </p>
               ) : (
                 <p className="text-[11px] text-white/35">
