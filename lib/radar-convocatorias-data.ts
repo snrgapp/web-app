@@ -10,7 +10,7 @@ export type Region =
   | 'santanderes'
   | 'eje'
   | 'orinoquia'
-export type Urgency = 'urgent' | 'soon' | 'open' | 'upcoming' | 'continuous'
+export type Urgency = 'urgent' | 'soon' | 'open' | 'upcoming' | 'continuous' | 'closed'
 
 export type Convocatoria = {
   id: string
@@ -32,7 +32,11 @@ export type Convocatoria = {
   urgencyLabel: string
   keywords: string
   accent: 'black' | 'yellow' | 'slate'
+  /** URL concreta de términos, ficha o PDF oficial. Nunca la home del portal. */
+  basesUrl: string
 }
+
+export const RADAR_REVIEWED_AT = '2026-09-19'
 
 export const REGIONS: { value: string; label: string }[] = [
   { value: 'all', label: 'Toda Colombia' },
@@ -53,133 +57,251 @@ export const FUNDING_FILTERS: { value: 'all' | FundingType; label: string }[] = 
   { value: 'cofinanciacion', label: 'Cofinanciación y crédito blando' },
 ]
 
+/**
+ * Fichas contrastadas el 2026-09-19 en listados públicos (sin login).
+ * Si un portal no respondió, se conservó el último enlace oficial válido.
+ * No se inventaron convocatorias.
+ */
 export const CONVOCATORIAS: Convocatoria[] = [
+  {
+    id: 'innpulsa-cfp-popayan-c4',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'Centros de Fortalecimiento Productivo',
+    title: 'CFP Manufactura Popayán — Cohorte 4',
+    summary:
+      'iNNpulsa busca vincular 60 MiPymes o unidades productivas de confección de prendas de vestir en el Cauca. Fortalecimiento productivo presencial en el centro CFP/ZASCA de Popayán.',
+    requirement: 'MiPymes o unidades productivas de manufactura-confección ubicadas en el Cauca.',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Fortalecimiento productivo CFP',
+    amountHint: '60 cupos · listado público iNNpulsa',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'comercio',
+    region: 'nacional',
+    tags: ['Fortalecimiento', 'Manufactura', 'Cauca', 'Cierra 24 sep 2026'],
+    urgency: 'urgent',
+    urgencyLabel: 'Cierra el 24 de septiembre',
+    keywords: 'innpulsa mincit zasca popayan manufactura confeccion cauca',
+    accent: 'yellow',
+    basesUrl:
+      'https://convocatorias.innpulsacolombia.com/convocatoria/centros-de-fortalecimiento-productivo-popayan-cohorte-4-66uzna',
+  },
+  {
+    id: 'innpulsa-cfp-tumaco-cacao-c4',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'Centros de Fortalecimiento Productivo',
+    title: 'CFP Agroindustria Tumaco Cacao — Cohorte 4',
+    summary:
+      'Convocatoria abierta para vincular 40 MiPymes o unidades productivas de agroindustria de cacao en Tumaco, Nariño, al Centro de Fortalecimiento Productivo.',
+    requirement: 'Unidad productiva o MiPymes de cacao con operación en Tumaco, Nariño.',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Acompañamiento CFP cacao',
+    amountHint: '40 cupos · cierre 30 sep 2026',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'agro',
+    region: 'nacional',
+    tags: ['Fortalecimiento', 'Agroindustria', 'Tumaco', 'Cacao'],
+    urgency: 'soon',
+    urgencyLabel: 'Cierra el 30 de septiembre',
+    keywords: 'innpulsa tumaco cacao agroindustria nariño zasca',
+    accent: 'yellow',
+    basesUrl:
+      'https://convocatorias.innpulsacolombia.com/convocatoria/centros-de-fortalecimiento-productivo-agroindustria-tumaco-cacao-cohorte-4-6atp9q',
+  },
+  {
+    id: 'bancoldex-territorios-paz',
+    initials: 'BX',
+    entity: 'Bancóldex',
+    entitySub: 'PNUD y Unidad para las Víctimas',
+    title: 'Transformación Financiera, Territorios de Paz',
+    summary:
+      'Formación financiera presencial y mentorías para unidades productivas de víctimas del conflicto en municipios priorizados. El cierre de esta convocatoria de fortalecimiento es el 30 de septiembre de 2026 (Adenda 4). La línea de crédito asociada se tramita por intermediarios financieros.',
+    requirement:
+      'Unidad productiva domiciliada y en operación en un municipio priorizado, con condición de víctima verificable.',
+    amountLabel: 'Cupos de fortalecimiento',
+    amountValue: 'Formación + mentoría',
+    amountHint: 'Cierre 30 sep 2026 · 11:59 p. m.',
+    funding: 'cofinanciacion',
+    stage: 'ambas',
+    sector: 'multi',
+    region: 'nacional',
+    tags: ['Fortalecimiento', 'Crédito blando aparte', 'Víctimas', 'Territorios priorizados'],
+    urgency: 'soon',
+    urgencyLabel: 'Cierra el 30 de septiembre',
+    keywords: 'bancoldex territorios paz pnud victimas formacion mentoria',
+    accent: 'black',
+    basesUrl:
+      'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/transformacion-financiera-territorios-de-paz',
+  },
+  {
+    id: 'innpulsa-logyca-gs1',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'Alianza LOGYCA / GS1',
+    title: 'Servicios complementarios logísticos, de colaboración y códigos de barras',
+    summary:
+      'Alianza MinCIT, iNNpulsa y LOGYCA/ASOCIACIÓN: siete servicios gratuitos bajo el estándar GS1 para que empresarios y emprendedores mejoren identificación, colaboración y logística. Listada como abierta hasta el 31 de octubre de 2026.',
+    requirement: 'Empresarios o emprendedores en Colombia que requieran estándares GS1 / LOGYCA.',
+    amountLabel: 'Beneficio principal',
+    amountValue: '7 servicios GS1 gratuitos',
+    amountHint: 'Cierre 31 oct 2026',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'multi',
+    region: 'nacional',
+    tags: ['Logística', 'Códigos de barras', 'Nacional', 'Sin costo'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 31 de octubre',
+    keywords: 'innpulsa logyca gs1 codigos de barras mincit',
+    accent: 'yellow',
+    basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69bb119298e5068a5213f26c',
+  },
+  {
+    id: 'innpulsa-cfp-honda',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'ZASCA Tecnologías',
+    title: 'CFP Tecnologías Honda, norte del Tolima y Guaduas',
+    summary:
+      'Postulación presencial para vincular 200 unidades productivas o MiPymes de cualquier sector en Honda, municipios del norte del Tolima y Guaduas. El listado público marca cierre el 30 de noviembre de 2026.',
+    requirement: 'Unidad productiva o MiPymes ubicada en Honda, norte del Tolima o Guaduas.',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Fortalecimiento ZASCA Tecnologías',
+    amountHint: '200 cupos · postulación presencial',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'multi',
+    region: 'nacional',
+    tags: ['ZASCA', 'Tolima', 'Guaduas', 'Cierra 30 nov 2026'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 30 de noviembre',
+    keywords: 'innpulsa zasca honda tolima guaduas tecnologias',
+    accent: 'slate',
+    basesUrl:
+      'https://convocatorias.innpulsacolombia.com/convocatoria/zasca-tecnologias-honda-norte-del-tolima-y-guaduas-postulacion-presencial-rg0fa',
+  },
+  {
+    id: 'ruta-emprendimiento-medellin-2026',
+    initials: 'RN',
+    entity: 'Ruta del Emprendimiento / Alcaldía de Medellín',
+    entitySub: 'Distrito de CTeI de Medellín',
+    title: 'Ruta del Emprendimiento 2026',
+    summary:
+      'Convocatoria abierta permanente hasta agotar 700 cupos: acompañamiento en ideación, preincubación, incubación, aceleración y consolidación para iniciativas de base tecnológica en Medellín. La Alcaldía anunció 60 incentivos de capital semilla en especie (hasta $15 millones) para preincubación e incubación.',
+    requirement:
+      'Mayor de edad, residente en Medellín, con idea, emprendimiento o empresa de base tecnológica o que incorpore tecnología.',
+    amountLabel: 'Capital semilla (especie)',
+    amountValue: 'Hasta $15.000.000 COP',
+    amountHint: '60 incentivos · TDR 2026 · hasta agotar cupos',
+    funding: 'semilla',
+    stage: 'ambas',
+    sector: 'tech',
+    region: 'antioquia',
+    tags: ['Capital semilla', 'Aceleración', 'Medellín', 'Hasta agotar cupos'],
+    urgency: 'continuous',
+    urgencyLabel: 'Abierta hasta agotar cupos',
+    keywords: 'ruta emprendimiento medellin capital semilla ruta n alcaldia',
+    accent: 'slate',
+    basesUrl:
+      'https://www.rutadelemprendimientomedellin.com/_files/ugd/b81507_10457b5836b24f698a5c2544416eae37.pdf',
+  },
+  {
+    id: 'fondo-mujer-a-pulso',
+    initials: 'FM',
+    entity: 'Fondo Mujer Libre y Productiva',
+    entitySub: 'Convenio Bancóldex / Grupo Bicentenario',
+    title: 'Línea de crédito A PULSO',
+    summary:
+      'Línea de redescuento para mujeres microempresarias de actividades no agrícolas, con posible compensación parcial de capital. La ficha pública del Fondo Mujer permanece publicada; el desembolso se gestiona con establecimientos financieros aliados.',
+    requirement:
+      'Mujer con micronegocio; SISBEN IV A, B o C o ingresos anuales inferiores a 50 SMMLV; destinar el crédito al micronegocio.',
+    amountLabel: 'Tope publicado',
+    amountValue: 'Hasta 6 SMMLV',
+    amountHint: 'Más alivio a capital en operaciones de hasta 2 SMMLV',
+    funding: 'cofinanciacion',
+    stage: 'temprana',
+    sector: 'multi',
+    region: 'nacional',
+    tags: ['Crédito blando', 'Mujeres', 'Microempresa', 'Ventanilla financiera'],
+    urgency: 'continuous',
+    urgencyLabel: 'Línea publicada',
+    keywords: 'fondo mujer a pulso bancoldex credito microempresarias',
+    accent: 'black',
+    basesUrl: 'https://fondomujer.gov.co/portfolio/linea-de-credito-creo-un-credito-para-conocernos/',
+  },
   {
     id: 'sena-fondo-emprender',
     initials: 'S',
     entity: 'SENA — Fondo Emprender',
     entitySub: 'Gobierno de Colombia',
-    title: 'Convocatoria Nacional Multisectorial 2025',
+    title: 'Convocatoria nacional No. 153 Multisectorial',
     summary:
-      'Financiación 100% no reembolsable para la creación y puesta en marcha de nuevas empresas en Colombia. Incluye asistencia técnica y mentoría de formulación.',
-    requirement: 'Plan de negocio validado en centros SENA.',
-    amountLabel: 'Monto financiable',
-    amountValue: 'Hasta $105.000.000 COP',
+      'Términos oficiales 2026: financiar creación o fortalecimiento de iniciativas en todos los sectores, individual o asociativa. Presupuesto de la convocatoria: $18.000 millones. Cerró el 6 de abril de 2026. Se conserva el PDF de términos como último enlace válido; no hay una nueva nacional verificada en esta pasada.',
+    requirement: 'Plan de negocio o de inversión según modalidad CREACIÓN o FORTALECIMIENTO, vía plataforma Fondo Emprender.',
+    amountLabel: 'Tope por plan (TDR)',
+    amountValue: 'Hasta 500 SMMLV',
+    amountHint: 'Bolsa $18.000 M · cerró 6 abr 2026',
     funding: 'capital',
     stage: 'temprana',
     sector: 'multi',
     region: 'nacional',
-    tags: ['Capital no reembolsable', 'Etapa temprana', 'Multisectorial', 'Nacional'],
-    urgency: 'soon',
-    urgencyLabel: 'Cierra en 21 días',
-    keywords: 'sena fondo emprender semilla gobierno',
+    tags: ['Capital no reembolsable', 'Cerrada', 'Multisectorial', 'Nacional'],
+    urgency: 'closed',
+    urgencyLabel: 'Cerrada el 6 de abril',
+    keywords: 'sena fondo emprender 153 multisectorial semilla',
     accent: 'black',
-  },
-  {
-    id: 'innpulsa-acelera',
-    initials: 'iN',
-    entity: 'iNNpulsa Colombia / MinCIT',
-    entitySub: 'Min. Comercio',
-    title: 'Programa Acelera Colombia — Cohorte Expansión',
-    summary:
-      'Programa intensivo de 16 semanas para empresas con ventas demostradas que buscan escalar a nivel nacional e internacional con optimización de modelo operativo.',
-    requirement: 'Mínimo 1 año de operación y ventas > $80M COP anuales.',
-    amountLabel: 'Beneficio principal',
-    amountValue: 'Acompañamiento 1:1 + red 45+ VCs',
-    funding: 'aceleradora',
-    stage: 'mediana',
-    sector: 'multi',
-    region: 'nacional',
-    tags: ['Aceleradora', 'Etapa mediana', 'Innovación', 'Mentoría y fondos'],
-    urgency: 'urgent',
-    urgencyLabel: 'Quedan 4 días',
-    keywords: 'innpulsa mincit acelera expansion vc',
-    accent: 'yellow',
-  },
-  {
-    id: 'ruta-n-angeles',
-    initials: 'RN',
-    entity: 'Ruta N & Red Ángeles',
-    entitySub: 'Medellín y nacional',
-    title: 'Fondo Semilla Inversión Ángel 2025',
-    summary:
-      'Inyección de capital para startups y empresas de servicios de alto valor agregado con producto mínimo viable lanzado y clientes activos en Colombia.',
-    requirement: 'PMV en operación y tracción mensual comprobable.',
-    amountLabel: 'Rango de inversión',
-    amountValue: '$50.000 – $100.000 USD',
-    amountHint: 'Aprox. $200M – $400M COP',
-    funding: 'semilla',
-    stage: 'temprana',
-    sector: 'tech',
-    region: 'antioquia',
-    tags: ['Fondo semilla', 'Etapa temprana', 'Servicios y tech', 'Equity / SAFE'],
-    urgency: 'open',
-    urgencyLabel: 'Cierre: 30 de mayo',
-    keywords: 'ruta n angeles medellin semilla equity',
-    accent: 'slate',
+    basesUrl:
+      'https://www.sena.edu.co/es-co/trabajo/FONDOEMPRENDER1/2026/MARZO/Convocatoria%20No%20153_Multisectorial.pdf',
   },
   {
     id: 'minciencias-cofinancia',
     initials: 'MC',
     entity: 'MinCiencias',
-    entitySub: 'Min. de Ciencia y Tecnología',
-    title: 'Cofinanciación para la Innovación y Productividad Empresarial',
+    entitySub: 'Convocatoria 976',
+    title: 'ColombIA Inteligente 2026',
     summary:
-      'Recursos no reembolsables para empresas legalmente constituidas: nuevos productos, absorción tecnológica y sofisticación productiva.',
-    requirement: 'Mínimo 2 años de registro en Cámara de Comercio con RUT activo.',
-    amountLabel: 'Monto no reembolsable',
-    amountValue: 'Hasta $300.000.000 COP',
+      'Cofinanciación de I+D+i en inteligencia artificial y tecnologías cuánticas. Alianza mínima: IES (ejecutora) + empresa nacional + organización local-regional. Bolsa publicada: $24.000 millones. Cerró el 13 de abril de 2026; se conserva la ficha oficial.',
+    requirement: 'Alianza IES + empresa nacional + organización local-regional, con domicilio regional según TDR.',
+    amountLabel: 'Recursos de la convocatoria',
+    amountValue: '$24.000.000.000 COP',
+    amountHint: 'Cerró 13 abr 2026',
     funding: 'cofinanciacion',
     stage: 'mediana',
-    sector: 'multi',
+    sector: 'tech',
     region: 'nacional',
-    tags: ['Capital no reembolsable', 'Etapa mediana', 'Multisectorial', 'Cofinanciación 70%'],
-    urgency: 'open',
-    urgencyLabel: 'Cierre: 15 de junio',
-    keywords: 'minciencias innovacion productividad cofinanciacion',
+    tags: ['Cofinanciación', 'IA', 'Cerrada', 'Alianzas'],
+    urgency: 'closed',
+    urgencyLabel: 'Cerrada el 13 de abril',
+    keywords: 'minciencias 976 colombia inteligente ia cuantica',
     accent: 'black',
+    basesUrl: 'https://minciencias.gov.co/convocatorias/convocatoria-colombia-inteligente-2026',
   },
   {
     id: 'appsco-mintic',
     initials: 'AP',
-    entity: 'Apps.co & MinTIC',
-    entitySub: 'Min. Tecnologías',
-    title: 'Fase de Validación y Crecimiento de Negocios Digitales',
+    entity: 'Apps.co / MinTIC / iNNpulsa',
+    entitySub: 'Emprendimiento Digital 2026',
+    title: 'Emprendimiento Digital 2026 — Modelo de negocio',
     summary:
-      'Asesoría especializada, kits de herramientas en la nube y preparación para rondas de capital para equipos con software o plataformas digitales.',
-    requirement: 'Equipo de mínimo 2 personas con producto digital funcional.',
-    amountLabel: 'Paquete de beneficios',
-    amountValue: 'Asesoría + $10.000 USD en cloud',
+      'Ruta oficial MinTIC–MinCIT–iNNpulsa para 110 empresas digitales con producto validado: 26 horas de asistencia y toolkit de hasta $2.000.000 COP para la mitad de los beneficiarios. El listado iNNpulsa la marca cerrada (plazo público de postulación: 22 de mayo de 2026). Apps.co no publica una convocatoria 2026 distinta verificable.',
+    requirement:
+      'Empresa legalmente constituida, producto digital propio validado y ventas ≥ $1.000.000 COP en el último año.',
+    amountLabel: 'Toolkit (50% de cupos)',
+    amountValue: 'Hasta $2.000.000 COP',
+    amountHint: '110 cupos · convocatoria cerrada',
     funding: 'aceleradora',
     stage: 'temprana',
     sector: 'tech',
     region: 'nacional',
-    tags: ['Aceleradora / incubación', 'Etapa temprana', 'Digital', '100% gratuito'],
-    urgency: 'continuous',
-    urgencyLabel: 'Convocatoria continua',
-    keywords: 'apps.co mintic digital cloud validacion',
+    tags: ['Aceleración digital', 'MinTIC', 'Cerrada', 'Producto digital'],
+    urgency: 'closed',
+    urgencyLabel: 'Cerrada el 22 de mayo',
+    keywords: 'apps.co mintic emprendimiento digital modelo de negocio innulsa',
     accent: 'yellow',
-  },
-  {
-    id: 'fondo-mujer',
-    initials: 'FM',
-    entity: 'Fondo Mujer Emprende',
-    entitySub: 'Presidencia y Vicepresidencia',
-    title: 'Línea Impulso Productivo Nacional para Emprendedoras',
-    summary:
-      'Capital semilla y fortalecimiento técnico para empresas lideradas por mujeres en comercio, agro, manufactura o servicios en cualquier departamento.',
-    requirement: 'Más del 51% de participación o liderazgo femenino acreditado.',
-    amountLabel: 'Subsidio asignable',
-    amountValue: 'Hasta $80.000.000 COP',
-    funding: 'capital',
-    stage: 'ambas',
-    sector: 'multi',
-    region: 'nacional',
-    tags: ['Capital no reembolsable', 'Etapa temprana y mediana', 'Mujeres líderes', 'Multisectorial'],
-    urgency: 'upcoming',
-    urgencyLabel: 'Apertura en 8 días',
-    keywords: 'mujer emprende vicepresidencia subsidio',
-    accent: 'black',
+    basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69d9786a6191167cbf5a8b99',
   },
 ]
 
@@ -187,4 +309,8 @@ export function matchesRegion(item: Convocatoria, region: string) {
   if (region === 'all') return true
   if (item.region === 'nacional') return true
   return item.region === region
+}
+
+export function isOpenToday(item: Convocatoria) {
+  return item.urgency !== 'upcoming' && item.urgency !== 'closed'
 }
