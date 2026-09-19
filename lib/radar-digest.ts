@@ -31,9 +31,10 @@ export async function sendRadarWeeklyDigest() {
   const cutoff = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
   const { data: subs, error } = await admin
     .from('radar_alertas')
-    .select('id, email, unsubscribe_token, last_digest_at, canal')
+    .select('id, email, unsubscribe_token, last_digest_at, canal, confirmed_at')
     .eq('active', true)
     .not('email', 'is', null)
+    .not('confirmed_at', 'is', null)
 
   if (error) return { ok: false, sent: 0, error: error.message }
 

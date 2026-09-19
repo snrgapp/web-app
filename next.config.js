@@ -46,6 +46,24 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: '/radar-convocatorias/confirmar',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/radar-convocatorias/baja',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0, must-revalidate',
+          },
+        ],
+      },
     ]
   },
   images: {

@@ -643,6 +643,7 @@ export interface Database {
           unsubscribe_token: string
           active: boolean
           confirmation_sent_at: string | null
+          confirmed_at: string | null
           last_digest_at: string | null
           created_at: string
         }
@@ -655,6 +656,7 @@ export interface Database {
           unsubscribe_token?: string
           active?: boolean
           confirmation_sent_at?: string | null
+          confirmed_at?: string | null
           last_digest_at?: string | null
           created_at?: string
         }
@@ -667,6 +669,7 @@ export interface Database {
           unsubscribe_token?: string
           active?: boolean
           confirmation_sent_at?: string | null
+          confirmed_at?: string | null
           last_digest_at?: string | null
           created_at?: string
         }

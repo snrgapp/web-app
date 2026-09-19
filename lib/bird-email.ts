@@ -19,9 +19,15 @@ function apiHost(apiKey: string) {
 
 export async function sendBirdEmail(input: {
   to: { email: string; name?: string }[]
-  subject: string
-  html: string
+  subject?: string
+  html?: string
   text?: string
+  template?: {
+    slug?: string
+    id?: string
+    language?: string
+    parameters?: Record<string, string>
+  }
   category?: 'transactional' | 'marketing'
   tags?: Record<string, string>
   headers?: Record<string, string>
@@ -33,6 +39,7 @@ export async function sendBirdEmail(input: {
 
   const senderEmail = process.env.BIRD_SENDER_EMAIL || 'hello@snrg.lat'
   const senderName = process.env.BIRD_SENDER_NAME || 'Synergy'
+  const useTemplate = Boolean(input.template?.slug || input.template?.id)
 
   try {
     const response = await fetch(`${apiHost(apiKey)}/v1/email/messages`, {
@@ -45,9 +52,20 @@ export async function sendBirdEmail(input: {
       body: JSON.stringify({
         from: { email: senderEmail, name: senderName },
         to: input.to.map((r) => (r.name ? { email: r.email, name: r.name } : r.email)),
-        subject: input.subject,
-        html: input.html,
-        text: input.text,
+        ...(useTemplate
+          ? {
+              template: {
+                ...(input.template?.id ? { id: input.template.id } : {}),
+                ...(input.template?.slug ? { slug: input.template.slug } : {}),
+                language: input.template?.language,
+                parameters: input.template?.parameters,
+              },
+            }
+          : {
+              subject: input.subject,
+              html: input.html,
+              text: input.text,
+            }),
         category: input.category ?? 'transactional',
         tags: input.tags,
         headers: input.headers,

@@ -4,6 +4,11 @@ import { createAdminClient } from '@/utils/supabase/admin'
 import { createServerClient } from '@/utils/supabase/server'
 import { sendBirdEmail } from '@/lib/bird-email'
 import { confirmationEmailHtml } from '@/lib/radar-emails'
+import { absoluteUrl } from '@/lib/site'
+
+const RADAR_CONFIRM_TEMPLATE =
+  process.env.BIRD_RADAR_CONFIRM_TEMPLATE ||
+  'plantilla-de-inscripci-n-convocatorias-2026-09-19-17-13-22'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -38,6 +43,7 @@ export async function subscribeRadarAlertasAction(input: {
     departamento,
     canal,
     unsubscribe_token: token,
+    confirmed_at: canal === 'whatsapp' ? new Date().toISOString() : null,
   })
 
   if (error) {
@@ -46,14 +52,30 @@ export async function subscribeRadarAlertasAction(input: {
   }
 
   if (email) {
-    const mail = await sendBirdEmail({
+    const confirmUrl = absoluteUrl(`/radar-convocatorias/confirmar?token=${token}`)
+    const unsubscribeUrl = absoluteUrl(`/radar-convocatorias/baja?token=${token}`)
+    let mail = await sendBirdEmail({
       to: [{ email }],
-      subject: 'Tu alerta del Radar Synergy está activa',
-      html: confirmationEmailHtml(token),
-      text: 'Tu alerta quedó activa. Cada lunes te enviaremos tres convocatorias. https://www.snrg.lat/radar-convocatorias',
+      template: {
+        slug: RADAR_CONFIRM_TEMPLATE,
+        parameters: {
+          confirm_url: confirmUrl,
+          unsubscribe_url: unsubscribeUrl,
+        },
+      },
       category: 'transactional',
       tags: { product: 'radar', type: 'confirmation' },
     })
+    if (!mail.success) {
+      mail = await sendBirdEmail({
+        to: [{ email }],
+        subject: 'Tu alerta del Radar Synergy está activa',
+        html: confirmationEmailHtml(token),
+        text: `Confirma tu correo: ${confirmUrl}`,
+        category: 'transactional',
+        tags: { product: 'radar', type: 'confirmation' },
+      })
+    }
     if (mail.success) {
       await supabase
         .from('radar_alertas')
