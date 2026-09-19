@@ -2,6 +2,8 @@
 
 import { createServerClient } from '@/utils/supabase/server'
 import { getDefaultOrgId } from '@/lib/org-resolver'
+import { sendBirdEmail } from '@/lib/bird-email'
+import { waitlistConfirmationEmail, waitlistConfirmationText } from '@/lib/lista-espera-emails'
 
 export type ListaEsperaPayload = {
   nombre: string
@@ -79,5 +81,18 @@ export async function submitListaEsperaAction(
     console.error('lista_espera_ciudades insert', error)
     return { success: false, error: 'No se pudo guardar. Intenta de nuevo.' }
   }
+
+  const mail = await sendBirdEmail({
+    to: [{ email, name: nombre }],
+    subject: `Ya estás en la lista de Synergy en ${ciudad}`,
+    html: waitlistConfirmationEmail({ nombre, ciudad }),
+    text: waitlistConfirmationText({ nombre, ciudad }),
+    category: 'transactional',
+    tags: { product: 'lista-espera', city: ciudad.slice(0, 40) },
+  })
+  if (!mail.success) {
+    console.error('lista_espera confirmation email', mail.error)
+  }
+
   return { success: true }
 }

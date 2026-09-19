@@ -1,27 +1,22 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import Image from 'next/image'
 import {
   ArrowRight,
   Bell,
   Bookmark,
   BookmarkCheck,
-  ChevronRight,
   Cloud,
-  Download,
   ExternalLink,
-  FolderKanban,
   MapPin,
   Rocket,
   Search,
   Share2,
-  Sparkles,
   Wallet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
-  CONVOCATORIAS,
   FUNDING_FILTERS,
   RADAR_REVIEWED_AT,
   REGIONS,
@@ -30,6 +25,7 @@ import {
   type Convocatoria,
   type FundingType,
 } from '@/lib/radar-convocatorias-data'
+import { subscribeRadarAlertasAction } from '@/app/actions/radar-alertas'
 
 const selectClass =
   'w-full appearance-none rounded-xl border border-white/10 bg-[#2a2a2a] px-3 py-2.5 text-sm text-white outline-none focus:border-[#FFD60A]'
@@ -50,7 +46,13 @@ function urgencyClass(urgency: Convocatoria['urgency']) {
   return 'bg-[#FFD60A]/15 text-[#FFD60A]'
 }
 
-export default function RadarConvocatoriasPage() {
+export default function RadarConvocatoriasPage({
+  items,
+  refreshedAt,
+}: {
+  items: Convocatoria[]
+  refreshedAt: string | null
+}) {
   const [query, setQuery] = useState('')
   const [region, setRegion] = useState('all')
   const [funding, setFunding] = useState<'all' | FundingType>('all')
@@ -59,13 +61,16 @@ export default function RadarConvocatoriasPage() {
   const [openOnly, setOpenOnly] = useState(true)
   const [sort, setSort] = useState('close')
   const [saved, setSaved] = useState<string[]>([])
-  const [diagnosisOpen, setDiagnosisOpen] = useState(false)
   const [alertOk, setAlertOk] = useState(false)
+  const [alertError, setAlertError] = useState('')
   const [contact, setContact] = useState('')
+  const [alertRegion, setAlertRegion] = useState('bogota')
+  const [alertChannel, setAlertChannel] = useState('email')
+  const [pendingAlert, startAlert] = useTransition()
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    let list = CONVOCATORIAS.filter((item) => {
+    let list = items.filter((item) => {
       if (funding !== 'all' && item.funding !== funding) return false
       if (stage !== 'all' && item.stage !== 'ambas' && item.stage !== stage) return false
       if (sector !== 'all' && item.sector !== 'multi' && item.sector !== sector) return false
@@ -88,10 +93,10 @@ export default function RadarConvocatoriasPage() {
       list = [...list].reverse()
     }
     return list
-  }, [query, region, funding, stage, sector, openOnly, sort])
+  }, [items, query, region, funding, stage, sector, openOnly, sort])
 
   const counts = useMemo(() => {
-    const base = CONVOCATORIAS.filter((item) => matchesRegion(item, region))
+    const base = items.filter((item) => matchesRegion(item, region))
     return {
       all: base.length,
       capital: base.filter((i) => i.funding === 'capital').length,
@@ -99,7 +104,7 @@ export default function RadarConvocatoriasPage() {
       aceleradora: base.filter((i) => i.funding === 'aceleradora').length,
       cofinanciacion: base.filter((i) => i.funding === 'cofinanciacion').length,
     }
-  }, [region])
+  }, [items, region])
 
   function clearFilters() {
     setQuery('')
@@ -148,8 +153,8 @@ export default function RadarConvocatoriasPage() {
         <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-2 md:grid-cols-4">
           <Metric
             icon={<Rocket className="h-5 w-5" />}
-            title={`${CONVOCATORIAS.filter(isOpenToday).length} abiertas`}
-            sub={`${CONVOCATORIAS.length} fichas · ${RADAR_REVIEWED_AT}`}
+            title={`${items.filter(isOpenToday).length} abiertas`}
+            sub={`${items.length} fichas · ${refreshedAt ? new Date(refreshedAt).toLocaleDateString('es-CO') : RADAR_REVIEWED_AT}`}
           />
           <Metric icon={<Wallet className="h-5 w-5" />} title="Portales oficiales" sub="SENA, iNNpulsa, MinCiencias…" />
           <Metric icon={<Cloud className="h-5 w-5 text-[#FFD60A]" />} title="100% multisectorial" sub="Todos los rubros" />
@@ -284,7 +289,7 @@ export default function RadarConvocatoriasPage() {
             </p>
           </div>
           <span className="hidden rounded-full bg-[#2a2a2a] px-3 py-1 text-[11px] text-white/60 sm:inline-block">
-            Mostrando {filtered.length} de {CONVOCATORIAS.length}
+            Mostrando {filtered.length} de {items.length}
           </span>
         </div>
 
@@ -409,60 +414,6 @@ export default function RadarConvocatoriasPage() {
         )}
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-10 md:px-8">
-        <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-12">
-          <div className="relative overflow-hidden rounded-3xl bg-[#141414] p-8 ring-1 ring-[#FFD60A]/30 lg:col-span-7">
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-[#FFD60A] px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-black">
-              <Sparkles className="h-4 w-4" />
-              Test inteligente gratuito
-            </div>
-            <h3 className="mb-2 max-w-lg text-2xl font-bold md:text-3xl">
-              ¿No sabes con certeza a cuál postular?
-            </h3>
-            <p className="mb-6 max-w-xl text-sm text-white/60">
-              Ajusta etapa, sector y región con el panel de arriba, o usa este atajo para dejar
-              filtros listos en 5 segundos.
-            </p>
-            <div className="mb-6 grid max-w-md grid-cols-3 gap-2">
-              <Stat n="2 min" l="Duración" />
-              <Stat n="5 pasos" l="Preguntas clave" />
-              <Stat n="Match" l="Resultado" />
-            </div>
-            <button
-              type="button"
-              onClick={() => setDiagnosisOpen(true)}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#FFD60A] px-6 py-3.5 text-sm font-bold text-black"
-            >
-              Iniciar diagnóstico de elegibilidad
-              <ArrowRight className="h-5 w-5" />
-            </button>
-            <p className="mt-3 text-xs text-white/40">Sin registros obligatorios</p>
-          </div>
-
-          <div className="flex flex-col justify-between rounded-3xl border border-white/10 bg-[#141414] p-6 lg:col-span-5">
-            <div>
-              <div className="mb-4 flex items-center justify-between">
-                <h4 className="text-xl font-bold">Recursos para emprendedores</h4>
-                <FolderKanban className="h-7 w-7 text-[#FFD60A]" />
-              </div>
-              <p className="mb-4 text-sm text-white/55">
-                Kits de documentos para formulación, legal y pitch. Próximamente descargables.
-              </p>
-              <div className="space-y-2">
-                <Resource title="Modelo financiero y flujo de caja" kind="XLSX" />
-                <Resource title="Guía de requisitos legales y estatutos" kind="PDF" />
-                <Resource title="Deck maestro de inversión" kind="PPTX" />
-                <Resource title="Matriz de autoevaluación" kind="DOCX" />
-              </div>
-            </div>
-            <p className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[#FFD60A]">
-              Ver biblioteca completa
-              <ChevronRight className="h-4 w-4" />
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section className="mx-auto max-w-6xl px-4 pb-16 md:px-8">
         <div className="rounded-3xl border border-white/10 bg-[#1a1a1a] p-8">
           <div className="grid grid-cols-1 items-center gap-6 lg:grid-cols-12">
@@ -475,22 +426,34 @@ export default function RadarConvocatoriasPage() {
                 Nunca más te pierdas una fecha de cierre
               </h3>
               <p className="max-w-xl text-sm text-white/55">
-                Deja tu contacto. En esta versión guardamos la intención en el navegador; el envío
-                a WhatsApp o correo llega en la siguiente iteración.
+                Recibes un correo de confirmación ahora y, cada lunes, tres convocatorias con enlace
+                a las bases oficiales.
               </p>
             </div>
             <form
               className="space-y-3 rounded-2xl border border-white/10 bg-[#141414] p-6 lg:col-span-6"
               onSubmit={(e) => {
                 e.preventDefault()
-                if (!contact.trim()) return
-                setAlertOk(true)
+                setAlertError('')
+                startAlert(async () => {
+                  const result = await subscribeRadarAlertasAction({
+                    contact,
+                    departamento: alertRegion,
+                    canal: alertChannel,
+                  })
+                  if (result.success) setAlertOk(true)
+                  else setAlertError(result.error || 'No se pudo activar.')
+                })
               }}
             >
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="block text-left">
                   <span className="mb-1 block text-[11px] font-bold text-white/45">Departamento</span>
-                  <select className={selectClass} defaultValue="bogota">
+                  <select
+                    value={alertRegion}
+                    onChange={(e) => setAlertRegion(e.target.value)}
+                    className={selectClass}
+                  >
                     <option value="bogota">Bogotá D.C.</option>
                     <option value="antioquia">Antioquia</option>
                     <option value="valle">Valle del Cauca</option>
@@ -502,7 +465,11 @@ export default function RadarConvocatoriasPage() {
                 </label>
                 <label className="block text-left">
                   <span className="mb-1 block text-[11px] font-bold text-white/45">Canal preferido</span>
-                  <select className={selectClass} defaultValue="email">
+                  <select
+                    value={alertChannel}
+                    onChange={(e) => setAlertChannel(e.target.value)}
+                    className={selectClass}
+                  >
                     <option value="email">Correo electrónico</option>
                     <option value="whatsapp">WhatsApp / SMS</option>
                     <option value="ambos">Ambos canales</option>
@@ -511,7 +478,7 @@ export default function RadarConvocatoriasPage() {
               </div>
               <label className="block text-left">
                 <span className="mb-1 block text-[11px] font-bold text-white/45">
-                  Correo o celular
+                  Correo electrónico o celular
                 </span>
                 <div className="flex gap-2">
                   <input
@@ -522,64 +489,27 @@ export default function RadarConvocatoriasPage() {
                   />
                   <button
                     type="submit"
-                    className="flex-shrink-0 rounded-xl bg-[#FFD60A] px-4 py-2.5 text-sm font-semibold text-black"
+                    disabled={pendingAlert}
+                    className="flex-shrink-0 rounded-xl bg-[#FFD60A] px-4 py-2.5 text-sm font-semibold text-black disabled:opacity-60"
                   >
-                    Activar alertas
+                    {pendingAlert ? 'Activando…' : 'Activar alertas'}
                   </button>
                 </div>
               </label>
               {alertOk ? (
-                <p className="text-xs text-[#FFD60A]">Listo. Preferencia guardada en esta sesión.</p>
+                <p className="text-xs text-[#FFD60A]">
+                  Listo. Si dejaste un correo, te acaba de llegar la confirmación.
+                </p>
               ) : (
                 <p className="text-[11px] text-white/35">
-                  Tratamiento de datos bajo la Ley 1581 de Habeas Data. Podrás cancelar cuando
-                  conectemos el envío.
+                  {alertError ||
+                    'Tratamiento de datos bajo la Ley 1581 de Habeas Data. Puedes cancelar con un clic en cada correo.'}
                 </p>
               )}
             </form>
           </div>
         </div>
       </section>
-
-      {diagnosisOpen ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 md:items-center">
-          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-[#141414] p-6">
-            <h3 className="mb-2 text-xl font-bold">Diagnóstico rápido</h3>
-            <p className="mb-4 text-sm text-white/55">
-              Elige tu etapa. Aplicamos el filtro y cerramos el panel.
-            </p>
-            <div className="flex flex-col gap-2">
-              <button
-                type="button"
-                className="rounded-xl bg-[#2a2a2a] px-4 py-3 text-left text-sm hover:bg-[#333]"
-                onClick={() => {
-                  setStage('temprana')
-                  setDiagnosisOpen(false)
-                }}
-              >
-                Etapa temprana — idea, prototipo o primeras ventas
-              </button>
-              <button
-                type="button"
-                className="rounded-xl bg-[#2a2a2a] px-4 py-3 text-left text-sm hover:bg-[#333]"
-                onClick={() => {
-                  setStage('mediana')
-                  setDiagnosisOpen(false)
-                }}
-              >
-                Etapa mediana — tracción y crecimiento
-              </button>
-              <button
-                type="button"
-                className="text-sm text-white/50"
-                onClick={() => setDiagnosisOpen(false)}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </main>
   )
 }
@@ -600,33 +530,6 @@ function Metric({
         <span className="block text-xs font-bold md:text-sm">{title}</span>
         <span className="block text-[11px] text-white/45">{sub}</span>
       </div>
-    </div>
-  )
-}
-
-function Stat({ n, l }: { n: string; l: string }) {
-  return (
-    <div className="rounded-xl bg-white/5 p-3 text-center ring-1 ring-white/10">
-      <span className="block text-lg font-bold">{n}</span>
-      <span className="text-[11px] text-white/45">{l}</span>
-    </div>
-  )
-}
-
-function Resource({ title, kind }: { title: string; kind: string }) {
-  return (
-    <div className="flex items-center justify-between rounded-xl bg-[#1a1a1a] p-3">
-      <div className="min-w-0">
-        <div className="mb-0.5 flex items-center gap-2">
-          <h5 className="truncate text-sm font-bold">{title}</h5>
-          <span className="flex-shrink-0 rounded bg-[#FFD60A]/15 px-1.5 py-0.5 text-[11px] font-bold text-[#FFD60A]">
-            {kind}
-          </span>
-        </div>
-      </div>
-      <span className="ml-2 rounded-lg bg-[#2a2a2a] p-2 text-white/50">
-        <Download className="h-4 w-4" />
-      </span>
     </div>
   )
 }

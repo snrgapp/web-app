@@ -594,6 +594,84 @@ export interface Database {
           }
         ]
       }
+      radar_convocatorias: {
+        Row: {
+          slug: string
+          card: Json
+          source_portal: string
+          source_url: string
+          closes_at: string | null
+          is_open: boolean
+          scrape_ok: boolean
+          scrape_note: string | null
+          scraped_at: string
+          updated_at: string
+        }
+        Insert: {
+          slug: string
+          card: Json
+          source_portal: string
+          source_url: string
+          closes_at?: string | null
+          is_open?: boolean
+          scrape_ok?: boolean
+          scrape_note?: string | null
+          scraped_at?: string
+          updated_at?: string
+        }
+        Update: {
+          slug?: string
+          card?: Json
+          source_portal?: string
+          source_url?: string
+          closes_at?: string | null
+          is_open?: boolean
+          scrape_ok?: boolean
+          scrape_note?: string | null
+          scraped_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      radar_alertas: {
+        Row: {
+          id: string
+          email: string | null
+          telefono: string | null
+          departamento: string
+          canal: string
+          unsubscribe_token: string
+          active: boolean
+          confirmation_sent_at: string | null
+          last_digest_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          email?: string | null
+          telefono?: string | null
+          departamento?: string
+          canal?: string
+          unsubscribe_token?: string
+          active?: boolean
+          confirmation_sent_at?: string | null
+          last_digest_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string | null
+          telefono?: string | null
+          departamento?: string
+          canal?: string
+          unsubscribe_token?: string
+          active?: boolean
+          confirmation_sent_at?: string | null
+          last_digest_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       lista_espera_ciudades: {
         Row: {
           id: string
