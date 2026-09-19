@@ -60,7 +60,7 @@ export const FUNDING_FILTERS: { value: 'all' | FundingType; label: string }[] = 
 /**
  * Fichas contrastadas el 2026-09-19 en listados públicos (sin login).
  * Si un portal no respondió, se conservó el último enlace oficial válido.
- * No se inventaron convocatorias.
+ * No se inventaron convocatorias. Apps.co devolvió error 500; se conserva su ficha.
  */
 export const CONVOCATORIAS: Convocatoria[] = [
   {
@@ -137,6 +137,54 @@ export const CONVOCATORIAS: Convocatoria[] = [
       'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/transformacion-financiera-territorios-de-paz',
   },
   {
+    id: 'minciencias-salud-desastre-001-2026',
+    initials: 'MC',
+    entity: 'MinCiencias',
+    entitySub: 'Convocatoria 001-2026',
+    title: 'CTeI para desafíos en salud derivados de la situación de desastre',
+    summary:
+      'Convocatoria abierta de I+D+i en salud (salud mental, brotes, ENT/cáncer y salud ambiental). Bolsa publicada: $109.000 millones. Pueden postular personas jurídicas colombianas —incluidas empresas— solas, en alianza o con cooperantes. Cierra el 13 de octubre de 2026 a las 5:00 p. m.',
+    requirement:
+      'Entidad ejecutora domiciliada en Colombia (IES, empresa u otro actor del SNCTI). Centros e institutos con reconocimiento vigente de MinCiencias cuando aplique.',
+    amountLabel: 'Recursos de la convocatoria',
+    amountValue: '$109.000.000.000 COP',
+    amountHint: 'Cierre 13 oct 2026 · 5:00 p. m.',
+    funding: 'cofinanciacion',
+    stage: 'mediana',
+    sector: 'salud',
+    region: 'nacional',
+    tags: ['Cofinanciación', 'Salud', 'I+D+i', 'Cierra 13 oct 2026'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 13 de octubre',
+    keywords: 'minciencias 001 2026 cte i salud desastre sismo cofinanciacion',
+    accent: 'black',
+    basesUrl:
+      'https://minciencias.gov.co/convocatorias/convocatoria-ctei-para-la-atencion-desafios-en-salud-derivados-la-situacion-desastre',
+  },
+  {
+    id: 'innpulsa-cfp-casanare-c2',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'ZASCA Tecnologías',
+    title: 'CFP Tecnologías Casanare — Cohorte 2',
+    summary:
+      'Postulación presencial para vincular 275 unidades productivas o MiPymes de cualquier sector en Casanare, en el ZASCA Tecnologías de la Cámara de Comercio de Casanare (Yopal). El listado público marca cierre el 16 de octubre de 2026.',
+    requirement: 'Unidad productiva o MiPymes ubicada en Casanare. Postulación presencial en Yopal.',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Fortalecimiento ZASCA Tecnologías',
+    amountHint: '275 cupos · postulación presencial',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'multi',
+    region: 'orinoquia',
+    tags: ['ZASCA', 'Casanare', 'Yopal', 'Cierra 16 oct 2026'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 16 de octubre',
+    keywords: 'innpulsa zasca casanare yopal tecnologias cfp',
+    accent: 'yellow',
+    basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69dd1274c108508aebd0c608',
+  },
+  {
     id: 'innpulsa-logyca-gs1',
     initials: 'iN',
     entity: 'iNNpulsa Colombia / MinCIT',
@@ -184,6 +232,29 @@ export const CONVOCATORIAS: Convocatoria[] = [
       'https://convocatorias.innpulsacolombia.com/convocatoria/zasca-tecnologias-honda-norte-del-tolima-y-guaduas-postulacion-presencial-rg0fa',
   },
   {
+    id: 'innpulsa-cfp-nortedesantander-c2',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'ZASCA Tecnologías',
+    title: 'CFP Tecnologías Norte de Santander — Cohorte 2',
+    summary:
+      'Postulación presencial para vincular 300 unidades productivas o MiPymes de cualquier sector en los municipios de Norte de Santander. El listado público de iNNpulsa marca cierre el 2 de diciembre de 2026.',
+    requirement: 'Unidad productiva o MiPymes ubicada en Norte de Santander. Postulación presencial.',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Fortalecimiento ZASCA Tecnologías',
+    amountHint: '300 cupos · postulación presencial',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'multi',
+    region: 'santanderes',
+    tags: ['ZASCA', 'Norte de Santander', 'Cierra 2 dic 2026'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 2 de diciembre',
+    keywords: 'innpulsa zasca cucuta norte de santander tecnologias cfp',
+    accent: 'slate',
+    basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69f3d045a338026cc9d9e0f2',
+  },
+  {
     id: 'ruta-emprendimiento-medellin-2026',
     initials: 'RN',
     entity: 'Ruta del Emprendimiento / Alcaldía de Medellín',
@@ -207,6 +278,55 @@ export const CONVOCATORIAS: Convocatoria[] = [
     accent: 'slate',
     basesUrl:
       'https://www.rutadelemprendimientomedellin.com/_files/ugd/b81507_10457b5836b24f698a5c2544416eae37.pdf',
+  },
+  {
+    id: 'ccb-ruta-bogota-cundinamarca-emprende',
+    initials: 'CCB',
+    entity: 'Cámara de Comercio de Bogotá',
+    entitySub: 'Ruta Bogotá Cundinamarca Emprende',
+    title: 'Ruta Ágil de Emprendimiento (RAE)',
+    summary:
+      'Acompañamiento gratuito (virtual) para estructurar ideas de negocio: talleres, asesoría grupal y consultor. La CCB publica la convocatoria habilitada de manera permanente, con nuevas rutas cada mes hasta noviembre de 2026.',
+    requirement:
+      'Persona emprendedora con idea o negocio en etapa temprana, según los términos de cada intervención de la Ruta (RAE, Emprendelab o Genera Tracción).',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Acompañamiento gratuito CCB',
+    amountHint: 'Rutas mensuales hasta noviembre 2026',
+    funding: 'aceleradora',
+    stage: 'temprana',
+    sector: 'multi',
+    region: 'bogota',
+    tags: ['Incubación', 'Bogotá', 'Cundinamarca', 'Permanente'],
+    urgency: 'continuous',
+    urgencyLabel: 'Convocatoria permanente',
+    keywords: 'ccb camara comercio bogota ruta emprende rae emprendelab',
+    accent: 'yellow',
+    basesUrl:
+      'https://www.ccb.org.co/es/servicios/crea-tu-empresa/preparate-para-crear-tu-empresa/ruta-emprender',
+  },
+  {
+    id: 'fiveonelabs-ignite-2026',
+    initials: '51',
+    entity: 'Five One Labs',
+    entitySub: 'Preincubación IGNITE — Barranquilla',
+    title: 'Preincubación IGNITE 2026',
+    summary:
+      'Programa presencial y gratuito en Barranquilla: factibilidad, pitch e innovación aplicada. Five One Labs anuncia tres cohortes en 2026 con selección continua. Un fundador por negocio; no pueden postular quienes ya cursaron Ignite, Incubación o FEM 2023-2025.',
+    requirement:
+      'Emprendedor o emprendedora con una idea de nuevo producto o expansión de mercado, disponible para sesiones presenciales en Barranquilla.',
+    amountLabel: 'Beneficio principal',
+    amountValue: 'Preincubación presencial gratuita',
+    amountHint: '3 cohortes 2026 · selección continua',
+    funding: 'aceleradora',
+    stage: 'temprana',
+    sector: 'multi',
+    region: 'caribe',
+    tags: ['Preincubación', 'Barranquilla', 'Gratuito', 'Selección continua'],
+    urgency: 'continuous',
+    urgencyLabel: 'Selección continua en 2026',
+    keywords: 'five one labs ignite barranquilla preincubacion caribe',
+    accent: 'slate',
+    basesUrl: 'https://fiveonelabs.org/ignite-2026',
   },
   {
     id: 'fondo-mujer-a-pulso',
@@ -239,7 +359,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'Gobierno de Colombia',
     title: 'Convocatoria nacional No. 153 Multisectorial',
     summary:
-      'Términos oficiales 2026: financiar creación o fortalecimiento de iniciativas en todos los sectores, individual o asociativa. Presupuesto de la convocatoria: $18.000 millones. Cerró el 6 de abril de 2026. Se conserva el PDF de términos como último enlace válido; no hay una nueva nacional verificada en esta pasada.',
+      'Términos oficiales 2026: financiar creación o fortalecimiento de iniciativas en todos los sectores, individual o asociativa. Presupuesto de la convocatoria: $18.000 millones. Cerró el 6 de abril de 2026. El listado de vigentes aún muestra la 165 Guatapé, pero su ficha oficial indica cierre el 6 de julio de 2026. Se conserva el PDF de la 153 como último TDR nacional válido.',
     requirement: 'Plan de negocio o de inversión según modalidad CREACIÓN o FORTALECIMIENTO, vía plataforma Fondo Emprender.',
     amountLabel: 'Tope por plan (TDR)',
     amountValue: 'Hasta 500 SMMLV',
@@ -286,7 +406,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'Emprendimiento Digital 2026',
     title: 'Emprendimiento Digital 2026 — Modelo de negocio',
     summary:
-      'Ruta oficial MinTIC–MinCIT–iNNpulsa para 110 empresas digitales con producto validado: 26 horas de asistencia y toolkit de hasta $2.000.000 COP para la mitad de los beneficiarios. El listado iNNpulsa la marca cerrada (plazo público de postulación: 22 de mayo de 2026). Apps.co no publica una convocatoria 2026 distinta verificable.',
+      'Ruta oficial MinTIC–MinCIT–iNNpulsa para 110 empresas digitales con producto validado: 26 horas de asistencia y toolkit de hasta $2.000.000 COP para la mitad de los beneficiarios. El listado iNNpulsa la marca cerrada (plazo público de postulación: 22 de mayo de 2026). El portal apps.co no respondió (HTTP 500) en esta pasada; no hay otra convocatoria 2026 distinta verificable.',
     requirement:
       'Empresa legalmente constituida, producto digital propio validado y ventas ≥ $1.000.000 COP en el último año.',
     amountLabel: 'Toolkit (50% de cupos)',
