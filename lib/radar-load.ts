@@ -27,17 +27,10 @@ export async function loadRadarConvocatorias(): Promise<RadarPayload> {
     return { items: CONVOCATORIAS, refreshedAt: null }
   }
 
-  const byId = new Map(CONVOCATORIAS.map((item) => [item.id, item]))
-  for (const row of data) {
-    const card = row.card as Convocatoria
-    if (card?.id && card.title) byId.set(card.id, card)
-  }
-
-  const items = [...byId.values()]
-  if (!items.length) return { items: CONVOCATORIAS, refreshedAt: null }
-
+  // El catálogo curado en código es la fuente de verdad: no reinyectar
+  // fichas viejas de Supabase (homes, cerradas o de portales caídos).
   return {
-    items,
+    items: CONVOCATORIAS,
     refreshedAt: data[0]?.scraped_at ?? null,
   }
 }
