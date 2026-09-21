@@ -18,7 +18,8 @@ export const RADAR_SOURCES: RadarSource[] = [
   {
     slug: 'innpulsa-acelera',
     portal: 'iNNpulsa Colombia',
-    url: 'https://www.innpulsa.gov.co/',
+    url: 'https://www.innpulsacolombia.com/',
+    extraUrls: ['https://convocatorias.innpulsacolombia.com/'],
   },
   {
     slug: 'ruta-n-angeles',
