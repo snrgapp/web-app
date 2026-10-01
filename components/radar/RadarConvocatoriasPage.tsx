@@ -7,6 +7,7 @@ import {
   Bell,
   Bookmark,
   BookmarkCheck,
+  CalendarClock,
   Cloud,
   ExternalLink,
   MapPin,
@@ -36,6 +37,19 @@ function officialHost(url: string) {
   } catch {
     return url
   }
+}
+
+function formatUpdatedAt(iso: string | null) {
+  const date = iso
+    ? new Date(iso)
+    : new Date(`${RADAR_REVIEWED_AT}T12:00:00-05:00`)
+  if (Number.isNaN(date.getTime())) return RADAR_REVIEWED_AT
+  return date.toLocaleDateString('es-CO', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'America/Bogota',
+  })
 }
 
 function urgencyClass(urgency: Convocatoria['urgency']) {
@@ -152,11 +166,28 @@ export default function RadarConvocatoriasPage({
           de aceleración para etapas temprana y mediana en todos los sectores.
         </p>
 
+        <div className="mx-auto mt-6 flex max-w-4xl items-center gap-3 rounded-2xl border border-white/10 bg-[#141414] px-4 py-3 text-left">
+          <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-[#FFD60A]/15 text-[#FFD60A]">
+            <CalendarClock className="h-5 w-5" aria-hidden />
+          </span>
+          <div className="min-w-0">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-white/45">
+              Última actualización
+            </p>
+            <p className="text-sm font-bold text-white md:text-base">
+              {formatUpdatedAt(refreshedAt)}
+            </p>
+            <p className="text-xs text-white/50">
+              Estás viendo las convocatorias más recientes del Radar.
+            </p>
+          </div>
+        </div>
+
         <div className="mx-auto mt-8 grid max-w-4xl grid-cols-2 gap-2 md:grid-cols-4">
           <Metric
             icon={<Rocket className="h-5 w-5" />}
             title={`${items.filter(isOpenToday).length} abiertas`}
-            sub={`${items.length} fichas · ${refreshedAt ? new Date(refreshedAt).toLocaleDateString('es-CO') : RADAR_REVIEWED_AT}`}
+            sub={`${items.length} fichas`}
           />
           <Metric icon={<Wallet className="h-5 w-5" />} title="Portales oficiales" sub="SENA, iNNpulsa, MinCiencias…" />
           <Metric icon={<Cloud className="h-5 w-5 text-[#FFD60A]" />} title="100% multisectorial" sub="Todos los rubros" />
@@ -287,7 +318,7 @@ export default function RadarConvocatoriasPage({
           <div>
             <h2 className="text-2xl font-bold">Convocatorias abiertas destacadas</h2>
             <p className="text-sm text-white/50">
-              Revisadas el {RADAR_REVIEWED_AT}. Cada ficha abre la convocatoria oficial para que puedas contrastar título, monto y cierre.
+              Revisadas el {formatUpdatedAt(refreshedAt)}. Cada ficha abre la convocatoria oficial para que puedas contrastar título, monto y cierre.
             </p>
           </div>
           <span className="hidden rounded-full bg-[#2a2a2a] px-3 py-1 text-[11px] text-white/60 sm:inline-block">
