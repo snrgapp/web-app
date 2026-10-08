@@ -40,7 +40,7 @@ export type Convocatoria = {
   isOpen?: boolean
 }
 
-export const RADAR_REVIEWED_AT = '2026-09-21'
+export const RADAR_REVIEWED_AT = '2026-10-08'
 
 export const REGIONS: { value: string; label: string }[] = [
   { value: 'all', label: 'Toda Colombia' },
@@ -62,137 +62,11 @@ export const FUNDING_FILTERS: { value: 'all' | FundingType; label: string }[] = 
 ]
 
 /**
- * Fichas contrastadas el 2026-09-21 en listados públicos (sin login).
+ * Fichas contrastadas el 2026-10-08 en listados públicos (sin login).
  * Solo convocatorias con cierre vigente o ventanilla activa y URL de ficha/TDR.
  * Portales sin respuesta o sin llamado abierto verificable no tienen ficha.
  */
 export const CONVOCATORIAS: Convocatoria[] = [
-  {
-    id: 'innpulsa-cfp-popayan-c4',
-    initials: 'iN',
-    entity: 'iNNpulsa Colombia / MinCIT',
-    entitySub: 'Centros de Fortalecimiento Productivo',
-    title: 'CFP Manufactura Popayán — Cohorte 4',
-    summary:
-      'iNNpulsa busca vincular 60 MiPymes o unidades productivas de confección de prendas de vestir en el Cauca al centro CFP/ZASCA de Popayán. El listado público la marca abierta hasta el 24 de septiembre de 2026.',
-    requirement: 'MiPymes o unidades productivas de manufactura-confección ubicadas en el Cauca.',
-    amountLabel: 'Beneficio principal',
-    amountValue: 'Fortalecimiento productivo CFP',
-    amountHint: '60 cupos · cierre 24 sep 2026',
-    funding: 'aceleradora',
-    stage: 'ambas',
-    sector: 'comercio',
-    region: 'nacional',
-    tags: ['Fortalecimiento', 'Manufactura', 'Cauca', 'Cierra 24 sep 2026'],
-    urgency: 'urgent',
-    urgencyLabel: 'Cierra el 24 de septiembre',
-    keywords: 'innpulsa mincit zasca popayan manufactura confeccion cauca',
-    accent: 'yellow',
-    closesAt: '2026-09-24',
-    basesUrl:
-      'https://convocatorias.innpulsacolombia.com/convocatoria/centros-de-fortalecimiento-productivo-popayan-cohorte-4-66uzna',
-  },
-  {
-    id: 'innpulsa-cfp-tumaco-cacao-c4',
-    initials: 'iN',
-    entity: 'iNNpulsa Colombia / MinCIT',
-    entitySub: 'Centros de Fortalecimiento Productivo',
-    title: 'CFP Agroindustria Tumaco Cacao — Cohorte 4',
-    summary:
-      'Convocatoria abierta para vincular 40 MiPymes o unidades productivas de agroindustria de cacao en Tumaco, Nariño. Cierre publicado: 30 de septiembre de 2026.',
-    requirement: 'Unidad productiva o MiPymes de cacao con operación en Tumaco, Nariño.',
-    amountLabel: 'Beneficio principal',
-    amountValue: 'Acompañamiento CFP cacao',
-    amountHint: '40 cupos · cierre 30 sep 2026',
-    funding: 'aceleradora',
-    stage: 'ambas',
-    sector: 'agro',
-    region: 'nacional',
-    tags: ['Fortalecimiento', 'Agroindustria', 'Tumaco', 'Cacao'],
-    urgency: 'soon',
-    urgencyLabel: 'Cierra el 30 de septiembre',
-    keywords: 'innpulsa tumaco cacao agroindustria nariño zasca',
-    accent: 'yellow',
-    closesAt: '2026-09-30',
-    basesUrl:
-      'https://convocatorias.innpulsacolombia.com/convocatoria/centros-de-fortalecimiento-productivo-agroindustria-tumaco-cacao-cohorte-4-6atp9q',
-  },
-  {
-    id: 'bancoldex-territorios-paz',
-    initials: 'BX',
-    entity: 'Bancóldex',
-    entitySub: 'PNUD y Unidad para las Víctimas',
-    title: 'Transformación Financiera, Territorios de Paz',
-    summary:
-      'Formación financiera presencial y mentorías para unidades productivas de víctimas del conflicto en municipios priorizados. Cierre de postulaciones: 30 de septiembre de 2026, 11:59 p. m. (Adenda 4). Cupos limitados, selección semanal.',
-    requirement:
-      'Unidad productiva domiciliada y en operación en un municipio priorizado, con condición de víctima verificable.',
-    amountLabel: 'Cupos de fortalecimiento',
-    amountValue: 'Formación + mentoría',
-    amountHint: 'Cierre 30 sep 2026 · 11:59 p. m.',
-    funding: 'cofinanciacion',
-    stage: 'ambas',
-    sector: 'multi',
-    region: 'nacional',
-    tags: ['Fortalecimiento', 'Víctimas', 'Territorios priorizados', 'Gratuito'],
-    urgency: 'soon',
-    urgencyLabel: 'Cierra el 30 de septiembre',
-    keywords: 'bancoldex territorios paz pnud victimas formacion mentoria',
-    accent: 'black',
-    closesAt: '2026-09-30',
-    basesUrl:
-      'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/transformacion-financiera-territorios-de-paz',
-  },
-  {
-    id: 'bancoldex-sumate-2026',
-    initials: 'BX',
-    entity: 'Bancóldex',
-    entitySub: 'Fortalecimiento empresarial 2026',
-    title: 'Súmate, Alístate para crecer',
-    summary:
-      'Programa gratuito de entrenamientos empresariales y asesorías cortas para micronegocios y microempresas, con el fin de organizar finanzas y alistar el acceso a crédito. La ficha oficial indica que el programa debe culminar el 30 de septiembre de 2026.',
-    requirement: 'Micronegocio o microempresa en Colombia que busque cerrar brechas de inclusión financiera.',
-    amountLabel: 'Beneficio principal',
-    amountValue: 'Entrenamiento + asesoría',
-    amountHint: 'Gratuito · culmina 30 sep 2026',
-    funding: 'aceleradora',
-    stage: 'temprana',
-    sector: 'multi',
-    region: 'nacional',
-    tags: ['Microempresa', 'Educación financiera', 'Gratuito', 'Cierra 30 sep 2026'],
-    urgency: 'soon',
-    urgencyLabel: 'Culmina el 30 de septiembre',
-    keywords: 'bancoldex sumate alistate microempresa inclusion financiera',
-    accent: 'slate',
-    closesAt: '2026-09-30',
-    basesUrl:
-      'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/sumate-alistate-para-crecer-2',
-  },
-  {
-    id: 'innpulsa-calidad-iso',
-    initials: 'iN',
-    entity: 'iNNpulsa Colombia / MinCIT',
-    entitySub: 'Asistencia técnica en calidad',
-    title: 'Formación ISO 22716 e ISO 13485 para mipymes',
-    summary:
-      'Formación y asistencia técnica en estándares de calidad para mipymes de salud, cosméticos y aseo en los 32 departamentos. El listado iNNpulsa la marca abierta hasta el 5 de octubre de 2026 (23:59).',
-    requirement: 'Mipymes de salud, cosméticos o aseo ubicadas en Colombia.',
-    amountLabel: 'Beneficio principal',
-    amountValue: 'Asistencia técnica ISO',
-    amountHint: 'Cierre 5 oct 2026 · 23:59',
-    funding: 'aceleradora',
-    stage: 'ambas',
-    sector: 'salud',
-    region: 'nacional',
-    tags: ['Calidad', 'ISO', 'Salud', 'Cosméticos'],
-    urgency: 'soon',
-    urgencyLabel: 'Cierra el 5 de octubre',
-    keywords: 'innpulsa iso 22716 13485 calidad mipymes salud cosmeticos',
-    accent: 'yellow',
-    closesAt: '2026-10-05',
-    basesUrl:
-      'https://convocatorias.innpulsacolombia.com/convocatoria/formacion-y-asistencia-tecnica-en-calidad-para-mipymes-estandares-iso-22716-e-is-ktf9hw',
-  },
   {
     id: 'innpulsa-cfp-caqueta-c2',
     initials: 'iN',
@@ -200,7 +74,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'ZASCA Tecnologías',
     title: 'CFP Tecnologías Caquetá — Cohorte 2',
     summary:
-      'Postulación presencial para vincular 200 unidades productivas o MiPymes de cualquier sector en Florencia, Caquetá. Cierre publicado: 10 de octubre de 2026.',
+      'Postulación presencial para vincular 200 unidades productivas o MiPymes de cualquier sector en Florencia, Caquetá. El listado iNNpulsa la marca abierta hasta el 10 de octubre de 2026.',
     requirement: 'Unidad productiva o MiPymes ubicada en Florencia, Caquetá.',
     amountLabel: 'Beneficio principal',
     amountValue: 'Fortalecimiento ZASCA Tecnologías',
@@ -210,7 +84,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     sector: 'multi',
     region: 'orinoquia',
     tags: ['ZASCA', 'Caquetá', 'Florencia', 'Cierra 10 oct 2026'],
-    urgency: 'soon',
+    urgency: 'urgent',
     urgencyLabel: 'Cierra el 10 de octubre',
     keywords: 'innpulsa zasca caqueta florencia tecnologias cohorte 2',
     accent: 'slate',
@@ -224,7 +98,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'Convocatoria 001-2026',
     title: 'CTeI para desafíos en salud derivados de desastre',
     summary:
-      'Cofinanciación de I+D+i en salud mental, enfermedades transmisibles y no transmisibles, y salud ambiental en contextos de desastre. Bolsa publicada: $109.000 millones. Cierre: 13 de octubre de 2026, 5:00 p. m.',
+      'Cofinanciación de I+D+i en salud mental, enfermedades transmisibles y no transmisibles, y salud ambiental en contextos de desastre. Bolsa publicada: $109.000 millones. El portal la marca “Convocatoria Abierta”; cierra el 13 de octubre de 2026, 5:00 p. m.',
     requirement:
       'Entidad ejecutora domiciliada en Colombia (IES, centros, empresas y demás actores del SNCTI según TDR).',
     amountLabel: 'Recursos de la convocatoria',
@@ -235,7 +109,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     sector: 'salud',
     region: 'nacional',
     tags: ['Cofinanciación', 'Salud', 'CTeI', 'Cierra 13 oct 2026'],
-    urgency: 'open',
+    urgency: 'urgent',
     urgencyLabel: 'Cierra el 13 de octubre',
     keywords: 'minciencias 001-2026 ctei salud desastre soberania sanitaria',
     accent: 'black',
@@ -260,12 +134,64 @@ export const CONVOCATORIAS: Convocatoria[] = [
     sector: 'multi',
     region: 'orinoquia',
     tags: ['ZASCA', 'Casanare', 'Yopal', 'Cierra 16 oct 2026'],
-    urgency: 'open',
+    urgency: 'soon',
     urgencyLabel: 'Cierra el 16 de octubre',
     keywords: 'innpulsa zasca casanare yopal tecnologias cohorte 2',
     accent: 'slate',
     closesAt: '2026-10-16',
     basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69dd1274c108508aebd0c608',
+  },
+  {
+    id: 'minciencias-53-cordoba-c2',
+    initials: 'MC',
+    entity: 'MinCiencias',
+    entitySub: 'Convocatoria 53 — SGR Córdoba corte 2',
+    title: 'Fortalecimiento CTeI en Córdoba — corte 2',
+    summary:
+      'Cofinanciación SGR para alianzas que fortalezcan capacidades de CTeI en Córdoba, con énfasis en reactivación agrícola, social y ambiental. Bolsa publicada: $28.094.792.444. El portal la marca “Convocatoria Abierta”; cierra el 23 de octubre de 2026, 4:00 p. m.',
+    requirement:
+      'Alianza con IES con domicilio en Córdoba, dos entidades territoriales (una debe ser el Departamento), un actor del sector productivo y una organización de sociedad civil en Córdoba.',
+    amountLabel: 'Recursos de la convocatoria',
+    amountValue: '$28.094.792.444 COP',
+    amountHint: 'Cierre 23 oct 2026 · 4:00 p. m.',
+    funding: 'cofinanciacion',
+    stage: 'mediana',
+    sector: 'agro',
+    region: 'caribe',
+    tags: ['SGR', 'Córdoba', 'CTeI', 'Cierra 23 oct 2026'],
+    urgency: 'soon',
+    urgencyLabel: 'Cierra el 23 de octubre',
+    keywords: 'minciencias 53 cordoba sgr corte 2 ctei regalías reactivacion',
+    accent: 'black',
+    closesAt: '2026-10-23',
+    basesUrl:
+      'https://minciencias.gov.co/convocatorias/plan-convocatorias-asctei-2025-2026/convocatoria-para-el-fortalecimiento-capacidades-0',
+  },
+  {
+    id: 'bancoldex-territorios-paz',
+    initials: 'BX',
+    entity: 'Bancóldex',
+    entitySub: 'PNUD y Unidad para las Víctimas',
+    title: 'Transformación Financiera, Territorios de Paz',
+    summary:
+      'Formación financiera presencial y mentorías para unidades productivas de víctimas del conflicto en municipios priorizados. Cierre de postulaciones: 30 de octubre de 2026, 11:59 p. m. (Adenda 5). Cupos limitados, selección semanal.',
+    requirement:
+      'Unidad productiva domiciliada y en operación en un municipio priorizado, con condición de víctima verificable.',
+    amountLabel: 'Cupos de fortalecimiento',
+    amountValue: 'Formación + mentoría',
+    amountHint: 'Cierre 30 oct 2026 · 11:59 p. m.',
+    funding: 'cofinanciacion',
+    stage: 'ambas',
+    sector: 'multi',
+    region: 'nacional',
+    tags: ['Fortalecimiento', 'Víctimas', 'Territorios priorizados', 'Gratuito'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 30 de octubre',
+    keywords: 'bancoldex territorios paz pnud victimas formacion mentoria adenda 5',
+    accent: 'black',
+    closesAt: '2026-10-30',
+    basesUrl:
+      'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/transformacion-financiera-territorios-de-paz',
   },
   {
     id: 'innpulsa-logyca-gs1',
@@ -290,6 +216,32 @@ export const CONVOCATORIAS: Convocatoria[] = [
     accent: 'yellow',
     closesAt: '2026-10-31',
     basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69bb119298e5068a5213f26c',
+  },
+  {
+    id: 'innpulsa-calidad-iatf-16949',
+    initials: 'iN',
+    entity: 'iNNpulsa Colombia / MinCIT',
+    entitySub: 'Asistencia técnica en calidad',
+    title: 'Formación IATF 16949:2016 para mipymes automotriz',
+    summary:
+      'Asistencia técnica para implementar un sistema de gestión de la calidad IATF 16949:2016 en la cadena automotriz y de motopartes. Incluye 50 horas de consultoría (25 presenciales y 25 virtuales). Cierre: 4 de noviembre de 2026, 23:59.',
+    requirement:
+      'Mipymes de la cadena automotriz o de motopartes, con al menos un año de constitución y 5 trabajadores, ubicadas en Antioquia, Bogotá D.C., Caldas, Cundinamarca, Quindío, Risaralda o Valle del Cauca.',
+    amountLabel: 'Beneficio principal',
+    amountValue: '50 horas de asistencia IATF',
+    amountHint: 'Cierre 4 nov 2026 · 23:59',
+    funding: 'aceleradora',
+    stage: 'ambas',
+    sector: 'comercio',
+    region: 'nacional',
+    tags: ['Calidad', 'IATF 16949', 'Automotriz', 'Cierra 4 nov 2026'],
+    urgency: 'open',
+    urgencyLabel: 'Cierra el 4 de noviembre',
+    keywords: 'innpulsa iatf 16949 calidad mipymes automotriz motopartes onudi',
+    accent: 'yellow',
+    closesAt: '2026-11-04',
+    basesUrl:
+      'https://convocatorias.innpulsacolombia.com/convocatoria/formacion-y-asistencia-tecnica-en-calidad-para-mipymes-convocatoria-territorial--o2q9yw',
   },
   {
     id: 'innpulsa-cfp-honda',
@@ -341,31 +293,6 @@ export const CONVOCATORIAS: Convocatoria[] = [
     basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69f3d045a338026cc9d9e0f2',
   },
   {
-    id: 'ruta-emprendimiento-medellin-2026',
-    initials: 'RN',
-    entity: 'Ruta del Emprendimiento / Alcaldía de Medellín',
-    entitySub: 'Distrito de CTeI de Medellín',
-    title: 'Ruta del Emprendimiento 2026',
-    summary:
-      'Acompañamiento en ideación, preincubación, incubación, aceleración y consolidación para iniciativas de base tecnológica en Medellín, hasta agotar 700 cupos. Los TDR 2026 publican 60 incentivos de capital semilla en especie (hasta $15 millones) para preincubación e incubación.',
-    requirement:
-      'Mayor de edad, residente en Medellín, con idea, emprendimiento o empresa de base tecnológica o que incorpore tecnología.',
-    amountLabel: 'Capital semilla (especie)',
-    amountValue: 'Hasta $15.000.000 COP',
-    amountHint: '60 incentivos · TDR 2026 · hasta agotar cupos',
-    funding: 'semilla',
-    stage: 'ambas',
-    sector: 'tech',
-    region: 'antioquia',
-    tags: ['Capital semilla', 'Aceleración', 'Medellín', 'Hasta agotar cupos'],
-    urgency: 'continuous',
-    urgencyLabel: 'Abierta hasta agotar cupos',
-    keywords: 'ruta emprendimiento medellin capital semilla ruta n alcaldia',
-    accent: 'slate',
-    basesUrl:
-      'https://www.rutadelemprendimientomedellin.com/_files/ugd/b81507_10457b5836b24f698a5c2544416eae37.pdf',
-  },
-  {
     id: 'fondo-mujer-a-pulso',
     initials: 'FM',
     entity: 'Fondo Mujer Libre y Productiva',
@@ -396,11 +323,11 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'Líneas Especiales de Crédito',
     title: 'LEC Finagro 2026',
     summary:
-      'Líneas Especiales de Crédito 2026 con tasa subsidiada para productores y empresas del sector agropecuario, acuícola y rural. La ficha y la Circular Externa 25 de 2026 están publicadas en el portal de Finagro.',
+      'Líneas Especiales de Crédito 2026 con tasa subsidiada para productores y empresas del sector agropecuario, acuícola y rural. La ficha oficial permanece publicada en el portal de Finagro.',
     requirement: 'Actividad agropecuaria, acuícola o rural elegible ante Finagro, vía intermediario financiero.',
     amountLabel: 'Instrumento',
     amountValue: 'Crédito de fomento LEC',
-    amountHint: 'Circular Externa 25 de 2026',
+    amountHint: 'Ficha LEC 2026 publicada',
     funding: 'cofinanciacion',
     stage: 'ambas',
     sector: 'agro',
@@ -408,7 +335,7 @@ export const CONVOCATORIAS: Convocatoria[] = [
     tags: ['Agroindustria', 'LEC', 'Crédito de fomento', '2026'],
     urgency: 'continuous',
     urgencyLabel: 'Línea 2026 publicada',
-    keywords: 'finagro lec 2026 credito agro rural circular 25',
+    keywords: 'finagro lec 2026 credito agro rural',
     accent: 'yellow',
     basesUrl: 'https://www.finagro.com.co/lineas-especiales-credito-lec-finagro-2026',
   },
@@ -419,8 +346,9 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'Banca de inversión para pymes',
     title: 'Finbi 2026',
     summary:
-      'Convocatoria de banca de inversión para pymes: estructuración y acompañamiento para operaciones de crecimiento. Apertura el 24 de abril de 2026; cierra al agotar el presupuesto disponible de Bancóldex.',
-    requirement: 'Empresa pyme que complete el formulario de postulación y ranking de indicadores financieros.',
+      'Convocatoria de banca de inversión para pymes: diagnóstico, estructuración financiera y acompañamiento para operaciones de crecimiento. Apertura el 24 de abril de 2026; cierra al agotar el presupuesto disponible. La Etapa I debe ejecutarse a más tardar el 30 de noviembre de 2026.',
+    requirement:
+      'Persona jurídica colombiana con al menos 3 años, ventas 2025 entre $2.500 y $78.451 millones, y estados financieros 2023-2025.',
     amountLabel: 'Beneficio principal',
     amountValue: 'Banca de inversión pyme',
     amountHint: 'Hasta agotar presupuesto Bancóldex',
