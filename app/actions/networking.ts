@@ -28,6 +28,49 @@ export async function getEventoLegacy(): Promise<Evento | null> {
   return getEventoByCheckinSlug('legacy')
 }
 
+/** Evento de hoy (Bogotá); si no hay, el más reciente. Usado por /networking/verify */
+export async function getEventoNetworkingActivo(): Promise<Evento | null> {
+  const supabase = await createServerClient()
+  if (!supabase) return null
+
+  const orgId = await getDefaultOrgId()
+  if (!orgId) return null
+
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' })
+
+  const { data: todayEvent } = await supabase
+    .from('eventos')
+    .select('*')
+    .eq('organizacion_id', orgId)
+    .eq('fecha', today)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  if (todayEvent) return todayEvent as Evento
+
+  const { data: latest } = await supabase
+    .from('eventos')
+    .select('*')
+    .eq('organizacion_id', orgId)
+    .order('fecha', { ascending: false })
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+
+  return (latest as Evento) ?? null
+}
+
+function telefonosCandidatos(telefono: string): string[] {
+  const digits = telefono.replace(/\D/g, '')
+  const out = new Set<string>()
+  if (digits) out.add(digits)
+  if (digits.length > 10) out.add(digits.slice(-10))
+  const trimmed = telefono.replace(/[\s\-]/g, '')
+  if (trimmed) out.add(trimmed)
+  return [...out]
+}
+
 /** Evento con conteo de asistentes para dashboard */
 export interface EventoConCount {
   id: string
@@ -83,23 +126,27 @@ export async function verificarAsistente(
   const supabase = await createServerClient()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
-  const normalizado = telefono.replace(/[\s\-]/g, '')
+  const candidatos = telefonosCandidatos(telefono)
+  if (candidatos.length === 0) {
+    return { ok: false, error: 'No estás registrado para este evento.' }
+  }
+
+  let eventoFiltro = eventoId
+  if (!eventoFiltro) {
+    const activo = (await getEventoNetworkingActivo()) ?? (await getEventoLegacy())
+    eventoFiltro = activo?.id ?? null
+  }
 
   let query = supabase
     .from('asistentes')
     .select('*')
-    .eq('telefono', normalizado)
+    .in('telefono', candidatos)
 
-  if (eventoId) {
-    query = query.eq('evento_id', eventoId)
-  } else {
-    const legacy = await getEventoLegacy()
-    if (legacy) {
-      query = query.eq('evento_id', legacy.id)
-    }
+  if (eventoFiltro) {
+    query = query.eq('evento_id', eventoFiltro)
   }
 
-  const { data, error } = await query.single()
+  const { data, error } = await query.maybeSingle()
 
   if (error || !data) {
     return { ok: false, error: 'No estás registrado para este evento.' }
