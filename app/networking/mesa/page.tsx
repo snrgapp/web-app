@@ -64,15 +64,15 @@ function MesaContent() {
     )
   }
 
-  const mesa = asistente
-    ? ronda === 1
-      ? asistente.mesa
-      : asistente.mesa_ronda2
-    : null
-
-  // Si en BD viene "mesa 7" / "Mesa 7", dejamos solo el número
-  const mesaNumero =
-    mesa?.replace(/^\s*mesa\s*/i, '').trim() || mesa || '?'
+  function mesaHeading(a: Asistente, r: 1 | 2) {
+    const code = r === 1 ? a.codigo_mesa : a.mesa_ronda2
+    const fromCode = code?.match(/(\d+)/)
+    if (fromCode) return `Mesa ${fromCode[1]}`
+    const label = r === 1 ? a.mesa : null
+    const fromLabel = label?.match(/(\d+)/)
+    if (fromLabel) return `Mesa ${fromLabel[1]}`
+    return 'Mesa'
+  }
 
   return (
     <div className="min-h-screen bg-[#09090b] flex flex-col font-sans">
@@ -104,8 +104,8 @@ function MesaContent() {
               {ronda === 1 ? 'Primera Ronda' : 'Segunda Ronda'}
             </span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-light text-white tracking-tight lowercase">
-            mesa {mesaNumero}
+          <h1 className="text-3xl sm:text-4xl font-light text-white tracking-tight">
+            {asistente ? mesaHeading(asistente, ronda) : 'Mesa'}
           </h1>
         </motion.div>
 
