@@ -40,7 +40,7 @@ export type Convocatoria = {
   isOpen?: boolean
 }
 
-export const RADAR_REVIEWED_AT = '2026-09-21'
+export const RADAR_REVIEWED_AT = '2026-09-22'
 
 export const REGIONS: { value: string; label: string }[] = [
   { value: 'all', label: 'Toda Colombia' },
@@ -62,7 +62,7 @@ export const FUNDING_FILTERS: { value: 'all' | FundingType; label: string }[] = 
 ]
 
 /**
- * Fichas contrastadas el 2026-09-21 en listados públicos (sin login).
+ * Fichas contrastadas el 2026-09-22 en listados públicos (sin login).
  * Solo convocatorias con cierre vigente o ventanilla activa y URL de ficha/TDR.
  * Portales sin respuesta o sin llamado abierto verificable no tienen ficha.
  */
@@ -74,11 +74,11 @@ export const CONVOCATORIAS: Convocatoria[] = [
     entitySub: 'Centros de Fortalecimiento Productivo',
     title: 'CFP Manufactura Popayán — Cohorte 4',
     summary:
-      'iNNpulsa busca vincular 60 MiPymes o unidades productivas de confección de prendas de vestir en el Cauca al centro CFP/ZASCA de Popayán. El listado público la marca abierta hasta el 24 de septiembre de 2026.',
+      'iNNpulsa busca vincular 60 MiPymes o unidades productivas de confección de prendas de vestir en el Cauca al centro CFP/ZASCA de Popayán. El listado público la marca abierta hasta el 24 de septiembre de 2026 (12:00).',
     requirement: 'MiPymes o unidades productivas de manufactura-confección ubicadas en el Cauca.',
     amountLabel: 'Beneficio principal',
     amountValue: 'Fortalecimiento productivo CFP',
-    amountHint: '60 cupos · cierre 24 sep 2026',
+    amountHint: '60 cupos · cierre 24 sep 2026 · 12:00',
     funding: 'aceleradora',
     stage: 'ambas',
     sector: 'comercio',
@@ -142,31 +142,6 @@ export const CONVOCATORIAS: Convocatoria[] = [
     closesAt: '2026-09-30',
     basesUrl:
       'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/transformacion-financiera-territorios-de-paz',
-  },
-  {
-    id: 'bancoldex-sumate-2026',
-    initials: 'BX',
-    entity: 'Bancóldex',
-    entitySub: 'Fortalecimiento empresarial 2026',
-    title: 'Súmate, Alístate para crecer',
-    summary:
-      'Programa gratuito de entrenamientos empresariales y asesorías cortas para micronegocios y microempresas, con el fin de organizar finanzas y alistar el acceso a crédito. La ficha oficial indica que el programa debe culminar el 30 de septiembre de 2026.',
-    requirement: 'Micronegocio o microempresa en Colombia que busque cerrar brechas de inclusión financiera.',
-    amountLabel: 'Beneficio principal',
-    amountValue: 'Entrenamiento + asesoría',
-    amountHint: 'Gratuito · culmina 30 sep 2026',
-    funding: 'aceleradora',
-    stage: 'temprana',
-    sector: 'multi',
-    region: 'nacional',
-    tags: ['Microempresa', 'Educación financiera', 'Gratuito', 'Cierra 30 sep 2026'],
-    urgency: 'soon',
-    urgencyLabel: 'Culmina el 30 de septiembre',
-    keywords: 'bancoldex sumate alistate microempresa inclusion financiera',
-    accent: 'slate',
-    closesAt: '2026-09-30',
-    basesUrl:
-      'https://www.bancoldex.com/soluciones-de-fortalecimiento-empresarial/sumate-alistate-para-crecer-2',
   },
   {
     id: 'innpulsa-calidad-iso',
@@ -339,31 +314,6 @@ export const CONVOCATORIAS: Convocatoria[] = [
     accent: 'slate',
     closesAt: '2026-12-02',
     basesUrl: 'https://convocatorias.innpulsacolombia.com/convocatoria/69f3d045a338026cc9d9e0f2',
-  },
-  {
-    id: 'ruta-emprendimiento-medellin-2026',
-    initials: 'RN',
-    entity: 'Ruta del Emprendimiento / Alcaldía de Medellín',
-    entitySub: 'Distrito de CTeI de Medellín',
-    title: 'Ruta del Emprendimiento 2026',
-    summary:
-      'Acompañamiento en ideación, preincubación, incubación, aceleración y consolidación para iniciativas de base tecnológica en Medellín, hasta agotar 700 cupos. Los TDR 2026 publican 60 incentivos de capital semilla en especie (hasta $15 millones) para preincubación e incubación.',
-    requirement:
-      'Mayor de edad, residente en Medellín, con idea, emprendimiento o empresa de base tecnológica o que incorpore tecnología.',
-    amountLabel: 'Capital semilla (especie)',
-    amountValue: 'Hasta $15.000.000 COP',
-    amountHint: '60 incentivos · TDR 2026 · hasta agotar cupos',
-    funding: 'semilla',
-    stage: 'ambas',
-    sector: 'tech',
-    region: 'antioquia',
-    tags: ['Capital semilla', 'Aceleración', 'Medellín', 'Hasta agotar cupos'],
-    urgency: 'continuous',
-    urgencyLabel: 'Abierta hasta agotar cupos',
-    keywords: 'ruta emprendimiento medellin capital semilla ruta n alcaldia',
-    accent: 'slate',
-    basesUrl:
-      'https://www.rutadelemprendimientomedellin.com/_files/ugd/b81507_10457b5836b24f698a5c2544416eae37.pdf',
   },
   {
     id: 'fondo-mujer-a-pulso',
