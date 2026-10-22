@@ -29,6 +29,16 @@ const nextConfig = {
         ],
       },
       {
+        source: '/directorio',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'private, no-store, max-age=0, must-revalidate',
+          },
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+        ],
+      },
+      {
         source: '/lista-espera',
         headers: [
           {
