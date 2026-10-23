@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+import Image from 'next/image'
 import { Clock, Mail, MessageCircle, Search } from 'lucide-react'
 import type { DirectorioAsistente } from '@/app/actions/directorio'
 import {
@@ -45,11 +46,14 @@ export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
     <div className="min-h-dvh bg-[#111318] text-[#e2e2e9] pb-16">
       <header className="bg-[#111318] sticky top-0 z-40 w-full px-4 py-3 flex justify-between items-center dir-gold border-b border-t-0 border-x-0">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#0c0e13] dir-gold-strong flex items-center justify-center shadow-lg">
-            <span className="font-bold text-lg text-[#ecc246]" style={{ fontFamily: 'var(--dir-display)' }}>
-              S
-            </span>
-          </div>
+          <Image
+            src="/logowhite.png"
+            alt="Synergy"
+            width={40}
+            height={40}
+            className="object-contain"
+            priority
+          />
           <div>
             <span
               className="block text-xl font-bold text-[#e2e2e9]"
@@ -59,11 +63,6 @@ export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
             </span>
             <span className="block text-xs text-[#c7c6cb]">Synergy</span>
           </div>
-        </div>
-        <div className="w-10 h-10 rounded-full bg-[#0c0e13] dir-gold-strong flex items-center justify-center shadow-lg">
-          <span className="font-bold text-lg text-[#ecc246]" style={{ fontFamily: 'var(--dir-display)' }}>
-            S
-          </span>
         </div>
       </header>
 

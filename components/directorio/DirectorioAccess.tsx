@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { ArrowRight, Loader2, ShieldCheck, Smartphone, Timer } from 'lucide-react'
 
 type Props = {
@@ -39,9 +40,14 @@ export function DirectorioAccess({ diasRestantes, cerrado, onSubmit }: Props) {
 
       <div className="relative z-10 w-full max-w-[400px]">
         <header className="flex justify-center items-center h-16 mb-2">
-          <div className="w-10 h-10 rounded-full bg-[#121317] border border-[#C9A227] flex items-center justify-center text-[#C9A227] font-bold text-xl select-none">
-            S
-          </div>
+          <Image
+            src="/logowhite.png"
+            alt="Synergy"
+            width={40}
+            height={40}
+            className="object-contain"
+            priority
+          />
         </header>
 
         <div className="flex justify-center mb-6">
