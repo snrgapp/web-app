@@ -22,6 +22,7 @@ type Props = {
 export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
   const [q, setQ] = useState('')
   const [filtro, setFiltro] = useState('Todos')
+  const [abierta, setAbierta] = useState<string | null>(null)
 
   const chips = useMemo(() => {
     const set = new Set(asistentes.map((a) => categoriaSector(a.sector)))
@@ -122,10 +123,21 @@ export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
             const tone = DIRECTORIO_CARD_TONES[i % DIRECTORIO_CARD_TONES.length]
             const nombre = [a.nombre, a.apellido].filter(Boolean).join(' ')
             const wa = telefonoWhatsApp(a.telefono)
+            const expandida = abierta === a.id
             return (
               <article
                 key={a.id}
-                className="rounded-xl p-5 shadow-xl"
+                role="button"
+                tabIndex={0}
+                aria-expanded={expandida}
+                onClick={() => setAbierta(expandida ? null : a.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setAbierta(expandida ? null : a.id)
+                  }
+                }}
+                className="rounded-xl p-5 shadow-xl text-left cursor-pointer"
                 style={{ backgroundColor: tone.bg, color: tone.fg }}
               >
                 <div className="flex justify-between items-start mb-3">
@@ -157,11 +169,16 @@ export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
                 </div>
 
                 <div className="space-y-2 mb-4 p-3 rounded-lg" style={{ backgroundColor: tone.panel }}>
-                  <p className="text-sm">
-                    <strong className="font-bold">Soluciona:</strong> {recorte(a.soluciones)}
+                  <p className={`text-sm ${expandida ? 'whitespace-pre-wrap' : ''}`}>
+                    <strong className="font-bold">Soluciona:</strong>{' '}
+                    {expandida ? a.soluciones?.trim() || '—' : recorte(a.soluciones)}
                   </p>
-                  <p className="text-sm">
-                    <strong className="font-bold">Desafío:</strong> {recorte(a.desafios, 80)}
+                  <p className={`text-sm ${expandida ? 'whitespace-pre-wrap' : ''}`}>
+                    <strong className="font-bold">Desafío:</strong>{' '}
+                    {expandida ? a.desafios?.trim() || '—' : recorte(a.desafios, 80)}
+                  </p>
+                  <p className="text-[11px] font-semibold pt-1" style={{ color: tone.onMuted }}>
+                    {expandida ? 'Toca para cerrar' : 'Toca para ver completo'}
                   </p>
                 </div>
 
@@ -180,6 +197,7 @@ export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
                         target="_blank"
                         rel="noreferrer"
                         title="WhatsApp"
+                        onClick={(e) => e.stopPropagation()}
                         className="w-9 h-9 rounded-full flex items-center justify-center"
                         style={{ backgroundColor: tone.actionBg, color: tone.actionFg }}
                       >
@@ -190,6 +208,7 @@ export function DirectorioGrid({ asistentes, diasRestantes }: Props) {
                       <a
                         href={`mailto:${a.correo}`}
                         title="Correo"
+                        onClick={(e) => e.stopPropagation()}
                         className="w-9 h-9 rounded-full flex items-center justify-center"
                         style={{ backgroundColor: tone.actionBg, color: tone.actionFg }}
                       >
