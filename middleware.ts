@@ -204,6 +204,7 @@ export async function middleware(request: NextRequest) {
     if (
       pathname.startsWith('/home') ||
       pathname.startsWith('/networking') ||
+      pathname.startsWith('/directorio') ||
       pathname.startsWith('/exp') ||
       pathname.startsWith('/inscripcion-exp') ||
       pathname.startsWith('/api') ||
