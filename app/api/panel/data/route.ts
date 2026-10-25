@@ -14,7 +14,7 @@ const COLUMNAS: Record<Tabla, string[]> = {
   eventos: [
     'titulo', 'fecha', 'ciudad', 'lugar', 'formato', 'estado', 'capacidad', 'precio_cop',
     'hora_inicio', 'hora_fin', 'acerca_del_evento', 'image_url', 'checkin_slug', 'inscripcion_abierta',
-    'agenda', 'lista_espera',
+    'agenda', 'lista_espera', 'patrocinadores', 'incluye',
   ],
   asistentes: [
     'evento_id', 'nombre', 'apellido', 'telefono', 'correo', 'empresa', 'sector', 'cargo', 'tipo_ticket',
@@ -168,6 +168,16 @@ export async function POST(req: NextRequest) {
       if (TABLAS_CON_ORG.includes(tabla)) valores.organizacion_id = orgId
       const { data, error } = await db.from(tabla).insert(valores).select().single()
       if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 400 })
+      if (tabla === 'eventos' && data?.id) {
+        await db.from('evento_form_campos').insert({
+          evento_id: data.id,
+          organizacion_id: orgId,
+          label: 'Nombre',
+          tipo: 'nombre',
+          obligatorio: true,
+          orden: 0,
+        })
+      }
       if (tabla === 'evento_pagos' && debeConfirmarPago(data)) {
         const c = await enviarConfirmacionPago(db, data)
         return NextResponse.json({ ok: true, fila: c.fila, confirmacion: { ok: c.ok, error: c.error, correo: c.correo } })

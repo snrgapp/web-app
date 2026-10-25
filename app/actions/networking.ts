@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { getDefaultOrgId } from '@/lib/org-resolver'
 import type { Asistente, Evento } from '@/types/database.types'
 
@@ -96,7 +97,9 @@ export async function getEventosConCountAsistentes(): Promise<EventoConCount[]> 
 
   if (!eventos?.length) return []
 
-  const { data: counts } = await supabase
+  const lector = await lectorAsistentes()
+  if (!lector) return []
+  const { data: counts } = await lector
     .from('asistentes')
     .select('evento_id')
 
@@ -117,13 +120,18 @@ export async function getEventosConCountAsistentes(): Promise<EventoConCount[]> 
     .filter((e) => e.count > 0)
 }
 
+/** Los asistentes no son legibles con la key pública; estas lecturas son del servidor. */
+async function lectorAsistentes() {
+  return createAdminClient() ?? (await createServerClient())
+}
+
 // ─── Verificación ─────────────────────────────────────────────
 
 export async function verificarAsistente(
   telefono: string,
   eventoId: string | null = null
 ): Promise<{ ok: true; asistente: Asistente } | { ok: false; error: string }> {
-  const supabase = await createServerClient()
+  const supabase = await lectorAsistentes()
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const candidatos = telefonosCandidatos(telefono)
@@ -156,7 +164,7 @@ export async function verificarAsistente(
 }
 
 export async function getAsistenteById(id: string): Promise<Asistente | null> {
-  const supabase = await createServerClient()
+  const supabase = await lectorAsistentes()
   if (!supabase) return null
 
   const { data } = await supabase
@@ -175,7 +183,7 @@ export async function getAsistentesPorMesa(
   ronda: 1 | 2,
   eventoId?: string | null
 ): Promise<Asistente[]> {
-  const supabase = await createServerClient()
+  const supabase = await lectorAsistentes()
   if (!supabase) return []
 
   const column = ronda === 1 ? 'mesa' : 'mesa_ronda2'

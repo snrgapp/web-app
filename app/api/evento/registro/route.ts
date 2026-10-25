@@ -61,6 +61,9 @@ export async function POST(req: NextRequest) {
     .select('id, label, tipo, obligatorio, opciones, orden')
     .eq('evento_id', evento.id)
   const campos = camposPublicos((camposDb ?? []) as CampoEvento[])
+  const campoNombre = campos.find((c) => c.tipo === 'nombre')
+  const apellido = campoNombre ? String(form.get('apellido') ?? '').trim().slice(0, 120) : ''
+  if (campoNombre?.obligatorio && apellido.length < 2) errores.apellido = 'Escribe tu apellido'
 
   const respuestas: Record<string, string | string[]> = {}
   const columnas: Record<string, string> = {}
@@ -68,6 +71,7 @@ export async function POST(req: NextRequest) {
 
   for (const c of campos) {
     const clave = `campo_${c.id}`
+    if (c.tipo === 'nombre') continue
     if (c.tipo === 'archivo') {
       const archivo = form.get(clave)
       if (archivo instanceof File && archivo.size) {
@@ -131,6 +135,7 @@ export async function POST(req: NextRequest) {
   const { error: alta } = await db.from('asistentes').insert({
     evento_id: evento.id,
     nombre,
+    apellido: apellido || null,
     correo,
     telefono,
     ...columnas,
@@ -140,7 +145,7 @@ export async function POST(req: NextRequest) {
   })
   if (alta) return error('No pudimos registrar tu inscripción. Intenta de nuevo.', 500)
 
-  const bird = await registrarContactoEvento({ email: correo, nombre, evento })
+  const bird = await registrarContactoEvento({ email: correo, nombre: [nombre, apellido].filter(Boolean).join(' '), evento })
   if (!bird.success) console.warn(`[Bird] No se pudo registrar contacto: ${bird.error}`)
 
   return NextResponse.json({ ok: true, estado })

@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import type { Asistente, Evento } from '@/types/database.types'
 import {
   DIRECTORIO_EVENT_SLUG,
@@ -49,7 +50,7 @@ export async function getDirectorioMeta(): Promise<DirectorioMeta | null> {
 }
 
 async function listarAsistentesEvento(eventoId: string): Promise<DirectorioAsistente[]> {
-  const supabase = await createServerClient()
+  const supabase = createAdminClient() ?? (await createServerClient())
   if (!supabase) return []
 
   const { data } = await supabase
@@ -100,7 +101,7 @@ export async function recargarDirectorio(
     return { ok: false, error: 'El acceso de 7 días ya cerró.' }
   }
 
-  const supabase = await createServerClient()
+  const supabase = createAdminClient() ?? (await createServerClient())
   if (!supabase) return { ok: false, error: 'Error de conexión' }
 
   const { data: yo } = await supabase

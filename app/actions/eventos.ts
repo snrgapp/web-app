@@ -1,6 +1,7 @@
 'use server'
 
 import { createServerClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { getDefaultOrgId, getOrgIdBySlug } from '@/lib/org-resolver'
 import type { Evento } from '@/types/database.types'
 import type { SupabaseClient } from '@supabase/supabase-js'
@@ -45,7 +46,7 @@ export async function getEventoPublicoBySlug(
       .select('whatsapp_pagos, politica_reembolso')
       .eq('organizacion_id', orgId)
       .maybeSingle(),
-    db
+    (createAdminClient() ?? db)
       .from('asistentes')
       .select('id', { count: 'exact', head: true })
       .eq('evento_id', evento.id)

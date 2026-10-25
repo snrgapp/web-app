@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, type FormEvent } from 'react'
-import { BookmarkCheck, CheckCircle2, Clock, Headset, Loader2, MessageCircle } from 'lucide-react'
+import { BookmarkCheck, CheckCircle2, Clock, Coffee, Headset, Loader2, MessageCircle } from 'lucide-react'
 import { MAX_ARCHIVO_MB, opcionesCampo, type CampoEvento } from '@/lib/registro-evento'
 
 type Resultado = { estado: 'confirmado' | 'pago_pendiente' | 'lista_espera' | 'ya_inscrito'; nombre: string; correo: string }
@@ -91,14 +91,19 @@ export default function RegistroEvento({
   campos,
   whatsappPagos,
   precio,
+  incluye,
 }: {
   slug: string
   titulo: string
   campos: CampoEvento[]
   whatsappPagos: string | null
   precio: number
+  incluye?: string | null
 }) {
   const [enviando, setEnviando] = useState(false)
+  const [aviso, setAviso] = useState(false)
+  const campoNombre = campos.find((c) => c.tipo === 'nombre')
+  const preguntas = campos.filter((c) => c.tipo !== 'nombre')
   const [mensaje, setMensaje] = useState<string | null>(null)
   const [errores, setErrores] = useState<Record<string, string>>({})
   const [resultado, setResultado] = useState<Resultado | null>(null)
@@ -123,7 +128,7 @@ export default function RegistroEvento({
       }
       const res: Resultado = { estado: j.estado, nombre: String(datos.get('nombre')).split(' ')[0], correo: String(datos.get('correo')) }
       setResultado(res)
-      if (res.estado === 'pago_pendiente' && pagaPorWhatsApp) window.location.href = mensajePago(res)
+      setAviso(res.estado !== 'ya_inscrito')
     } catch {
       setMensaje('Sin conexión. Revisa tu internet e intenta de nuevo.')
     } finally {
@@ -136,6 +141,46 @@ export default function RegistroEvento({
     const espera = resultado.estado === 'lista_espera'
     return (
       <div className="flex flex-col gap-4">
+        {aviso && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={() => setAviso(false)}
+          >
+            <div
+              className="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-2xl flex flex-col items-center gap-5 text-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="w-16 h-16 rounded-full bg-[#009668]/10 flex items-center justify-center">
+                <CheckCircle2 className="w-10 h-10 text-[#009668]" />
+              </span>
+              <p className="text-[16px] leading-[24px] text-[#1a1b22]">
+                {espera
+                  ? 'Hemos registrado tu información. Los cupos están llenos y quedaste en lista de espera. Te contactaremos si se libera uno. ¡Hasta pronto!'
+                  : 'Hemos registrado tu información, dentro de poco un miembro del equipo te contactará para validar tu información y ayudarte con el pago. ¡Hasta pronto!'}
+              </p>
+              <div className="w-full flex flex-col gap-2.5">
+                {pago && pagaPorWhatsApp && (
+                  <a
+                    href={mensajePago(resultado)}
+                    className="w-full h-12 rounded-xl bg-[#25D366] hover:opacity-90 text-white text-[16px] font-semibold flex items-center justify-center gap-2.5 shadow-lg active:scale-[0.98] transition-all"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Escribir ahora por WhatsApp
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setAviso(false)}
+                  className="w-full h-12 rounded-xl bg-black hover:bg-[#1a1b21] text-white text-[16px] font-semibold active:scale-[0.98] transition-all"
+                >
+                  Entendido
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="p-4 rounded-xl bg-[#f4f2fd] flex items-start gap-3">
           {espera ? <Clock className="w-6 h-6 text-[#46464b] shrink-0" /> : <CheckCircle2 className="w-6 h-6 text-[#009668] shrink-0" />}
           <div className="flex flex-col gap-1">
@@ -178,11 +223,32 @@ export default function RegistroEvento({
 
       <div className="flex flex-col gap-3.5">
         <span className="text-[11px] leading-[14px] tracking-[0.04em] font-semibold uppercase text-[#46464b]">1. Datos del asistente</span>
-        <label className="flex flex-col gap-1.5">
-          <span className={LABEL}>Nombre completo *</span>
-          <input name="nombre" required autoComplete="name" placeholder="Ej. Sofía Hernández" className={INPUT} />
-          {errores.nombre && <span className="text-[13px] text-[#ba1a1a]">{errores.nombre}</span>}
-        </label>
+        {campoNombre ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="flex flex-col gap-1.5">
+              <span className={LABEL}>Nombre *</span>
+              <input name="nombre" required autoComplete="given-name" placeholder="Ej. Sofía" className={INPUT} />
+              {errores.nombre && <span className="text-[13px] text-[#ba1a1a]">{errores.nombre}</span>}
+            </label>
+            <label className="flex flex-col gap-1.5">
+              <span className={LABEL}>Apellido{campoNombre.obligatorio && ' *'}</span>
+              <input
+                name="apellido"
+                required={Boolean(campoNombre.obligatorio)}
+                autoComplete="family-name"
+                placeholder="Ej. Hernández"
+                className={INPUT}
+              />
+              {errores.apellido && <span className="text-[13px] text-[#ba1a1a]">{errores.apellido}</span>}
+            </label>
+          </div>
+        ) : (
+          <label className="flex flex-col gap-1.5">
+            <span className={LABEL}>Nombre completo *</span>
+            <input name="nombre" required autoComplete="name" placeholder="Ej. Sofía Hernández" className={INPUT} />
+            {errores.nombre && <span className="text-[13px] text-[#ba1a1a]">{errores.nombre}</span>}
+          </label>
+        )}
         <label className="flex flex-col gap-1.5">
           <span className={LABEL}>Correo *</span>
           <input name="correo" type="email" required autoComplete="email" placeholder="sofia@tuempresa.com" className={INPUT} />
@@ -193,26 +259,32 @@ export default function RegistroEvento({
           <input name="telefono" type="tel" required autoComplete="tel" placeholder="300 123 4567" className={INPUT} />
           {errores.telefono && <span className="text-[13px] text-[#ba1a1a]">{errores.telefono}</span>}
         </label>
-        {campos.map((c) => (
+        {preguntas.map((c) => (
           <Campo key={c.id} campo={c} error={errores[`campo_${c.id}`]} />
         ))}
       </div>
 
-      <div className="p-4 rounded-xl bg-[#f4f2fd] flex justify-between items-center gap-3">
-        <div className="flex flex-col">
-          <span className="text-[20px] leading-[28px] tracking-[-0.01em] font-semibold text-[#1a1b22]">Valor:</span>
-          <span className="text-[13px] leading-[18px] text-[#46464b]">Entrada general</span>
+      <div className="p-4 rounded-xl bg-[#f4f2fd] flex flex-col gap-2.5">
+        <div className="flex justify-between items-center gap-3">
+          <div className="flex flex-col">
+            <span className="text-[20px] leading-[28px] tracking-[-0.01em] font-semibold text-[#1a1b22]">Valor:</span>
+            <span className="text-[13px] leading-[18px] text-[#46464b]">Entrada general</span>
+          </div>
+          <span className="text-[28px] leading-tight font-bold text-[#4648d4]">{precio > 0 ? cop(precio) : 'Gratis'}</span>
         </div>
-        <span className="text-[28px] leading-tight font-bold text-[#4648d4]">{precio > 0 ? cop(precio) : 'Gratis'}</span>
+        {incluye && (
+          <div className="pt-2 border-t border-[#e3e1ec]/60 flex items-center gap-2">
+            <Coffee className="w-[18px] h-[18px] text-[#4648d4] shrink-0" />
+            <span className="text-[11px] leading-[14px] tracking-[0.04em] font-semibold text-[#46464b]">{incluye}</span>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-2 px-2 text-[#46464b] text-[11px] leading-[14px] tracking-[0.04em] font-semibold">
-        {pagaPorWhatsApp && (
-          <span className="flex items-center gap-1.5">
-            <Headset className="w-4 h-4 text-[#009668]" />
-            Atención directa en &lt; 5 min
-          </span>
-        )}
+        <span className="flex items-center gap-1.5">
+          <Headset className="w-4 h-4 text-[#009668]" />
+          Atención directa en &lt; 5 min
+        </span>
         <span className="flex items-center gap-1.5">
           <BookmarkCheck className="w-4 h-4 text-[#4648d4]" />
           Reserva de cupo garantizada
@@ -238,7 +310,7 @@ export default function RegistroEvento({
         <div className="p-3.5 rounded-xl bg-[#f4f2fd] border border-[#e3e1ec]/50 flex items-start gap-3">
           <MessageCircle className="w-5 h-5 text-[#25D366] shrink-0 mt-0.5" />
           <p className="text-[13px] leading-snug text-[#46464b]">
-            Tu registro quedará completado y serás redirigido a WhatsApp para ser atendido y coordinar tu método de pago.
+            Tu registro quedará completado y un miembro del equipo te atenderá por WhatsApp para coordinar tu método de pago.
           </p>
         </div>
       )}

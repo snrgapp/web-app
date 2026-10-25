@@ -61,6 +61,31 @@
     var mapa = P.boton('Abrir en Mapas');
     if (mapa) mapa.href = 'https://maps.google.com/?q=' + encodeURIComponent([e.lugar, e.ciudad].filter(Boolean).join(', '));
 
+    var sponsors = document.getElementById('p-sponsors');
+    if (!sponsors) {
+      var host = document.querySelector('main h3');
+      if (host && /Sponsors/.test(host.textContent || '')) sponsors = host.closest('div.p-5, div.p-6, div[class*=\"p-5\"]');
+    }
+    var listaSp = Array.isArray(e.patrocinadores) ? e.patrocinadores.filter(function (s) { return s && s.nombre; }) : [];
+    if (sponsors) {
+      sponsors.style.display = listaSp.length ? '' : 'none';
+      var grid = sponsors.querySelector('.grid');
+      if (grid && listaSp.length) {
+        grid.innerHTML = listaSp.map(function (s) {
+          var logo = s.logo_url
+            ? '<img src="' + P.esc(s.logo_url) + '" alt="" class="w-full h-full object-contain p-1">'
+            : '<span class="font-label-md text-label-md text-on-surface-variant">' + P.esc((s.nombre || '?').slice(0, 1)) + '</span>';
+          var inner =
+            '<div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col items-center justify-center gap-2 text-center min-w-0 h-full">' +
+            '<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center overflow-hidden shrink-0">' + logo + '</div>' +
+            '<div class="flex flex-col items-center min-w-0 w-full"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold truncate w-full">' + P.esc(s.nombre) + '</span>' +
+            (s.rol ? '<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full">' + P.esc(s.rol) + '</span>' : '') +
+            '</div></div>';
+          return s.url ? '<a href="' + P.esc(s.url) + '" target="_blank" rel="noopener noreferrer">' + inner + '</a>' : inner;
+        }).join('');
+      }
+    }
+
     var agenda = document.getElementById('tab-agenda');
     if (agenda) {
       var bloques = Array.isArray(e.agenda) ? e.agenda : [];

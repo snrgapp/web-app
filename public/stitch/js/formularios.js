@@ -3,6 +3,7 @@
   var st = { evento: null, guardado: null };
 
   var TIPOS = {
+    nombre: ['badge', 'Nombre y Apellido'],
     texto: ['short_text', 'Texto Corto', 'badge'],
     parrafo: ['notes', 'Texto Largo'],
     si_no: ['toggle_on', 'Sí / No'],
@@ -15,7 +16,7 @@
     email: ['alternate_email', 'Correo', 'domain'],
   };
   var PALETA = {
-    'Texto Corto': 'texto', 'Texto Largo': 'parrafo', 'Sí / No Switch': 'si_no', 'Opción Única': 'unica', 'Opción Múltiple': 'multiple',
+    'Nombre y Apellido': 'nombre', 'Texto Corto': 'texto', 'Texto Largo': 'parrafo', 'Sí / No Switch': 'si_no', 'Opción Única': 'unica', 'Opción Múltiple': 'multiple',
     'Subir Archivo / PDF': 'archivo', 'Teléfono / WhatsApp': 'telefono', 'URL / Social Link': 'url', 'Número Entero': 'numero',
   };
 
@@ -148,6 +149,7 @@
     f = f.charAt(0).toUpperCase() + f.slice(1);
     var virtual = e.formato === 'virtual';
     var agenda = Array.isArray(e.agenda) ? e.agenda : [];
+    var patrocinadores = Array.isArray(e.patrocinadores) ? e.patrocinadores : [];
     var portada = e.image_url
       ? '<div class="absolute inset-0 bg-cover bg-center" style="background-image:url(\'' + P.esc(e.image_url) + '\')"></div><div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-transparent to-transparent z-10"></div>'
       : '<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/30 to-primary/10 z-10"></div><div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-secondary/40 via-surface-container-highest/20 to-surface-container-low opacity-90"></div>';
@@ -196,9 +198,56 @@
       '<div class="flex flex-col gap-2 p-3.5 rounded-lg bg-surface-container-low"><div class="flex items-center justify-between"><label class="font-label-sm text-label-sm text-on-surface font-semibold flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-secondary">payments</span> Precio de Entrada</label>' +
       '<div class="flex items-center gap-1.5"><span class="px-2 py-0.5 rounded bg-surface-container-high font-label-sm text-label-sm text-on-surface">COP</span><input data-d="precio" class="w-24 h-7 text-center rounded bg-surface-container-lowest font-body-sm text-body-sm font-semibold text-on-surface focus:outline-none border border-outline-variant/30" type="text" inputmode="numeric" value="' + (e.precio_cop ? P.cop(e.precio_cop) : '') + '" placeholder="Gratis"></div></div>' +
       '<div class="flex items-center justify-between pt-2 border-t border-surface-container-high"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-secondary">chat</span><p class="font-label-sm text-label-sm text-on-surface-variant text-[11px]">Cobro y confirmación vía WhatsApp</p></div>' +
-      '<span class="font-label-sm text-label-sm ' + (e.precio_cop ? 'text-secondary' : 'text-on-surface-variant') + ' font-semibold text-[11px]">' + (e.precio_cop ? 'Activo' : 'Evento gratis') + '</span></div></div></div>'
+      '<span class="font-label-sm text-label-sm ' + (e.precio_cop ? 'text-secondary' : 'text-on-surface-variant') + ' font-semibold text-[11px]">' + (e.precio_cop ? 'Activo' : 'Evento gratis') + '</span></div></div></div>' +
+
+      '<div class="flex flex-col gap-1.5"><label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold flex items-center justify-between"><span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">local_cafe</span> La entrada incluye</span><span class="text-[11px] text-on-surface-variant font-normal normal-case tracking-normal">Se muestra bajo el valor en la tarjeta de registro</span></label>' +
+      '<input data-d="incluye" type="text" value="' + P.esc(e.incluye || '') + '" placeholder="Ej. Incluye bebida (1 café y 1 limonada) con tu pago" class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm border border-transparent focus:border-outline-variant focus:outline-none"></div>' +
+
+      '<div class="flex flex-col gap-2.5 pt-1"><div class="flex items-center justify-between"><label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold flex items-center gap-1.5"><span class="material-symbols-outlined text-[15px] text-secondary">award_star</span> Sponsors &amp; Aliados</label><span class="font-label-sm text-label-sm text-on-surface-variant text-[11px]">Tarjeta en la página pública</span></div>' +
+      '<div class="flex flex-col gap-2 bg-surface-container-low p-3 rounded-xl border border-outline-variant/30"><div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="p-sponsors">' +
+      (patrocinadores.length ? patrocinadores.map(tarjetaSponsor).join('') : '<p class="col-span-full font-body-sm text-body-sm text-on-surface-variant px-1 py-2">Todavía no hay patrocinadores.</p>') +
+      '</div><button data-d="nuevo-sponsor" class="w-full py-2.5 rounded-lg border border-dashed border-outline-variant hover:border-secondary hover:bg-surface-container-lowest text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 transition-all active:scale-[0.99]"><span class="material-symbols-outlined text-[16px] text-secondary">add_circle</span><span>Añadir patrocinador</span></button></div></div>'
     );
     enlazarDetalles(card, e);
+  }
+
+  function tarjetaSponsor(s, i) {
+    var logo = s.logo_url
+      ? '<img src="' + P.esc(s.logo_url) + '" alt="" class="w-full h-full object-contain">'
+      : '<span class="material-symbols-outlined text-[20px] text-on-surface-variant">apartment</span>';
+    return (
+      '<button data-sp="' + i + '" class="p-3 rounded-xl bg-surface-container-lowest shadow-sm hover:shadow-md transition-shadow flex flex-col items-center gap-2 text-center min-w-0">' +
+      '<span class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center overflow-hidden shrink-0">' + logo + '</span>' +
+      '<span class="font-label-md text-label-md text-on-surface font-semibold leading-tight truncate w-full">' + P.esc(s.nombre) + '</span>' +
+      (s.rol ? '<span class="font-label-sm text-label-sm text-on-surface-variant truncate w-full">' + P.esc(s.rol) + '</span>' : '') +
+      '</button>'
+    );
+  }
+
+  function formSponsor(i) {
+    var lista = (ev().patrocinadores || []).slice();
+    var guardar = function (msg) {
+      return guardarEvento({ patrocinadores: lista }, msg).then(function (ok) { if (ok) detalles(); return ok; });
+    };
+    P.modal({
+      titulo: i == null ? 'Nuevo patrocinador' : 'Editar patrocinador',
+      campos: [
+        { nombre: 'nombre', etiqueta: 'Nombre', requerido: true, placeholder: 'Ej. Bancolombia' },
+        { nombre: 'rol', etiqueta: 'Tipo de alianza', placeholder: 'Ej. Patrocinador oro' },
+        { nombre: 'logo_url', etiqueta: 'URL del logo', placeholder: 'https://…', ayuda: 'Enlace público a la imagen del logo (PNG o SVG, fondo transparente).' },
+        { nombre: 'url', etiqueta: 'Sitio web', placeholder: 'https://…' },
+      ],
+      valores: i == null ? {} : lista[i],
+      onGuardar: function (v) {
+        if (i == null) lista.push(v);
+        else lista[i] = v;
+        return guardar(i == null ? 'Patrocinador añadido' : 'Patrocinador actualizado');
+      },
+      onEliminar: i == null ? null : function () {
+        lista.splice(i, 1);
+        return guardar('Patrocinador eliminado');
+      },
+    });
   }
 
   function guardarAgenda(agenda) {
@@ -258,6 +307,8 @@
           });
         } else if (d === 'nuevo-bloque') {
           formBloque(null);
+        } else if (d === 'nuevo-sponsor') {
+          formSponsor(null);
         } else if (d === 'espera') {
           guardarEvento({ lista_espera: !e.lista_espera }, e.lista_espera ? 'Lista de espera desactivada' : 'Lista de espera activada').then(detalles);
         }
@@ -289,6 +340,14 @@
       guardarEvento({ precio_cop: n }, n ? 'Precio actualizado' : 'Evento marcado como gratis').then(detalles);
     });
 
+    var incluye = card.querySelector('[data-d=incluye]');
+    incluye.addEventListener('change', function () {
+      guardarEvento({ incluye: incluye.value.trim() }, 'Detalle de la entrada guardado');
+    });
+    card.querySelectorAll('[data-sp]').forEach(function (b) {
+      b.addEventListener('click', function () { formSponsor(Number(b.getAttribute('data-sp'))); });
+    });
+
     var agenda = card.querySelector('#p-agenda');
     agenda.querySelectorAll('[data-i]').forEach(function (fila) {
       var i = Number(fila.getAttribute('data-i'));
@@ -315,6 +374,11 @@
   function vistaPrevia(c) {
     var t = TIPOS[c.tipo] || TIPOS.texto;
     var ops = opciones(c);
+    if (c.tipo === 'nombre') {
+      return '<div class="grid grid-cols-2 gap-2">' + ['Nombre', 'Apellido'].map(function (l) {
+        return '<div class="flex flex-col gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant">' + l + (c.obligatorio ? ' *' : '') + '</span><div class="w-full bg-surface-container-low rounded-lg p-2.5 text-on-surface-variant font-body-sm text-body-sm">Ej. ' + (l === 'Nombre' ? 'Sofía' : 'Hernández') + '</div></div>';
+      }).join('') + '</div>';
+    }
     if (c.tipo === 'parrafo') {
       return '<div class="w-full h-20 bg-surface-container-low rounded-lg p-2.5 text-on-surface-variant font-body-sm text-body-sm flex justify-between items-start"><span>Respuesta abierta…</span><span class="font-label-sm text-label-sm text-on-surface-variant">0 / 300</span></div>';
     }
@@ -419,10 +483,16 @@
         { nombre: 'opciones', etiqueta: 'Opciones (una por línea)', tipo: 'textarea', filas: 4, ayuda: 'Solo aplica a Opción Única y Opción Múltiple.' },
         { nombre: 'obligatorio', etiqueta: 'Respuesta obligatoria', tipo: 'checkbox' },
       ],
-      valores: c ? Object.assign({}, c, { opciones: opciones(c).join('\n') }) : { tipo: tipo || 'texto', obligatorio: false },
+      valores: c
+        ? Object.assign({}, c, { opciones: opciones(c).join('\n') })
+        : tipo === 'nombre' ? { tipo: 'nombre', label: 'Nombre', obligatorio: true } : { tipo: tipo || 'texto', obligatorio: false },
       textoGuardar: c ? 'Guardar pregunta' : 'Añadir pregunta',
       onGuardar: function (v) {
         if (v.tipo !== 'unica' && v.tipo !== 'multiple') v.opciones = '';
+        if (v.tipo === 'nombre' && campos().some(function (x) { return x.tipo === 'nombre' && (!c || x.id !== c.id); })) {
+          P.toast('El formulario ya tiene un campo de Nombre y Apellido', 'error');
+          return Promise.resolve(false);
+        }
         var req = c ? P.editar('evento_form_campos', c.id, v) : P.crear('evento_form_campos', Object.assign(v, { evento_id: st.evento, orden: campos().length }));
         return req.then(function (r) {
           if (!r.ok) return false;

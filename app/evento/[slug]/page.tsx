@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Plus_Jakarta_Sans } from 'next/font/google'
-import { ArrowUpRight, CalendarCheck, CalendarDays, Download, MapPin, Navigation, Users, Video } from 'lucide-react'
+import { ArrowUpRight, Award, CalendarCheck, CalendarDays, Download, MapPin, Navigation, Users, Video } from 'lucide-react'
 import { getEventoPublicoBySlug } from '@/app/actions/eventos'
 import { camposPublicos } from '@/lib/registro-evento'
 import RegistroEvento from '@/components/evento/RegistroEvento'
@@ -27,6 +27,7 @@ const T = {
 const FORMATOS: Record<string, string> = { presencial: 'Presencial', virtual: 'Virtual', hibrido: 'Híbrido' }
 
 type BloqueAgenda = { inicio?: string; fin?: string; titulo?: string; detalle?: string; lugar?: string }
+type Patrocinador = { nombre?: string; rol?: string; logo_url?: string; url?: string }
 
 function fechaLarga(fecha: string) {
   const f = new Date(fecha + 'T12:00:00').toLocaleDateString('es-CO', {
@@ -111,6 +112,8 @@ export default async function EventoSlugPage({ params }: PageProps) {
     lugar?: string | null
     agenda?: BloqueAgenda[] | null
     lista_espera?: boolean | null
+    patrocinadores?: Patrocinador[] | null
+    incluye?: string | null
   }
   const titulo = evento.titulo ?? 'Evento'
   const virtual = evento.formato === 'virtual'
@@ -122,6 +125,8 @@ export default async function EventoSlugPage({ params }: PageProps) {
   const linkExterno = rawLink ? (/^https?:\/\//.test(rawLink) ? rawLink : `https://${rawLink}`) : null
   const sede = [evento.lugar, evento.ciudad].filter(Boolean).join(', ')
   const agenda = (Array.isArray(evento.agenda) ? evento.agenda : []).filter((b) => b?.titulo)
+  const patrocinadores = (Array.isArray(evento.patrocinadores) ? evento.patrocinadores : []).filter((s) => s?.nombre)
+  const incluye = evento.incluye?.trim() || null
   const acerca = evento.acerca_del_evento?.trim() || 'Pronto compartiremos todos los detalles de este encuentro.'
   const cal = evento.fecha
     ? calendario({
@@ -147,20 +152,27 @@ export default async function EventoSlugPage({ params }: PageProps) {
           : `${restantes} cupos disponibles`
 
   const tabs = [
-    agenda.length > 0 && {
+    {
       id: 'agenda',
       label: 'Agenda',
-      contenido: agenda.map((b, i) => (
-        <div key={i} className="p-4 rounded-xl bg-white shadow-sm flex items-start gap-4">
-          <span className={`${T.label} text-[#4648d4] shrink-0 pt-0.5`}>{b.inicio || '—'}</span>
-          <div className="flex flex-col gap-0.5">
-            <h4 className={`${T.label} text-[#1a1b22]`}>{b.titulo}</h4>
-            {(b.detalle || b.lugar) && (
-              <p className={`${T.body} text-[#46464b]`}>{[b.detalle, b.lugar].filter(Boolean).join(' · ')}</p>
-            )}
+      contenido:
+        agenda.length > 0 ? (
+          agenda.map((b, i) => (
+            <div key={i} className="p-4 rounded-xl bg-white shadow-sm flex items-start gap-4">
+              <span className={`${T.label} text-[#4648d4] shrink-0 pt-0.5`}>{b.inicio || '—'}</span>
+              <div className="flex flex-col gap-0.5">
+                <h4 className={`${T.label} text-[#1a1b22]`}>{b.titulo}</h4>
+                {(b.detalle || b.lugar) && (
+                  <p className={`${T.body} text-[#46464b]`}>{[b.detalle, b.lugar].filter(Boolean).join(' · ')}</p>
+                )}
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="p-4 rounded-xl bg-white shadow-sm">
+            <p className={`${T.body} text-[#46464b]`}>La agenda se publicará pronto.</p>
           </div>
-        </div>
-      )),
+        ),
     },
     politicaReembolso && {
       id: 'detalles',
@@ -312,6 +324,47 @@ export default async function EventoSlugPage({ params }: PageProps) {
                 )}
               </div>
 
+              {patrocinadores.length > 0 && (
+                <div className="p-5 sm:p-6 rounded-xl bg-[#f4f2fd] shadow-sm flex flex-col gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex items-center gap-2">
+                        <Award className="w-5 h-5 text-[#4648d4]" />
+                        <h3 className="text-[20px] leading-[28px] tracking-[-0.01em] font-semibold">Sponsors &amp; Aliados Oficiales</h3>
+                      </div>
+                      <p className={`${T.body} text-[#46464b]`}>Empresas e instituciones que impulsan este encuentro.</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                    {patrocinadores.map((s, i) => {
+                      const card = (
+                        <div className="p-3.5 rounded-xl bg-white shadow-sm flex flex-col items-center justify-center gap-2 text-center min-w-0 h-full hover:shadow-md transition-shadow">
+                          <div className="w-10 h-10 rounded-lg bg-[#e3e1ec] flex items-center justify-center overflow-hidden shrink-0">
+                            {s.logo_url ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={s.logo_url} alt="" className="w-full h-full object-contain p-1" />
+                            ) : (
+                              <span className={`${T.label} text-[#46464b]`}>{(s.nombre ?? '?').slice(0, 1)}</span>
+                            )}
+                          </div>
+                          <div className="flex flex-col items-center min-w-0 w-full">
+                            <span className={`${T.label} leading-tight truncate w-full`}>{s.nombre}</span>
+                            {s.rol && <span className={`${T.labelSm} text-[#46464b] truncate w-full`}>{s.rol}</span>}
+                          </div>
+                        </div>
+                      )
+                      return s.url ? (
+                        <a key={i} href={/^https?:\/\//.test(s.url) ? s.url : `https://${s.url}`} target="_blank" rel="noopener noreferrer">
+                          {card}
+                        </a>
+                      ) : (
+                        <div key={i}>{card}</div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
               <EventoTabs tabs={tabs} />
             </div>
 
@@ -344,6 +397,7 @@ export default async function EventoSlugPage({ params }: PageProps) {
                     campos={camposPublicos(campos)}
                     whatsappPagos={whatsappPagos}
                     precio={Number(evento.precio_cop) || 0}
+                    incluye={incluye}
                   />
                 )}
               </div>

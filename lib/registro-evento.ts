@@ -38,10 +38,13 @@ const COLUMNA: Record<string, 'empresa' | 'cargo' | 'sector'> = {
   industria: 'sector',
 }
 
-/** Preguntas del panel que se muestran, sin repetir los campos base. */
+/**
+ * Preguntas del panel que se muestran, sin repetir los campos base.
+ * El tipo `nombre` sí pasa: cambia el nombre completo por Nombre y Apellido separados.
+ */
 export function camposPublicos(campos: CampoEvento[]) {
   return campos
-    .filter((c) => c.label?.trim() && !BASE.test(normalizar(c.label)))
+    .filter((c) => c.tipo === 'nombre' || (c.label?.trim() && !BASE.test(normalizar(c.label))))
     .sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0))
 }
 
