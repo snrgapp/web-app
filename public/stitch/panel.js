@@ -551,8 +551,11 @@
   };
 
   P.iniciar = function (render) {
-    P.cargar().then(render).catch(function (e) {
-      if (e && e.message !== 'sesion') P.toast(e.message || 'No se pudo cargar el panel', 'error');
+    var mostrar = function () { document.documentElement.classList.remove('p-cargando'); };
+    P.cargar().then(render).then(mostrar).catch(function (e) {
+      if (e && e.message === 'sesion') return;
+      mostrar();
+      P.toast(e.message || 'No se pudo cargar el panel', 'error');
     });
   };
 })();
