@@ -3,9 +3,9 @@ import { sendBirdEmail } from '@/lib/bird-email'
 import { registrarContactoEvento } from '@/lib/bird-contactos'
 
 /**
- * Correo "Pago completado" (plantilla Bird). El nombre lo pinta la plantilla desde
- * bird.contact.first_name. El contacto normalmente ya existe desde el registro; se
- * vuelve a guardar por si vino de una lista, del panel o con otro correo.
+ * Correo "Pago completado" (plantilla Bird). Un envío transaccional no puede leer
+ * bird.contact.*, así que el nombre va como parámetro {{nombre}}. El contacto se
+ * guarda igual en Bird para las audiencias del evento.
  *
  * Env:
  *   BIRD_PAGO_CONFIRM_TEMPLATE  id de la plantilla (emt_...)
@@ -54,6 +54,7 @@ export async function enviarConfirmacionPago(
         template: {
           id: TEMPLATE_ID,
           parameters: {
+            nombre: nombreCompleto.split(/\s+/)[0] || 'asistente',
             fecha: new Date(String(pago.created_at || Date.now())).toLocaleDateString('es-CO', {
               day: 'numeric',
               month: 'long',
