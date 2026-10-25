@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { createServerClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
 import { getDefaultOrgId } from '@/lib/org-resolver'
 import { phoneDigitsCo } from '@/lib/inalambria'
 import { registrarContactoEvento } from '@/lib/bird-contactos'
@@ -30,7 +31,8 @@ export async function POST(req: NextRequest) {
   if (!form) return error('No pudimos leer el formulario')
   if (String(form.get('sitio_web') ?? '')) return NextResponse.json({ ok: true, estado: 'confirmado' })
 
-  const supabase = await createServerClient()
+  // Las políticas de asistentes solo dejan escribir a admins de la organización.
+  const supabase = createAdminClient() ?? (await createServerClient())
   const orgId = await getDefaultOrgId()
   if (!supabase || !orgId) return error('Servicio no disponible', 503)
   const db = supabase as unknown as SupabaseClient

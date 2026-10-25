@@ -8,7 +8,7 @@ import { Category } from '@/types/database.types'
 interface QuestionCardProps {
   content: string
   category: Category
-  variant?: 'yellow' | 'dark' | 'genius' | 'ieee' | 'hackathon'
+  variant?: 'yellow' | 'dark' | 'genius' | 'hackathon'
   className?: string
   variants?: any
   initial?: any
@@ -39,15 +39,12 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const IconComponent = getIcon(category.icon_slug)
   const isGenius = variant === 'genius'
-  const isIeee = variant === 'ieee'
   const isHackathon = variant === 'hackathon'
-  const isDark = variant === 'dark' || isGenius || isIeee || isHackathon
+  const isDark = variant === 'dark' || isGenius || isHackathon
 
   const shellClasses = isGenius
     ? 'rounded-[20px] sm:rounded-[25px] md:rounded-[30px] bg-[#1c1c1c] border border-white/12 shadow-[6px_6px_0_#694aff]'
-    : isIeee
-      ? 'rounded-[20px] sm:rounded-[25px] md:rounded-[30px] bg-[#1c1c1c] border border-white/12 shadow-[6px_6px_0_#00629B]'
-      : isHackathon
+    : isHackathon
         ? 'rounded-[20px] sm:rounded-[25px] md:rounded-[30px] bg-[#141418] border border-[#7B35FF]/35 shadow-[6px_6px_0_#7B35FF]'
         : `rounded-[20px] sm:rounded-[25px] md:rounded-[30px] ${
         variant === 'dark' ? 'bg-[#1a1a1a] border border-white/10' : 'bg-[#FFE100] border border-black/5'
@@ -95,15 +92,6 @@ export default function QuestionCard({
             decoding="async"
             className="h-7 w-auto object-contain opacity-90"
           />
-        ) : isIeee ? (
-          <img
-            src="/images/ieee.png"
-            alt=""
-            width={72}
-            height={72}
-            decoding="async"
-            className="h-9 w-auto object-contain opacity-90 sm:h-10"
-          />
         ) : isHackathon ? (
           <span
             className="select-none text-[11px] font-black uppercase tracking-[0.2em] text-[#A87CFF]"
@@ -127,9 +115,7 @@ export default function QuestionCard({
         style={{
           background: isGenius
             ? 'linear-gradient(to top, rgba(105,74,255,0.2) 0%, transparent 100%)'
-            : isIeee
-              ? 'linear-gradient(to top, rgba(0,98,155,0.22) 0%, transparent 100%)'
-              : isHackathon
+            : isHackathon
                 ? 'linear-gradient(to top, rgba(123,53,255,0.25) 0%, transparent 100%)'
                 : isDark
                 ? 'linear-gradient(to top, rgba(255,255,255,0.1) 0%, transparent 100%)'
