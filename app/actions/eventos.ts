@@ -10,6 +10,8 @@ export type EventoPublico = {
   evento: Evento & { estado?: string | null }
   campos: CampoEvento[]
   whatsappPagos: string | null
+  politicaReembolso: string | null
+  ocupados: number
 }
 
 export async function getEventoPublicoBySlug(
@@ -32,19 +34,31 @@ export async function getEventoPublicoBySlug(
   if (evError || !evento) return null
 
   const db = supabase as unknown as SupabaseClient
-  const [{ data: campos }, { data: ajustes }] = await Promise.all([
+  const [{ data: campos }, { data: ajustes }, { count: ocupados }] = await Promise.all([
     db
       .from('evento_form_campos')
       .select('id, label, tipo, obligatorio, opciones, orden')
       .eq('evento_id', evento.id)
       .order('orden'),
-    db.from('evento_ajustes').select('whatsapp_pagos').eq('organizacion_id', orgId).maybeSingle(),
+    db
+      .from('evento_ajustes')
+      .select('whatsapp_pagos, politica_reembolso')
+      .eq('organizacion_id', orgId)
+      .maybeSingle(),
+    db
+      .from('asistentes')
+      .select('id', { count: 'exact', head: true })
+      .eq('evento_id', evento.id)
+      .not('estado_pago', 'in', '(rechazado,lista_espera)'),
   ])
+  const aj = ajustes as { whatsapp_pagos?: string | null; politica_reembolso?: string | null } | null
 
   return {
     evento: evento as EventoPublico['evento'],
     campos: (campos ?? []) as CampoEvento[],
-    whatsappPagos: (ajustes as { whatsapp_pagos?: string | null } | null)?.whatsapp_pagos ?? null,
+    whatsappPagos: aj?.whatsapp_pagos?.trim() || null,
+    politicaReembolso: aj?.politica_reembolso?.trim() || null,
+    ocupados: ocupados ?? 0,
   }
 }
 
