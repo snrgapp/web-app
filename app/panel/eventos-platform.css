@@ -1,0 +1,117 @@
+.ep {
+  --ep-bg: #fbf8ff;
+  --ep-surface: #ffffff;
+  --ep-ink: #1a1b22;
+  --ep-muted: #46464b;
+  --ep-line: #dad9e3;
+  --ep-primary: #090a0f;
+  --ep-accent: #4648d4;
+  --ep-accent-soft: #e1e0ff;
+  --ep-good: #009668;
+  --ep-good-soft: #6ffbbe;
+  --ep-sidebar: #090a0f;
+  --ep-sidebar-fg: #f4f2fd;
+  --ep-sidebar-muted: #c7c6cd;
+  min-height: 100dvh;
+  background: var(--ep-bg);
+  color: var(--ep-ink);
+  font-family: var(--ep-font), 'Plus Jakarta Sans', system-ui, sans-serif;
+  overflow-x: clip;
+}
+
+.ep-page {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding: 1rem 1rem 2rem;
+}
+
+@media (min-width: 640px) {
+  .ep-page {
+    padding: 1.25rem 1.25rem 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ep-page {
+    padding: 2rem 2rem 3rem;
+  }
+}
+
+.ep-title {
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 640px) {
+  .ep-title {
+    font-size: 1.875rem;
+  }
+}
+
+.ep-card {
+  background: var(--ep-surface);
+  border: 1px solid var(--ep-line);
+  border-radius: 16px;
+}
+
+.ep-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 16px;
+}
+
+.ep-btn-primary {
+  background: var(--ep-primary);
+  color: #fff;
+}
+
+.ep-btn-accent {
+  background: var(--ep-accent);
+  color: #fff;
+}
+
+.ep-btn-ghost {
+  background: #eeedf7;
+  color: var(--ep-ink);
+}
+
+.ep-input,
+.ep-select,
+.ep-textarea {
+  width: 100%;
+  border: 1px solid var(--ep-line);
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 16px;
+  color: var(--ep-ink);
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  .ep-input,
+  .ep-select,
+  .ep-textarea {
+    font-size: 14px;
+  }
+}
+
+.ep-input:focus,
+.ep-select:focus,
+.ep-textarea:focus {
+  border-color: var(--ep-accent);
+  box-shadow: 0 0 0 3px var(--ep-accent-soft);
+}
+
+.ep-nav-active {
+  background: #2f3038;
+  color: #fff;
+}
