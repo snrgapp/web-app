@@ -180,7 +180,11 @@
       '</div><div class="flex flex-col"><div class="flex items-center gap-2">' + pill +
       '<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">' + (virtual ? 'videocam' : 'pin_drop') + '</span> ' + P.formatoLabel(e.formato) + '</span></div>' +
       '<h2 class="font-headline-md text-headline-md font-bold text-on-surface mt-1 group-hover:text-secondary transition-colors">' + P.esc(e.titulo) + '</h2></div></div>' +
-      '<div class="flex items-center gap-1.5 self-end sm:self-auto"><span class="font-headline-md text-headline-md font-bold text-on-surface">' + P.cop(plata) + '</span><span class="font-label-sm text-label-sm text-on-surface-variant">COP</span></div></div>' +
+      '<div class="flex flex-col items-end self-end sm:self-auto"><div class="flex items-center gap-1.5">' +
+      (e.precio_cop
+        ? '<span class="font-headline-md text-headline-md font-bold text-on-surface">' + P.cop(e.precio_cop) + '</span><span class="font-label-sm text-label-sm text-on-surface-variant">COP / entrada</span>'
+        : '<span class="font-headline-md text-headline-md font-bold text-on-surface">Gratis</span>') +
+      '</div>' + (plata ? '<span class="font-label-sm text-label-sm text-on-tertiary-container">' + P.cop(plata) + ' recaudado</span>' : '') + '</div></div>' +
       '<div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">' + portada(e) +
       '<div class="sm:col-span-8 flex flex-col justify-between gap-3 h-full"><div class="flex flex-col gap-1">' +
       '<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm"><span class="material-symbols-outlined text-[16px]">schedule</span><span>' + P.fechaLarga(e.fecha, hora) + '</span></div>' +
