@@ -89,7 +89,7 @@ export async function getInalambriaBalance(): Promise<{
   const key = process.env.INALAMBRIA_API_KEY?.trim()
   if (!key) return { ok: false, error: 'INALAMBRIA_API_KEY no configurada.' }
   const base = getInalambriaApiBase()
-  const path = process.env.INALAMBRIA_BALANCE_PATH ?? '/account/balance'
+  const path = process.env.INALAMBRIA_BALANCE_PATH ?? '/messages/balance'
   const url = `${base}${path.startsWith('/') ? path : `/${path}`}`
   try {
     const res = await fetch(url, {

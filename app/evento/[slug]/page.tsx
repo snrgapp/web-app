@@ -11,9 +11,10 @@ import {
   User,
   ArrowRight,
 } from 'lucide-react'
-import { getEventoConFormularioBySlug } from '@/app/actions/eventos'
-import { getInscripcionFormUrl } from '@/lib/config'
+import { getEventoPublicoBySlug } from '@/app/actions/eventos'
+import { camposPublicos } from '@/lib/registro-evento'
 import Navbar from '@/components/Navbar'
+import RegistroEvento from '@/components/evento/RegistroEvento'
 
 const DIAS_SEMANA = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
 const MESES = [
@@ -36,7 +37,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params
-  const data = await getEventoConFormularioBySlug(slug)
+  const data = await getEventoPublicoBySlug(slug)
   if (!data) return { title: 'Evento no encontrado' }
   return {
     title: `${data.evento.titulo ?? 'Evento'} | Synergy`,
@@ -49,14 +50,15 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function EventoSlugPage({ params }: PageProps) {
   unstable_noStore()
   const { slug } = await params
-  const data = await getEventoConFormularioBySlug(slug)
+  const data = await getEventoPublicoBySlug(slug)
 
   if (!data) {
     notFound()
   }
 
-  const { evento, form } = data
-  const inscripcionAbierta = evento.inscripcion_abierta !== false
+  const { evento, campos, whatsappPagos } = data
+  const inscripcionAbierta =
+    evento.inscripcion_abierta !== false && evento.estado !== 'borrador' && evento.estado !== 'archivado'
   const fechaFormateada = formatFecha(evento.fecha)
   // Link válido: con protocolo o sin él (ej: inscripcion.snrg.lat/fh-2025)
   const rawLink = evento.link?.trim() ?? ''
@@ -160,50 +162,37 @@ export default async function EventoSlugPage({ params }: PageProps) {
               <div className="rounded-xl border border-zinc-200 bg-white p-6">
                 <h2 className="text-sm font-semibold text-[#1a1a1a] mb-4">Inscripción</h2>
 
-                {(form || hasLink) ? (
+                {!inscripcionAbierta ? (
+                  <span
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-200 text-zinc-500 rounded-xl font-medium cursor-not-allowed"
+                    aria-disabled
+                  >
+                    Inscripciones cerradas
+                  </span>
+                ) : normalizedLink ? (
                   <div className="space-y-4">
                     <p className="text-sm text-zinc-600">
-                      {inscripcionAbierta
-                        ? '¡Bienvenido! Para unirte al evento, por favor solicita tu inscripción.'
-                        : 'Inscripciones cerradas'}
+                      ¡Bienvenido! Para unirte al evento, por favor solicita tu inscripción.
                     </p>
-                    {inscripcionAbierta ? (
-                      form ? (
-                        <a
-                          href={getInscripcionFormUrl(form.slug)}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
-                        >
-                          <User className="w-4 h-4" />
-                          Solicitar unirse
-                          <ArrowRight className="w-4 h-4" />
-                        </a>
-                      ) : normalizedLink ? (
-                        <a
-                          href={normalizedLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
-                        >
-                          <User className="w-4 h-4" />
-                          Solicitar unirse
-                          <ArrowRight className="w-4 h-4" />
-                        </a>
-                      ) : null
-                    ) : (
-                      <span
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-200 text-zinc-500 rounded-xl font-medium cursor-not-allowed"
-                        aria-disabled
-                      >
-                        Inscripciones cerradas
-                      </span>
-                    )}
+                    <a
+                      href={normalizedLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[#1a1a1a] text-white rounded-xl font-medium hover:bg-black/90 transition-colors"
+                    >
+                      <User className="w-4 h-4" />
+                      Solicitar unirse
+                      <ArrowRight className="w-4 h-4" />
+                    </a>
                   </div>
                 ) : (
-                  <p className="text-sm text-zinc-500">
-                    La inscripción está cerrada para este evento.
-                  </p>
+                  <RegistroEvento
+                    slug={slug}
+                    titulo={evento.titulo ?? 'el evento'}
+                    campos={camposPublicos(campos)}
+                    whatsappPagos={whatsappPagos}
+                  />
                 )}
-
               </div>
 
               {/* Acerca del evento */}

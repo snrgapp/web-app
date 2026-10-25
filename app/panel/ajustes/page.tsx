@@ -31,8 +31,9 @@ export default function AjustesPage() {
   return (
     <div className="ep-page max-w-xl space-y-6">
       <div>
-        <p className="text-xs uppercase tracking-wider text-[var(--ep-muted)]">Plataforma</p>
-        <h1 className="ep-title mt-1">Ajustes</h1>
+        <p className="ep-kicker">Plataforma</p>
+        <h1 className="ep-title mt-1.5">Ajustes</h1>
+        <p className="ep-sub">WhatsApp de pagos y avisos. No hay pasarela conectada.</p>
       </div>
 
       <form onSubmit={save} className="ep-card p-5 space-y-4">

@@ -1,0 +1,355 @@
+<!DOCTYPE html><html lang="es" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode":"class","theme":{"extend":{"colors":{"on-tertiary-fixed":"#002113","surface-container-high":"#e8e7f1","surface-bright":"#fbf8ff","background":"#fbf8ff","secondary":"#4648d4","surface-container":"#eeedf7","primary":"#000000","on-secondary-fixed":"#07006c","error":"#ba1a1a","outline":"#77767b","error-container":"#ffdad6","on-error":"#ffffff","primary-fixed":"#e3e1e9","on-secondary":"#ffffff","inverse-on-surface":"#f1effa","surface-tint":"#5e5e64","on-secondary-container":"#fffbff","tertiary-fixed-dim":"#4edea3","secondary-container":"#6063ee","tertiary-container":"#002113","surface-dim":"#dad9e3","tertiary-fixed":"#6ffbbe","inverse-primary":"#c7c6cd","on-primary-fixed":"#1a1b21","surface":"#fbf8ff","tertiary":"#000000","on-tertiary-container":"#009668","on-primary-container":"#83838a","on-surface-variant":"#46464b","on-primary-fixed-variant":"#46464c","on-background":"#1a1b22","primary-fixed-dim":"#c7c6cd","surface-container-highest":"#e3e1ec","secondary-fixed":"#e1e0ff","primary-container":"#1a1b21","on-secondary-fixed-variant":"#2f2ebe","on-tertiary":"#ffffff","secondary-fixed-dim":"#c0c1ff","on-error-container":"#93000a","inverse-surface":"#2f3038","surface-container-lowest":"#ffffff","on-tertiary-fixed-variant":"#005236","on-primary":"#ffffff","surface-variant":"#e3e1ec","on-surface":"#1a1b22","surface-container-low":"#f4f2fd","outline-variant":"#c7c6cb"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-md":"2rem","space-sm":"0.5rem","gutter":"1rem","space-md":"1rem","margin-lg":"3rem","space-xl":"2.5rem","gutter-md":"1.5rem","margin":"1rem","gutter-lg":"2rem","space-lg":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"body-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"body-lg":["17px",{"lineHeight":"26px","letterSpacing":"-0.005em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.015em","fontWeight":"600"}],"display-lg-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.025em","fontWeight":"700"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between"><div class="flex items-center gap-3"><img src="/logo.png" alt="Synergy" style="height:28px;width:auto;display:block" /><span class="font-headline-md text-headline-md tracking-tight text-on-surface">Synergy</span></div><nav class="hidden md:flex items-center gap-8" data-active-classes="text-on-surface font-semibold"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="explorar-eventos" href="#">Explorar</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="calendario-comunitario" href="#">Calendario</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="anfitriones" href="#">Anfitriones</a></nav><div class="flex items-center gap-4"><a class="h-9 px-4 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-2 transition-all shadow-[0_2px_8px_rgba(0,0,0,0.06)] active:scale-[0.98]" data-path="dashboard-de-eventos" href="#">Host Dashboard</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
+<div class="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
+<!-- LEFT COLUMN: Immersive Event Narrative (7 Cols) -->
+<div class="w-full lg:w-7/12 flex flex-col gap-8">
+<!-- Hero Media Container -->
+<div class="relative w-full h-80 sm:h-96 rounded-xl overflow-hidden shadow-md">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-700 hover:scale-105" data-alt="Modern architectural auditorium with ambient neon violet lighting, sleek minimalist stage, polished concrete surfaces, warm directional spotlighting on an AI presentation screen with focused tech entrepreneurs seated in an intimate, high-end atmosphere." style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuD6iegmYIBIfGwGdNgYmMX67SIbvQQq1x3w8lTxoWwLB_jFa0u3z77lXVwio-ivdUkYgGPcIuF_cOaxlE-o8cR2VlcvnkS7sWwhBEcv1YFOC91ONGFIr7m3Lb7lR35SPLlAS1n5xJNg5dPozK0okZdMgt_rdBfJDDZjetcpVKAMjet-Ho1bLiTAUmcIrweDLb3iiIkJ5_aTO5RMNalxc_wOiN28zjoJupBNzhn3cOGqMsmCz3cZ3q1Cag&quot;);"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-primary/20 to-transparent"></div>
+<div class="absolute top-4 left-4 flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-sm text-label-sm shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+              Pocas entradas disponibles
+            </span>
+</div>
+<div class="absolute bottom-5 left-5 right-5 flex justify-between items-end">
+<div class="flex flex-col gap-1">
+<span class="text-tertiary-fixed font-label-md text-label-md tracking-wider uppercase font-semibold">Conferencia de Alto Impacto</span>
+<p class="text-on-primary font-body-sm text-body-sm opacity-90">Ciudad de México • Edición Exclusiva</p>
+</div>
+<div class="flex items-center -space-x-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Portrait of a young woman founder with sleek hair against warm neutral studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp3u-Pb0CATvr7QdEI7kK0o0jz_kCils-G_6mZbA05-L6zIkZEmNMMz4-vRsDpoywkjkRUit4gD8576n86-XDyNtH-BDKLwwaiY1ym3-aP278i6lTpqozCnCQEqkLoAwqgWJ-LCrPYM0qj377jVw1jfeQtOzcXTP6D6iSr-yoy4zfyOuvLvCsoMipDBDgS2_PSETaScoHWmvjAHpPpKuIrEPKJhgqEUsDAfa0lW4N8mYUkxP7sDawj6Q">
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a tech innovator in minimal spectacles smiling gently" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCovfS2Wm4YedOCm3qOV7uhs8kklCl5szYcGQCfQ_s6xiAcsE7V5OA-MWS9LHB_SC_l5-lCWijt5ERSpZx6fj85hgMd98sgcyVE6zNwbtgpp4yONJzEf2KlVIGwL2019_Us-UbeVFYK4gtPOpHhJXtbiKEClxSgR04dimWp0T_bQxX4e2nUXdSZvWZV2WjQanE2FlRwfeKD4BjmOFupVJU1edwKWNJe_2OXSdT26xIhOdlIp2BDLxD8UA">
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-container-lowest overflow-hidden shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Portrait of an AI venture capitalist man in black turtleneck with sharp cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4RYjslvGmWJdcZ2WPKPbg9UzLOG3WwLre2qxx7ZQqJbEyA7WTsmCSroOJMMTAeqGSC5pS-zubwuHWjlBelvHT_nSB_ko3UppVvsjq-LmtHuYq2cNyWovbycZh-M8PScUA56pv7dv4bASMgX2irTrN5g_3TyF5XdB8paqYb5WzgUDlLF18TGT9ba9YoQmu0OJfp5AEF4CihfxSmAyCmiFks5t6SlgwTVQZx1hLdRuruGGdIM6og8C9Lg">
+</div>
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm shadow-sm">
+                +140
+              </div>
+</div>
+</div>
+</div>
+<!-- Event Main Title & Quick Details -->
+<div class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight leading-none">
+              Tech Founders &amp; AI Summit 2025
+            </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+              El punto de encuentro curado para los 200 constructores, venture capitalists e investigadores que están liderando la nueva era de inteligencia artificial en América Latina.
+            </p>
+</div>
+<!-- Metadata Pill Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+<!-- Date & Time Card -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-secondary">calendar_today</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Jueves, 18 Octubre 2025</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">18:00 — 22:30 hrs GMT-6</span>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<button class="h-7 px-2.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">event_available</span>
+                  Google Calendar
+                </button>
+<button class="h-7 px-2.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">ios_share</span>
+                  Apple iCal
+                </button>
+</div>
+</div>
+<!-- Location Card -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-start gap-3.5">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-secondary">location_on</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface truncate">Auditorio Central, Torre Prisma</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Campos Elíseos 204, Polanco, CDMX</span>
+</div>
+</div>
+<a class="h-7 px-2.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm transition-colors w-fit" href="https://maps.google.com" target="_blank">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+                Abrir en Mapas
+              </a>
+</div>
+</div>
+<!-- Embedded Stylized Map Preview -->
+<div class="w-full h-36 rounded-xl overflow-hidden relative shadow-sm group">
+<div class="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-location="Campos Eliseos 204, Polanco, Ciudad de Mexico" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuDN9wQ7Wr3Gnsur7jxdPLbz3TMmZi456IVu4GQ_18lSOPDQDHqTPONF7YAqT0ZmZ2ad8FAblk5QIlW2TiTZX1o9NPwocJzkO8-XS3GP5a8nAfFkhrph--nm1fYgwEVpwOx4u7EiVdjro43AeIAdrfMTeqKlhrJKgmQMP7tzFMggGg9ayEeNQU-1iIAl6-Km5S3CiOhbmkS6tTiOZTkV3ElHLh2sI_-JgzPcB8Spa3W3lKM8sYBuCjNyIg&quot;);"></div>
+<div class="absolute inset-0 bg-primary/20 pointer-events-none"></div>
+<div class="absolute bottom-3 left-3 bg-surface-container-lowest/90 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface">Valet Parking &amp; Acceso Peatonal Disponible</span>
+</div>
+</div>
+</div>
+<!-- Verified Host Section -->
+<div class="p-5 sm:p-6 rounded-xl bg-surface-container-low shadow-sm flex flex-col gap-4"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex flex-col gap-0.5"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[20px]">award_star</span><h3 class="font-headline-md text-headline-md text-on-surface">Sponsors &amp; Aliados Oficiales</h3></div><p class="font-body-sm text-body-sm text-on-surface-variant">Empresas líderes e instituciones que impulsan el ecosistema de IA en la región.</p></div><span class="font-label-sm text-label-sm text-secondary bg-secondary-fixed/50 px-2.5 py-1 rounded-full w-fit font-semibold uppercase tracking-wider">Partners 2025</span></div><div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1"><div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col items-center justify-center gap-2 group hover:shadow-md transition-shadow text-center"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0"><svg class="w-6 h-6 text-on-surface group-hover:scale-105 transition-transform" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" width="24"><rect height="14" rx="2" ry="2" width="14" x="5" y="5"></rect><path d="M9 9h6v6H9z"></path><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"></path></svg></div><div class="flex flex-col items-center"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">NVIDIA AI</span><span class="font-label-sm text-label-sm text-on-surface-variant">Inception Partner</span></div></div><div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col items-center justify-center gap-2 group hover:shadow-md transition-shadow text-center"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0"><svg class="w-6 h-6 text-on-surface group-hover:scale-105 transition-transform" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" width="24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg></div><div class="flex flex-col items-center"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">AWS Startups</span><span class="font-label-sm text-label-sm text-on-surface-variant">Cloud &amp; Infra</span></div></div><div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col items-center justify-center gap-2 group hover:shadow-md transition-shadow text-center"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0"><svg class="w-6 h-6 text-on-surface group-hover:scale-105 transition-transform" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" width="24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg></div><div class="flex flex-col items-center"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">Stripe</span><span class="font-label-sm text-label-sm text-on-surface-variant">Payments Partner</span></div></div><div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col items-center justify-center gap-2 group hover:shadow-md transition-shadow text-center"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0"><svg class="w-6 h-6 text-on-surface group-hover:scale-105 transition-transform" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewBox="0 0 24 24" width="24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div><div class="flex flex-col items-center"><span class="font-label-md text-label-md text-on-surface leading-tight font-semibold">Kaszek</span><span class="font-label-sm text-label-sm text-on-surface-variant">VC Alliance</span></div></div></div></div>
+<!-- Tabs & Agenda Narrative -->
+<div class="flex flex-col gap-4">
+<!-- Tab Navigation -->
+<div class="flex items-center gap-2 border-b-0 pb-1" id="agenda-tabs">
+<button class="agenda-tab-btn px-4 py-2 rounded-lg font-label-md text-label-md transition-all bg-primary text-on-primary" onclick="switchTab('tab-agenda', this)" type="button">
+              Agenda&nbsp;</button>
+
+<button class="agenda-tab-btn px-4 py-2 rounded-lg hover:text-on-surface font-label-md text-label-md transition-all bg-surface-container-low text-on-surface-variant" onclick="switchTab('tab-details', this)" type="button">
+              Detalles &amp; Dress Code
+            </button>
+</div>
+<!-- Agenda Content -->
+<div class="tab-pane flex flex-col gap-3" id="tab-agenda">
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex items-start gap-4">
+<span class="font-label-md text-label-md text-secondary shrink-0 pt-0.5">18:00</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-label-md text-label-md text-on-surface">Check-in, Cóctel de Apertura &amp; Badging</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Recepción privada en el Sky Lounge, mixología de autor y acreditaciones con NFC para networking inteligente.</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex items-start gap-4">
+<span class="font-label-md text-label-md text-secondary shrink-0 pt-0.5">19:00</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-label-md text-label-md text-on-surface">Keynote: 'Foundations of Autonomous Agents in 2026'</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Por Dra. Elena Morales (Head of AI Architecture en Synapse Labs). Arquitecturas multi-agente en producción.</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex items-start gap-4">
+<span class="font-label-md text-label-md text-secondary shrink-0 pt-0.5">20:15</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-label-md text-label-md text-on-surface">Panel de Inversores: El Futuro del Capital Semilla en LatAm</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Debate en vivo con socios generales de Kaszek, Monashees y Nazca sobre valuaciones y tracción con IA.</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex items-start gap-4">
+<span class="font-label-md text-label-md text-secondary shrink-0 pt-0.5">21:30</span>
+<div class="flex flex-col gap-0.5">
+<h4 class="font-label-md text-label-md text-on-surface">VIP Rooftop Afterparty &amp; Curated Pairing</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Acceso exclusivo para titulares de Pase VIP. Set acústico lounge, catering gourmet y sesiones 1-on-1 con speakers.</p>
+</div>
+</div>
+</div>
+<!-- Speakers Content (Hidden by default) -->
+<div class="tab-pane flex-col gap-3 hidden" id="tab-speakers">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait of Dr. Elena Morales AI researcher in minimal dark attire looking confident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClgLjuDJYnDONkk78qvuv-9QqtT7JCGnlNwfMm6okJI9XNHg3T0oJCsicpRvl2DZaTldsIxpWc7ufdKA9QEvtpshs3qt8rF9Fk7j9sqEEav-f53XcSUuQJqH23w2Vs1v5Q8o7g9IytlgbC7i_JPXxQx9SrzVZMuz5qDH1bACWJ9fD3jclQ8gLAeuCv3aPkKNalKVL85ZNF-yYSgTSqIiTQYtzGFFRNuY5jEjQpWmIOFDUOjgGyQ6xX2g">
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Dra. Elena Morales</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Synapse Labs • Head of AI</p>
+</div>
+</div>
+<div class="p-3.5 rounded-xl bg-surface-container-lowest shadow-sm flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Portrait of Mateo Silva venture partner smiling in business casual against concrete wall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDn_n5LX7IBsHWm-hshU5f8zrB6Tuvx0NJqn0Nej6zKMt_KEIUZc_Vm2FX70d3UKqwoG-OC-ZJ3cRKgDEm8IErY0th14zqnk4KAwS5tImmPBHhqHxGb_yVP2bGYhL8YhVLyuIKTuas1mH4wu0myaBtTJvpEdjl-urMZ1OozcfHYLzuxPvGtwSwbhXjNPKgoiwLcVz4Nct180dCwLMwhnN1KL6j754Z3Bvh-6pYIptZnLDRqPQlDwQ3tA">
+</div>
+<div class="flex flex-col min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface truncate">Mateo Silva</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Kaszek Ventures • Partner</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Details Content (Hidden by default) -->
+<div class="tab-pane flex-col gap-3 hidden" id="tab-details">
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col gap-2">
+<h4 class="font-label-md text-label-md text-on-surface">Código de Vestimenta</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Smart Casual / Tech Formal. Sugerimos calzado cómodo para el rooftop afterparty.</p>
+<h4 class="font-label-md text-label-md text-on-surface pt-2">Política de Reembolso</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cancelación con reembolso del 100% hasta 72 horas antes del evento. Entradas transferibles mediante soporte.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Registration & Payment Flow (5 Cols Sticky Panel) -->
+<div class="w-full lg:w-5/12 flex flex-col gap-6 lg:sticky lg:top-24">
+<div class="w-full rounded-2xl bg-surface-container-lowest p-6 sm:p-7 shadow-xl flex flex-col gap-6">
+<!-- Registration Card Header -->
+<div class="flex items-center justify-between pb-2">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Registro Oficial</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Confirma tu cupo en tiempo real</p>
+</div>
+
+</div>
+<!-- STEP 1: Ticket Selection -->
+<div class="flex flex-col gap-3">
+
+<!-- General Admission Ticket -->
+
+<!-- Optional VIP Addon Toggle -->
+
+</div>
+<!-- STEP 2: Attendee Form -->
+<div class="flex flex-col gap-3.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">1. Datos del Asistente</span>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface">Nombre Completo *</label>
+<input class="w-full h-11 px-3.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-all" placeholder="Ej. Sofía Hernández" type="text" value="Sofía Hernández">
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface">Correo Corporativo *</label>
+<input class="w-full h-11 px-3.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-all" placeholder="sofia@tuempresa.com" type="email" value="sofia@novavc.io">
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface">Rol Principal *</label>
+<select class="w-full h-11 px-3 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-all appearance-none cursor-pointer">
+<option selected="">Founder / Co-Founder</option>
+<option>CTO / Head of Eng</option>
+<option>Inversor / VC Partner</option>
+<option>AI Researcher / Lead</option>
+</select>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface">Empresa u Organización</label>
+<input class="w-full h-11 px-3.5 rounded-lg bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest shadow-sm transition-all" placeholder="Nova VC" type="text" value="Nova VC">
+</div>
+</div>
+<!-- Interests Checkboxes -->
+<div class="flex flex-col gap-2 pt-1">
+<label class="font-label-sm text-label-sm text-on-surface">Áreas prioritarias para networking:</label>
+<div class="flex flex-wrap gap-2">
+<label class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="accent-secondary w-3.5 h-3.5 rounded" type="checkbox">
+                  Autonomous LLMs
+                </label>
+<label class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="accent-secondary w-3.5 h-3.5 rounded" type="checkbox">
+                  Ronda Seed / Serie A
+                </label>
+<label class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm cursor-pointer hover:bg-surface-container transition-colors">
+<input class="accent-secondary w-3.5 h-3.5 rounded" type="checkbox">
+                  Infraestructura GPU
+                </label>
+</div>
+</div>
+</div>
+<!-- STEP 3: Integrated Payment Gateway -->
+<div class="flex flex-col gap-3.5"></div>
+<!-- STEP 4: Order Summary -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-2.5"><div class="flex justify-between items-center"><div class="flex flex-col"><span class="font-headline-md text-headline-md text-on-surface">Valor:</span><span class="font-body-sm text-body-sm text-on-surface-variant">Acceso General + Networking</span></div><span class="font-display-lg text-[28px] leading-tight text-secondary font-bold" id="order-total-price">$45.000</span></div><div class="pt-2 border-t border-surface-container-highest/60 flex items-center gap-2 text-on-surface"><span class="material-symbols-outlined text-[18px] text-secondary">local_cafe</span><span class="font-label-sm text-label-sm text-on-surface-variant">Incluye bebida (1 café y 1 limonada) con tu pago</span></div></div>
+<!-- Security Badges & Trust -->
+<div class="flex items-center justify-between px-2 text-on-surface-variant"><div class="flex items-center gap-1.5 font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px] text-on-tertiary-container">support_agent</span><span class="">Atención directa en &lt; 5 min</span></div><div class="flex items-center gap-1.5 font-label-sm text-label-sm"><span class="material-symbols-outlined text-[16px] text-secondary">bookmark_added</span><span class="">Reserva de cupo garantizada</span></div></div>
+<!-- CTA Submission Button -->
+<div class="flex items-start gap-2.5 pt-1 px-1"><label class="flex items-start gap-2.5 cursor-pointer text-body-sm font-body-sm text-on-surface-variant"><input checked="" type="checkbox" class="accent-secondary w-4 h-4 rounded mt-0.5 cursor-pointer"><span class="leading-tight">Acepto los <a href="#" class="underline text-on-surface hover:text-secondary font-medium transition-colors">Términos y Condiciones</a> del evento y la <a href="#" class="underline text-on-surface hover:text-secondary font-medium transition-colors">Política de Privacidad</a> de datos.</span></label></div><div class="p-3.5 rounded-xl bg-surface-container-low border border-surface-container-highest/50 flex items-start gap-3"><span class="material-symbols-outlined text-[20px] text-[#25D366] shrink-0 mt-0.5">chat_bubble</span><p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">Tu registro estará completado y serás redirigido a WhatsApp para ser atendido y coordinar tu método de pago.</p></div><a href="https://wa.me/525541902810?text=Hola%20Synergy!%20Quiero%20completar%20mi%20inscripci%C3%B3n%20a%20Tech%20Founders%20%26%20AI%20Summit%202025%20para%20Sof%C3%ADa%20Hern%C3%A1ndez%20(Pase%20General%20%2B%20Afterparty%20VIP)" target="_blank" class="w-full h-12 rounded-xl bg-[#25D366] hover:opacity-90 text-white font-headline-md text-headline-md flex items-center justify-center gap-2.5 shadow-lg active:scale-[0.98] transition-all" id="checkout-cta-btn"><span class="material-symbols-outlined text-[22px]">chat</span><span id="btn-cta-text" class="">&nbsp;Confirmar Registro&nbsp;</span></a>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  let vipSelected = true;
+
+  function toggleVipPass() {
+    vipSelected = !vipSelected;
+    const thumb = document.getElementById('vip-switch-thumb');
+    const vipRow = document.getElementById('summary-vip-row');
+    const totalPrice = document.getElementById('order-total-price');
+    const ctaText = document.getElementById('btn-cta-text');
+
+    if (vipSelected) {
+      thumb.classList.remove('translate-x-0', 'bg-surface-variant');
+      thumb.classList.add('translate-x-5', 'bg-secondary');
+      vipRow.style.display = 'flex';
+      totalPrice.innerText = '$76.40 USD';
+      ctaText.innerText = 'Pagar $76.40 USD y Confirmar Registro';
+    } else {
+      thumb.classList.remove('translate-x-5', 'bg-secondary');
+      thumb.classList.add('translate-x-0', 'bg-surface-variant');
+      vipRow.style.display = 'none';
+      totalPrice.innerText = '$51.40 USD';
+      ctaText.innerText = 'Pagar $51.40 USD y Confirmar Registro';
+    }
+  }
+
+  function switchTab(tabId, btn) {
+    document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+    document.getElementById(tabId).classList.remove('hidden');
+
+    document.querySelectorAll('.agenda-tab-btn').forEach(b => {
+      b.classList.remove('bg-primary', 'text-on-primary');
+      b.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+    });
+
+    btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+    btn.classList.add('bg-primary', 'text-on-primary');
+  }
+
+  function setPaymentTab(type, btn) {
+    document.querySelectorAll('.pay-tab-btn').forEach(b => {
+      b.classList.remove('bg-surface-container-lowest', 'shadow-sm', 'text-on-surface');
+      b.classList.add('text-on-surface-variant');
+    });
+
+    btn.classList.add('bg-surface-container-lowest', 'shadow-sm', 'text-on-surface');
+    btn.classList.remove('text-on-surface-variant');
+
+    const cardPanel = document.getElementById('payment-card-panel');
+    const walletPanel = document.getElementById('payment-wallet-panel');
+    const speiPanel = document.getElementById('payment-spei-panel');
+
+    cardPanel.classList.add('hidden');
+    walletPanel.classList.add('hidden');
+    speiPanel.classList.add('hidden');
+
+    if (type === 'card') {
+      cardPanel.classList.remove('hidden');
+    } else if (type === 'wallet') {
+      walletPanel.classList.remove('hidden');
+    } else if (type === 'spei') {
+      speiPanel.classList.remove('hidden');
+    }
+  }
+
+  function triggerCheckoutConfirmation(button) {
+    const originalText = button.innerHTML;
+    button.disabled = true;
+    button.innerHTML = '<span class="material-symbols-outlined text-[20px] animate-spin">refresh</span> Procesando Reserva...';
+
+    setTimeout(() => {
+      button.classList.remove('bg-primary', 'hover:bg-primary-container');
+      button.classList.add('bg-on-tertiary-fixed', 'text-tertiary-fixed');
+      button.innerHTML = '<span class="material-symbols-outlined text-[20px]">check_circle</span> ¡Entrada Confirmada! Revisa tu Email';
+    }, 1200);
+  }
+</script></main><footer class="w-full bg-surface-container-lowest py-12 shadow-[0_-1px_8px_rgba(0,0,0,0.02)]"><div class="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col md:flex-row items-center justify-between gap-6"><div class="flex items-center gap-2"><div class="w-5 h-5 rounded bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[12px]">adjust</span></div><span class="font-label-md text-label-md text-on-surface font-semibold">Synergy events</span></div><div class="flex items-center gap-6"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Términos</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacidad</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">Soporte</a></div><p class="font-body-sm text-body-sm text-on-surface-variant">© 2025 Synergy Studio Inc. Experiencias íntimas y gatherings.</p></div></footer>
+
+<script>
+(function () {
+  var map = {
+    "dashboard-de-eventos": "/stitch/dashboard.html",
+    "gestion-de-asistentes": "/stitch/asistentes.html",
+    "constructor-de-formularios": "/stitch/formularios.html",
+    "analiticas-y-ventas": "/stitch/analitica.html",
+    "pagos": "/stitch/pagos.html",
+    "pagos-y-transacciones": "/stitch/pagos.html",
+    "notificaciones": "/stitch/notificaciones.html",
+    "comunicaciones-y-automatizacion": "/stitch/notificaciones.html",
+    "registro-y-checkout-publico": "/stitch/vista-publica.html"
+  };
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-path]");
+    if (!el) return;
+    var dest = map[el.getAttribute("data-path")];
+    if (!dest) return;
+    e.preventDefault();
+    window.top.location.href = dest;
+  });
+})();
+</script><script src="/stitch/panel.js?v=2"></script><script src="/stitch/js/vista-publica.js?v=1"></script>
+</body></html>

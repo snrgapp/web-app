@@ -47,8 +47,9 @@ export default function EventosPage() {
   return (
     <div className="ep-page space-y-6">
       <div>
-        <p className="text-xs uppercase tracking-wider text-[var(--ep-muted)]">Constructor</p>
-        <h1 className="ep-title mt-1">Crear evento</h1>
+        <p className="ep-kicker">Constructor</p>
+        <h1 className="ep-title mt-1.5">Crear evento</h1>
+        <p className="ep-sub">Nombre, fecha, aforo y precio. El pago, si lo hay, se cierra por WhatsApp.</p>
       </div>
 
       <form onSubmit={onSubmit} className="ep-card p-5 grid grid-cols-1 md:grid-cols-2 gap-4">

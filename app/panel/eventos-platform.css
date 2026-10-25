@@ -1,17 +1,20 @@
 .ep {
   --ep-bg: #fbf8ff;
-  --ep-surface: #ffffff;
+  --ep-card: #ffffff;
+  --ep-low: #f4f2fd;
+  --ep-mid: #eeedf7;
+  --ep-high: #e8e7f1;
+  --ep-highest: #e3e1ec;
   --ep-ink: #1a1b22;
   --ep-muted: #46464b;
-  --ep-line: #dad9e3;
-  --ep-primary: #090a0f;
-  --ep-accent: #4648d4;
-  --ep-accent-soft: #e1e0ff;
-  --ep-good: #009668;
-  --ep-good-soft: #6ffbbe;
-  --ep-sidebar: #090a0f;
-  --ep-sidebar-fg: #f4f2fd;
-  --ep-sidebar-muted: #c7c6cd;
+  --ep-indigo: #4648d4;
+  --ep-indigo-soft: #e1e0ff;
+  --ep-green: #009668;
+  --ep-green-soft: #6ffbbe;
+  --ep-danger: #ba1a1a;
+  --ep-danger-soft: #ffdad6;
+  --ep-line: #e4e3ec;
+  --ep-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.04);
   min-height: 100dvh;
   background: var(--ep-bg);
   color: var(--ep-ink);
@@ -21,40 +24,45 @@
 
 .ep-page {
   width: 100%;
-  max-width: 72rem;
-  margin-inline: auto;
-  padding: 1rem 1rem 2rem;
+  padding: 1.25rem 0 2.5rem;
 }
 
-@media (min-width: 640px) {
-  .ep-page {
-    padding: 1.25rem 1.25rem 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .ep-page {
-    padding: 2rem 2rem 3rem;
-  }
+.ep-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ep-muted);
 }
 
 .ep-title {
-  font-size: 1.5rem;
-  line-height: 1.2;
-  font-weight: 600;
+  font-size: 1.75rem;
+  line-height: 1.15;
+  font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 1024px) {
   .ep-title {
-    font-size: 1.875rem;
+    font-size: 2.5rem;
+    letter-spacing: -0.02em;
   }
 }
 
+.ep-sub {
+  margin-top: 0.35rem;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--ep-muted);
+}
+
 .ep-card {
-  background: var(--ep-surface);
-  border: 1px solid var(--ep-line);
+  background: var(--ep-card);
   border-radius: 16px;
+  box-shadow: var(--ep-shadow);
 }
 
 .ep-btn {
@@ -62,34 +70,55 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 14px;
-  padding: 10px 16px;
+  font-size: 13px;
+  line-height: 16px;
+  padding: 0 14px;
+  height: 40px;
+  transition: transform 0.12s ease, background 0.15s ease;
+}
+
+.ep-btn:active {
+  transform: scale(0.98);
 }
 
 .ep-btn-primary {
-  background: var(--ep-primary);
+  background: #090a0f;
   color: #fff;
 }
 
+.ep-btn-primary:hover {
+  background: #1a1b21;
+}
+
 .ep-btn-accent {
-  background: var(--ep-accent);
+  background: var(--ep-indigo);
   color: #fff;
 }
 
 .ep-btn-ghost {
-  background: #eeedf7;
+  background: var(--ep-low);
   color: var(--ep-ink);
+}
+
+.ep-btn-ghost:hover {
+  background: var(--ep-mid);
+}
+
+.ep-btn-sm {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
 }
 
 .ep-input,
 .ep-select,
 .ep-textarea {
   width: 100%;
-  border: 1px solid var(--ep-line);
-  background: #fff;
-  border-radius: 12px;
+  border: 0;
+  background: var(--ep-low);
+  border-radius: 10px;
   padding: 10px 12px;
   font-size: 16px;
   color: var(--ep-ink);
@@ -107,11 +136,24 @@
 .ep-input:focus,
 .ep-select:focus,
 .ep-textarea:focus {
-  border-color: var(--ep-accent);
-  box-shadow: 0 0 0 3px var(--ep-accent-soft);
+  background: var(--ep-mid);
+  box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.15);
+}
+
+.ep-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 
 .ep-nav-active {
-  background: #2f3038;
-  color: #fff;
+  background: var(--ep-mid);
+  color: var(--ep-ink);
+  font-weight: 600;
 }

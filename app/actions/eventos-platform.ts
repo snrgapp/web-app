@@ -21,6 +21,7 @@ export type EventoPlat = {
   acerca_del_evento: string | null
   asistentes: number
   checkins: number
+  muestra: string[]
 }
 
 export type AsistentePlat = {
@@ -54,12 +55,17 @@ export async function listarEventosPlat(): Promise<EventoPlat[]> {
     .eq('organizacion_id', orgId)
     .order('fecha', { ascending: false })
 
-  const { data: counts } = await supabase
-    .from('asistentes')
-    .select('evento_id, checked_in_at')
+  const ids = (eventos ?? []).map((e) => e.id)
+  const { data: counts } = ids.length
+    ? await supabase.from('asistentes').select('evento_id, checked_in_at, nombre, apellido').in('evento_id', ids)
+    : { data: [] }
 
   return (eventos ?? []).map((e) => {
     const rows = (counts ?? []).filter((c) => c.evento_id === e.id)
+    const muestra = rows
+      .map((r) => [r.nombre, r.apellido].filter(Boolean).join(' ').trim())
+      .filter(Boolean)
+      .slice(0, 3)
     return {
       ...e,
       estado: e.estado ?? 'activo',
@@ -67,36 +73,69 @@ export async function listarEventosPlat(): Promise<EventoPlat[]> {
       precio_cop: e.precio_cop ?? 0,
       asistentes: rows.length,
       checkins: rows.filter((r) => r.checked_in_at).length,
+      muestra,
     } as EventoPlat
   })
 }
 
+export type ActividadPlat = {
+  id: string
+  nombre: string
+  detalle: string
+  created_at: string | null
+}
+
 export async function resumenDashboard() {
   const eventos = await listarEventosPlat()
-  const { supabase, orgId } = await org()
-  if (!supabase || !orgId) {
-    return {
-      eventosActivos: 0,
-      totalAsistentes: 0,
-      ingresos: 0,
-      checkinPct: 0,
-      eventos,
-    }
+  const vacio = {
+    eventosActivos: 0,
+    totalAsistentes: 0,
+    ingresos: 0,
+    checkinPct: 0,
+    eventos,
+    recientes: [] as ActividadPlat[],
+    registrosMes: 0,
+    registrosMesPrevio: 0,
   }
+  const { supabase, orgId } = await org()
+  if (!supabase || !orgId) return vacio
+
+  const ids = eventos.map((e) => e.id)
+  if (!ids.length) return vacio
 
   const { data: asistentes } = await supabase
     .from('asistentes')
-    .select('id, checked_in_at, estado_pago, evento_id')
+    .select('id, nombre, apellido, empresa, checked_in_at, estado_pago, evento_id, created_at')
+    .in('evento_id', ids)
 
-  const total = asistentes?.length ?? 0
-  const checkins = (asistentes ?? []).filter((a) => a.checked_in_at).length
-  const activos = eventos.filter((e) => e.estado !== 'finalizado').length
+  const rows = asistentes ?? []
+  const total = rows.length
+  const checkins = rows.filter((a) => a.checked_in_at).length
+  const activos = eventos.filter((e) => e.estado !== 'finalizado' && e.estado !== 'borrador').length
+  const titulos = new Map(eventos.map((e) => [e.id, e.titulo || 'evento']))
   const ingresos = eventos.reduce((sum, e) => {
-    const pagados = (asistentes ?? []).filter(
-      (a) => a.evento_id === e.id && a.estado_pago !== 'pendiente'
-    ).length
+    const pagados = rows.filter((a) => a.evento_id === e.id && a.estado_pago !== 'pendiente').length
     return sum + pagados * (e.precio_cop || 0)
   }, 0)
+
+  const mesActual = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' }).slice(0, 7)
+  const [anio, mes] = mesActual.split('-').map(Number)
+  const previo = new Date(Date.UTC(anio, mes - 2, 1))
+  const mesPrevio = `${previo.getUTCFullYear()}-${String(previo.getUTCMonth() + 1).padStart(2, '0')}`
+  const mesDe = (iso: string | null) =>
+    iso ? new Date(iso).toLocaleDateString('en-CA', { timeZone: 'America/Bogota' }).slice(0, 7) : ''
+
+  const recientes: ActividadPlat[] = [...rows]
+    .sort((a, b) => (b.created_at ?? '').localeCompare(a.created_at ?? ''))
+    .slice(0, 4)
+    .map((a) => ({
+      id: a.id,
+      nombre: [a.nombre, a.apellido].filter(Boolean).join(' ') || 'Asistente',
+      detalle: a.checked_in_at
+        ? `Hizo check-in en ${titulos.get(a.evento_id) ?? 'el evento'}`
+        : `Se registró en ${titulos.get(a.evento_id) ?? 'el evento'}${a.empresa ? ` · ${a.empresa}` : ''}`,
+      created_at: a.created_at,
+    }))
 
   return {
     eventosActivos: activos,
@@ -104,6 +143,9 @@ export async function resumenDashboard() {
     ingresos,
     checkinPct: total ? Math.round((checkins / total) * 100) : 0,
     eventos,
+    recientes,
+    registrosMes: rows.filter((a) => mesDe(a.created_at) === mesActual).length,
+    registrosMesPrevio: rows.filter((a) => mesDe(a.created_at) === mesPrevio).length,
   }
 }
 

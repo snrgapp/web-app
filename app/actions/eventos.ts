@@ -3,30 +3,19 @@
 import { createServerClient } from '@/utils/supabase/server'
 import { getDefaultOrgId, getOrgIdBySlug } from '@/lib/org-resolver'
 import type { Evento } from '@/types/database.types'
-import type { FormWithParsedFields } from '@/lib/forms'
-import type { FormFieldConfig } from '@/types/form.types'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { CampoEvento } from '@/lib/registro-evento'
 
-export type EventoConFormulario = {
-  evento: Evento
-  form: FormWithParsedFields | null
+export type EventoPublico = {
+  evento: Evento & { estado?: string | null }
+  campos: CampoEvento[]
+  whatsappPagos: string | null
 }
 
-function parseCampos(campos: unknown): FormFieldConfig[] {
-  if (!Array.isArray(campos)) return []
-  return campos.filter(
-    (c): c is FormFieldConfig =>
-      typeof c === 'object' &&
-      c !== null &&
-      typeof (c as FormFieldConfig).key === 'string' &&
-      typeof (c as FormFieldConfig).label === 'string' &&
-      typeof (c as FormFieldConfig).type === 'string'
-  )
-}
-
-export async function getEventoConFormularioBySlug(
+export async function getEventoPublicoBySlug(
   slug: string,
   orgSlug?: string | null
-): Promise<EventoConFormulario | null> {
+): Promise<EventoPublico | null> {
   const supabase = await createServerClient()
   if (!supabase) return null
 
@@ -42,25 +31,20 @@ export async function getEventoConFormularioBySlug(
 
   if (evError || !evento) return null
 
-  const { data: form } = await supabase
-    .from('forms')
-    .select('*')
-    .eq('evento_id', evento.id)
-    .eq('activo', true)
-    .limit(1)
-    .maybeSingle()
-
-  const formParsed: FormWithParsedFields | null = form
-    ? {
-        ...form,
-        campos: parseCampos(form.campos),
-        brevo_list_id: (form as Record<string, unknown>).brevo_list_id as number | null ?? null,
-      }
-    : null
+  const db = supabase as unknown as SupabaseClient
+  const [{ data: campos }, { data: ajustes }] = await Promise.all([
+    db
+      .from('evento_form_campos')
+      .select('id, label, tipo, obligatorio, opciones, orden')
+      .eq('evento_id', evento.id)
+      .order('orden'),
+    db.from('evento_ajustes').select('whatsapp_pagos').eq('organizacion_id', orgId).maybeSingle(),
+  ])
 
   return {
-    evento: evento as Evento,
-    form: formParsed,
+    evento: evento as EventoPublico['evento'],
+    campos: (campos ?? []) as CampoEvento[],
+    whatsappPagos: (ajustes as { whatsapp_pagos?: string | null } | null)?.whatsapp_pagos ?? null,
   }
 }
 
