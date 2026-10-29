@@ -197,6 +197,7 @@
       '<div class="pt-3 flex flex-wrap items-center justify-between gap-2"><div class="flex items-center gap-2">' +
       '<button data-acc="editar" class="h-8 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[15px]">edit</span><span>Editar</span></button>' +
       '<button data-acc="duplicar" class="h-8 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[15px]">content_copy</span><span>Duplicar</span></button>' +
+      '<a data-acc="checkin" href="/stitch/checkin.html" class="h-8 px-3 rounded-lg hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[15px]">qr_code_scanner</span><span>Check-in</span></a>' +
       '<a data-acc="publica" href="/evento/' + encodeURIComponent(e.checkin_slug || '') + '" target="_blank" class="h-8 px-3 rounded-lg hover:bg-surface-container-low text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[15px]">visibility</span><span>Ver pública</span></a>' +
       '</div><button data-acc="mas" class="w-8 h-8 rounded-lg hover:bg-surface-container-low flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[18px]">more_horiz</span></button></div></article>'
     );
@@ -241,9 +242,16 @@
     if (acc === 'eliminar') return P.borrarEvento(e, recargar);
     if (acc === 'publicar') return P.editar('eventos', e.id, { estado: 'activo' }).then(function (r) { if (r.ok) { P.toast('Evento publicado'); recargar(); } });
     if (acc === 'duplicar') return P.op({ op: 'duplicar_evento', id: e.id }).then(function (r) { if (r.ok) { P.toast('Evento duplicado como borrador'); recargar(); } });
+    if (acc === 'checkin') {
+      localStorage.setItem('snrg_evento', e.id);
+      location.href = '/stitch/checkin.html';
+      return;
+    }
     if (acc === 'mas') {
       P.menu(btn, [
-        { texto: 'Check-in App', icono: 'qr_code_scanner', accion: function () { window.open('/checkin?event=' + encodeURIComponent(e.checkin_slug || ''), '_blank'); } },
+        { texto: 'Check-in & Anfitrión', icono: 'qr_code_scanner', accion: function () { localStorage.setItem('snrg_evento', e.id); location.href = '/stitch/checkin.html'; } },
+        { texto: 'Configuración del Evento', icono: 'tune', accion: function () { localStorage.setItem('snrg_evento', e.id); location.href = '/stitch/configuracion.html'; } },
+        { texto: 'Comentarios & Feedback', icono: 'rate_review', accion: function () { localStorage.setItem('snrg_evento', e.id); location.href = '/stitch/feedback.html'; } },
         { texto: 'Ver asistentes', icono: 'group', accion: function () { localStorage.setItem('snrg_evento', e.id); location.href = '/stitch/asistentes.html'; } },
         { texto: 'Editar formulario', icono: 'wysiwyg', accion: function () { localStorage.setItem('snrg_evento', e.id); location.href = '/stitch/formularios.html'; } },
         e.estado === 'archivado'

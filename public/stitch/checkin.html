@@ -1,0 +1,546 @@
+<!DOCTYPE html><html lang="es" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode":"class","theme":{"extend":{"colors":{"on-tertiary-fixed":"#002113","surface-container-high":"#e8e7f1","surface-bright":"#fbf8ff","background":"#fbf8ff","secondary":"#4648d4","surface-container":"#eeedf7","primary":"#000000","on-secondary-fixed":"#07006c","error":"#ba1a1a","outline":"#77767b","error-container":"#ffdad6","on-error":"#ffffff","primary-fixed":"#e3e1e9","on-secondary":"#ffffff","inverse-on-surface":"#f1effa","surface-tint":"#5e5e64","on-secondary-container":"#fffbff","tertiary-fixed-dim":"#4edea3","secondary-container":"#6063ee","tertiary-container":"#002113","surface-dim":"#dad9e3","tertiary-fixed":"#6ffbbe","inverse-primary":"#c7c6cd","on-primary-fixed":"#1a1b21","surface":"#fbf8ff","tertiary":"#000000","on-tertiary-container":"#009668","on-primary-container":"#83838a","on-surface-variant":"#46464b","on-primary-fixed-variant":"#46464c","on-background":"#1a1b22","primary-fixed-dim":"#c7c6cd","surface-container-highest":"#e3e1ec","secondary-fixed":"#e1e0ff","primary-container":"#1a1b21","on-secondary-fixed-variant":"#2f2ebe","on-tertiary":"#ffffff","secondary-fixed-dim":"#c0c1ff","on-error-container":"#93000a","inverse-surface":"#2f3038","surface-container-lowest":"#ffffff","on-tertiary-fixed-variant":"#005236","on-primary":"#ffffff","surface-variant":"#e3e1ec","on-surface":"#1a1b22","surface-container-low":"#f4f2fd","outline-variant":"#c7c6cb"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-md":"2rem","space-sm":"0.5rem","gutter":"1rem","space-md":"1rem","margin-lg":"3rem","space-xl":"2.5rem","gutter-md":"1.5rem","margin":"1rem","gutter-lg":"2rem","space-lg":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"body-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"body-lg":["17px",{"lineHeight":"26px","letterSpacing":"-0.005em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.015em","fontWeight":"600"}],"display-lg-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.025em","fontWeight":"700"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"600"}]}}}};</script><style>html.p-cargando main{visibility:hidden}</style><script>document.documentElement.classList.add("p-cargando")</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between py-5 px-4 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-6"><div class="flex items-center gap-2.5 px-2"><img src="/logo.png" alt="Synergy" style="height:28px;width:auto;display:block" /><span class="font-headline-md text-headline-md tracking-tight text-on-surface">Synergy</span></div><div class="bg-surface-container-low rounded-xl p-2.5 flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors"><div class="flex items-center gap-2.5 min-w-0"><div class="w-6 h-6 rounded bg-primary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[14px]">hub</span></div><div class="min-w-0"><p class="font-label-md text-label-md text-on-surface truncate leading-tight">Venture Hub</p><p class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Pro Curator</p></div></div><span class="material-symbols-outlined text-on-surface-variant text-[18px]">unfold_more</span></div><button class="w-full h-10 bg-primary hover:bg-primary-container text-on-primary rounded-lg flex items-center justify-center gap-2 font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(0,0,0,0.06)] active:scale-[0.98]"><span class="material-symbols-outlined text-[18px]">add</span><span class="">Crear Evento</span></button><nav class="flex flex-col gap-1" data-active-classes="bg-surface-container text-on-surface font-semibold"><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm bg-surface-container text-on-surface font-semibold transition-colors" data-path="dashboard-de-eventos" href="#"><span class="material-symbols-outlined text-[18px]">calendar_today</span><span class="">Eventos</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="gestion-de-asistentes" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span class="">Asistentes</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="constructor-de-formularios" href="#"><span class="material-symbols-outlined text-[18px]">wysiwyg</span><span class="">Formularios</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="analiticas-y-ventas" href="#"><span class="material-symbols-outlined text-[18px]">query_stats</span><span class="">Analíticas</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pagos" href="#"><span class="material-symbols-outlined text-[18px]">payments</span><span class="">Pagos</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="notificaciones" href="#"><span class="material-symbols-outlined text-[18px]">notifications</span><span class="">Notificaciones</span></a></nav></div><div class="flex flex-col gap-3 pt-4"><div class="bg-surface-container-low rounded-xl p-3 flex flex-col gap-2"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ticketing Live</span><span class="w-2 h-2 rounded-full bg-secondary"></span></div><p class="font-body-sm text-body-sm text-on-surface font-semibold">1,420 RSVPs este mes</p></div><div class="flex items-center justify-between px-2 pt-1"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0"><p class="font-label-md text-label-md text-on-surface truncate">Alex Rivera</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate">alex@venture.co</p></div></div><button class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[18px]">more_vert</span></button></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 px-8 flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="flex items-center gap-3 w-80"><div class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm text-on-surface-variant flex-1">Buscar eventos, invitados...</span><kbd class="font-label-sm text-label-sm bg-surface-container-highest px-1.5 py-0.5 rounded text-on-surface">⌘K</kbd></div></div><div class="flex items-center gap-3"><a class="h-9 px-3.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2 transition-colors" data-path="registro-y-checkout-publico" href="#"><span class="material-symbols-outlined text-[16px]">open_in_new</span><span class="">Vista Pública</span></a><button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-1.5 h-1.5 bg-secondary rounded-full"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 min-h-screen bg-surface px-8"><div class="flex flex-col w-full pb-16">
+<!-- Top Ambient Banner & Event Identity -->
+<div class="flex flex-col gap-4 mb-6"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div class="flex items-center gap-3"><a href="#" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors"><span class="material-symbols-outlined text-[18px]">arrow_back</span><span class="">Volver a Eventos</span></a><span class="text-outline text-body-sm">/</span><span class="font-label-md text-label-md text-on-surface font-semibold">Tech Founders &amp; AI Summit 2025</span></div><div class="flex flex-wrap items-center gap-2.5"><div class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-container-low border-0"><span class="material-symbols-outlined text-secondary text-[18px]">shield_person</span><span class="font-label-sm text-label-sm text-on-surface-variant">Vista activa:</span><select class="bg-transparent font-label-md text-label-md text-on-surface font-semibold focus:outline-none cursor-pointer"><option selected="">Administrador General</option><option>Co-Host / Staff de Puerta</option></select></div></div></div><div class="flex items-center gap-2 border-b-0 overflow-x-auto pb-1"><a data-path="dashboard-de-eventos" href="#" class="px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors whitespace-nowrap">Resumen</a><a data-path="portal-anfitrion-check-in" href="#" class="px-4 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary font-semibold shadow-sm transition-colors whitespace-nowrap flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">how_to_reg</span><span class="">Check-in &amp; Anfitrión</span></a><a data-path="configuracion-del-evento" href="#" class="px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors whitespace-nowrap">Configuración del Evento</a><a data-path="comentarios-feedback" href="#" class="px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors whitespace-nowrap">Comentarios &amp; Feedback</a></div></div><section class="relative rounded-2xl overflow-hidden bg-surface-container-lowest shadow-sm mb-8">
+<div class="absolute inset-0 opacity-25 pointer-events-none bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-secondary-container via-surface-container-low to-transparent"></div>
+<div class="relative p-6 lg:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<!-- Left: Event Context -->
+<div class="flex flex-col gap-3 max-w-2xl">
+<div class="flex flex-wrap items-center gap-2.5">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm shadow-sm">
+<span class="material-symbols-outlined text-[14px]">shield_person</span>
+            Portal de Staff &amp; Acceso
+          </span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+            Terminal Puerta Norte • 01
+          </span>
+</div>
+<div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Tech Founders &amp; AI Summit 2025</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Conferencia anual de innovación, infraestructura agéntica y capital semilla.</p>
+</div>
+<div class="flex flex-wrap items-center gap-y-2 gap-x-5 text-on-surface-variant font-body-sm text-body-sm pt-1">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[17px] text-secondary">calendar_today</span>
+<span class="">Octubre 18, 2025 • 18:00 GMT-6</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[17px] text-secondary">location_on</span>
+<span class="text-on-surface font-medium">Auditorio Central Torre Prisma</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[17px] text-outline">badge</span>
+<span class="">Rol: <strong class="text-on-surface">Co-Anfitrión &amp; Validación</strong></span>
+</div>
+</div>
+</div>
+<!-- Right: Realtime Countdown Box -->
+<div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-between gap-4 p-5 rounded-xl bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">timer</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Apertura de Puertas</span>
+</div>
+<!-- Counter Units -->
+<div class="flex items-center gap-2 text-center" id="countdown-wrapper">
+<div class="flex flex-col items-center bg-surface-container-lowest px-3 py-2 rounded-lg shadow-sm min-w-[56px]">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold leading-none" id="count-days">04</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px] mt-1 uppercase">Días</span>
+</div>
+<span class="font-headline-md text-headline-md text-outline">:</span>
+<div class="flex flex-col items-center bg-surface-container-lowest px-3 py-2 rounded-lg shadow-sm min-w-[56px]">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold leading-none" id="count-hours">14</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px] mt-1 uppercase">Horas</span>
+</div>
+<span class="font-headline-md text-headline-md text-outline">:</span>
+<div class="flex flex-col items-center bg-surface-container-lowest px-3 py-2 rounded-lg shadow-sm min-w-[56px]">
+<span class="font-headline-lg text-headline-lg text-on-surface font-bold leading-none" id="count-minutes">22</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant text-[10px] mt-1 uppercase">Min</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="">Aforo máximo recinto: <strong>220 plazas</strong></span>
+</div>
+</div>
+</div>
+</section>
+<!-- Middle Grid: Live Metrics Donut & Live QR Gate Scanner -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+<!-- Left Column: Metrics & Donut Chart (5 Cols) -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Live Check-in Progress Overview -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Validación de Ingreso</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ritmo de asistencia en tiempo real</p>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-secondary font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+            En Vivo
+          </span>
+</div>
+<!-- Metric Stat Cards -->
+<div class="grid grid-cols-2 gap-3">
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Check-in Puerta</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-xl text-headline-xl text-on-surface font-bold" id="metric-checkins">142</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">/ 184</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full transition-all duration-500" style="width: 77.1%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">77.2% concurrencia</span>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Capacidad Sala</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-xl text-headline-xl text-on-surface font-bold">64.5%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant"><br></span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mt-2 overflow-hidden">
+<div class="bg-secondary-container h-1.5 rounded-full transition-all duration-500" style="width: 64.5%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">78 butacas libres</span>
+</div>
+</div>
+<!-- Donut Chart: Total Inscritos vs Pagos Confirmados -->
+<div class="pt-2 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface">Auditoría: Registro vs Acreditación de Pago</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">200 Inscritos</span>
+</div>
+<div class="flex items-center gap-6 p-4 rounded-xl bg-surface-container-low">
+<!-- Inline SVG Donut Chart Minimal -->
+<div class="relative w-28 h-28 shrink-0 flex items-center justify-center">
+<svg class="w-28 h-28 transform -rotate-90" viewBox="0 0 100 100">
+<!-- Background Base Ring (100% capacity) -->
+<circle class="text-surface-container-high" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-width="12"></circle>
+<!-- Segment 1: Pagos Validados (92%) = circumference 251.32. 92% is ~231.2 -->
+<circle class="text-primary transition-all duration-1000" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="231.2 251.32" stroke-linecap="round" stroke-width="12"></circle>
+<!-- Segment 2: Pendientes (8%) = 20.1 offset 231.2 -->
+<circle class="text-secondary-fixed-dim transition-all duration-1000" cx="50" cy="50" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="20.1 251.32" stroke-dashoffset="-231.2" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+<span class="font-headline-sm text-label-md font-bold text-on-surface">92%</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">Pagados</span>
+</div>
+</div>
+<!-- Chart Legends & Ratios -->
+<div class="flex flex-col gap-3 w-full">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Pagos Validados</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">184</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(92%)</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary-fixed-dim shrink-0"></span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Comprobante Pend.</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">16</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">(8%)</span>
+</div>
+</div>
+<div class="text-[11px] leading-tight text-on-surface-variant bg-surface-container-lowest px-2.5 py-1.5 rounded-lg text-outline">
+                * Solo los pases con pago validado pueden registrar ingreso aforo.
+              </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Role Privilege Reminder -->
+<div class="p-4 rounded-xl bg-surface-container-low flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary text-[22px] mt-0.5">verified_user</span>
+<div class="flex flex-col gap-0.5">
+<span class="font-label-md text-label-md text-on-surface">Terminal Autorizada para Alex Rivera</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Estás operando con credenciales de Co-Host. Los ingresos quedan marcados con timestamp encriptado para auditoría de patrocinadores.</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Interactive Scanner & Verification Console (7 Cols) -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between h-full">
+<div>
+<!-- Header of Scanner -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">qr_code_scanner</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Escáner QR de Puerta / Check-in</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Apunta el lente al ticket digital del asistente o ingresa la clave manual.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-surface-container-low text-on-surface font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim"></span>
+                Lector Óptico Listo
+              </span>
+</div>
+</div>
+<!-- Scanner Viewport Frame (Tactile Luma Style) -->
+<div class="relative w-full h-72 rounded-xl bg-primary-container overflow-hidden flex items-center justify-center shadow-inner group">
+<div id="qr-reader" class="absolute inset-0 z-[5] hidden overflow-hidden [&_video]:h-full [&_video]:w-full [&_video]:object-cover [&_img]:hidden"></div>
+<!-- Simulated Camera Feed Texture / Ambient Pattern -->
+<div id="qr-placeholder" class="absolute inset-0 bg-gradient-to-b from-primary/90 via-surface-tint/20 to-primary/95 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container text-[80px] opacity-15">videocam</span>
+</div>
+<!-- Optical Grid & Target Reticle -->
+<div class="relative z-10 w-52 h-52 flex items-center justify-center">
+<!-- Corner Marks -->
+<div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-white rounded-tl-lg"></div>
+<div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-white rounded-tr-lg"></div>
+<div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-white rounded-bl-lg"></div>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-white rounded-br-lg"></div>
+<!-- Animated Laser Scanning Beam -->
+<div class="absolute left-2 right-2 h-0.5 bg-gradient-to-r from-transparent via-tertiary-fixed-dim to-transparent shadow-[0_0_12px_#4edea3] animate-[bounce_2.5s_infinite]"></div>
+<!-- Center QR Icon Outline -->
+<div class="p-4 rounded-xl bg-surface-container-lowest/10 backdrop-blur-sm flex flex-col items-center gap-2 text-center pointer-events-none">
+<span class="material-symbols-outlined text-white text-[32px]">crop_free</span>
+<span class="font-label-sm text-label-sm text-white/80">Centra el código QR</span>
+</div>
+</div>
+<!-- Top Camera Controls Floating -->
+<div class="absolute top-3 right-3 z-20 flex items-center gap-2">
+<button class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all" title="Alternar Linterna">
+<span class="material-symbols-outlined text-[18px]">flashlight_on</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all" title="Cambiar Cámara">
+<span class="material-symbols-outlined text-[18px]">flip_camera_ios</span>
+</button>
+</div>
+<!-- Trigger Scan Button -->
+<div class="absolute bottom-4 inset-x-0 z-20 flex justify-center">
+<button class="h-10 px-5 rounded-lg bg-white text-primary hover:bg-white/90 font-label-md text-label-md flex items-center gap-2 shadow-lg transition-transform active:scale-95" id="btn-simulate-scan">
+<span class="material-symbols-outlined text-[18px]">center_focus_strong</span>
+<span class="">Activar cámara</span>
+</button>
+</div>
+</div>
+<!-- Manual Code Fallback Input -->
+<div class="mt-4 pt-1 flex flex-col sm:flex-row items-center gap-2.5">
+<div class="relative flex-1 w-full">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">pin</span>
+<input class="w-full h-11 pl-9 pr-3 rounded-xl bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary/30 transition-all" id="manual-ticket-input" placeholder="Ingreso manual de Ticket (ej. #TK-8942 o nombre)" type="text">
+</div>
+<button class="w-full sm:w-auto h-11 px-5 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md flex items-center justify-center gap-2 transition-all active:scale-95 shrink-0" id="btn-validate-manual">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="">Validar Entrada</span>
+</button>
+</div>
+</div>
+<!-- Realtime Validation Feedback Banner (Dynamic) -->
+<div class="mt-5 p-4 rounded-xl bg-surface-container-low transition-all" id="validation-feedback">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-on-tertiary-container/15 flex items-center justify-center text-on-tertiary-container shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="feedback-name">Sofia Mendez</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">VIP Founder</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="feedback-msg">
+                  ✓ Check-in Exitoso • Ticket #TK-8942 validado a las 17:45 hrs
+                </p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant shrink-0 bg-surface-container-highest px-2 py-1 rounded">
+              Puerta 01
+            </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Attendees Roster (Strict Read-Only Mode) -->
+<section class="bg-surface-container-lowest rounded-2xl p-6 lg:p-8 shadow-sm">
+<!-- Section Title & Notice of Read-Only Constraint -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6">
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Panel de Asistentes al Evento</h2>
+
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Visualiza acreditaciones y registra el ingreso físico.
+        </p>
+</div>
+<!-- Compliance Notice Callout -->
+<div class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-surface-container-low max-w-md">
+<span class="material-symbols-outlined text-outline text-[20px] shrink-0">lock_clock</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+<strong>Modo solo lectura de puerta.</strong> La aprobación y validación de comprobantes se gestiona exclusivamente desde el <em class="not-italic text-on-surface font-medium">Tablero de Pagos</em>.
+        </p>
+</div>
+</div>
+<!-- Search & Filter Controls -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
+<!-- Filter Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="filter-container">
+<button class="filter-btn h-9 px-3.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md transition-all" data-filter="all" style="animation-delay: 378ms;">
+          Todos (200)
+        </button>
+<button class="filter-btn h-9 px-3.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-all" data-filter="checked" style="animation-delay: 378ms;">
+          Ingresados (142)
+        </button>
+<button class="filter-btn h-9 px-3.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-all" data-filter="pending-gate" style="animation-delay: 378ms;">
+          Por Ingresar (42)
+        </button>
+<button class="filter-btn h-9 px-3.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container font-label-md text-label-md transition-all" data-filter="pending-payment" style="animation-delay: 378ms;">
+          Pago Pendiente (16)
+        </button>
+</div>
+<!-- In-table Search Bar -->
+<div class="relative w-full sm:w-72">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-[18px]">search</span>
+<input class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="table-search" placeholder="Buscar por nombre, correo o TK..." type="text">
+</div>
+</div>
+<!-- Attendees Table (Clean, Border-free, Read-Only) -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm min-w-[760px]">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-3 px-4 rounded-l-lg">Asistente</th>
+<th class="py-3 px-4">Tipo Entrada</th>
+<th class="py-3 px-4">Estado de Pago</th>
+<th class="py-3 px-4">Estado Puerta</th>
+<th class="py-3 px-4 rounded-r-lg">Ticket ID</th>
+</tr>
+</thead>
+<tbody class="divide-y-0" id="attendees-table-body">
+<!-- Row 1: Checked In VIP -->
+<tr class="hover:bg-surface-container-low/60 transition-colors" data-status="checked">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center font-label-md text-label-md text-on-primary">
+                  SM
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Sofia Mendez</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">sofia.m@vertexai.io</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-medium">
+                Pase VIP
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-on-tertiary-container/10 text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                Pago Verificado
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+                Ingresado ✓ (17:45)
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<code class="font-label-sm text-label-sm font-mono text-on-surface bg-surface-container px-2 py-0.5 rounded">#TK-8942</code>
+</td>
+</tr>
+<!-- Row 2: Paid, Pending Gate Check-in -->
+<tr class="hover:bg-surface-container-low/60 transition-colors" data-status="pending-gate">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface">
+                  MR
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Mateo Rivas</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">mateo@finloop.co</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                Acceso General
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-on-tertiary-container/10 text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                Pago Verificado
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<button class="h-8 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95" onclick="handleQuickCheckIn(this, 'Mateo Rivas', '#TK-3109')">
+<span class="material-symbols-outlined text-[15px]">how_to_reg</span>
+<span class="">Marcar Check-in</span>
+</button>
+</td>
+<td class="py-3.5 px-4">
+<code class="font-label-sm text-label-sm font-mono text-on-surface bg-surface-container px-2 py-0.5 rounded">#TK-3109</code>
+</td>
+</tr>
+<!-- Row 3: Speaker (Checked In) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors" data-status="checked">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-md text-label-md">
+                  CL
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Dra. Camila Lara</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">clara@stanford.edu</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-medium">
+                Keynote Speaker
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-on-tertiary-container/10 text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                Cortesía / Invitado
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container"></span>
+                Ingresado ✓ (16:30)
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<code class="font-label-sm text-label-sm font-mono text-on-surface bg-surface-container px-2 py-0.5 rounded">#TK-SPK01</code>
+</td>
+</tr>
+<!-- Row 4: Pending Payment (Ineligible for gate entry) -->
+<tr class="hover:bg-surface-container-low/60 transition-colors opacity-80" data-status="pending-payment">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface-variant">
+                  DA
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Diego Alarcón</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">diego.alarcon@gmail.com</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-medium">
+                Acceso General
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold" title="Requiere validación de recibo">
+<span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+                Comprobante Pendiente
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-low text-outline font-label-sm text-label-sm cursor-not-allowed" title="No puede ingresar hasta que Tesorería valide comprobante">
+<span class="material-symbols-outlined text-[14px]">block</span>
+                No Autorizado
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<code class="font-label-sm text-label-sm font-mono text-outline bg-surface-container-low px-2 py-0.5 rounded">#TK-5521</code>
+</td>
+</tr>
+<!-- Row 5: Another Paid Attendee Ready for Gate Check -->
+<tr class="hover:bg-surface-container-low/60 transition-colors" data-status="pending-gate">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-surface-container-high flex items-center justify-center font-label-md text-label-md text-on-surface">
+                  LP
+                </div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Lucía Paredes</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">lucia@angellist.mx</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-medium">
+                Pase VIP
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-on-tertiary-container/10 text-on-tertiary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">check</span>
+                Pago Verificado
+              </span>
+</td>
+<td class="py-3.5 px-4">
+<button class="h-8 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95" onclick="handleQuickCheckIn(this, 'Lucía Paredes', '#TK-4028')">
+<span class="material-symbols-outlined text-[15px]">how_to_reg</span>
+<span class="">Marcar Check-in</span>
+</button>
+</td>
+<td class="py-3.5 px-4">
+<code class="font-label-sm text-label-sm font-mono text-on-surface bg-surface-container px-2 py-0.5 rounded">#TK-4028</code>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer Meta -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 mt-4 border-t-0 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span class="">Sincronización en segundo plano activa (latencia 120ms)</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="">Mostrando 5 de 200 registros</span>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-outline disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main></div>
+
+
+
+
+<script>
+(function () {
+  var map = {
+    "dashboard-de-eventos": "/stitch/dashboard.html",
+    "gestion-de-asistentes": "/stitch/asistentes.html",
+    "constructor-de-formularios": "/stitch/formularios.html",
+    "analiticas-y-ventas": "/stitch/analitica.html",
+    "pagos": "/stitch/pagos.html",
+    "pagos-y-transacciones": "/stitch/pagos.html",
+    "notificaciones": "/stitch/notificaciones.html",
+    "comunicaciones-y-automatizacion": "/stitch/notificaciones.html",
+    "registro-y-checkout-publico": "/stitch/vista-publica.html",
+    "portal-anfitrion-check-in": "/stitch/checkin.html",
+    "configuracion-del-evento": "/stitch/configuracion.html",
+    "comentarios-feedback": "/stitch/feedback.html"
+  };
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-path]");
+    if (!el) return;
+    var dest = map[el.getAttribute("data-path")];
+    if (!dest) return;
+    e.preventDefault();
+    window.top.location.href = dest;
+  });
+})();
+</script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="/stitch/panel.js?v=4"></script><script src="/stitch/js/checkin.js?v=2"></script></body></html>

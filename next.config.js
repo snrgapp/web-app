@@ -11,13 +11,31 @@ const nextConfig = {
       { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
       {
         key: 'Permissions-Policy',
-        value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+        value: 'camera=(self), microphone=(), geolocation=(), interest-cohort=()',
       },
     ]
     return [
       {
         source: '/:path*',
         headers: securityHeaders,
+      },
+      {
+        source: '/stitch/checkin.html',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(self), microphone=(), geolocation=(), interest-cohort=()',
+          },
+        ],
+      },
+      {
+        source: '/pase/:path*',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+          },
+        ],
       },
       {
         source: '/evento/:path*',

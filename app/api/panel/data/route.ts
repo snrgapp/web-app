@@ -5,16 +5,17 @@ import { getDefaultOrgId } from '@/lib/org-resolver'
 import { phoneDigitsCo, sendInalambriaSmsBroadcast } from '@/lib/inalambria'
 import { sendBirdEmail } from '@/lib/bird-email'
 import { debeConfirmarPago, enviarConfirmacionPago } from '@/lib/pago-confirmacion'
+import { enviarPasesEvento, htmlStaffEmail, puertaUrl } from '@/lib/pase'
 
 export const dynamic = 'force-dynamic'
 
-type Tabla = 'eventos' | 'asistentes' | 'evento_form_campos' | 'evento_mensajes' | 'evento_pagos'
+type Tabla = 'eventos' | 'asistentes' | 'evento_form_campos' | 'evento_mensajes' | 'evento_pagos' | 'evento_staff'
 
 const COLUMNAS: Record<Tabla, string[]> = {
   eventos: [
     'titulo', 'fecha', 'ciudad', 'lugar', 'formato', 'estado', 'capacidad', 'precio_cop',
     'hora_inicio', 'hora_fin', 'acerca_del_evento', 'image_url', 'checkin_slug', 'inscripcion_abierta',
-    'agenda', 'lista_espera', 'patrocinadores', 'incluye',
+    'agenda', 'lista_espera', 'patrocinadores', 'incluye', 'pase_recordatorio',
   ],
   asistentes: [
     'evento_id', 'nombre', 'apellido', 'telefono', 'correo', 'empresa', 'sector', 'cargo', 'tipo_ticket',
@@ -29,9 +30,10 @@ const COLUMNAS: Record<Tabla, string[]> = {
     'evento_id', 'asistente_id', 'pagador', 'correo', 'correo_origen_pago', 'monto_cop', 'estado', 'canal',
     'comprobante_url', 'notas', 'referencia', 'entradas', 'concepto',
   ],
+  evento_staff: ['evento_id', 'email', 'nombre', 'rol'],
 }
 
-const TABLAS_CON_ORG: Tabla[] = ['eventos', 'evento_form_campos', 'evento_mensajes', 'evento_pagos']
+const TABLAS_CON_ORG: Tabla[] = ['eventos', 'evento_form_campos', 'evento_mensajes', 'evento_pagos', 'evento_staff']
 
 function limpiar(tabla: Tabla, valores: Record<string, unknown>) {
   const out: Record<string, unknown> = {}
@@ -74,6 +76,20 @@ async function eventoDeLaOrg(db: SupabaseClient, orgId: string, eventoId: unknow
   return Boolean(data)
 }
 
+async function convitarStaff(db: SupabaseClient, staff: Record<string, unknown>) {
+  const { data: evento } = await db.from('eventos').select('*').eq('id', staff.evento_id).maybeSingle()
+  const url = puertaUrl(String(staff.invite_token || ''))
+  const mail = await sendBirdEmail({
+    to: [{ email: String(staff.email), name: String(staff.nombre || '') || undefined }],
+    subject: `Invitación de puerta · ${evento?.titulo || 'Synergy'}`,
+    html: htmlStaffEmail({ evento: evento || {}, rol: String(staff.rol || 'puerta'), urlPuerta: url }),
+    text: `Te invitaron a la puerta de ${evento?.titulo || 'un evento Synergy'}. Enlace: ${url}`,
+    category: 'transactional',
+    tags: { tipo: 'staff_puerta' },
+  })
+  return { ok: mail.success, error: mail.error, url }
+}
+
 function rellenar(texto: string, a: Record<string, unknown>, ev: Record<string, unknown> | null) {
   const nombre = String(a.nombre ?? '').trim() || 'Hola'
   return texto
@@ -82,7 +98,7 @@ function rellenar(texto: string, a: Record<string, unknown>, ev: Record<string, 
     .replaceAll('{Tipo_Ticket}', String(a.tipo_ticket ?? 'General'))
     .replaceAll('{Fecha_Evento}', String(ev?.fecha ?? ''))
     .replaceAll('{Ubicacion_Mapa}', String(ev?.lugar ?? ev?.ciudad ?? ''))
-    .replaceAll('{Link_QR}', ev?.checkin_slug ? `snrg.lat/checkin?event=${ev.checkin_slug}` : 'snrg.lat')
+    .replaceAll('{Link_QR}', a.ticket_token ? `${process.env.NEXT_PUBLIC_BASE_URL || 'https://www.snrg.lat'}/pase/${a.ticket_token}` : (ev?.checkin_slug ? `snrg.lat/evento/${ev.checkin_slug}` : 'snrg.lat'))
 }
 
 export async function GET() {
@@ -90,13 +106,14 @@ export async function GET() {
   if (!ctx) return NextResponse.json({ ok: false, error: 'Inicia sesión en el panel' }, { status: 401 })
   const { db, orgId, user } = ctx
 
-  const [eventos, campos, mensajes, pagos, ajustes, miembros] = await Promise.all([
+  const [eventos, campos, mensajes, pagos, ajustes, miembros, staff] = await Promise.all([
     db.from('eventos').select('*').eq('organizacion_id', orgId).order('fecha', { ascending: false }),
     db.from('evento_form_campos').select('*').eq('organizacion_id', orgId).order('orden'),
     db.from('evento_mensajes').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
     db.from('evento_pagos').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
     db.from('evento_ajustes').select('*').eq('organizacion_id', orgId).maybeSingle(),
     db.from('organizacion_miembros').select('user_id, rol').eq('organizacion_id', orgId),
+    db.from('evento_staff').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
   ])
 
   const ids = (eventos.data ?? []).map((e: { id: string }) => e.id)
@@ -114,6 +131,7 @@ export async function GET() {
     pagos: pagos.data ?? [],
     ajustes: ajustes.data ?? null,
     miembros: miembros.data ?? [],
+    staff: staff.data ?? [],
   })
 }
 
@@ -165,8 +183,35 @@ export async function POST(req: NextRequest) {
         if (typeof valores.telefono === 'string') valores.telefono = phoneDigitsCo(valores.telefono).slice(-10)
         valores.origen_registro = valores.origen_registro ?? 'panel'
       }
+      if (tabla === 'evento_staff') {
+        const email = String(valores.email ?? '').trim().toLowerCase()
+        if (!email.includes('@')) return NextResponse.json({ ok: false, error: 'Escribe un correo válido' }, { status: 400 })
+        valores.email = email
+        valores.rol = ['cohost', 'puerta', 'viewer', 'checkin'].includes(String(valores.rol))
+          ? (valores.rol === 'checkin' ? 'puerta' : valores.rol)
+          : 'puerta'
+        valores.nombre = String(valores.nombre ?? '').trim() || email.split('@')[0]
+      }
       if (TABLAS_CON_ORG.includes(tabla)) valores.organizacion_id = orgId
-      const { data, error } = await db.from(tabla).insert(valores).select().single()
+      let { data, error } = await db.from(tabla).insert(valores).select().single()
+      if (error && tabla === 'evento_staff') {
+        const { data: previo } = await db
+          .from('evento_staff')
+          .select('*')
+          .eq('evento_id', valores.evento_id)
+          .eq('email', valores.email)
+          .maybeSingle()
+        if (previo) {
+          const { data: upd } = await db
+            .from('evento_staff')
+            .update({ rol: valores.rol, nombre: valores.nombre })
+            .eq('id', previo.id)
+            .select()
+            .single()
+          data = upd
+          error = null
+        }
+      }
       if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 400 })
       if (tabla === 'eventos' && data?.id) {
         await db.from('evento_form_campos').insert({
@@ -181,6 +226,10 @@ export async function POST(req: NextRequest) {
       if (tabla === 'evento_pagos' && debeConfirmarPago(data)) {
         const c = await enviarConfirmacionPago(db, data)
         return NextResponse.json({ ok: true, fila: c.fila, confirmacion: { ok: c.ok, error: c.error, correo: c.correo } })
+      }
+      if (tabla === 'evento_staff' && data) {
+        const convite = await convitarStaff(db, data)
+        return NextResponse.json({ ok: true, fila: data, convite })
       }
       return NextResponse.json({ ok: true, fila: data })
     }
@@ -314,6 +363,14 @@ export async function POST(req: NextRequest) {
       .select()
       .single()
     return NextResponse.json({ ok: enviados > 0, fila, enviados, fallidos, error: errores[0] })
+  }
+
+  if (op === 'enviar_pases') {
+    if (!body.id || !(await eventoDeLaOrg(db, orgId, body.id))) {
+      return NextResponse.json({ ok: false, error: 'Evento no válido' }, { status: 400 })
+    }
+    const r = await enviarPasesEvento(db, body.id, { forzar: true })
+    return NextResponse.json({ ...r, ok: r.ok })
   }
 
   if (op === 'ajustes') {

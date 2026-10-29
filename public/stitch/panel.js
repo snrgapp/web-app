@@ -507,6 +507,59 @@
     });
   };
 
+  /* ---------- Pestañas internas de un evento ---------- */
+
+  P.RUTAS_EVENTO = {
+    resumen: '/stitch/dashboard.html',
+    checkin: '/stitch/checkin.html',
+    configuracion: '/stitch/configuracion.html',
+    feedback: '/stitch/feedback.html',
+  };
+
+  P.ticketId = function (a) {
+    var t = String(a.ticket_token || a.id || '').replace(/-/g, '');
+    return '#TK-' + t.slice(-4).toUpperCase();
+  };
+
+  P.pestaniasEvento = function (eventoId) {
+    var volver = P.boton('Volver a Eventos');
+    if (volver && !volver.dataset.p) {
+      volver.setAttribute('href', '/stitch/dashboard.html');
+      P.on(volver, function () { location.href = '/stitch/dashboard.html'; });
+    }
+    var ev = P.evento(eventoId);
+    if (ev && volver && volver.parentNode) {
+      var crumb = null;
+      volver.parentNode.querySelectorAll('span').forEach(function (s) {
+        if (s.className.indexOf('font-semibold') !== -1) crumb = s;
+      });
+      if (crumb) {
+        crumb.textContent = ev.titulo;
+        crumb.style.cursor = 'pointer';
+        crumb.title = 'Cambiar de evento';
+        crumb.onclick = function () {
+          P.elegirEvento(crumb, function (id) {
+            localStorage.setItem('snrg_evento', id);
+            location.reload();
+          }, { actual: ev.id });
+        };
+      }
+    }
+    document.querySelectorAll('main a[data-path]').forEach(function (a) {
+      var dest = a.getAttribute('data-path');
+      if (dest === 'registro-y-checkout-publico' && ev && ev.checkin_slug) {
+        a.setAttribute('href', '/evento/' + encodeURIComponent(ev.checkin_slug));
+        if (!a.dataset.pPub) {
+          a.dataset.pPub = '1';
+          a.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.open('/evento/' + encodeURIComponent(ev.checkin_slug), '_blank');
+          });
+        }
+      }
+    });
+  };
+
   /* ---------- Barra lateral (igual en todas las pantallas) ---------- */
 
   P.sidebar = function () {

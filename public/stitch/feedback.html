@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+
+<html lang="es" style=""><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {"darkMode":"class","theme":{"extend":{"colors":{"on-tertiary-fixed":"#002113","surface-container-high":"#e8e7f1","surface-bright":"#fbf8ff","background":"#fbf8ff","secondary":"#4648d4","surface-container":"#eeedf7","primary":"#000000","on-secondary-fixed":"#07006c","error":"#ba1a1a","outline":"#77767b","error-container":"#ffdad6","on-error":"#ffffff","primary-fixed":"#e3e1e9","on-secondary":"#ffffff","inverse-on-surface":"#f1effa","surface-tint":"#5e5e64","on-secondary-container":"#fffbff","tertiary-fixed-dim":"#4edea3","secondary-container":"#6063ee","tertiary-container":"#002113","surface-dim":"#dad9e3","tertiary-fixed":"#6ffbbe","inverse-primary":"#c7c6cd","on-primary-fixed":"#1a1b21","surface":"#fbf8ff","tertiary":"#000000","on-tertiary-container":"#009668","on-primary-container":"#83838a","on-surface-variant":"#46464b","on-primary-fixed-variant":"#46464c","on-background":"#1a1b22","primary-fixed-dim":"#c7c6cd","surface-container-highest":"#e3e1ec","secondary-fixed":"#e1e0ff","primary-container":"#1a1b21","on-secondary-fixed-variant":"#2f2ebe","on-tertiary":"#ffffff","secondary-fixed-dim":"#c0c1ff","on-error-container":"#93000a","inverse-surface":"#2f3038","surface-container-lowest":"#ffffff","on-tertiary-fixed-variant":"#005236","on-primary":"#ffffff","surface-variant":"#e3e1ec","on-surface":"#1a1b22","surface-container-low":"#f4f2fd","outline-variant":"#c7c6cb"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"margin-md":"2rem","space-sm":"0.5rem","gutter":"1rem","space-md":"1rem","margin-lg":"3rem","space-xl":"2.5rem","gutter-md":"1.5rem","margin":"1rem","gutter-lg":"2rem","space-lg":"1.5rem","space-xs":"0.25rem"},"fontFamily":{"body-lg":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"body-lg":["17px",{"lineHeight":"26px","letterSpacing":"-0.005em","fontWeight":"400"}],"label-sm":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.015em","fontWeight":"600"}],"display-lg-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.025em","fontWeight":"700"}],"display-lg":["56px",{"lineHeight":"64px","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-xl":["40px",{"lineHeight":"48px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-md":["15px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"label-md":["13px",{"lineHeight":"16px","letterSpacing":"0.01em","fontWeight":"600"}]}}}};</script><style>html.p-cargando main{visibility:hidden}</style><script>document.documentElement.classList.add("p-cargando")</script></head><body class="bg-surface font-body-md text-on-surface antialiased selection:bg-secondary-fixed selection:text-on-secondary-fixed"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between py-5 px-4 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-6"><div class="flex items-center gap-2.5 px-2"><img src="/logo.png" alt="Synergy" style="height:28px;width:auto;display:block" /><span class="font-headline-md text-headline-md tracking-tight text-on-surface">Synergy</span></div><div class="bg-surface-container-low rounded-xl p-2.5 flex items-center justify-between cursor-pointer hover:bg-surface-container transition-colors"><div class="flex items-center gap-2.5 min-w-0"><div class="w-6 h-6 rounded bg-primary-container flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[14px]">hub</span></div><div class="min-w-0"><p class="font-label-md text-label-md text-on-surface truncate leading-tight">Venture Hub</p><p class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Pro Curator</p></div></div><span class="material-symbols-outlined text-on-surface-variant text-[18px]">unfold_more</span></div><button class="w-full h-10 bg-primary hover:bg-primary-container text-on-primary rounded-lg flex items-center justify-center gap-2 font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(0,0,0,0.06)] active:scale-[0.98]"><span class="material-symbols-outlined text-[18px]">add</span><span class="">Crear Evento</span></button><nav class="flex flex-col gap-1" data-active-classes="bg-surface-container text-on-surface font-semibold"><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="dashboard-de-eventos" href="#"><span class="material-symbols-outlined text-[18px]">calendar_today</span><span class="">Eventos</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="gestion-de-asistentes" href="#"><span class="material-symbols-outlined text-[18px]">group</span><span class="">Asistentes</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="constructor-de-formularios" href="#"><span class="material-symbols-outlined text-[18px]">wysiwyg</span><span class="">Formularios</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="analiticas-y-ventas" href="#"><span class="material-symbols-outlined text-[18px]">query_stats</span><span class="">Analíticas</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pagos" href="#"><span class="material-symbols-outlined text-[18px]">payments</span><span class="">Pagos</span></a><a class="flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="notificaciones" href="#"><span class="material-symbols-outlined text-[18px]">notifications</span><span class="">Notificaciones</span></a></nav></div><div class="flex flex-col gap-3 pt-4"><div class="bg-surface-container-low rounded-xl p-3 flex flex-col gap-2"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ticketing Live</span><span class="w-2 h-2 rounded-full bg-secondary"></span></div><p class="font-body-sm text-body-sm text-on-surface font-semibold">1,420 RSVPs este mes</p></div><div class="flex items-center justify-between px-2 pt-1"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="min-w-0"><p class="font-label-md text-label-md text-on-surface truncate">Alex Rivera</p><p class="font-label-sm text-label-sm text-on-surface-variant truncate">alex@venture.co</p></div></div><button class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[18px]">more_vert</span></button></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 px-8 flex items-center justify-between shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="flex items-center gap-3 w-80"><div class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer"><span class="material-symbols-outlined text-[18px]">search</span><span class="font-body-sm text-body-sm text-on-surface-variant flex-1">Buscar eventos, invitados...</span><kbd class="font-label-sm text-label-sm bg-surface-container-highest px-1.5 py-0.5 rounded text-on-surface">⌘K</kbd></div></div><div class="flex items-center gap-3"><a class="h-9 px-3.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2 transition-colors" data-path="registro-y-checkout-publico" href="#"><span class="material-symbols-outlined text-[16px]">open_in_new</span><span class="">Vista Pública</span></a><button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors relative"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2 right-2 w-1.5 h-1.5 bg-secondary rounded-full"></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center cursor-pointer"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></header><main class="w-full pt-16 min-h-screen bg-surface px-8"><div class="flex flex-col w-full">
+<!-- Event Navigation Bar & Breadcrumb -->
+<div class="flex flex-col gap-4 pb-6 pt-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<a class="flex items-center gap-1.5 font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span>Volver a Eventos</span>
+</a>
+<span class="text-on-surface-variant/40 font-body-sm text-body-sm">/</span>
+<span class="font-headline-md text-headline-md text-on-surface font-semibold tracking-tight">Tech Founders &amp; AI Summit 2025</span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-tertiary-container font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+          Publicado
+        </span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">ID de Evento:</span>
+<code class="font-label-sm text-label-sm px-2 py-1 bg-surface-container rounded font-mono text-on-surface">EVT-7729-AI</code>
+</div>
+</div>
+<!-- Event Tabs -->
+<div class="flex items-center gap-2 p-1 bg-surface-container-low rounded-xl w-fit">
+<a data-path="dashboard-de-eventos" class="px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[16px]">overview</span>
+<span>Resumen</span>
+</a>
+<a data-path="portal-anfitrion-check-in" class="px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[16px]">how_to_reg</span>
+<span>Check-in &amp; Anfitrión</span>
+</a>
+<a data-path="configuracion-del-evento" class="px-4 py-2 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Configuración del Evento</span>
+</a>
+<a data-path="comentarios-feedback" class="px-4 py-2 rounded-lg font-label-md text-label-md bg-primary text-on-primary shadow-sm flex items-center gap-2 transition-all" href="#">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">rate_review</span>
+<span>Comentarios &amp; Feedback</span>
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed"></span>
+</a>
+</div>
+</div>
+<!-- Header Section -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 py-6">
+<div class="flex flex-col gap-1.5 max-w-3xl">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Comentarios &amp; Feedback del Evento</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Calificaciones, encuestas post-evento y testimonios recopilados de asistentes presenciales y virtuales en tiempo real.
+      </p>
+</div>
+<div class="flex items-center flex-wrap gap-3">
+<!-- Toggle Encuesta Activa -->
+<label class="flex items-center gap-3 px-3.5 py-2 rounded-xl bg-surface-container-low cursor-pointer select-none">
+<span class="font-label-md text-label-md text-on-surface">Encuesta Activa</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="survey-toggle" type="checkbox"/>
+<div class="w-10 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-container-lowest after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-primary after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</div>
+</label>
+<!-- Configurar Encuesta -->
+<button class="h-10 px-4 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px]">settings_suggest</span>
+<span>Configurar Encuesta</span>
+</button>
+<!-- Exportar CSV -->
+<button class="h-10 px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Exportar Respuestas (CSV)</span>
+</button>
+</div>
+</div>
+<!-- KPI Metrics Strip -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 py-4">
+<!-- NPS Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Net Promoter Score</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm font-semibold">Excelente</span>
+</div>
+<div class="flex items-baseline gap-3 my-3">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">+74</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ 100</span>
+</div>
+<div class="flex items-center gap-2 pt-2 text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+8 pts vs. Tech Summit 2024</span>
+</div>
+</div>
+<!-- Rating Promedio -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Calificación Promedio</span>
+<div class="flex text-secondary text-sm">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2 my-3">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">4.8</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">de 5.0</span>
+</div>
+<div class="flex items-center gap-2 pt-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span>Basado en 184 valoraciones</span>
+</div>
+</div>
+<!-- Tasa de Respuesta -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Tasa de Respuesta</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">percent</span>
+</div>
+<div class="flex items-baseline gap-2 my-3">
+<span class="font-display-lg text-display-lg text-on-surface font-bold tracking-tight">68.2%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">conversión</span>
+</div>
+<div class="w-full bg-surface-container-low rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 68.2%;"></div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant pt-2">184 de 270 asistieron con check-in</p>
+</div>
+<!-- Organización y Ponentes Split -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Desglose por Pilares</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">insights</span>
+</div>
+<div class="flex flex-col gap-3 my-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">apartment</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Venue &amp; Logística</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold">4.9<span class="text-on-surface-variant font-normal">/5</span></span>
+</div>
+<div class="w-full bg-surface-container-low rounded-full h-1 overflow-hidden">
+<div class="bg-on-tertiary-container h-1 rounded-full" style="width: 98%;"></div>
+</div>
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">mic</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Speakers &amp; Contenido</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold">4.7<span class="text-on-surface-variant font-normal">/5</span></span>
+</div>
+<div class="w-full bg-surface-container-low rounded-full h-1 overflow-hidden">
+<div class="bg-secondary h-1 rounded-full" style="width: 94%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Analytics Split: Distribution Bar Chart & Keyword Sentiment -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-4 py-4">
+<!-- Distribution Chart (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Distribución de Puntuaciones</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Frecuencia acumulada sobre 184 cuestionarios completados</p>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">Últimas 48 horas</span>
+</div>
+<div class="flex flex-col gap-3 py-2">
+<!-- 5 Stars -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 w-20 shrink-0 font-label-md text-label-md text-on-surface">
+<span>5</span>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-full h-3 overflow-hidden">
+<div class="bg-secondary h-3 rounded-full transition-all duration-500" style="width: 82%;"></div>
+</div>
+<span class="w-14 text-right font-label-sm text-label-sm text-on-surface font-semibold">151 (82%)</span>
+</div>
+<!-- 4 Stars -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 w-20 shrink-0 font-label-md text-label-md text-on-surface">
+<span>4</span>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-full h-3 overflow-hidden">
+<div class="bg-secondary-container h-3 rounded-full transition-all duration-500" style="width: 14%;"></div>
+</div>
+<span class="w-14 text-right font-label-sm text-label-sm text-on-surface font-semibold">25 (14%)</span>
+</div>
+<!-- 3 Stars -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 w-20 shrink-0 font-label-md text-label-md text-on-surface">
+<span>3</span>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-full h-3 overflow-hidden">
+<div class="bg-surface-container-high h-3 rounded-full transition-all duration-500" style="width: 3%;"></div>
+</div>
+<span class="w-14 text-right font-label-sm text-label-sm text-on-surface font-semibold">5 (3%)</span>
+</div>
+<!-- 2 Stars -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 w-20 shrink-0 font-label-md text-label-md text-on-surface">
+<span>2</span>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-full h-3 overflow-hidden">
+<div class="bg-surface-container-high h-3 rounded-full transition-all duration-500" style="width: 1%;"></div>
+</div>
+<span class="w-14 text-right font-label-sm text-label-sm text-on-surface font-semibold">2 (1%)</span>
+</div>
+<!-- 1 Star -->
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-1 w-20 shrink-0 font-label-md text-label-md text-on-surface">
+<span>1</span>
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-full h-3 overflow-hidden">
+<div class="bg-surface-container-high h-3 rounded-full transition-all duration-500" style="width: 0.5%;"></div>
+</div>
+<span class="w-14 text-right font-label-sm text-label-sm text-on-surface font-semibold">1 (0.5%)</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-4 mt-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">96% recomendaría este encuentro a un colega</span>
+<button class="font-label-md text-label-md text-secondary hover:underline flex items-center gap-1">
+<span>Ver desglose de métricas</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Keyword & Sentiment Analysis (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-3">
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Tópicos &amp; Tendencias</h2>
+<span class="flex items-center gap-1 text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>IA Insights</span>
+</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Conceptos con mayor recurrencia semántica en comentarios abiertos.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Networking de alto valor</span>
+<span class="text-on-tertiary-container font-bold text-xs bg-surface-container px-1.5 py-0.5 rounded-md">89x</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Speakers A+</span>
+<span class="text-on-tertiary-container font-bold text-xs bg-surface-container px-1.5 py-0.5 rounded-md">64x</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Audio impecable</span>
+<span class="text-on-tertiary-container font-bold text-xs bg-surface-container px-1.5 py-0.5 rounded-md">41x</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Check-in ágil</span>
+<span class="text-on-tertiary-container font-bold text-xs bg-surface-container px-1.5 py-0.5 rounded-md">38x</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Café de especialidad</span>
+<span class="text-on-surface-variant font-bold text-xs bg-surface-container px-1.5 py-0.5 rounded-md">29x</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Q&amp;A interactivo</span>
+<span class="text-on-surface-variant font-bold text-xs bg-surface-container px-1.5 py-0.5 rounded-md">19x</span>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md">
+<span>Espacio reducido sala B</span>
+<span class="text-error font-bold text-xs bg-error-container/50 px-1.5 py-0.5 rounded-md">12x</span>
+</div>
+</div>
+</div>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-[22px]">lightbulb</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+<strong>Resumen IA:</strong> El 91% del feedback destaca la calidad de ponencias y networking. 12 asistentes sugieren ampliar la capacidad del workshop de Agentes Autónomos.
+        </p>
+</div>
+</div>
+</div>
+<!-- Search & Filter Controls -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm my-4 flex flex-col gap-3">
+<div class="flex flex-col md:flex-row items-center gap-3">
+<!-- Search Input -->
+<div class="relative w-full md:flex-1">
+<span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full h-11 pl-10 pr-4 bg-surface-container-low rounded-xl font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container transition-colors" placeholder="Buscar por testimonio, asistente, compañía o palabra clave..." type="text"/>
+</div>
+<!-- Quick Action Controls -->
+<div class="flex items-center gap-2 w-full md:w-auto">
+<button class="h-11 px-4 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2 transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+<span>Filtros avanzados</span>
+</button>
+<button class="h-11 px-4 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2 transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]">swap_vert</span>
+<span>Más recientes</span>
+</button>
+</div>
+</div>
+<!-- Filter Pills Group -->
+<div class="flex flex-wrap items-center gap-2 pt-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase mr-1">Calificación:</span>
+<button class="px-3 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm transition-all">Todas</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all flex items-center gap-1">
+<span>5★</span>
+<span class="text-on-surface-variant">151</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all flex items-center gap-1">
+<span>4★</span>
+<span class="text-on-surface-variant">25</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all flex items-center gap-1">
+<span>≤ 3★</span>
+<span class="text-on-surface-variant">8</span>
+</button>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase ml-3 mr-1">Ticket:</span>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all">VIP Founder (82)</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all">Acceso General (88)</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all">Speaker / Cortesía (14)</button>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase ml-3 mr-1">Estado:</span>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+<span>Publicable en Web (42)</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>Respondido (31)</span>
+</button>
+<button class="px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface font-label-sm text-label-sm transition-all flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+<span>Requiere Atención (3)</span>
+</button>
+</div>
+</div>
+<!-- Feedback & Testimonials Wall -->
+<div class="flex flex-col gap-4 py-2" id="p-comentarios-lista">
+<!-- Testimonial Card 1 (Destacado / 5 Estrellas) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="Professional portrait photo of Sofia Mendez, female tech startup founder with short dark hair, smiling warmly in a modern office setup with soft ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1FctMEjHIPyL-sC6i8mv8b7okE8cQhI0dvazmYUSAR_VBaMWYmcx18mFmhCr2v6hZXl4tBPpZ2hOp2Qfij4kteJvTb6igXYp0EAUKwx7ponb-Ce0tlFTv1KPYs1Ze6SEXZH9qgL2gISLn1xJ2hBpPYqpeqmWcRjrxBwyucsBgPcYB2C34ypEcQyqaPq75PySmNfqldMh0N92uQiTMTbNN9gj_IyWqVeojetwmJCrw"/>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold truncate">Sofia Mendez</h3>
+<span class="px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm font-semibold">VIP Founder</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                Check-in verificado
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Founder &amp; CEO @ VertexAI • Buenos Aires</p>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hace 2 horas (18:42 hs)</span>
+</div>
+</div>
+<!-- Testimonial Quote -->
+<blockquote class="font-body-lg text-body-lg text-on-surface leading-relaxed pl-3 border-l-2 border-primary/20">
+        “Increíble nivel de ponentes y networking. El panel sobre LLMs en producción fue una clase magistral. La curaduría de asistentes estuvo impecable: cerramos dos alianzas clave durante el espacio de founder speed-dating. Definitivamente volveré el próximo año.”
+      </blockquote>
+<!-- Tags & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Speakers A+</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Networking</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Founder Lounge</span>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px] text-secondary" style="font-variation-settings: 'FILL' 1;">star_border</span>
+<span>Destacar en Web</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">reply</span>
+<span>Responder</span>
+</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Más opciones">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Testimonial Card 2 (5 Estrellas / Logística) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="Portrait photo of Mateo Rivas, a latino venture partner in his early 40s wearing a crisp navy blazer, looking confident with warm natural light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNCNCJrrq6VEJhGUihbu0LqBo0GlSgsfTMV0pntzWXU7LmYkYc3kN162Aa2J85AUykJ5ogXxXhZLdms5nwAN24uiXVssobtcYJw0gsVpt8BrOy9nsgC28jDW9AriNbIjQohXw7WZ3JkJEYG0p8BOYssVdeQeLjpYpBSrKZpVTcneDROb2V7X_TBu-UfQW773MNB-fXg2fUDk_Ddv4QE-nl_Dzjl2D5DKssvRZYMnyx"/>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold truncate">Mateo Rivas</h3>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">Acceso General</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                Check-in verificado
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">General Partner @ Finloop Ventures • Ciudad de México</p>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hace 4 horas (16:15 hs)</span>
+</div>
+</div>
+<!-- Testimonial Quote -->
+<blockquote class="font-body-lg text-body-lg text-on-surface leading-relaxed pl-3 border-l-2 border-primary/20">
+        “La logística de check-in fue súper rápida y fluida: llegué con el código QR de Backstage y en menos de 10 segundos ya tenía mi credencial y welcome pack. El audio en la sala principal estuvo perfecto y el catering de primer nivel.”
+      </blockquote>
+<!-- Tags & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Check-in</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Catering</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Producción de Audio</span>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="h-9 px-3 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>Destacado en Web</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+<span>Mensaje Directo</span>
+</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Más opciones">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Testimonial Card 3 (4 Estrellas con sugerencia constructiva) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover shrink-0" data-alt="Portrait photo of Lucía Chen, young software engineer and tech lead with glasses, working in an illuminated modern studio environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRrwWAKHvz0SC6jHO3slo776Y40-Xy2uybKxdoJMX67bFJyfp2Egrc2m8xO6W3VBVGJbzuFwlymWR1-TdnwzS5QKJSciB9SmP2fBQxkz4mf2CJ-Wkc8zMf1Ui2iDIy87OE2401wOL8_sp7QT53O_TkIafiXqCjXAtbL8Gc9cqYXCgC7MGZtlJsjW4maP-fZXN7XK9bqeRKFYdp7IFRMpgsaTuSCGa99eokHhmWo3FC"/>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold truncate">Lucía Chen</h3>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">Acceso General</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                Check-in verificado
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lead AI Engineer @ Kinetix Labs • Santiago</p>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px] text-surface-container-highest">star</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hace 6 horas (14:30 hs)</span>
+</div>
+</div>
+<!-- Testimonial Quote -->
+<blockquote class="font-body-lg text-body-lg text-on-surface leading-relaxed pl-3 border-l-2 border-primary/20">
+        “Excelente contenido técnico y los workshops fueron muy prácticos. La única sugerencia es que la Sala B quedó chica para la cantidad de personas interesadas en el taller de Agentes Autónomos; valdría la pena repetir esa sesión en el auditorio principal.”
+      </blockquote>
+<!-- Tags & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Workshops</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Capacidad de Sala</span>
+<span class="px-2.5 py-1 rounded-lg bg-secondary-fixed/50 text-on-secondary-fixed font-label-sm text-label-sm">Sugerencia Operativa</span>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">reply</span>
+<span>Responder por Email</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">visibility_off</span>
+<span>Marcar Privado</span>
+</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Más opciones">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Testimonial Card 4 (Speaker / Ponente) -->
+<div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md font-bold shrink-0">
+            DR
+          </div>
+<div class="min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-on-surface font-semibold truncate">Diego Ramos</h3>
+<span class="px-2.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface font-label-sm text-label-sm font-semibold">Keynote Speaker</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-surface-container text-on-tertiary-container font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+                Check-in verificado
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">VP of Research @ OpenCompute • San Francisco / Remoto</p>
+</div>
+</div>
+<div class="flex items-center gap-3 shrink-0">
+<div class="flex items-center gap-1 text-secondary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ayer (21:10 hs)</span>
+</div>
+</div>
+<!-- Testimonial Quote -->
+<blockquote class="font-body-lg text-body-lg text-on-surface leading-relaxed pl-3 border-l-2 border-primary/20">
+        “Como speaker, la experiencia de backstage y la atención del equipo de producción fue impecable. El setup audiovisual y la conexión con la audiencia durante el Q&amp;A estuvieron al nivel de conferencias globales. Un placer colaborar con la comunidad.”
+      </blockquote>
+<!-- Tags & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Speaker Experience</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Producción Técnica</span>
+<span class="px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface">Q&amp;A en Vivo</span>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px] text-secondary">star_border</span>
+<span>Destacar en Web</span>
+</button>
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+<span>Agradecer vía Correo</span>
+</button>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Más opciones">
+<span class="material-symbols-outlined text-[18px]">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination and Footer Stats -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-6 border-t-0">
+<div class="flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span>Mostrando 4 de 184 valoraciones registradas</span>
+<span class="w-1 h-1 rounded-full bg-on-surface-variant/40"></span>
+<span class="text-on-surface font-semibold">Tasa de satisfacción del 96%</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center gap-1 transition-colors" disabled="">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+<span>Anterior</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-label-md text-label-md">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors">3</button>
+<span class="px-1 text-on-surface-variant font-label-md text-label-md">...</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md transition-colors">19</button>
+</div>
+<button class="h-9 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1 transition-colors">
+<span>Siguiente</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div></main></div>
+<script>
+(function () {
+  var map = {
+    "dashboard-de-eventos": "/stitch/dashboard.html",
+    "gestion-de-asistentes": "/stitch/asistentes.html",
+    "constructor-de-formularios": "/stitch/formularios.html",
+    "analiticas-y-ventas": "/stitch/analitica.html",
+    "pagos": "/stitch/pagos.html",
+    "pagos-y-transacciones": "/stitch/pagos.html",
+    "notificaciones": "/stitch/notificaciones.html",
+    "comunicaciones-y-automatizacion": "/stitch/notificaciones.html",
+    "registro-y-checkout-publico": "/stitch/vista-publica.html",
+    "portal-anfitrion-check-in": "/stitch/checkin.html",
+    "configuracion-del-evento": "/stitch/configuracion.html",
+    "comentarios-feedback": "/stitch/feedback.html"
+  };
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-path]");
+    if (!el) return;
+    var dest = map[el.getAttribute("data-path")];
+    if (!dest) return;
+    e.preventDefault();
+    window.top.location.href = dest;
+  });
+})();
+</script><script src="/stitch/panel.js?v=4"></script><script src="/stitch/js/feedback.js?v=2"></script></body></html>
