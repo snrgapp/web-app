@@ -611,4 +611,63 @@
       P.toast(e.message || 'No se pudo cargar el panel', 'error');
     });
   };
+
+  /* ---------- Menú lateral en iPhone / móvil ---------- */
+
+  P.mobileShell = function () {
+    if (document.getElementById('p-menu-btn')) return;
+    var aside = document.querySelector('aside');
+    var header = document.querySelector('header');
+    if (!aside || !header) return;
+
+    var btn = document.createElement('button');
+    btn.id = 'p-menu-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'Abrir menú');
+    btn.innerHTML = '<span class="material-symbols-outlined text-[22px]">menu</span>';
+    header.insertBefore(btn, header.firstChild);
+
+    var fondo = document.createElement('button');
+    fondo.id = 'p-menu-fondo';
+    fondo.type = 'button';
+    fondo.setAttribute('aria-label', 'Cerrar menú');
+    document.body.appendChild(fondo);
+
+    function cerrar() {
+      document.documentElement.classList.remove('p-menu-abierto');
+      btn.setAttribute('aria-label', 'Abrir menú');
+      var ic = btn.querySelector('span');
+      if (ic) ic.textContent = 'menu';
+      if (window.innerWidth < 1024) aside.setAttribute('aria-hidden', 'true');
+      else aside.removeAttribute('aria-hidden');
+    }
+    function abrir() {
+      document.documentElement.classList.add('p-menu-abierto');
+      btn.setAttribute('aria-label', 'Cerrar menú');
+      var ic = btn.querySelector('span');
+      if (ic) ic.textContent = 'close';
+      aside.removeAttribute('aria-hidden');
+    }
+
+    btn.addEventListener('click', function () {
+      if (document.documentElement.classList.contains('p-menu-abierto')) cerrar();
+      else abrir();
+    });
+    fondo.addEventListener('click', cerrar);
+    aside.querySelectorAll('nav a').forEach(function (a) {
+      a.addEventListener('click', cerrar);
+    });
+    aside.querySelectorAll('button').forEach(function (b) {
+      if (b.textContent.indexOf('Crear Evento') !== -1) b.addEventListener('click', cerrar);
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth >= 1024) cerrar();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') cerrar();
+    });
+    if (window.innerWidth < 1024) aside.setAttribute('aria-hidden', 'true');
+  };
+
+  P.mobileShell();
 })();

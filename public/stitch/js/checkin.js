@@ -146,10 +146,12 @@
       el.textContent = check;
       var den = el.nextElementSibling;
       if (den) den.textContent = '/ ' + ok;
-      var barra = el.parentNode.parentNode.querySelector('.h-1.5.rounded-full, .bg-primary.h-1.5');
-      if (barra) barra.style.width = (ok ? Math.min(100, Math.round((check / ok) * 100)) : 0) + '%';
-      var pct = el.parentNode.parentNode.querySelector('.font-label-sm.text-label-sm.text-on-surface-variant.mt-0.5, span.mt-0\\.5');
-      var spans = el.parentNode.parentNode.querySelectorAll('span');
+      var caja = el.parentNode.parentNode;
+      var barra = caja.querySelector('.bg-primary');
+      if (barra && barra.className.indexOf('h-1') !== -1) {
+        barra.style.width = (ok ? Math.min(100, Math.round((check / ok) * 100)) : 0) + '%';
+      }
+      var spans = caja.querySelectorAll('span');
       spans.forEach(function (s) {
         if (/%/.test(s.textContent) && s !== den) s.textContent = (ok ? P.pct(check, ok) : 0) + '% concurrencia';
       });
@@ -370,10 +372,13 @@
           staff: [],
         };
         st.evento = j.evento.id;
+        document.documentElement.classList.add('p-puerta');
         var aside = document.querySelector('aside');
         if (aside) aside.classList.add('hidden');
         var wrap = document.querySelector('.pl-64');
         if (wrap) wrap.classList.remove('pl-64');
+        var btn = document.getElementById('p-menu-btn');
+        if (btn) btn.style.display = 'none';
         document.documentElement.classList.remove('p-cargando');
         bind();
         pintar();

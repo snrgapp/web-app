@@ -188,8 +188,8 @@ export default async function EventoSlugPage({ params }: PageProps) {
 
   return (
     <div className={`${jakarta.className} bg-[#fbf8ff] text-[#1a1b22] antialiased selection:bg-[#e1e0ff]`}>
-      <header className="fixed top-0 w-full z-50 bg-[#fbf8ff]/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]">
-        <div className="h-16 max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between">
+      <header className="fixed top-0 w-full z-50 bg-[#fbf8ff]/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-[env(safe-area-inset-top)]">
+        <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1">
             <Image src="/logo.png" alt="" width={56} height={56} className="w-14 h-14 -ml-3 mix-blend-multiply" priority />
             <span className={`${T.label} text-[15px]`}>Synergy</span>
@@ -203,7 +203,7 @@ export default async function EventoSlugPage({ params }: PageProps) {
         </div>
       </header>
 
-      <main className="w-full pt-16 min-h-screen">
+      <main className="w-full pt-[calc(4rem+env(safe-area-inset-top))] min-h-screen">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-8 lg:py-12">
           <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 items-start">
             <div className="w-full lg:w-7/12 flex flex-col gap-8">

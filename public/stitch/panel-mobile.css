@@ -1,0 +1,216 @@
+/* Panel Synergy · iPhone 12 Pro / 13 / 15 (390–393px) y el resto de móviles */
+
+#p-menu-btn {
+  display: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #1a1b22;
+  background: transparent;
+  border: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#p-menu-btn:active {
+  background: #eeedf7;
+}
+
+#p-menu-fondo {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 27, 34, 0.45);
+  z-index: 55;
+  border: 0;
+  padding: 0;
+}
+
+html.p-menu-abierto #p-menu-fondo {
+  display: block;
+}
+
+html.p-puerta #p-menu-btn,
+html.p-puerta #p-menu-fondo,
+html.p-puerta aside {
+  display: none !important;
+}
+
+@media (max-width: 1023px) {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  aside.fixed {
+    transform: translateX(-105%);
+    transition: transform 0.22s ease;
+    width: min(18rem, 86vw) !important;
+    padding-top: calc(1.25rem + env(safe-area-inset-top));
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: none !important;
+    z-index: 60 !important;
+  }
+
+  html.p-menu-abierto aside.fixed {
+    transform: translateX(0);
+    box-shadow: 8px 0 32px rgba(0, 0, 0, 0.18) !important;
+  }
+
+  html.p-menu-abierto {
+    overflow: hidden;
+  }
+
+  .pl-64 {
+    padding-left: 0 !important;
+  }
+
+  header.fixed {
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: calc(4rem + env(safe-area-inset-top)) !important;
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(0.75rem, env(safe-area-inset-left)) !important;
+    padding-right: max(0.75rem, env(safe-area-inset-right)) !important;
+    gap: 0.5rem;
+  }
+
+  main.pt-16,
+  main {
+    padding-top: calc(4rem + env(safe-area-inset-top)) !important;
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom)) !important;
+  }
+
+  header .w-80 {
+    width: auto !important;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  header kbd,
+  main kbd,
+  main span.absolute.right-3.font-label-sm {
+    display: none !important;
+  }
+
+  body:has(aside) header .w-8.h-8.rounded-full {
+    display: none !important;
+  }
+
+  header a[data-path="registro-y-checkout-publico"] span:last-child {
+    display: none;
+  }
+
+  header a[data-path="registro-y-checkout-publico"] {
+    width: 2.25rem;
+    padding-left: 0;
+    padding-right: 0;
+    justify-content: center;
+  }
+
+  #p-menu-btn {
+    display: inline-flex !important;
+  }
+
+  .text-headline-xl {
+    font-size: 28px !important;
+    line-height: 34px !important;
+    letter-spacing: -0.02em !important;
+    overflow-wrap: anywhere;
+  }
+
+  .text-headline-lg,
+  .font-display-lg,
+  .text-display-lg {
+    font-size: 22px !important;
+    line-height: 28px !important;
+  }
+
+  .text-\[42px\] {
+    font-size: 32px !important;
+  }
+
+  main table {
+    min-width: 36rem;
+  }
+
+  main :has(> table) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  main .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  .p-menu {
+    max-width: calc(100vw - 1rem) !important;
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+  }
+
+  .sticky.bottom-4 {
+    bottom: calc(0.75rem + env(safe-area-inset-bottom)) !important;
+    left: 0.75rem;
+    right: 0.75rem;
+  }
+
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
+
+  /* Formularios de modal: una columna en el iPhone */
+  .fixed.inset-0 form .grid.grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .fixed.inset-0 form {
+    max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 1.25rem);
+  }
+
+  /* Heatmap 5 columnas → 2 en móvil */
+  main .grid.grid-cols-5 {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  /* Tarjetas de evento y bloques densos */
+  .event-card,
+  article.bg-surface-container-lowest {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  #qr-reader {
+    max-width: 100%;
+  }
+
+  /* Pestañas internas: el swipe ya está; evita que se corten */
+  main a[data-path].whitespace-nowrap,
+  .event-tab {
+    flex-shrink: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  #p-menu-btn,
+  #p-menu-fondo {
+    display: none !important;
+  }
+
+  html.p-menu-abierto aside.fixed {
+    transform: none;
+  }
+}
