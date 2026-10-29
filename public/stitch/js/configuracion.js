@@ -269,14 +269,14 @@
     if (chk24) {
       chk24.checked = ev() ? ev().pase_recordatorio !== false : true;
       chk24.addEventListener('change', function () {
-        guardar({ pase_recordatorio: chk24.checked }, chk24.checked ? 'El QR se enviará el día anterior' : 'Recordatorio de QR desactivado');
+        guardar({ pase_recordatorio: chk24.checked }, chk24.checked ? 'Recuerda enviar los pases el día anterior' : 'Recordatorio de QR desactivado');
       });
     }
     var ntf = document.getElementById('notificaciones');
     if (ntf && !document.getElementById('p-enviar-pases')) {
       var bar = document.createElement('div');
       bar.className = 'flex items-center justify-between gap-3 pt-1';
-      bar.innerHTML = '<p class="font-body-sm text-body-sm text-on-surface-variant">El cron envía el pase QR el día anterior. También puedes dispararlo ahora.</p>' +
+      bar.innerHTML = '<p class="font-body-sm text-body-sm text-on-surface-variant">El día anterior al evento, pulsa aquí para que cada inscrito reciba su QR y los detalles de la reunión.</p>' +
         '<button id="p-enviar-pases" type="button" class="h-9 px-3.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md shrink-0">Enviar pases ahora</button>';
       ntf.appendChild(bar);
       document.getElementById('p-enviar-pases').addEventListener('click', function () {
