@@ -258,7 +258,8 @@
       if (ic && ic.textContent.trim() === 'flip_camera_ios') {
         b.addEventListener('click', function () {
           st.facing = st.facing === 'environment' ? 'user' : 'environment';
-          if (st.cam) activarCamara();
+          if (!st.cam) return;
+          detenerCamara().then(function () { activarCamara(); });
         });
       }
     });
@@ -292,23 +293,47 @@
   }
 
   function etiquetaCamara(on) {
+    document.documentElement.classList.toggle('p-cam-on', !!on);
     var sim = document.getElementById('btn-simulate-scan');
-    if (!sim) return;
-    sim.querySelector('span:last-child').textContent = on ? 'Detener cámara' : 'Activar cámara';
-    var chip = P.porTexto('Lector Óptico Listo');
+    if (sim) {
+      var txt = sim.querySelector('span:last-child');
+      if (txt) txt.textContent = on ? 'Detener cámara' : 'Activar cámara';
+    }
+    var chip = P.porTexto('Lector Óptico Listo') || P.porTexto('Cámara activa') || P.porTexto('Lector óptico listo');
     if (chip) chip.textContent = on ? 'Cámara activa' : 'Lector óptico listo';
+    var ph = document.getElementById('qr-placeholder');
+    var mira = document.getElementById('qr-reticle');
+    if (ph) ph.classList.toggle('hidden', !!on);
+    if (mira) mira.classList.toggle('hidden', !!on);
+  }
+
+  function prepararVideo() {
+    var box = document.getElementById('qr-reader');
+    if (!box) return;
+    var videos = box.querySelectorAll('video');
+    videos.forEach(function (video) {
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('webkit-playsinline', 'true');
+      video.setAttribute('autoplay', 'true');
+      video.muted = true;
+      video.playsInline = true;
+      video.style.width = '100%';
+      video.style.height = '100%';
+      video.style.objectFit = 'cover';
+      var play = video.play();
+      if (play && play.catch) play.catch(function () {});
+    });
   }
 
   function detenerCamara() {
+    var box = document.getElementById('qr-reader');
     var p = Promise.resolve();
     if (st.cam && st.cam.stop) p = st.cam.stop().catch(function () {});
     st.cam = null;
-    var box = document.getElementById('qr-reader');
-    var ph = document.getElementById('qr-placeholder');
-    if (box) box.classList.add('hidden');
-    if (ph) ph.classList.remove('hidden');
     etiquetaCamara(false);
-    return p;
+    return p.then(function () {
+      if (box) box.innerHTML = '';
+    });
   }
 
   function onScan(texto) {
@@ -324,33 +349,39 @@
     marcar(a);
   }
 
+  function arrancarCamara(constraints) {
+    var box = document.getElementById('qr-reader');
+    if (!box || typeof Html5Qrcode === 'undefined') {
+      return Promise.reject(new Error('sin lector'));
+    }
+    var cam = new Html5Qrcode('qr-reader', { verbose: false });
+    st.cam = cam;
+    return cam.start(constraints, { fps: 10 }, onScan).then(function () {
+      prepararVideo();
+      etiquetaCamara(true);
+    });
+  }
+
   function activarCamara() {
     if (typeof Html5Qrcode === 'undefined') {
       P.toast('No se pudo cargar el lector de cámara', 'error');
       return;
     }
-    detenerCamara().then(function () {
-      var box = document.getElementById('qr-reader');
-      var ph = document.getElementById('qr-placeholder');
-      if (!box) return;
-      box.classList.remove('hidden');
-      if (ph) ph.classList.add('hidden');
-      var cam = new Html5Qrcode('qr-reader');
-      st.cam = cam;
-      cam.start(
-        { facingMode: st.facing },
-        { fps: 8, qrbox: { width: 220, height: 220 } },
-        onScan
-      ).then(function () {
-        etiquetaCamara(true);
-      }).catch(function (err) {
-        st.cam = null;
-        box.classList.add('hidden');
-        if (ph) ph.classList.remove('hidden');
-        etiquetaCamara(false);
-        P.toast('No pudimos abrir la cámara. Permite el acceso o usa el ingreso manual.', 'error');
-        console.warn(err);
+    if (st.cam) {
+      detenerCamara();
+      return;
+    }
+    etiquetaCamara(true);
+    var facing = st.facing || 'environment';
+    arrancarCamara({ facingMode: { ideal: facing } }).catch(function () {
+      return detenerCamara().then(function () {
+        return arrancarCamara({ facingMode: { ideal: 'user' } });
       });
+    }).catch(function (err) {
+      st.cam = null;
+      etiquetaCamara(false);
+      console.warn(err);
+      P.toast('Safari no mostró la cámara. En Ajustes → Safari → Cámara permite snrg.lat, o usa el ingreso manual.', 'error');
     });
   }
 
@@ -382,7 +413,6 @@
         document.documentElement.classList.remove('p-cargando');
         bind();
         pintar();
-        activarCamara();
       })
       .catch(function (e) {
         document.documentElement.classList.remove('p-cargando');
