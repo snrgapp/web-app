@@ -578,6 +578,21 @@
     aside.querySelectorAll('p').forEach(function (p) { if (/RSVPs|registros este mes/.test(p.textContent)) rs = p; });
     if (rs) rs.textContent = P.num(nMes) + ' registros este mes';
 
+    var nav = aside.querySelector('nav');
+    if (nav && !nav.querySelector('[data-p-checkin]')) {
+      var link = document.createElement('a');
+      link.href = '/stitch/checkin.html';
+      link.setAttribute('data-p-checkin', '1');
+      link.className = 'flex items-center gap-3 px-3 py-2 rounded-lg font-body-sm text-body-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors';
+      if (window.P_PAGINA === 'checkin') {
+        link.className = 'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors bg-surface-container text-on-surface font-semibold';
+      }
+      link.innerHTML = '<span class="material-symbols-outlined text-[18px]">qr_code_scanner</span><span>Check-in QR</span>';
+      var eventos = nav.querySelector('a');
+      if (eventos && eventos.nextSibling) nav.insertBefore(link, eventos.nextSibling);
+      else nav.appendChild(link);
+    }
+
     var crear = P.boton('Crear Evento', aside);
     if (crear && !crear.dataset.p) {
       crear = P.on(crear, function () {

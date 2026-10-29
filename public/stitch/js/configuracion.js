@@ -269,7 +269,7 @@
     if (chk24) {
       chk24.checked = ev() ? ev().pase_recordatorio !== false : true;
       chk24.addEventListener('change', function () {
-        guardar({ pase_recordatorio: chk24.checked }, chk24.checked ? 'Recuerda enviar los pases el día anterior' : 'Recordatorio de QR desactivado');
+        guardar({ pase_recordatorio: chk24.checked }, chk24.checked ? 'Recuerda enviar los pases a mano el día anterior' : 'Recordatorio de QR desactivado');
       });
     }
     var ntf = document.getElementById('notificaciones');

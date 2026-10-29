@@ -197,6 +197,11 @@ html.p-puerta aside {
     max-width: 100%;
   }
 
+  /* Check-in: el escáner QR va primero en el iPhone */
+  #p-checkin-scanner {
+    order: -1;
+  }
+
   /* Pestañas internas: el swipe ya está; evita que se corten */
   main a[data-path].whitespace-nowrap,
   .event-tab {
