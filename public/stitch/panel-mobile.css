@@ -1,31 +1,12 @@
-/* Cámara QR: Safari iOS necesita el <video> visible, playsinline y a tamaño completo */
-#qr-reader {
+/* Cámara QR nativa: el <video> tiene que verse en cualquier navegador */
+#qr-video {
   background: #000;
-}
-#qr-reader,
-#qr-reader__scan_region,
-#qr-reader__dashboard_section {
-  width: 100% !important;
-  height: 100% !important;
-  min-height: 16rem;
-  border: 0 !important;
-}
-#qr-reader video,
-#qr-reader__scan_region video {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  position: absolute;
-  inset: 0;
-  border: 0 !important;
+  transform: translateZ(0);
 }
-#qr-reader img,
-#qr-reader__dashboard,
-#qr-shaded-region {
-  display: none !important;
-}
-html.p-cam-on #qr-placeholder,
-html.p-cam-on #qr-reticle {
+html.p-cam-on #qr-placeholder {
   display: none !important;
 }
 
@@ -224,7 +205,7 @@ html.p-puerta aside {
     padding-right: 1rem !important;
   }
 
-  #qr-reader {
+  #qr-video {
     max-width: 100%;
   }
 
