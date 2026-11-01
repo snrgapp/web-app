@@ -92,8 +92,13 @@
     setVal('ig-handle-input', d.instagram);
     setVal('problem-textarea', d.problema);
     if (d.tiempo_empresa) {
-      document.querySelectorAll('.stage-card').forEach(function (b) {
+      document.querySelectorAll('.stage-card[data-value]').forEach(function (b) {
         if (b.getAttribute('data-value') === d.tiempo_empresa && typeof selectStage === 'function') selectStage(b);
+      });
+    }
+    if (d.facturacion) {
+      document.querySelectorAll('.stage-card[data-revenue]').forEach(function (b) {
+        if (b.getAttribute('data-revenue') === d.facturacion && typeof selectStage === 'function') selectStage(b);
       });
     }
     if (d.tamano_equipo) {
@@ -104,12 +109,14 @@
     var cont = botonPorTexto('Continuar a Canales');
     if (cont) {
       cont.addEventListener('click', function () {
-        var stage = document.querySelector('.stage-card.selected');
+        var stage = document.querySelector('.stage-card[data-value].selected');
+        var revenue = document.querySelector('.stage-card[data-revenue].selected');
         var team = document.querySelector('.team-card.selected');
         guardar({
           instagram: val('ig-handle-input').replace(/^@+/, ''),
           problema: val('problem-textarea'),
           tiempo_empresa: stage ? stage.getAttribute('data-value') : '6m',
+          facturacion: revenue ? revenue.getAttribute('data-revenue') : '3-10m',
           tamano_equipo: team ? team.getAttribute('data-team') : 'medium',
         });
         location.href = BASE + '/traccion';
@@ -141,7 +148,17 @@
     window.handleSubmit = function (btn) {
       var terms = document.getElementById('terms-toggle');
       if (!terms || !terms.checked) {
+        var card = document.getElementById('terms-card');
         var box = document.getElementById('terms-box');
+        if (card) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.classList.remove('p-tambalea');
+          void card.offsetWidth;
+          card.classList.add('p-tambalea', 'p-terms-alerta');
+          setTimeout(function () {
+            card.classList.remove('p-tambalea', 'p-terms-alerta');
+          }, 900);
+        }
         if (box) {
           box.classList.add('scale-125');
           setTimeout(function () { box.classList.remove('scale-125'); }, 200);

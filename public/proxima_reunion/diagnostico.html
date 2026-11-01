@@ -75,7 +75,6 @@
 <div class="flex flex-col gap-space-sm bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
 <div class="flex items-center justify-between">
 <h3 class="font-headline-md text-headline-md text-on-surface">¿Qué tiempo tiene tu empresa?</h3>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Trayectoria</span>
 </div>
 <p class="font-body-sm text-body-sm text-on-surface-variant">Ayuda a balancear los niveles de experiencia operativa en tu grupo.</p>
 <div aria-label="Antigüedad de la empresa" class="grid grid-cols-1 gap-space-sm mt-space-xs" role="radiogroup">
@@ -87,7 +86,7 @@
 </div>
 <div class="flex flex-col">
 <span class="font-label-md text-label-md font-semibold text-surface">Temprana (+ 6 meses)</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Primeros clientes y validacion.</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Etapa inicial o validación</span>
 </div>
 </div>
 <div class="stage-radio-check w-6 h-6 rounded-full flex items-center justify-center transition-all bg-secondary">
@@ -102,7 +101,7 @@
 </div>
 <div class="flex flex-col">
 <span class="font-label-md text-label-md font-semibold text-on-surface">Crecimiento (+ 1 año)</span>
-<span class="font-body-sm text-body-sm text-on-primary-container">Facturación recurrente y clientes activos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">En consolidación operativa</span>
 </div>
 </div>
 <div class="stage-radio-check w-6 h-6 rounded-full flex items-center justify-center transition-all bg-surface-container">
@@ -117,7 +116,7 @@
 </div>
 <div class="flex flex-col">
 <span class="font-label-md text-label-md font-semibold text-on-surface">Consolidada (+ 3 años)</span>
-<span class="font-body-sm text-body-sm text-on-surface-variant">Escalamiento, procesos o diversificación</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Empresa establecida y con trayectoria</span>
 </div>
 </div>
 <div class="stage-radio-check w-6 h-6 rounded-full bg-surface-container flex items-center justify-center transition-all">
@@ -126,11 +125,60 @@
 </button>
 </div>
 </div>
+<div class="flex flex-col gap-space-sm bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface">¿En qué nivel se encuentra tu facturación mensual?</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Esto nos ayuda a agrupar mesas con retos financieros y comerciales comparables.</p>
+<div aria-label="Facturación mensual" class="grid grid-cols-1 gap-space-sm mt-space-xs" role="radiogroup">
+<button class="stage-card flex items-center justify-between p-space-md rounded-lg transition-all text-left shadow-none active:scale-[0.99] bg-surface-container-low text-on-surface" data-revenue="1-3m" onclick="selectStage(this)" type="button">
+<div class="flex items-center gap-space-md">
+<div class="stage-icon-box w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">payments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Entre 1 y 3 millones</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Validación comercial y flujos recurrentes</span>
+</div>
+</div>
+<div class="stage-radio-check w-6 h-6 rounded-full flex items-center justify-center transition-all bg-surface-container">
+<span class="material-symbols-outlined text-surface text-[15px] checkmark opacity-0">check</span>
+</div>
+</button>
+<button class="stage-card flex items-center justify-between p-space-md rounded-lg transition-all text-left active:scale-[0.99] bg-primary-container text-on-primary-container selected shadow-sm" data-revenue="3-10m" onclick="selectStage(this)" type="button">
+<div class="flex items-center gap-space-md">
+<div class="stage-icon-box w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">trending_up</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-surface">Entre 3 y 10 millones</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Tracción constante y modelo probado</span>
+</div>
+</div>
+<div class="stage-radio-check w-6 h-6 rounded-full flex items-center justify-center transition-all bg-secondary">
+<span class="material-symbols-outlined text-surface text-[15px] checkmark opacity-100">check</span>
+</div>
+</button>
+<button class="stage-card flex items-center justify-between p-space-md rounded-lg transition-all text-left shadow-none active:scale-[0.99] bg-surface-container-low text-on-surface" data-revenue="10m+" onclick="selectStage(this)" type="button">
+<div class="flex items-center gap-space-md">
+<div class="stage-icon-box w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 transition-colors">
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant">account_balance</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold text-on-surface">+ 10 millones</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Escalamiento comercial y flujo sostenido</span>
+</div>
+</div>
+<div class="stage-radio-check w-6 h-6 rounded-full flex items-center justify-center transition-all bg-surface-container">
+<span class="material-symbols-outlined text-surface text-[15px] checkmark opacity-0">check</span>
+</div>
+</button>
+</div>
+</div>
 <!-- Pregunta 6: Tamaño del equipo (Chips Táctiles Visuales) -->
 <div class="flex flex-col gap-space-sm bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
 <div class="flex items-center justify-between">
 <h3 class="font-headline-md text-headline-md text-on-surface">¿Cuál es el tamaño de tu equipo?</h3>
-<span class="font-label-sm text-label-sm text-on-surface-variant">Estructura</span>
 </div>
 <p class="font-body-sm text-body-sm text-on-surface-variant">Para unir retos de equipo, cultura y liderazgo interno.</p>
 <div aria-label="Tamaño del equipo" class="grid grid-cols-3 gap-space-sm mt-space-xs" role="radiogroup">
@@ -160,41 +208,6 @@
 <span class="font-label-md text-label-md font-semibold text-secondary">6 a 15</span>
 <span class="font-label-sm text-label-sm text-on-surface-variant mt-0.5">Equipo en escala</span>
 </button>
-</div>
-</div>
-<!-- 4. Tarjeta de Interludio / Dato de Conexión SNRG -->
-<div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-secondary-fixed/50 via-surface-container-low to-surface-container-high p-space-lg shadow-sm">
-<div class="flex flex-col gap-space-sm relative z-10">
-<div class="flex items-center justify-between">
-<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary text-on-secondary shadow-sm">
-<span class="material-symbols-outlined text-[14px]">psychology</span>
-<span class="font-label-sm text-label-sm font-semibold tracking-wide">Dato de Conexión Synergy</span>
-</div>
-<span class="material-symbols-outlined text-secondary/40 text-[26px]">handshake</span>
-</div>
-<div class="flex flex-col gap-1.5 mt-1">
-<h4 class="font-headline-md text-headline-md text-on-surface flex items-center gap-1.5">
-<span class="">🤝 El poder de colaborar</span>
-</h4>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-            Los emprendedores que comparten sus problemas abiertamente con pares en etapas similares resuelven desafíos de crecimiento un <span class="font-semibold text-secondary">40% más rápido</span> que quienes lo hacen en aislamiento.
-          </p>
-</div>
-<!-- Micro avatars social proof -->
-<div class="flex items-center gap-space-sm pt-space-xs border-t-0">
-<div class="flex -space-x-2 overflow-hidden">
-<div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center shadow-sm">
-<span class="font-label-sm text-label-sm text-on-primary font-bold">AL</span>
-</div>
-<div class="w-7 h-7 rounded-full bg-secondary flex items-center justify-center shadow-sm">
-<span class="font-label-sm text-label-sm text-on-secondary font-bold">MR</span>
-</div>
-<div class="w-7 h-7 rounded-full bg-surface-tint flex items-center justify-center shadow-sm">
-<span class="font-label-sm text-label-sm text-surface font-bold">JG</span>
-</div>
-</div>
-<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">94% de emprendedores confirmados.</span>
-</div>
 </div>
 </div>
 </div>

@@ -5,6 +5,7 @@ export const dynamic = 'force-dynamic'
 
 const CIUDADES = ['Barranquilla', 'Cartagena', 'Pereira', 'Medellín', 'Bogotá', 'Cali']
 const TIEMPOS = ['6m', '1y', '3y']
+const FACTURACIONES = ['1-3m', '3-10m', '10m+']
 const EQUIPOS = ['solo', 'small', 'medium']
 const CAMARAS = ['natural', 'juridica', 'no']
 
@@ -42,6 +43,7 @@ export async function POST(req: NextRequest) {
   const instagram = limpio(body.instagram).replace(/^@+/, '')
   const problema = limpio(body.problema).slice(0, 160)
   const tiempo = limpio(body.tiempo_empresa)
+  const facturacion = limpio(body.facturacion)
   const equipo = limpio(body.tamano_equipo)
   const canales = Array.isArray(body.canales)
     ? body.canales.map((c) => limpio(c)).filter(Boolean)
@@ -91,6 +93,7 @@ export async function POST(req: NextRequest) {
       instagram: instagram || null,
       problema: problema || null,
       tiempo_empresa: TIEMPOS.includes(tiempo) ? tiempo : null,
+      facturacion: FACTURACIONES.includes(facturacion) ? facturacion : null,
       tamano_equipo: EQUIPOS.includes(equipo) ? equipo : null,
       canales,
       camara_comercio: CAMARAS.includes(camara) ? camara : null,

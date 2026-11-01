@@ -3,6 +3,23 @@
     body {
       min-height: max(884px, 100dvh);
     }
+    @keyframes p-tambaleo {
+      0%, 100% { transform: translateX(0) rotate(0); }
+      12% { transform: translateX(-10px) rotate(-2deg); }
+      24% { transform: translateX(10px) rotate(2deg); }
+      36% { transform: translateX(-8px) rotate(-1.5deg); }
+      48% { transform: translateX(8px) rotate(1.5deg); }
+      60% { transform: translateX(-5px) rotate(-1deg); }
+      72% { transform: translateX(5px) rotate(1deg); }
+      84% { transform: translateX(-2px); }
+    }
+    .p-tambalea {
+      animation: p-tambaleo 0.65s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    }
+    .p-terms-alerta {
+      background-color: #ffdad6 !important;
+      box-shadow: 0 0 0 2px #ba1a1a;
+    }
   </style>
   </head><body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col antialiased selection:bg-secondary-fixed"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-28 bg-surface px-margin"><div class="w-full max-w-[720px] mx-auto flex-1 flex flex-col pt-space-lg"><div class="flex flex-col w-full gap-space-lg pb-10">
 <!-- Progress Bar (Internal Tracker) -->
@@ -209,7 +226,7 @@
 </div>
 <!-- Legal & Terms Acceptance -->
 <section class="flex flex-col gap-2">
-<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low text-on-surface cursor-pointer select-none transition-colors active:scale-[0.99] shadow-sm">
+<label class="flex items-start gap-3 p-3.5 rounded-xl bg-surface-container-low text-on-surface cursor-pointer select-none transition-colors active:scale-[0.99] shadow-sm" id="terms-card">
 <input class="hidden" id="terms-toggle" onchange="toggleTerms(this)" type="checkbox">
 <div class="w-5 h-5 mt-0.5 rounded bg-surface-container-highest flex items-center justify-center transition-all shrink-0" id="terms-box">
 <span class="material-symbols-outlined text-[14px] text-on-secondary opacity-0 transition-opacity">check</span>
@@ -290,11 +307,13 @@
 
   function toggleTerms(checkbox) {
     const box = document.getElementById('terms-box');
+    const card = document.getElementById('terms-card');
     const checkIcon = box.querySelector('span');
     if (checkbox.checked) {
       box.classList.remove('bg-surface-container-highest');
       box.classList.add('bg-secondary');
       checkIcon.classList.remove('opacity-0');
+      if (card) card.classList.remove('p-tambalea', 'p-terms-alerta');
     } else {
       box.classList.remove('bg-secondary');
       box.classList.add('bg-surface-container-highest');
@@ -305,7 +324,15 @@
   function handleSubmit(btn) {
     const terms = document.getElementById('terms-toggle');
     if (!terms.checked) {
+      const card = document.getElementById('terms-card');
       const box = document.getElementById('terms-box');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.classList.remove('p-tambalea');
+        void card.offsetWidth;
+        card.classList.add('p-tambalea', 'p-terms-alerta');
+        setTimeout(() => card.classList.remove('p-tambalea'), 900);
+      }
       box.classList.add('scale-125');
       setTimeout(() => box.classList.remove('scale-125'), 200);
       return;
