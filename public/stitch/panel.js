@@ -524,8 +524,7 @@
   P.pestaniasEvento = function (eventoId) {
     if (P.d && P.d.vista === 'cohost') {
       document.querySelectorAll('main a[data-path]').forEach(function (a) {
-        var path = a.getAttribute('data-path');
-        if (path !== 'portal-anfitrion-check-in') a.classList.add('hidden');
+        a.classList.add('hidden');
       });
     }
     var volver = P.boton('Volver a Eventos');
@@ -599,7 +598,7 @@
     if (rs) rs.textContent = P.num(nMes) + ' registros este mes';
 
     var nav = aside.querySelector('nav');
-    if (nav && !nav.querySelector('[data-p-checkin]')) {
+    if (nav && !nav.querySelector('[data-p-checkin]') && P.d.vista !== 'cohost') {
       var link = document.createElement('a');
       link.href = '/stitch/checkin.html';
       link.setAttribute('data-p-checkin', '1');

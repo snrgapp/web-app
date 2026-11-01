@@ -253,14 +253,23 @@
   }
 
   function limpiarRuido() {
-    ['p-aforo', 'p-butacas', 'p-sync', 'p-mostrando', 'filter-container'].forEach(function (id) {
+    ['p-aforo', 'p-butacas', 'p-sync', 'p-mostrando', 'filter-container', 'countdown-wrapper', 'metric-checkins'].forEach(function (id) {
       var n = document.getElementById(id);
-      if (n) n.remove();
+      if (!n) return;
+      var box = n.closest('.p-5, .p-4') || n;
+      box.remove();
     });
     document.querySelectorAll('main span, main p, main div').forEach(function (n) {
-      if (n.querySelector('input, button, table, video')) return;
+      if (n.querySelector('input, button, table, video, canvas')) return;
       var t = (n.textContent || '').replace(/\s+/g, ' ').trim();
-      if (/^Aforo máximo|^[0-9]+ butacas|Sincronización en segundo plano|^Mostrando \d+ de/i.test(t)) n.remove();
+      if (/ingreso aforo/i.test(t)) {
+        n.remove();
+        return;
+      }
+      if (/^Aforo máximo|^[0-9]+ butacas|Sincronización en segundo plano|^Mostrando \d+ de|Apertura de Puertas|Terminal Autorizada|^Check-in Puerta/i.test(t)) {
+        var box = n.closest('.p-5, .p-4') || n;
+        box.remove();
+      }
     });
     document.querySelectorAll('#attendees-table button, [onclick*="handleQuickCheckIn"]').forEach(function (b) { b.remove(); });
   }

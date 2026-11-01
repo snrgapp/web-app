@@ -19,7 +19,14 @@ html.p-cam-on #qr-placeholder {
 #p-sync,
 #p-mostrando,
 #filter-container,
+#countdown-wrapper,
+#metric-checkins,
 #attendees-table button {
+  display: none !important;
+}
+
+html.p-cohost aside nav a[data-p-checkin],
+html.p-cohost main a[data-path] {
   display: none !important;
 }
 
