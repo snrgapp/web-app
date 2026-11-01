@@ -197,7 +197,7 @@
     } else if (p === 'pending-payment') {
       puertaHtml = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-low text-outline font-label-sm text-label-sm cursor-not-allowed"><span class="material-symbols-outlined text-[14px]">block</span>No Autorizado</span>';
     } else {
-      puertaHtml = '<button data-ci="' + a.id + '" class="h-8 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95"><span class="material-symbols-outlined text-[15px]">how_to_reg</span><span class="p-ci-full">Marcar Check-in</span></button>';
+      puertaHtml = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-outline"></span>Por ingresar</span>';
     }
     var avCls = p === 'checked' ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface';
     return (
@@ -221,12 +221,6 @@
     tbody.innerHTML = page.length
       ? page.map(fila).join('')
       : '<tr><td colspan="5">' + P.vacio('qr_code_scanner', 'Nadie en esta vista', 'Cambia el filtro o espera a que lleguen asistentes.') + '</td></tr>';
-    tbody.querySelectorAll('[data-ci]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        var a = lista().find(function (x) { return x.id === b.getAttribute('data-ci'); });
-        if (a) marcar(a);
-      });
-    });
     var l = lista();
     var c = { all: l.length, checked: 0, 'pending-gate': 0, 'pending-payment': 0 };
     l.forEach(function (a) { c[puerta(a)]++; });

@@ -163,6 +163,14 @@ html.p-puerta aside {
     max-width: 100%;
   }
 
+  #filter-container,
+  #p-aforo,
+  #p-butacas,
+  #p-sync,
+  #p-mostrando {
+    display: none !important;
+  }
+
   /* Check-in / co-host: en el iPhone solo nombre y estado en puerta */
   #attendees-table {
     min-width: 0 !important;
@@ -188,17 +196,6 @@ html.p-puerta aside {
     text-align: right;
     white-space: nowrap;
     width: 1%;
-  }
-
-  #attendees-table .p-ci-full {
-    font-size: 0 !important;
-  }
-
-  #attendees-table .p-ci-full::after {
-    content: 'Check-in';
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
   }
 
   .overflow-x-auto:has(#attendees-table) {
