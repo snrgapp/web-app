@@ -1,6 +1,6 @@
 (function () {
   window.P_PAGINA = 'checkin';
-  var POR_PAGINA = 5;
+  var POR_PAGINA = 500;
   var st = { evento: null, filtro: 'all', q: '', pagina: 1, detectado: null, puerta: null, cam: null, facing: 'environment', raf: 0, tick: 0, ultimoQr: '', ultimoQrAt: 0 };
 
   function lista() {
@@ -176,13 +176,6 @@
   function fila(a) {
     var p = puerta(a);
     var ini = P.iniciales(a.nombre, a.apellido);
-    var vip = /vip/i.test(a.tipo_ticket || '');
-    var ticketCls = vip
-      ? 'bg-secondary-fixed text-on-secondary-fixed'
-      : 'bg-surface-container text-on-surface';
-    var pago = pagados(a)
-      ? '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-on-tertiary-container/10 text-on-tertiary-container font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">check</span>Pago Verificado</span>'
-      : '<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span>Comprobante Pendiente</span>';
     var puertaHtml;
     if (p === 'checked') {
       var h = new Date(a.checked_in_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'America/Bogota' });
@@ -196,12 +189,8 @@
     return (
       '<tr class="hover:bg-surface-container-low/60 transition-colors' + (p === 'pending-payment' ? ' opacity-80' : '') + '" data-status="' + p + '">' +
       '<td class="py-3.5 px-4"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full ' + avCls + ' flex items-center justify-center font-label-md text-label-md">' + P.esc(ini) + '</div>' +
-      '<div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface font-semibold truncate">' + P.esc(P.nombre(a)) + '</span>' +
-      '<span class="font-body-sm text-body-sm text-on-surface-variant truncate">' + P.esc(a.correo || 'Sin correo') + '</span></div></div></td>' +
-      '<td class="py-3.5 px-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full ' + ticketCls + ' font-label-sm text-label-sm font-medium">' + P.esc(a.tipo_ticket || 'General') + '</span></td>' +
-      '<td class="py-3.5 px-4">' + pago + '</td>' +
-      '<td class="py-3.5 px-4">' + puertaHtml + '</td>' +
-      '<td class="py-3.5 px-4"><code class="font-label-sm text-label-sm font-mono text-on-surface bg-surface-container px-2 py-0.5 rounded">' + P.esc(P.ticketId(a)) + '</code></td></tr>'
+      '<div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface font-semibold truncate">' + P.esc(P.nombre(a)) + '</span></div></div></td>' +
+      '<td class="py-3.5 px-4">' + puertaHtml + '</td></tr>'
     );
   }
 
@@ -213,25 +202,7 @@
     var page = rows.slice(ini, ini + POR_PAGINA);
     tbody.innerHTML = page.length
       ? page.map(fila).join('')
-      : '<tr><td colspan="5">' + P.vacio('qr_code_scanner', 'Nadie en esta vista', 'Cambia el filtro o espera a que lleguen asistentes.') + '</td></tr>';
-    var l = lista();
-    var c = { all: l.length, checked: 0, 'pending-gate': 0, 'pending-payment': 0 };
-    l.forEach(function (a) { c[puerta(a)]++; });
-    document.querySelectorAll('#filter-container .filter-btn').forEach(function (b) {
-      var f = b.getAttribute('data-filter');
-      var labels = { all: 'Todos', checked: 'Ingresados', 'pending-gate': 'Por Ingresar', 'pending-payment': 'Pago Pendiente' };
-      b.textContent = (labels[f] || f) + ' (' + (c[f] || 0) + ')';
-      var on = st.filtro === f;
-      b.className = 'filter-btn h-9 px-3.5 rounded-lg font-label-md text-label-md transition-all ' +
-        (on ? 'bg-primary text-on-primary' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container');
-    });
-    document.querySelectorAll('main span, main p').forEach(function (n) {
-      if (n.children.length === 0 && n.textContent.indexOf('Mostrando') === 0) {
-        n.textContent = rows.length
-          ? 'Mostrando ' + page.length + ' de ' + rows.length + ' registros'
-          : 'Sin registros en esta vista';
-      }
-    });
+      : '<tr><td colspan="2">' + P.vacio('qr_code_scanner', 'Nadie en esta vista', 'Cambia la búsqueda o espera a que lleguen asistentes.') + '</td></tr>';
   }
 
   function bind() {
@@ -281,7 +252,21 @@
     });
   }
 
+  function limpiarRuido() {
+    ['p-aforo', 'p-butacas', 'p-sync', 'p-mostrando', 'filter-container'].forEach(function (id) {
+      var n = document.getElementById(id);
+      if (n) n.remove();
+    });
+    document.querySelectorAll('main span, main p, main div').forEach(function (n) {
+      if (n.querySelector('input, button, table, video')) return;
+      var t = (n.textContent || '').replace(/\s+/g, ' ').trim();
+      if (/^Aforo máximo|^[0-9]+ butacas|Sincronización en segundo plano|^Mostrando \d+ de/i.test(t)) n.remove();
+    });
+    document.querySelectorAll('#attendees-table button, [onclick*="handleQuickCheckIn"]').forEach(function (b) { b.remove(); });
+  }
+
   function pintar() {
+    limpiarRuido();
     encabezado();
     countdown();
     metricas();

@@ -18,8 +18,14 @@ html.p-cam-on #qr-placeholder {
 #p-butacas,
 #p-sync,
 #p-mostrando,
+#filter-container,
 #attendees-table button {
   display: none !important;
+}
+
+#attendees-table {
+  min-width: 0 !important;
+  width: 100%;
 }
 
 /* Panel Synergy · iPhone 12 Pro / 13 / 15 (390–393px) y el resto de móviles */
@@ -169,45 +175,6 @@ html.p-puerta aside {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     max-width: 100%;
-  }
-
-  #filter-container,
-  #p-aforo,
-  #p-butacas,
-  #p-sync,
-  #p-mostrando {
-    display: none !important;
-  }
-
-  /* Check-in / co-host: en el iPhone solo nombre y estado en puerta */
-  #attendees-table {
-    min-width: 0 !important;
-    width: 100%;
-  }
-
-  #attendees-table th:nth-child(2),
-  #attendees-table th:nth-child(3),
-  #attendees-table th:nth-child(5),
-  #attendees-table td:nth-child(2),
-  #attendees-table td:nth-child(3),
-  #attendees-table td:nth-child(5) {
-    display: none !important;
-  }
-
-  #attendees-table td:first-child .w-9,
-  #attendees-table td:first-child .text-on-surface-variant {
-    display: none !important;
-  }
-
-  #attendees-table th:nth-child(4),
-  #attendees-table td:nth-child(4) {
-    text-align: right;
-    white-space: nowrap;
-    width: 1%;
-  }
-
-  .overflow-x-auto:has(#attendees-table) {
-    overflow-x: hidden;
   }
 
   main .overflow-x-auto {
