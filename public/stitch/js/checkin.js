@@ -197,7 +197,7 @@
     } else if (p === 'pending-payment') {
       puertaHtml = '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-low text-outline font-label-sm text-label-sm cursor-not-allowed"><span class="material-symbols-outlined text-[14px]">block</span>No Autorizado</span>';
     } else {
-      puertaHtml = '<button data-ci="' + a.id + '" class="h-8 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95"><span class="material-symbols-outlined text-[15px]">how_to_reg</span><span>Marcar Check-in</span></button>';
+      puertaHtml = '<button data-ci="' + a.id + '" class="h-8 px-3 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-sm text-label-sm flex items-center gap-1.5 transition-all shadow-sm active:scale-95"><span class="material-symbols-outlined text-[15px]">how_to_reg</span><span class="p-ci-full">Marcar Check-in</span></button>';
     }
     var avCls = p === 'checked' ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface';
     return (
