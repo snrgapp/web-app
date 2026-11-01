@@ -10,34 +10,12 @@
     return n;
   }
 
-  function barra() {
-    var b = document.getElementById('p-preview');
-    if (b) return b;
-    b = document.createElement('div');
-    b.id = 'p-preview';
-    b.className = 'sticky top-16 z-30 -mx-8 px-8 py-2.5 mb-4 bg-secondary-fixed/60 backdrop-blur-md flex flex-wrap items-center justify-between gap-3';
-    b.innerHTML =
-      '<div class="flex items-center gap-2 font-label-md text-label-md text-on-secondary-fixed"><span class="material-symbols-outlined text-[18px]">preview</span>Vista previa de <button id="p-preview-ev" class="underline font-bold"></button></div>' +
-      '<div class="flex items-center gap-2"><button id="p-preview-editar" class="h-8 px-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">edit</span>Editar evento</button>' +
-      '<a id="p-preview-real" target="_blank" class="h-8 px-3 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">open_in_new</span>Abrir página real</a></div>';
-    var main = document.querySelector('main');
-    main.insertBefore(b, main.firstChild);
-    b.querySelector('#p-preview-ev').addEventListener('click', function (e) {
-      P.elegirEvento(e.currentTarget, function (id) { st.evento = id; pintar(); }, { actual: st.evento });
-    });
-    b.querySelector('#p-preview-editar').addEventListener('click', function () {
-      P.formEvento(P.evento(st.evento), function () { P.cargar().then(pintar); });
-    });
-    return b;
-  }
-
   function pintar() {
+    var vieja = document.getElementById('p-preview');
+    if (vieja) vieja.remove();
     var e = P.evento(st.evento);
-    var b = barra();
-    if (!e) { b.querySelector('#p-preview-ev').textContent = 'ningún evento'; return; }
-    b.querySelector('#p-preview-ev').textContent = e.titulo;
+    if (!e) return;
     st.url = '/evento/' + encodeURIComponent(e.checkin_slug || '');
-    b.querySelector('#p-preview-real').href = st.url;
 
     var asis = P.asistentesDe(e.id);
     var cap = Number(e.capacidad) || 0;

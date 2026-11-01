@@ -550,8 +550,8 @@
             }, { actual: ev.id });
           };
         } else {
-          crumb.style.cursor = 'default';
-          crumb.removeAttribute('title');
+          crumb.classList.add('hidden');
+          if (crumb.previousElementSibling) crumb.previousElementSibling.classList.add('hidden');
         }
       }
     }
@@ -619,7 +619,12 @@
       var crearBtn = P.boton('Crear Evento', aside);
       if (crearBtn) crearBtn.classList.add('hidden');
       document.querySelectorAll('a').forEach(function (a) {
-        if (a.textContent.indexOf('Volver a Eventos') !== -1) a.classList.add('hidden');
+        if (a.textContent.indexOf('Volver a Eventos') === -1) return;
+        a.classList.add('hidden');
+        if (!a.parentNode) return;
+        a.parentNode.querySelectorAll('span').forEach(function (s) {
+          s.classList.add('hidden');
+        });
       });
       var vista = document.querySelector('main select');
       if (vista) {
@@ -642,14 +647,23 @@
     aside.querySelectorAll('button').forEach(function (b) { if (b.textContent.trim() === 'more_vert') mas = b; });
     if (mas && mas.tagName === 'BUTTON' && !mas.dataset.p) {
       mas = P.on(mas, function (e, el) {
-        P.menu(el, [
-          { texto: 'Ajustes de pagos', icono: 'settings', accion: function () { location.href = '/panel/ajustes'; } },
-          { texto: 'Ir al sitio', icono: 'open_in_new', accion: function () { location.href = '/'; } },
-          { sep: true },
-          { texto: 'Cerrar sesión', icono: 'logout', peligro: true, accion: function () {
+        var items = [];
+        if (P.d.vista !== 'cohost') {
+          items.push(
+            { texto: 'Ajustes de pagos', icono: 'settings', accion: function () { location.href = '/panel/ajustes'; } },
+            { texto: 'Ir al sitio', icono: 'open_in_new', accion: function () { location.href = '/'; } },
+            { sep: true }
+          );
+        }
+        items.push({
+          texto: 'Cerrar sesión',
+          icono: 'logout',
+          peligro: true,
+          accion: function () {
             fetch('/api/panel/salir', { method: 'POST' }).then(function () { location.href = '/login'; });
-          } },
-        ]);
+          },
+        });
+        P.menu(el, items);
       });
       mas.dataset.p = '1';
     }

@@ -262,8 +262,13 @@
     document.querySelectorAll('main span, main p, main div').forEach(function (n) {
       if (n.querySelector('input, button, table, video, canvas')) return;
       var t = (n.textContent || '').replace(/\s+/g, ' ').trim();
-      if (/ingreso aforo/i.test(t)) {
+      if (/ingreso aforo|Terminal Puerta Norte/i.test(t)) {
         n.remove();
+        return;
+      }
+      if (/Validación de Ingreso|Auditoría: Registro vs Acreditación/i.test(t)) {
+        var card = n.closest('.rounded-2xl') || n.closest('[class*="lg:col-span"]') || n;
+        card.remove();
         return;
       }
       if (/^Aforo máximo|^[0-9]+ butacas|Sincronización en segundo plano|^Mostrando \d+ de|Apertura de Puertas|Terminal Autorizada|^Check-in Puerta/i.test(t)) {

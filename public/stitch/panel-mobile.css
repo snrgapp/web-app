@@ -30,6 +30,10 @@ html.p-cohost main a[data-path] {
   display: none !important;
 }
 
+#p-preview {
+  display: none !important;
+}
+
 #attendees-table {
   min-width: 0 !important;
   width: 100%;
