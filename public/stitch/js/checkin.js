@@ -149,7 +149,6 @@
     var check = l.filter(function (a) { return a.checked_in_at; }).length;
     var ok = l.filter(pagados).length;
     var pend = l.length - ok;
-    var cap = Number((P.evento(st.evento) || {}).capacidad) || 0;
     var el = document.getElementById('metric-checkins');
     if (el) {
       el.textContent = check;
@@ -168,15 +167,9 @@
     document.querySelectorAll('main span, main p, main div').forEach(function (n) {
       if (n.children.length > 2) return;
       var t = n.textContent.trim();
-      if (t.indexOf('78 butacas') !== -1 || t === '64.5%') {
-        var libres = cap ? Math.max(0, cap - check) : Math.max(0, ok - check);
-        if (t.indexOf('butacas') !== -1) n.textContent = libres + ' butacas libres';
-        else n.textContent = (cap ? P.pct(check, cap) : (ok ? P.pct(check, ok) : 0)) + '%';
-      }
       if (t === '200 Inscritos') n.textContent = l.length + ' Inscritos';
       if (t === '184 (92%)') n.textContent = ok + ' (' + P.pct(ok, l.length || 1) + '%)';
       if (t === '16 (8%)') n.textContent = pend + ' (' + P.pct(pend, l.length || 1) + '%)';
-      if (t.indexOf('Aforo máximo') !== -1) n.textContent = 'Aforo máximo recinto: ' + (cap || 'sin límite') + (cap ? ' plazas' : '');
     });
   }
 
