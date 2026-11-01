@@ -435,7 +435,6 @@
     var main = document.querySelector('main');
     P.on(P.boton('Filtros avanzados', main), avanzados);
     P.on(P.boton('Exportar CSV', main), function () { exportar(filtrados()); });
-    P.on(P.boton('Escanear QR en Puerta', main), abrirCheckin);
     P.on(P.boton('+ Invitar Asistente', main), function () {
       if (!P.d.eventos.length) return P.toast('Primero crea un evento', 'error');
       P.formAsistente(null, st.evento || P.eventoActualId(), recargar);

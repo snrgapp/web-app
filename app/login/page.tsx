@@ -25,7 +25,7 @@ function SubmitButton() {
 function LoginForm() {
   const [state, formAction] = useFormState<LoginState, FormData>(login, null)
   const searchParams = useSearchParams()
-  const from = searchParams.get('from') || '/panel'
+  const from = searchParams.get('from') || searchParams.get('next') || '/panel'
 
   return (
     <div className="min-h-screen bg-zinc-100 flex items-center justify-center p-4 sm:p-6">

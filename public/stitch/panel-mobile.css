@@ -1,3 +1,7 @@
+html.p-cohost aside nav a:not([data-p-checkin]) {
+  display: none !important;
+}
+
 /* Cámara QR nativa: el <video> tiene que verse en cualquier navegador */
 #qr-video {
   background: #000;

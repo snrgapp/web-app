@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { createServerClient } from '@/utils/supabase/server'
-import { getDefaultOrgId } from '@/lib/org-resolver'
 import { phoneDigitsCo, sendInalambriaSmsBroadcast } from '@/lib/inalambria'
 import { sendBirdEmail } from '@/lib/bird-email'
 import { debeConfirmarPago, enviarConfirmacionPago } from '@/lib/pago-confirmacion'
 import { enviarPasesEvento, htmlStaffEmail, puertaUrl } from '@/lib/pase'
+import { contextoPanel, eventoPermitido, type ContextoPanel } from '@/lib/panel-acceso'
 
 export const dynamic = 'force-dynamic'
 
@@ -56,16 +55,15 @@ function slugify(s: string) {
 }
 
 async function contexto() {
-  const supabase = await createServerClient()
-  if (!supabase) return null
-  const { data } = await supabase.auth.getUser()
-  if (!data.user) return null
-  const orgId = await getDefaultOrgId()
-  if (!orgId) return null
-  return { db: supabase as unknown as SupabaseClient, orgId, user: data.user }
+  return contextoPanel()
 }
 
-async function idsEventos(db: SupabaseClient, orgId: string) {
+function soloSuEvento(ctx: ContextoPanel) {
+  return ctx.vista === 'cohost'
+}
+
+async function idsEventos(db: SupabaseClient, orgId: string, permitidos?: string[] | null) {
+  if (permitidos) return permitidos
   const { data } = await db.from('eventos').select('id').eq('organizacion_id', orgId)
   return (data ?? []).map((e: { id: string }) => e.id)
 }
@@ -105,15 +103,45 @@ export async function GET() {
   const ctx = await contexto()
   if (!ctx) return NextResponse.json({ ok: false, error: 'Inicia sesión en el panel' }, { status: 401 })
   const { db, orgId, user } = ctx
+  const idsOk = ctx.eventosPermitidos
+  if (idsOk && !idsOk.length) {
+    return NextResponse.json({
+      ok: true,
+      vista: ctx.vista,
+      usuario: { id: user.id, email: user.email, nombre: ctx.staff[0]?.nombre || '' },
+      eventos: [],
+      asistentes: [],
+      campos: [],
+      mensajes: [],
+      pagos: [],
+      ajustes: null,
+      miembros: [],
+      staff: ctx.staff,
+    })
+  }
 
+  let evQ = db.from('eventos').select('*').eq('organizacion_id', orgId).order('fecha', { ascending: false })
+  if (idsOk) evQ = evQ.in('id', idsOk)
   const [eventos, campos, mensajes, pagos, ajustes, miembros, staff] = await Promise.all([
-    db.from('eventos').select('*').eq('organizacion_id', orgId).order('fecha', { ascending: false }),
-    db.from('evento_form_campos').select('*').eq('organizacion_id', orgId).order('orden'),
-    db.from('evento_mensajes').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
-    db.from('evento_pagos').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
-    db.from('evento_ajustes').select('*').eq('organizacion_id', orgId).maybeSingle(),
-    db.from('organizacion_miembros').select('user_id, rol').eq('organizacion_id', orgId),
-    db.from('evento_staff').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
+    evQ,
+    idsOk
+      ? db.from('evento_form_campos').select('*').in('evento_id', idsOk).order('orden')
+      : db.from('evento_form_campos').select('*').eq('organizacion_id', orgId).order('orden'),
+    idsOk
+      ? db.from('evento_mensajes').select('*').in('evento_id', idsOk).order('created_at', { ascending: false })
+      : db.from('evento_mensajes').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
+    idsOk
+      ? db.from('evento_pagos').select('*').in('evento_id', idsOk).order('created_at', { ascending: false })
+      : db.from('evento_pagos').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
+    soloSuEvento(ctx)
+      ? Promise.resolve({ data: null })
+      : db.from('evento_ajustes').select('*').eq('organizacion_id', orgId).maybeSingle(),
+    soloSuEvento(ctx)
+      ? Promise.resolve({ data: [] })
+      : db.from('organizacion_miembros').select('user_id, rol').eq('organizacion_id', orgId),
+    soloSuEvento(ctx)
+      ? Promise.resolve({ data: ctx.staff })
+      : db.from('evento_staff').select('*').eq('organizacion_id', orgId).order('created_at', { ascending: false }),
   ])
 
   const ids = (eventos.data ?? []).map((e: { id: string }) => e.id)
@@ -123,7 +151,8 @@ export async function GET() {
 
   return NextResponse.json({
     ok: true,
-    usuario: { id: user.id, email: user.email },
+    vista: ctx.vista,
+    usuario: { id: user.id, email: user.email, nombre: ctx.staff[0]?.nombre || '' },
     eventos: eventos.data ?? [],
     asistentes: asistentes.data ?? [],
     campos: campos.data ?? [],
@@ -150,6 +179,15 @@ export async function POST(req: NextRequest) {
   }
   const op = body.op
 
+  if (soloSuEvento(ctx)) {
+    const permitidas = op === 'crear' || op === 'editar' || op === 'eliminar'
+      ? body.tabla === 'asistentes'
+      : false
+    if (!permitidas) {
+      return NextResponse.json({ ok: false, error: 'Este usuario solo administra su evento' }, { status: 403 })
+    }
+  }
+
   if (op === 'crear' || op === 'editar' || op === 'eliminar') {
     const tabla = body.tabla
     if (!tabla || !(tabla in COLUMNAS)) return NextResponse.json({ ok: false, error: 'Tabla no permitida' }, { status: 400 })
@@ -158,9 +196,12 @@ export async function POST(req: NextRequest) {
     if (tabla !== 'eventos' && 'evento_id' in valores && valores.evento_id && !(await eventoDeLaOrg(db, orgId, valores.evento_id))) {
       return NextResponse.json({ ok: false, error: 'Evento no válido' }, { status: 400 })
     }
+    if (tabla !== 'eventos' && valores.evento_id && !eventoPermitido(ctx, valores.evento_id)) {
+      return NextResponse.json({ ok: false, error: 'Este usuario solo administra su evento' }, { status: 403 })
+    }
 
     if (tabla === 'asistentes' && body.id) {
-      const ids = await idsEventos(db, orgId)
+      const ids = await idsEventos(db, orgId, ctx.eventosPermitidos)
       const { data } = await db.from('asistentes').select('evento_id').eq('id', body.id).maybeSingle()
       if (!data || !ids.includes(data.evento_id)) {
         return NextResponse.json({ ok: false, error: 'Asistente no encontrado' }, { status: 404 })

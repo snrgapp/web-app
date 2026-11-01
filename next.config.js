@@ -4,6 +4,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  async rewrites() {
+    return [
+      { source: '/proxima_reunion', destination: '/proxima_reunion/index.html' },
+      { source: '/proxima_reunion/diagnostico', destination: '/proxima_reunion/diagnostico.html' },
+      { source: '/proxima_reunion/traccion', destination: '/proxima_reunion/traccion.html' },
+      { source: '/proxima_reunion/listo', destination: '/proxima_reunion/listo.html' },
+    ]
+  },
   async headers() {
     const securityHeaders = [
       { key: 'X-Frame-Options', value: 'DENY' },
