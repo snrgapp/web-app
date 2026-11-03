@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { avisarRegistroReunion } from '@/lib/reunion-aviso'
 
 export const dynamic = 'force-dynamic'
 
@@ -113,5 +114,26 @@ export async function POST(req: NextRequest) {
     }
     return NextResponse.json({ ok: false, error: error.message }, { status: 400 })
   }
+
+  const mail = await avisarRegistroReunion({
+    nombre,
+    apellido,
+    correo,
+    telefono,
+    ciudad,
+    empresa,
+    instagram,
+    problema,
+    tiempo_empresa: TIEMPOS.includes(tiempo) ? tiempo : null,
+    facturacion: FACTURACIONES.includes(facturacion) ? facturacion : null,
+    tamano_equipo: EQUIPOS.includes(equipo) ? equipo : null,
+    canales,
+    camara_comercio: CAMARAS.includes(camara) ? camara : null,
+    desafio,
+  })
+  if (!mail.success) {
+    console.error('[proxima-reunion] aviso Bird', mail.error)
+  }
+
   return NextResponse.json({ ok: true, id: data.id })
 }
