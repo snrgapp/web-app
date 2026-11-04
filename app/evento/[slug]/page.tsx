@@ -5,14 +5,12 @@ import { unstable_noStore } from 'next/cache'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Plus_Jakarta_Sans } from 'next/font/google'
 import { ArrowUpRight, Award, CalendarCheck, CalendarDays, Download, MapPin, Navigation, Users, Video } from 'lucide-react'
 import { getEventoPublicoBySlug } from '@/app/actions/eventos'
 import { camposPublicos } from '@/lib/registro-evento'
 import RegistroEvento from '@/components/evento/RegistroEvento'
 import EventoTabs from '@/components/evento/EventoTabs'
-
-const jakarta = Plus_Jakarta_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] })
+import './evento.css'
 
 const T = {
   label: 'text-[13px] leading-4 tracking-[0.01em] font-semibold',
@@ -187,7 +185,11 @@ export default async function EventoSlugPage({ params }: PageProps) {
   ].filter(Boolean) as { id: string; label: string; contenido: React.ReactNode }[]
 
   return (
-    <div className={`${jakarta.className} bg-[#fbf8ff] text-[#1a1b22] antialiased selection:bg-[#e1e0ff]`}>
+    <div className="font-evento bg-[#fbf8ff] text-[#1a1b22] antialiased selection:bg-[#e1e0ff]">
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      />
       <header className="fixed top-0 w-full z-50 bg-[#fbf8ff]/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-[env(safe-area-inset-top)]">
         <div className="h-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-1">
