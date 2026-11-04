@@ -1,8 +1,33 @@
+/**
+ * Enlaces cortos del sitio público (snrg.lat y www.snrg.lat).
+ * Para añadir otro: una entrada en esta lista. El redirect es temporal (307)
+ * para poder cambiar el destino sin que el navegador lo cachee.
+ * Solo aplica en esos hosts; el resto de subdominios del deploy no cambia.
+ */
+const SHORT_LINKS = [
+  {
+    source: '/reunion',
+    destination: 'https://www.eventos.snrg.lat/proxima_reunion',
+  },
+]
+
+const SHORT_LINK_HOSTS = ['snrg.lat', 'www.snrg.lat']
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
+  },
+  async redirects() {
+    return SHORT_LINKS.flatMap((link) =>
+      SHORT_LINK_HOSTS.map((host) => ({
+        source: link.source,
+        destination: link.destination,
+        permanent: false,
+        has: [{ type: 'host', value: host }],
+      }))
+    )
   },
   async rewrites() {
     return [
