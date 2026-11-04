@@ -36,6 +36,15 @@ const EVENTOS_PANEL_HOSTS = [
   'eventos.localhost',
 ]
 
+/** Acortador: snrg.lat/reunion → formulario. Añade otra entrada para un corto nuevo. */
+const SHORT_LINKS: { source: string; destination: string }[] = [
+  {
+    source: '/reunion',
+    destination: 'https://www.eventos.snrg.lat/proxima_reunion',
+  },
+]
+const SHORT_LINK_HOSTS = ['snrg.lat', 'www.snrg.lat', 'localhost']
+
 function matchesHosts(req: NextRequest, hosts: string[]): boolean {
   // En Vercel/proxy: x-forwarded-host tiene el host original del usuario
   const forwardedHost = req.headers.get('x-forwarded-host') ?? ''
@@ -64,6 +73,11 @@ function getOrgSlugFromHost(req: NextRequest): string {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const requestHeaders = new Headers(request.headers)
+
+  const corto = SHORT_LINKS.find((l) => l.source === (pathname.replace(/\/+$/, '') || '/'))
+  if (corto && matchesHosts(request, SHORT_LINK_HOSTS)) {
+    return NextResponse.redirect(corto.destination, 307)
+  }
 
   let orgSlug = getOrgSlugFromHost(request)
   if (matchesHosts(request, EVENTOS_PANEL_HOSTS)) {
