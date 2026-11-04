@@ -17,6 +17,18 @@ export function birdApiHost(apiKey: string) {
   return 'https://us1.platform.bird.com'
 }
 
+/** Bird solo acepta tags ASCII. Medellín y Medellin quedan medellin. */
+export function etiquetaBird(valor: string) {
+  const ascii = String(valor ?? '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40)
+  return ascii || 'na'
+}
+
 export async function sendBirdEmail(input: {
   to: { email: string; name?: string }[]
   subject?: string
@@ -70,8 +82,8 @@ export async function sendBirdEmail(input: {
         ...(input.tags
           ? {
               tags: Object.entries(input.tags).map(([name, value]) => ({
-                name,
-                value,
+                name: etiquetaBird(name),
+                value: etiquetaBird(value),
               })),
             }
           : {}),

@@ -14,6 +14,18 @@ function limpio(v: unknown) {
   return String(v ?? '').trim()
 }
 
+function sinTilde(v: string) {
+  return v
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+}
+
+function ciudadOficial(v: string) {
+  return CIUDADES.find((c) => sinTilde(c) === sinTilde(v)) || null
+}
+
 function correoOk(c: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c)
 }
@@ -39,7 +51,7 @@ export async function POST(req: NextRequest) {
   const apellido = limpio(body.apellido)
   const correo = limpio(body.correo).toLowerCase()
   const telefono = limpio(body.telefono).replace(/\D/g, '').slice(-10)
-  const ciudad = limpio(body.ciudad)
+  const ciudad = ciudadOficial(limpio(body.ciudad))
   const empresa = limpio(body.empresa)
   const instagram = limpio(body.instagram).replace(/^@+/, '')
   const problema = limpio(body.problema).slice(0, 160)
@@ -59,7 +71,7 @@ export async function POST(req: NextRequest) {
   if (!correoOk(correo)) {
     return NextResponse.json({ ok: false, error: 'Escribe un correo válido' }, { status: 400 })
   }
-  if (!CIUDADES.includes(ciudad)) {
+  if (!ciudad) {
     return NextResponse.json({ ok: false, error: 'Elige la ciudad de la reunión' }, { status: 400 })
   }
   if (!terminos) {

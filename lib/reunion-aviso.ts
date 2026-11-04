@@ -1,4 +1,4 @@
-import { sendBirdEmail } from '@/lib/bird-email'
+import { etiquetaBird, sendBirdEmail } from '@/lib/bird-email'
 
 /**
  * Aviso interno al registrar un founder en /proxima_reunion.
@@ -115,6 +115,6 @@ export async function avisarRegistroReunion(reg: RegistroReunionAviso) {
       },
     },
     category: 'transactional',
-    tags: { tipo: 'registro-reunion', ciudad: (reg.ciudad || '').slice(0, 40) },
+    tags: { tipo: 'registro-reunion', ciudad: etiquetaBird(reg.ciudad || '') },
   })
 }
