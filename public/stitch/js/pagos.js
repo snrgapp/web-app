@@ -301,13 +301,13 @@
 
     if (!p || p.estado !== 'aprobado') return;
     var enviado = p.confirmacion_enviada_at;
-    var acciones = modal.querySelector('[data-eliminar]').parentElement;
-    acciones.insertAdjacentHTML('beforebegin',
-      '<div class="rounded-xl p-3 flex items-center justify-between gap-3 ' + (enviado ? 'bg-tertiary-fixed/30' : 'bg-error-container/30') + '">' +
-      '<div class="flex items-start gap-2 min-w-0"><span class="material-symbols-outlined text-[18px] ' + (enviado ? 'text-on-tertiary-fixed' : 'text-error') + '">' + (enviado ? 'mark_email_read' : 'unsubscribe') + '</span>' +
-      '<div class="min-w-0"><p class="font-label-md text-label-md text-on-surface">' + (enviado ? 'Confirmación enviada ' + P.fechaHora(enviado) : 'Confirmación sin enviar') + '</p>' +
+    var pie = modal.querySelector('[data-pie]') || modal.querySelector('[data-eliminar]').closest('.flex');
+    pie.insertAdjacentHTML('beforebegin',
+      '<div class="w-full rounded-xl px-3 py-2 flex items-center justify-between gap-2 ' + (enviado ? 'bg-tertiary-fixed/30' : 'bg-error-container/30') + '">' +
+      '<div class="flex items-center gap-2 min-w-0"><span class="material-symbols-outlined text-[16px] shrink-0 ' + (enviado ? 'text-on-tertiary-fixed' : 'text-error') + '">' + (enviado ? 'mark_email_read' : 'unsubscribe') + '</span>' +
+      '<div class="min-w-0"><p class="font-label-sm text-[12px] text-on-surface leading-tight">' + (enviado ? 'Confirmación enviada ' + P.fechaHora(enviado) : 'Confirmación sin enviar') + '</p>' +
       (!enviado && p.confirmacion_error ? '<p class="font-label-sm text-[11px] text-on-surface-variant break-words">' + P.esc(p.confirmacion_error) + '</p>' : '') + '</div></div>' +
-      '<button type="button" data-adj="reenviar" class="px-3 py-1.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm flex items-center gap-1 shrink-0"><span class="material-symbols-outlined text-[14px]">send</span>' + (enviado ? 'Reenviar' : 'Enviar') + '</button></div>'
+      '<button type="button" data-adj="reenviar" class="h-8 px-2.5 rounded-lg bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-[12px] flex items-center gap-1 shrink-0"><span class="material-symbols-outlined text-[14px]">send</span>' + (enviado ? 'Reenviar' : 'Enviar') + '</button></div>'
     );
     modal.querySelector('[data-adj=reenviar]').addEventListener('click', function (e) {
       var b = e.currentTarget;

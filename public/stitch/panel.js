@@ -207,13 +207,14 @@
       '<button type="button" data-cerrar class="w-8 h-8 rounded-lg hover:bg-surface-container text-on-surface-variant flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">close</span></button></div>' +
       (cfg.texto ? '<p class="font-body-md text-body-md text-on-surface-variant">' + P.esc(cfg.texto) + '</p>' : '') +
       (cfg.campos.length ? '<div class="grid grid-cols-2 gap-x-3 gap-y-4">' + cfg.campos.map(function (c) { return campoHtml(c, valores[c.nombre]); }).join('') + '</div>' : '') +
-      '<div class="flex items-center justify-between gap-3 pt-2"><div>' +
+      '<div data-pie class="flex items-center justify-between gap-2 pt-2 flex-wrap">' +
+      '<div class="shrink-0">' +
       (cfg.onEliminar
-        ? '<button type="button" data-eliminar class="px-3 py-2 rounded-lg hover:bg-error-container text-error font-label-md text-label-md flex items-center gap-1.5 transition-colors"><span class="material-symbols-outlined text-[16px]">delete</span>Eliminar</button>'
+        ? '<button type="button" data-eliminar class="h-8 px-2.5 rounded-lg hover:bg-error-container text-error font-label-sm text-[12px] flex items-center gap-1 transition-colors"><span class="material-symbols-outlined text-[15px]">delete</span>Eliminar</button>'
         : '') +
-      '</div><div class="flex items-center gap-3"><button type="button" data-cerrar class="px-4 py-2 rounded-lg hover:bg-surface-container font-label-md text-label-md text-on-surface transition-colors">Cancelar</button>' +
-      '<button type="submit" class="px-5 py-2 rounded-lg ' + (cfg.peligro ? 'bg-error text-on-error' : 'bg-primary hover:bg-primary-container text-on-primary') +
-      ' font-label-md text-label-md transition-all shadow-sm disabled:opacity-50">' + P.esc(cfg.textoGuardar || 'Guardar') + '</button></div></div></form>';
+      '</div><div class="flex items-center gap-2 shrink-0 ml-auto"><button type="button" data-cerrar class="h-8 px-3 rounded-lg hover:bg-surface-container font-label-sm text-[12px] text-on-surface transition-colors">Cancelar</button>' +
+      '<button type="submit" class="h-8 px-3.5 rounded-lg ' + (cfg.peligro ? 'bg-error text-on-error' : 'bg-primary hover:bg-primary-container text-on-primary') +
+      ' font-label-sm text-[12px] transition-all shadow-sm disabled:opacity-50">' + P.esc(cfg.textoGuardar || 'Guardar') + '</button></div></div></form>';
 
     var form = wrap.querySelector('form');
     var cerrado = false;
