@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import { CONVOCATORIAS, type Convocatoria } from '@/lib/radar-convocatorias-data'
+import { CONVOCATORIAS, RADAR_REVIEWED_AT, type Convocatoria } from '@/lib/radar-convocatorias-data'
 import type { Database } from '@/types/database.types'
 
 export type RadarPayload = {
@@ -16,7 +16,8 @@ function fromEnv() {
 
 export async function loadRadarConvocatorias(): Promise<RadarPayload> {
   const supabase = fromEnv()
-  if (!supabase) return { items: CONVOCATORIAS, refreshedAt: null }
+  const reviewedAt = `${RADAR_REVIEWED_AT}T12:00:00-05:00`
+  if (!supabase) return { items: CONVOCATORIAS, refreshedAt: reviewedAt }
 
   const { data, error } = await supabase
     .from('radar_convocatorias')
@@ -24,13 +25,13 @@ export async function loadRadarConvocatorias(): Promise<RadarPayload> {
     .order('scraped_at', { ascending: false })
 
   if (error || !data?.length) {
-    return { items: CONVOCATORIAS, refreshedAt: null }
+    return { items: CONVOCATORIAS, refreshedAt: reviewedAt }
   }
 
   // El catálogo curado en código es la fuente de verdad: no reinyectar
   // fichas viejas de Supabase (homes, cerradas o de portales caídos).
   return {
     items: CONVOCATORIAS,
-    refreshedAt: data[0]?.scraped_at ?? null,
+    refreshedAt: reviewedAt,
   }
 }
