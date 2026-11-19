@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@/utils/supabase/middleware'
 import { getCookieName, hasValidSessionFormat } from '@/lib/members/session-edge'
-import { registrarClickEnlace } from '@/lib/enlace-clicks'
 
 const HACKATON_HOSTS = [
   'hackaton.snrg.lat',
@@ -81,8 +80,11 @@ export async function middleware(request: NextRequest) {
 
   const corto = SHORT_LINKS.find((l) => l.source === (pathname.replace(/\/+$/, '') || '/'))
   if (corto && matchesHosts(request, SHORT_LINK_HOSTS)) {
-    await registrarClickEnlace(request, corto.source, corto.destination)
-    return NextResponse.redirect(corto.destination, 307)
+    const url = request.nextUrl.clone()
+    url.pathname = '/api/enlace-clicks'
+    url.search = ''
+    url.searchParams.set('slug', corto.source.replace(/^\//, ''))
+    return NextResponse.rewrite(url)
   }
 
   let orgSlug = getOrgSlugFromHost(request)
