@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import type { NextFetchEvent } from 'next/server'
 import { NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@/utils/supabase/middleware'
 import { getCookieName, hasValidSessionFormat } from '@/lib/members/session-edge'
@@ -72,13 +71,17 @@ function getOrgSlugFromHost(req: NextRequest): string {
   return parts[0] ?? 'snrg'
 }
 
-export async function middleware(request: NextRequest, event: NextFetchEvent) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
   const requestHeaders = new Headers(request.headers)
 
+  if (pathname === '/api/enlace-clicks') {
+    return NextResponse.next()
+  }
+
   const corto = SHORT_LINKS.find((l) => l.source === (pathname.replace(/\/+$/, '') || '/'))
   if (corto && matchesHosts(request, SHORT_LINK_HOSTS)) {
-    registrarClickEnlace(request, event, corto.source, corto.destination)
+    await registrarClickEnlace(request, corto.source, corto.destination)
     return NextResponse.redirect(corto.destination, 307)
   }
 

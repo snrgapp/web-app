@@ -1,4 +1,4 @@
-import type { NextFetchEvent, NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 function clasificar(ua: string): 'visita' | 'preview' | 'bot' {
   const u = ua.toLowerCase()
@@ -15,21 +15,16 @@ function clasificar(ua: string): 'visita' | 'preview' | 'bot' {
   return 'visita'
 }
 
-/** Anota el clic sin retrasar el 307. En local no se guarda. */
-export function registrarClickEnlace(
-  request: NextRequest,
-  event: NextFetchEvent,
-  slug: string,
-  destino: string
-) {
-  const host = (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '')
+function hostDe(request: NextRequest) {
+  return (request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '')
     .replace(/:.*$/, '')
     .toLowerCase()
-  if (!host || host.includes('localhost')) return
+}
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!url || !key) return
+/** Guarda el clic y espera un momento para no perderlo en el 307. En local no se anota. */
+export async function registrarClickEnlace(request: NextRequest, slug: string, destino: string) {
+  const host = hostDe(request)
+  if (!host || host.includes('localhost')) return
 
   const ua = request.headers.get('user-agent') || ''
   const fila = {
@@ -42,20 +37,18 @@ export function registrarClickEnlace(
     tipo: clasificar(ua),
   }
 
-  event.waitUntil(
-    fetch(`${url}/rest/v1/enlace_clicks`, {
+  const ctrl = new AbortController()
+  const t = setTimeout(() => ctrl.abort(), 800)
+  try {
+    await fetch(new URL('/api/enlace-clicks', request.url), {
       method: 'POST',
-      headers: {
-        apikey: key,
-        Authorization: `Bearer ${key}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(fila),
+      signal: ctrl.signal,
     })
-      .then(async (r) => {
-        if (!r.ok) await r.text().catch(() => '')
-      })
-      .catch(() => {})
-  )
+  } catch {
+    // El redirect sigue aunque el conteo falle.
+  } finally {
+    clearTimeout(t)
+  }
 }
