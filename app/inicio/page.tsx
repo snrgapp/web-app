@@ -4,13 +4,11 @@ import { useRef } from 'react'
 import Navbar from '@/components/Navbar'
 import Hero from '@/components/Hero'
 // import TarjetasSection from '@/components/inicio/TarjetasSection'
-import Partners from '@/components/Partners'
 import AIMatchingSection from '@/components/inicio/AIMatchingSection'
 import ThreeStepsSection from '@/components/inicio/ThreeStepsSection'
 import ReviewsCarousel from '@/components/inicio/ReviewsCarousel'
 import ExperiencesPortfolioSection from '@/components/inicio/ExperiencesPortfolioSection'
 import PhotoGallery from '@/components/inicio/PhotoGallery'
-import CommunityMapSection from '@/components/inicio/CommunityMapSection'
 import Footer from '@/components/Footer'
 import FaqSection from '@/components/inicio/FaqSection'
 import { useCinematicScroll } from '@/hooks/useCinematicScroll'
@@ -22,16 +20,14 @@ export default function InicioPage() {
   return (
     <main
       ref={mainRef}
-      className="min-h-screen synergy-page-dots text-[#1a1a1a] overflow-x-hidden"
+      className="min-h-screen bg-[#f2f2f2] text-[#1a1a1a]"
     >
       <Navbar />
       <Hero />
-      <Partners />
+      <PhotoGallery />
       <AIMatchingSection />
       <ThreeStepsSection />
-      <CommunityMapSection />
       <ExperiencesPortfolioSection />
-      <PhotoGallery />
       <ReviewsCarousel />
       <FaqSection />
       {/* <TarjetasSection /> */}

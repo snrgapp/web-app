@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { MapPin } from 'lucide-react'
 import { Manrope } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/components/i18n/LanguageProvider'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -20,7 +21,6 @@ export type GalleryPhoto = {
   src: string
 }
 
-/** Fotos en `public/images/galeria/` (ej. mt-1.jpeg). Ajusta títulos y ciudades si quieres. */
 const photos: GalleryPhoto[] = [
   {
     name: 'Networking abierto',
@@ -137,7 +137,7 @@ function GalleryCard({ p, className }: { p: GalleryPhoto; className?: string }) 
         src={p.src}
         alt={p.name}
         fill
-        sizes="(max-width: 1024px) 100vw, 33vw"
+        sizes="(max-width: 1024px) 80vw, 33vw"
         className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
       />
       <div
@@ -175,40 +175,16 @@ function GalleryCard({ p, className }: { p: GalleryPhoto; className?: string }) 
 }
 
 export default function PhotoGallery() {
-  return (
-    <section
-      className="py-16 lg:py-24 w-full"
-      aria-labelledby="gallery-heading"
-    >
-      <div className="text-center px-6 mb-12 max-w-2xl mx-auto">
-        <div
-          className={cn(
-            'inline-flex items-center gap-1.5 rounded-full border border-[#1a1a1a]/15',
-            'bg-white/80 backdrop-blur-sm px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider',
-            'text-[#1a1a1a]/80 mb-5',
-            manrope.className
-          )}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E5B318]" aria-hidden />
-          momentos
-        </div>
-        <h2
-          id="gallery-heading"
-          className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1a1a1a] lowercase tracking-tight leading-tight mb-3.5"
-        >
-          imágenes de{' '}
-          <span className="font-[family-name:var(--font-playfair-display)] normal-case italic text-[#1a1a1a]">
-            quienes construyen{' '}
-            <em className="text-[#E5B318] not-italic font-semibold">juntos</em>
-          </span>
-        </h2>
-        <p className="text-base text-neutral-600 leading-relaxed max-w-md mx-auto lowercase">
-          un vistazo a encuentros, pitches y la comunidad synergy en el caribe colombiano.
-        </p>
-      </div>
+  const { t } = useI18n()
+  const localized = photos.map((p, i) => ({
+    ...p,
+    name: t.gallery.photos[i]?.name ?? p.name,
+    badge: t.gallery.photos[i]?.badge ?? p.badge,
+  }))
 
-      {/* Desktop: mosaico 12 columnas */}
-      <div className="hidden lg:block px-8 max-w-[1200px] mx-auto">
+  return (
+    <section className="w-full pb-4 pt-2 sm:pb-6 lg:pb-8" aria-label={t.gallery.headingAccent}>
+      <div className="hidden lg:block mx-auto max-w-[1200px] px-8">
         <div
           className="grid gap-3"
           style={{
@@ -216,9 +192,9 @@ export default function PhotoGallery() {
             gridAutoRows: '36px',
           }}
         >
-          {photos.map((p, i) => (
+          {localized.map((p, i) => (
             <div
-              key={`${p.name}-d-${i}`}
+              key={`${p.src}-d-${i}`}
               className="min-h-0"
               style={{ gridColumn: p.col, gridRow: p.row }}
             >
@@ -228,10 +204,18 @@ export default function PhotoGallery() {
         </div>
       </div>
 
-      {/* Mobile / tablet: columna con proporción fija */}
-      <div className="lg:hidden px-4 sm:px-6 flex flex-col gap-3 max-w-xl mx-auto">
-        {photos.map((p, i) => (
-          <div key={`${p.name}-m-${i}`} className="relative aspect-[4/3] w-full">
+      <div
+        className={cn(
+          'flex gap-3 overflow-x-auto px-4 pb-2 sm:px-6 lg:hidden',
+          'snap-x snap-mandatory',
+          '[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+        )}
+      >
+        {localized.map((p, i) => (
+          <div
+            key={`${p.src}-m-${i}`}
+            className="relative h-[210px] w-[min(78vw,280px)] shrink-0 snap-center sm:h-[240px]"
+          >
             <GalleryCard p={p} className="absolute inset-0 h-full w-full" />
           </div>
         ))}

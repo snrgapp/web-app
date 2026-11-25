@@ -1,115 +1,129 @@
 'use client'
 
-import { useRef } from 'react'
 import { Manrope } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/components/i18n/LanguageProvider'
 
 const manrope = Manrope({
   subsets: ['latin'],
   variable: '--font-reviews-manrope',
 })
 
-export type ReviewItem = {
-  stars: number
+type Contrast = 'ink' | 'gold' | 'paper' | 'charcoal' | 'cream' | 'inkGold' | 'mist'
+
+type ReviewItem = {
   quote: string
   name: string
-  role: string
-  company: string
-  initials: string
-  palette: { bg: string; text: string; badge: string; badgeText: string }
+  contrast: Contrast
+  rotate: string
+  desktop: string
 }
 
-const reviews: ReviewItem[] = [
+const contrasts: Record<
+  Contrast,
+  { card: string; quote: string; name: string; star: string; rule: string }
+> = {
+  ink: {
+    card: 'bg-[#1a1a1a] text-white shadow-[0_18px_40px_rgba(26,26,26,0.28)]',
+    quote: 'text-white/90',
+    name: 'text-white',
+    star: 'text-[#E5B318]',
+    rule: 'bg-white/15',
+  },
+  gold: {
+    card: 'bg-[#E5B318] text-[#1a1a1a] shadow-[0_18px_40px_rgba(229,179,24,0.35)]',
+    quote: 'text-[#1a1a1a]',
+    name: 'text-[#1a1a1a]',
+    star: 'text-[#1a1a1a]',
+    rule: 'bg-[#1a1a1a]/20',
+  },
+  paper: {
+    card: 'bg-white text-[#1a1a1a] shadow-[0_18px_40px_rgba(26,26,26,0.12)] ring-1 ring-black/[0.04]',
+    quote: 'text-[#1a1a1a]/85',
+    name: 'text-[#1a1a1a]',
+    star: 'text-[#E5B318]',
+    rule: 'bg-[#1a1a1a]/10',
+  },
+  charcoal: {
+    card: 'bg-[#2a2a2a] text-[#f4f4f4] shadow-[0_18px_40px_rgba(26,26,26,0.24)]',
+    quote: 'text-[#f4f4f4]/90',
+    name: 'text-white',
+    star: 'text-[#E5B318]',
+    rule: 'bg-white/12',
+  },
+  cream: {
+    card: 'bg-[#FFF4C8] text-[#1a1a1a] shadow-[0_18px_40px_rgba(229,179,24,0.18)]',
+    quote: 'text-[#1a1a1a]/85',
+    name: 'text-[#1a1a1a]',
+    star: 'text-[#1a1a1a]',
+    rule: 'bg-[#1a1a1a]/12',
+  },
+  inkGold: {
+    card: 'bg-[#111] text-[#E5B318] shadow-[0_18px_40px_rgba(0,0,0,0.32)]',
+    quote: 'text-[#E5B318]',
+    name: 'text-[#E5B318]',
+    star: 'text-[#E5B318]',
+    rule: 'bg-[#E5B318]/35',
+  },
+  mist: {
+    card: 'bg-[#f7f7f7] text-[#1a1a1a] shadow-[0_18px_40px_rgba(26,26,26,0.1)] ring-1 ring-black/[0.05]',
+    quote: 'text-[#1a1a1a]/80',
+    name: 'text-[#1a1a1a]',
+    star: 'text-[#E5B318]',
+    rule: 'bg-[#1a1a1a]/10',
+  },
+}
+
+const reviewMeta: Omit<ReviewItem, 'quote'>[] = [
   {
-    stars: 5,
-    quote:
-      'Salí del evento con tres reuniones agendadas con gente que buscaba exactamente lo que ofrecemos. El match antes de llegar marca la diferencia.',
-    name: 'Lucía Fernández',
-    role: 'Co-fundadora',
-    company: 'E-commerce',
-    initials: 'LF',
-    palette: { bg: '#fef9e8', text: '#713f12', badge: '#fef3c7', badgeText: '#a16207' },
+    name: 'Lucía F.',
+    contrast: 'ink',
+    rotate: '-rotate-[4deg]',
+    desktop: 'lg:left-[8%] lg:top-[26%] lg:-rotate-[13deg] lg:z-[12]',
   },
   {
-    stars: 5,
-    quote:
-      'Había probado otros formatos de networking y terminaba coleccionando tarjetas. Aquí la conversación empieza con contexto; en una semana cerramos alianza.',
-    name: 'Martín Ortega',
-    role: 'Fundador',
-    company: 'SaaS B2B',
-    initials: 'MO',
-    palette: { bg: '#f3f4f6', text: '#1f2937', badge: '#e5e7eb', badgeText: '#374151' },
+    name: 'Martín O.',
+    contrast: 'gold',
+    rotate: 'rotate-[3deg]',
+    desktop: 'lg:left-[24%] lg:top-[8%] lg:-rotate-[6deg] lg:z-[18]',
   },
   {
-    stars: 5,
-    quote:
-      'El ambiente es cercano y el pitch me abrió puertas con mentores que no habría conocido de otra forma. Volveré a cada edición que pueda.',
-    name: 'Valentina Ríos',
-    role: 'CEO',
-    company: 'Healthtech',
-    initials: 'VR',
-    palette: { bg: '#faf5ff', text: '#6b21a8', badge: '#f3e8ff', badgeText: '#7e22ce' },
+    name: 'Valentina R.',
+    contrast: 'paper',
+    rotate: '-rotate-[2deg]',
+    desktop: 'lg:left-[50%] lg:top-[4%] lg:rotate-[8deg] lg:z-[14]',
   },
   {
-    stars: 5,
-    quote:
-      'Nuestro equipo de ventas aterrizó con leads cualificados desde el día uno del encuentro. La IA no sustituye al café, lo hace más eficiente.',
-    name: 'Diego Castillo',
-    role: 'Head of Growth',
-    initials: 'DC',
-    company: 'Fintech',
-    palette: { bg: '#eff6ff', text: '#1e40af', badge: '#dbeafe', badgeText: '#1d4ed8' },
+    name: 'Diego C.',
+    contrast: 'cream',
+    rotate: 'rotate-[2deg]',
+    desktop: 'lg:left-[40%] lg:top-[34%] lg:rotate-[7deg] lg:z-[32]',
   },
   {
-    stars: 5,
-    quote:
-      'Como inversionista busco claridad y velocidad. En Synergy conozco a founders con traction real y respuestas concretas, no solo slides.',
-    name: 'Ana Morales',
-    role: 'Angel investor',
-    company: 'Independiente',
-    initials: 'AM',
-    palette: { bg: '#fff7ed', text: '#9a3412', badge: '#ffedd5', badgeText: '#c2410c' },
+    name: 'Ana M.',
+    contrast: 'inkGold',
+    rotate: '-rotate-[3deg]',
+    desktop: 'lg:left-[20%] lg:top-[46%] lg:-rotate-[3deg] lg:z-[24]',
   },
   {
-    stars: 5,
-    quote:
-      'Postulamos nuestra ciudad y el proceso fue claro. La comunidad local ya pide la siguiente fecha.',
-    name: 'Karla Mejía',
-    role: 'Organizadora',
-    company: 'Hub regional',
-    initials: 'KM',
-    palette: { bg: '#f0fdf4', text: '#166534', badge: '#dcfce7', badgeText: '#15803d' },
+    name: 'Karla M.',
+    contrast: 'charcoal',
+    rotate: 'rotate-[4deg]',
+    desktop: 'lg:left-[58%] lg:top-[20%] lg:rotate-[11deg] lg:z-[22]',
   },
   {
-    stars: 5,
-    quote:
-      'El panel de miembros y las recomendaciones me ayudaron a retomar conversaciones que se habían enfriado. Es red viva, no una lista estática.',
-    name: 'Santiago Pérez',
-    role: 'Co-fundador',
-    company: 'Logística',
-    initials: 'SP',
-    palette: { bg: '#fef2f2', text: '#991b1b', badge: '#fee2e2', badgeText: '#b91c1c' },
-  },
-  {
-    stars: 5,
-    quote:
-      'Llevamos a todo el equipo a un evento y el check-in y la dinámica en mesa evitaron el awkward silence inicial. Experiencia muy cuidada.',
-    name: 'Elena Vargas',
-    role: 'Chief of Staff',
-    company: 'Marketplace',
-    initials: 'EV',
-    palette: { bg: '#f5f5f5', text: '#1a1a1a', badge: '#e5e5e5', badgeText: '#404040' },
+    name: 'Santiago P.',
+    contrast: 'mist',
+    rotate: '-rotate-[1deg]',
+    desktop: 'lg:left-[62%] lg:top-[46%] lg:rotate-[5deg] lg:z-[16]',
   },
 ]
 
-function Stars({ count }: { count: number }) {
+function Stars({ className }: { className: string }) {
   return (
-    <div className="flex gap-0.5 mb-3.5" aria-hidden>
+    <div className="mb-4 flex gap-1" aria-hidden>
       {Array.from({ length: 5 }, (_, i) => (
-        <span
-          key={i}
-          className={cn('text-base', i < count ? 'text-[#E5B318]' : 'text-neutral-300')}
-        >
+        <span key={i} className={cn('text-[15px] leading-none', className)}>
           ★
         </span>
       ))}
@@ -117,164 +131,107 @@ function Stars({ count }: { count: number }) {
   )
 }
 
-function ReviewCard({ review }: { review: ReviewItem }) {
-  const { stars, quote, name, role, company, initials, palette } = review
+function ReviewCard({
+  review,
+  className,
+}: {
+  review: ReviewItem
+  className?: string
+}) {
+  const tone = contrasts[review.contrast]
   return (
     <article
       className={cn(
-        'shrink-0 w-[320px] rounded-2xl border border-[#1a1a1a]/10 bg-white p-6',
-        'shadow-[0_1px_3px_rgba(0,0,0,0.06),0_4px_12px_rgba(0,0,0,0.04)]',
-        'transition-[box-shadow,transform] duration-200 ease-out',
-        'hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(0,0,0,0.09)]'
+        'flex h-[250px] w-[236px] shrink-0 flex-col overflow-hidden rounded-[22px] p-6 transition-transform duration-300 ease-out',
+        'lg:h-[260px] lg:w-[244px] lg:origin-center lg:hover:z-50 lg:hover:rotate-0 lg:hover:scale-[1.05]',
+        tone.card,
+        className
       )}
     >
-      <Stars count={stars} />
-      <p className="text-[14.5px] text-neutral-700 leading-relaxed mb-5 font-normal">
-        <span className="text-[#E5B318]/90 text-[22px] leading-none align-[-6px] mr-0.5 font-serif">
-          &ldquo;
-        </span>
-        {quote}
+      <Stars className={tone.star} />
+      <p
+        className={cn(
+          'line-clamp-5 flex-1 text-[14.5px] font-medium leading-[1.35] tracking-tight',
+          tone.quote,
+          manrope.className
+        )}
+      >
+        {review.quote}
       </p>
-      <div className="h-px bg-neutral-100 mb-4" />
-      <div className="flex items-center gap-3 min-w-0">
-        <div
-          className="w-[38px] h-[38px] rounded-full flex items-center justify-center shrink-0 text-[13px] font-bold tracking-wide"
-          style={{ background: palette.bg, color: palette.text }}
-        >
-          {initials}
-        </div>
-        <div className="flex-1 min-w-0">
-          <div className={cn('text-[13.5px] font-semibold text-[#1a1a1a] mb-0.5', manrope.className)}>
-            {name}
-          </div>
-          <div className="text-xs text-neutral-500 truncate">{role}</div>
-        </div>
-        <span
-          className={cn(
-            'text-[11px] font-semibold px-2 py-0.5 rounded-md shrink-0',
-            manrope.className
-          )}
-          style={{ background: palette.badge, color: palette.badgeText }}
-        >
-          {company}
-        </span>
-      </div>
+      <div className={cn('mb-3 mt-4 h-px w-full', tone.rule)} />
+      <p className={cn('text-[13.5px] font-semibold', tone.name, manrope.className)}>
+        {review.name}
+      </p>
     </article>
   )
 }
 
-function TrackRowInner({
-  items,
-  direction,
-}: {
-  items: ReviewItem[]
-  direction: 'left' | 'right'
-}) {
-  const trackRef = useRef<HTMLDivElement>(null)
-  const pause = () => {
-    if (trackRef.current) trackRef.current.style.animationPlayState = 'paused'
-  }
-  const resume = () => {
-    if (trackRef.current) trackRef.current.style.animationPlayState = 'running'
-  }
-
-  const doubled = [...items, ...items]
-
-  return (
-    <div
-      ref={trackRef}
-      onMouseEnter={pause}
-      onMouseLeave={resume}
-      className={cn(
-        'flex gap-5 w-max mb-5',
-        direction === 'left' ? 'animate-reviews-scroll-left' : 'animate-reviews-scroll-right',
-        'motion-reduce:animate-none'
-      )}
-    >
-      {doubled.map((r, i) => (
-        <ReviewCard key={`${r.name}-${i}`} review={r} />
-      ))}
-    </div>
-  )
-}
-
 export default function ReviewsCarousel() {
-  const row1 = reviews.slice(0, 5)
-  const row2 = reviews.slice(3)
-
-  const stats: { num: string; label: string; showStar?: boolean }[] = [
-    { num: '4.9', label: 'valoración media', showStar: true },
-    { num: '500+', label: 'founders en eventos' },
-    { num: '98%', label: 'recomendarían la experiencia' },
-  ]
+  const { t } = useI18n()
+  const reviews: ReviewItem[] = reviewMeta.map((meta, i) => ({
+    ...meta,
+    quote: t.reviews.quotes[i],
+  }))
+  const stats = t.reviews.stats
 
   return (
     <section
       className={cn(
-        'overflow-hidden w-full pt-16 lg:pt-24 pb-10 lg:pb-12',
+        'w-full overflow-x-clip pt-16 pb-10 lg:overflow-visible lg:pt-24 lg:pb-16',
         manrope.variable
       )}
       aria-labelledby="reviews-heading"
     >
-      <div className="text-center px-6 mb-14 max-w-2xl mx-auto">
-        <div
-          className={cn(
-            'inline-flex items-center gap-1.5 rounded-full border border-[#1a1a1a]/15',
-            'bg-white/80 backdrop-blur-sm px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider',
-            'text-[#1a1a1a]/80 mb-5',
-            manrope.className
-          )}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#E5B318]" aria-hidden />
-          testimonios
-        </div>
+      <div className="mx-auto mb-10 max-w-2xl px-4 text-center sm:mb-14 sm:px-6">
         <h2
           id="reviews-heading"
           className={cn(
-            'text-2xl sm:text-3xl lg:text-4xl font-bold text-[#1a1a1a] lowercase tracking-tight leading-tight mb-3.5',
+            'scroll-mt-24 text-2xl font-bold lowercase leading-tight tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl',
             manrope.className
           )}
         >
-          lo que dicen quienes ya vivieron la experiencia
+          <span className="block">{t.reviews.heading[0]}</span>
+          <span className="mt-1 block text-[#E5B318]">{t.reviews.heading[1]}</span>
         </h2>
-        <p className="text-base text-neutral-600 leading-relaxed max-w-md mx-auto lowercase">
-          founders, operadores e inversionistas que conectaron en synergy.
-        </p>
       </div>
 
-      <div className="relative w-full overflow-hidden">
+      <div className="px-4 sm:px-6">
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 z-[2] bg-gradient-to-r from-[#f2f2f2] to-transparent"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 z-[2] bg-gradient-to-l from-[#f2f2f2] to-transparent"
-          aria-hidden
-        />
-
-        <TrackRowInner items={row1} direction="left" />
-        <TrackRowInner items={row2} direction="right" />
+          className={cn(
+            'flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3',
+            '[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
+            'lg:relative lg:mx-auto lg:block lg:h-[540px] lg:w-full lg:max-w-[1080px] lg:overflow-visible lg:pb-0'
+          )}
+        >
+          {reviews.map((review) => (
+            <div
+              key={review.name}
+              className={cn(
+                'snap-center',
+                review.rotate,
+                'lg:absolute lg:transition-transform lg:duration-300',
+                review.desktop
+              )}
+            >
+              <ReviewCard review={review} />
+            </div>
+          ))}
+        </div>
       </div>
 
-      <div className="flex justify-center gap-10 sm:gap-14 lg:gap-24 mt-12 px-6 flex-wrap">
+      <div className="mx-auto mt-10 grid max-w-3xl grid-cols-3 gap-3 px-4 sm:mt-12 sm:gap-10 lg:max-w-none lg:gap-24">
         {stats.map(({ num, label, showStar }) => (
-          <div key={label} className="text-center">
+          <div key={label} className="min-w-0 text-center">
             <div
               className={cn(
-                'text-3xl font-bold text-[#1a1a1a] tracking-tight leading-none mb-1',
+                'mb-1 text-2xl font-bold leading-none tracking-tight text-[#1a1a1a] sm:text-3xl',
                 manrope.className
               )}
             >
-              {showStar ? (
-                <>
-                  {num}
-                  <span className="text-lg text-[#E5B318]">★</span>
-                </>
-              ) : (
-                num
-              )}
+              {num}
+              {showStar ? <span className="text-lg text-[#E5B318]">★</span> : null}
             </div>
-            <div className="text-[13px] text-neutral-500 lowercase">{label}</div>
+            <div className="text-[11px] lowercase leading-snug text-neutral-500 sm:text-[13px]">{label}</div>
           </div>
         ))}
       </div>

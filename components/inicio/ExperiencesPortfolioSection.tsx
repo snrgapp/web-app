@@ -7,6 +7,7 @@ import {
   experiencesPortfolio,
   type ExperiencePortfolioItem,
 } from '@/lib/experiences-portfolio-data'
+import { useI18n } from '@/components/i18n/LanguageProvider'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -43,6 +44,8 @@ function cardByStatus(status: ExperiencePortfolioItem['status']): string[] {
 }
 
 export default function ExperiencesPortfolioSection() {
+  const { t } = useI18n()
+
   return (
     <section
       className={cn('w-full pt-10 pb-24 lg:pt-12 lg:pb-36', manrope.variable)}
@@ -58,7 +61,7 @@ export default function ExperiencesPortfolioSection() {
           )}
         >
           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#E5B318]" aria-hidden />
-          experiencias
+          {t.experiences.pill}
         </div>
         <h2
           id="experiences-portfolio-heading"
@@ -67,18 +70,16 @@ export default function ExperiencesPortfolioSection() {
             manrope.className
           )}
         >
-          <span className="block">nuestro portafolio de </span>
-          <span className="mt-1.5 block font-[family-name:var(--font-playfair-display)] italic text-[#E5B318]">
-            experiencias
-          </span>
+          <span className="block">{t.experiences.heading[0]}</span>
+          <span className="mt-1.5 block text-[#E5B318]">{t.experiences.heading[1]}</span>
         </h2>
         <p className="mx-auto max-w-lg text-[15px] lowercase leading-relaxed text-neutral-600 sm:text-base">
-          distintos formatos para distintos momentos de tu camino como founder.
+          {t.experiences.intro}
         </p>
       </div>
 
-      <div className="mx-auto mt-11 grid max-w-5xl grid-cols-1 gap-6 px-6 sm:px-8 md:grid-cols-3 md:gap-5 lg:mt-12">
-        {experiencesPortfolio.map((xp) => (
+      <div className="mx-auto mt-11 grid max-w-5xl grid-cols-1 gap-6 px-6 sm:px-8 lg:mt-12 lg:grid-cols-3 lg:gap-5">
+        {experiencesPortfolio.map((xp, i) => (
           <article
             key={xp.name}
             className={cn(
@@ -111,7 +112,9 @@ export default function ExperiencesPortfolioSection() {
               </div>
             </div>
 
-            <p className="flex-1 text-left text-[13px] leading-relaxed text-neutral-600">{xp.description}</p>
+            <p className="flex-1 text-left text-[13px] leading-relaxed text-neutral-600">
+              {t.experiences.items[i]?.description ?? xp.description}
+            </p>
 
             <div
               className={cn(
@@ -125,16 +128,21 @@ export default function ExperiencesPortfolioSection() {
                   statusStyles[xp.status] ?? statusStyles.COMPLETADO
                 )}
               >
-                {xp.status}
+                {t.experiences.status[xp.status]}
               </span>
               <span className="text-neutral-300" aria-hidden>
                 ·
               </span>
-              <span>{xp.frequency}</span>
+              <span>
+                {t.experiences.frequency[xp.frequency as keyof typeof t.experiences.frequency] ??
+                  xp.frequency}
+              </span>
               <span className="text-neutral-300" aria-hidden>
                 ·
               </span>
-              <span>{xp.attendees} founders</span>
+              <span>
+                {xp.attendees} {t.experiences.founders}
+              </span>
             </div>
           </article>
         ))}

@@ -14,6 +14,7 @@ export function useCinematicScroll(containerRef: RefObject<HTMLElement | null>) 
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
+    if (!window.matchMedia('(min-width: 1024px)').matches) return
 
     const sections = Array.from(container.querySelectorAll('section'))
     const triggers: ScrollTrigger[] = []

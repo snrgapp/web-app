@@ -9,27 +9,30 @@ import {
   SNRG_SHOW_PUBLIC_EVENTOS_NAV,
   SNRG_SHOW_PUBLIC_RECURSOS_NAV,
 } from '@/lib/snrg-public-flags'
+import { useI18n } from '@/components/i18n/LanguageProvider'
+import LanguageSwitcher from '@/components/i18n/LanguageSwitcher'
 
-const navLinksAll = [
-  { href: '/eventos', label: 'eventos', icon: Ticket },
-  { href: '/recursos', label: 'recursos', icon: BookOpen },
-  { href: '/contacto', label: 'contacto', icon: Mail },
-]
-
-const navLinks = navLinksAll.filter((link) => {
-  if (link.href === '/eventos' && !SNRG_SHOW_PUBLIC_EVENTOS_NAV) return false
-  if (link.href === '/recursos' && !SNRG_SHOW_PUBLIC_RECURSOS_NAV) return false
-  return true
-})
-
-const primaryLinks = navLinks.filter((link) => link.href !== '/contacto')
-const contactLink = navLinks.find((link) => link.href === '/contacto')
 const linkClassName =
   'flex items-center gap-2 text-sm font-light text-[#1a1a1a] lowercase tracking-wide hover:text-black/70 transition-colors'
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { t } = useI18n()
 
+  const navLinksAll = [
+    { href: '/eventos', label: t.nav.events, icon: Ticket },
+    { href: '/recursos', label: t.nav.resources, icon: BookOpen },
+    { href: '/contacto', label: t.nav.contact, icon: Mail },
+  ]
+
+  const navLinks = navLinksAll.filter((link) => {
+    if (link.href === '/eventos' && !SNRG_SHOW_PUBLIC_EVENTOS_NAV) return false
+    if (link.href === '/recursos' && !SNRG_SHOW_PUBLIC_RECURSOS_NAV) return false
+    return true
+  })
+
+  const primaryLinks = navLinks.filter((link) => link.href !== '/contacto')
+  const contactLink = navLinks.find((link) => link.href === '/contacto')
   const closeMenu = () => setMobileMenuOpen(false)
   const ContactIcon = contactLink?.icon
 
@@ -52,7 +55,6 @@ export default function Navbar() {
             />
           </Link>
 
-          {/* Desktop: enlaces junto al logo */}
           <div className="hidden min-w-0 items-center gap-6 md:flex lg:gap-8">
             {primaryLinks.map((link) => {
               const Icon = link.icon
@@ -66,32 +68,25 @@ export default function Navbar() {
           </div>
         </div>
 
-        {contactLink && ContactIcon ? (
-          <Link
-            href={contactLink.href}
-            className={`hidden md:flex ${linkClassName}`}
+        <div className="flex items-center gap-1 sm:gap-3">
+          {contactLink && ContactIcon ? (
+            <Link href={contactLink.href} className={`hidden md:flex ${linkClassName}`}>
+              <ContactIcon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
+              {contactLink.label}
+            </Link>
+          ) : null}
+          <LanguageSwitcher />
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 -mr-2 rounded-lg text-[#1a1a1a] hover:bg-black/5 transition-colors"
+            aria-label={mobileMenuOpen ? t.nav.closeMenu : t.nav.openMenu}
           >
-            <ContactIcon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />
-            {contactLink.label}
-          </Link>
-        ) : null}
-
-        {/* Mobile: botón hamburguesa */}
-        <button
-          type="button"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 -mr-2 rounded-lg text-[#1a1a1a] hover:bg-black/5 transition-colors"
-          aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-        >
-          {mobileMenuOpen ? (
-            <X className="w-6 h-6" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </button>
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile: menú desplegable */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div

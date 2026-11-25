@@ -164,7 +164,7 @@ export default function JoinFormSection() {
             >
               <span className="block">tu próxima conexión</span>
               <span className="block">clave te está</span>
-              <span className="mt-1 block font-[family-name:var(--font-playfair-display)] normal-case italic text-[#E5B318]">
+              <span className="mt-1 block text-[#E5B318]">
                 esperando
               </span>
             </h2>

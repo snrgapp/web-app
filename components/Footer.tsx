@@ -4,28 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ExternalLink } from 'lucide-react'
 import { SNRG_SHOW_PUBLIC_EVENTOS_NAV } from '@/lib/snrg-public-flags'
+import { useI18n } from '@/components/i18n/LanguageProvider'
 
-const eventosLinksRaw = [
-  { href: '/eventos', label: 'Calendario de eventos' },
-  { href: '/postula-tu-ciudad', label: 'Postula a tu ciudad' },
-  { href: '/ia', label: 'IA para conectar' },
-]
-
-const eventosLinks = SNRG_SHOW_PUBLIC_EVENTOS_NAV
-  ? eventosLinksRaw
-  : eventosLinksRaw.filter((link) => link.href !== '/eventos')
-
-const contactoLinks = [
-  { href: '/contacto', label: 'Dudas y preguntas' },
-  { href: '/contacto', label: 'Proponer alianza' },
-]
-
-const legalLinks = [
-  { href: '/politica-privacidad', label: 'Políticas de Privacidad' },
-  { href: '/terminos', label: 'Términos y condiciones' },
-  { href: '/politica-cookies', label: 'Política de cookies' },
-  { href: '/uso-datos', label: 'Uso de datos y comunidades' },
-]
 
 function LinkItem({ href, label }: { href: string; label: string }) {
   return (
@@ -49,6 +29,26 @@ function Column({ title, children }: { title: string; children: React.ReactNode 
 }
 
 export default function Footer() {
+  const { t } = useI18n()
+  const eventosLinksRaw = [
+    { href: '/eventos', label: t.footer.calendar },
+    { href: '/postula-tu-ciudad', label: t.footer.applyCity },
+    { href: '/ia', label: t.footer.ia },
+  ]
+  const eventosLinks = SNRG_SHOW_PUBLIC_EVENTOS_NAV
+    ? eventosLinksRaw
+    : eventosLinksRaw.filter((link) => link.href !== '/eventos')
+  const contactoLinks = [
+    { href: '/contacto', label: t.footer.questions },
+    { href: '/contacto', label: t.footer.partnership },
+  ]
+  const legalLinks = [
+    { href: '/politica-privacidad', label: t.footer.privacy },
+    { href: '/terminos', label: t.footer.terms },
+    { href: '/politica-cookies', label: t.footer.cookies },
+    { href: '/uso-datos', label: t.footer.data },
+  ]
+
   return (
     <footer className="bg-black text-white">
       {/* Taza como separador: centrada, grande, desbordando a la sección clara */}
@@ -81,21 +81,21 @@ export default function Footer() {
           </div>
 
           {/* Columna 2: Eventos & Networking */}
-          <Column title="Eventos & Networking">
+          <Column title={t.footer.eventsTitle}>
             {eventosLinks.map((link) => (
               <LinkItem key={link.href} href={link.href} label={link.label} />
             ))}
           </Column>
 
           {/* Columna 3: Contacto */}
-          <Column title="Contacto">
+          <Column title={t.footer.contactTitle}>
             {contactoLinks.map((link) => (
               <LinkItem key={link.href} href={link.href} label={link.label} />
             ))}
           </Column>
 
           {/* Columna 4: Legal & Confianza */}
-          <Column title="Legal & Confianza">
+          <Column title={t.footer.legalTitle}>
             {legalLinks.map((link) => (
               <LinkItem key={link.href} href={link.href} label={link.label} />
             ))}
@@ -105,7 +105,7 @@ export default function Footer() {
         {/* Derechos reservados */}
         <div className="mt-10 pt-6 border-t border-white/20 text-center">
           <p className="text-xs sm:text-sm text-white/80">
-            Derechos reservados Synergy Founders & Makers community
+            {t.footer.rights}
           </p>
         </div>
       </div>

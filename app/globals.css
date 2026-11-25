@@ -162,16 +162,14 @@
   margin: 0;
 }
 
-html,
-body {
-  overflow-x: hidden;
-}
-
 html {
+  overflow-x: clip;
+  overflow-y: auto;
   scrollbar-gutter: stable;
 }
 
 body {
+  overflow: visible;
   color: var(--color-text);
   background: var(--color-background);
   font-family: var(--font-sans);
@@ -269,6 +267,36 @@ body {
   .community-map-hotspot-pulse::after {
     animation: none;
     opacity: 0;
+  }
+}
+
+@keyframes hero-orbit-travel {
+  from { offset-distance: var(--orbit-start); }
+  to { offset-distance: calc(var(--orbit-start) + 100%); }
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.hero-orbit-upright {
+  position: absolute;
+  offset-path: circle(var(--orbit-r) at 50% 50%);
+  offset-distance: var(--orbit-start);
+  offset-anchor: center;
+  offset-rotate: 0deg;
+  animation: hero-orbit-travel var(--orbit-duration, 70s) linear infinite;
+}
+
+.hero-float {
+  animation: hero-float 4.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-upright,
+  .hero-float {
+    animation: none;
   }
 }
 

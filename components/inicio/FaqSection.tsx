@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { Manrope } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { faqs } from '@/lib/faq-data'
+import { useI18n } from '@/components/i18n/LanguageProvider'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -94,7 +94,9 @@ function FaqAccordionItem({
 }
 
 export default function FaqSection() {
+  const { t } = useI18n()
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const faqs = t.faq.items
 
   const toggle = (i: number) => setOpenIndex(openIndex === i ? null : i)
 
@@ -107,8 +109,8 @@ export default function FaqSection() {
       aria-labelledby="faq-heading"
     >
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col gap-12 md:flex-row md:gap-16 lg:gap-20">
-          <div className="shrink-0 md:sticky md:top-28 md:w-64 md:self-start">
+        <div className="flex flex-col gap-12 lg:flex-row lg:gap-20">
+          <div className="shrink-0 lg:sticky lg:top-28 lg:w-64 lg:self-start">
             <h2
               id="faq-heading"
               className={cn(
@@ -116,10 +118,8 @@ export default function FaqSection() {
                 manrope.className
               )}
             >
-              <span className="block">todo lo que </span>
-              <span className="mt-1 block font-[family-name:var(--font-playfair-display)] italic text-[#E5B318]">
-                quieres saber.
-              </span>
+              <span className="block">{t.faq.heading[0]}</span>
+              <span className="mt-1 block text-[#E5B318]">{t.faq.heading[1]}</span>
             </h2>
             <p
               className={cn(
@@ -127,7 +127,7 @@ export default function FaqSection() {
                 manrope.className
               )}
             >
-              Si no encuentras tu respuesta aquí, escríbenos directamente.
+              {t.faq.intro}
             </p>
             <Link
               href="/contacto"
@@ -137,7 +137,7 @@ export default function FaqSection() {
                 manrope.className
               )}
             >
-              contáctanos
+              {t.faq.contact}
               <span aria-hidden className="text-[#E5B318]">
                 →
               </span>

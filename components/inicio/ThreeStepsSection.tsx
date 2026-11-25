@@ -1,271 +1,185 @@
 'use client'
 
+import { useLayoutEffect, useRef, useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Manrope } from 'next/font/google'
+import { useI18n } from '@/components/i18n/LanguageProvider'
 
 const manrope = Manrope({ subsets: ['latin'] })
+const impact: { fontFamily: string } = {
+  fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", "Franklin Gothic Bold", sans-serif',
+}
 
-const tagStyles = [
-  { bg: '#fef3c7', color: '#92400e' },
-  { bg: '#d1fae5', color: '#065f46' },
-  { bg: '#e0f2fe', color: '#075985' },
-] as const
+const VB = { w: 1200, h: 640 }
+
+const PATH =
+  'M 40 340 C 140 340 160 480 280 480 S 410 175 530 175 S 640 485 750 485 S 840 190 940 190 S 1080 430 1170 400'
+
+const PIN_AT = [0.1, 0.17, 0.39, 0.61, 0.82, 0.97]
+const PIN_ABOVE = [true, false, true, false, true, false]
+
+type StepItem = { n: string; title: string; body: string }
+
+type Pin = { x: number; y: number; above: boolean }
 
 export default function ThreeStepsSection() {
+  const { t } = useI18n()
+  const steps = t.steps.items
+
   return (
-    <>
-      <style>{`
-        @keyframes ts-evpulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.35; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .ts-ev-dot { animation: none !important; opacity: 1 !important; }
-        }
-        .ts-ev-dot { animation: ts-evpulse 2s infinite; }
-      `}</style>
+    <section className="w-full py-12 sm:py-16 lg:py-24" aria-labelledby="three-steps-heading">
+      <div className="mb-8 px-4 text-center sm:mb-10 sm:px-6 lg:mb-4">
+        <h2
+          id="three-steps-heading"
+          className="scroll-mt-24 text-[1.375rem] font-bold lowercase leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-2xl md:text-3xl lg:text-4xl"
+        >
+          <span className="block">{t.steps.heading[0]}</span>
+          <span className="mt-1 block text-[#E5B318]">{t.steps.heading[1]}</span>
+        </h2>
+      </div>
 
-      <section className="w-full py-16 lg:py-24" aria-labelledby="three-steps-heading">
-        <div className="mb-12 px-6 text-center">
+      <MobileTimeline steps={steps} />
+      <RoadMap steps={steps} />
+
+      <div className="mt-10 flex justify-center px-4 sm:mt-12 sm:px-6 lg:mt-6">
+        <a
+          href="https://www.snrg.lat/reunion"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-[#1a1a1a] px-7 py-3.5',
+            'text-sm font-semibold text-white transition-colors hover:bg-[#2d2d2d] sm:w-auto',
+            manrope.className
+          )}
+        >
+          {t.steps.cta}
+          <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+        </a>
+      </div>
+    </section>
+  )
+}
+
+function RoadMap({ steps }: { steps: StepItem[] }) {
+  const pathRef = useRef<SVGPathElement>(null)
+  const [pins, setPins] = useState<Pin[]>([])
+
+  useLayoutEffect(() => {
+    const path = pathRef.current
+    if (!path) return
+    const len = path.getTotalLength()
+    setPins(
+      PIN_AT.map((t, i) => {
+        const pt = path.getPointAtLength(len * t)
+        return { x: pt.x, y: pt.y, above: PIN_ABOVE[i] ?? pt.y < VB.h * 0.48 }
+      })
+    )
+  }, [])
+
+  return (
+    <div className="relative mx-auto hidden w-full max-w-[1180px] px-6 lg:block" style={{ aspectRatio: `${VB.w} / ${VB.h}` }}>
+      <svg
+        className="absolute inset-0 h-full w-full"
+        viewBox={`0 0 ${VB.w} ${VB.h}`}
+        fill="none"
+        aria-hidden
+      >
+        <defs>
+          <filter id="ts-road-shadow" x="-20%" y="-20%" width="140%" height="160%">
+            <feDropShadow dx="0" dy="18" stdDeviation="24" floodColor="#1a1a1a" floodOpacity="0.18" />
+          </filter>
+        </defs>
+        <path
+          ref={pathRef}
+          d={PATH}
+          stroke="#ffffff"
+          strokeWidth="36"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          filter="url(#ts-road-shadow)"
+        />
+        <path
+          d={PATH}
+          stroke="#1a1a1a"
+          strokeOpacity="0.06"
+          strokeWidth="36"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+
+      {pins.map((pin, i) => {
+        const step = steps[i]
+        if (!step) return null
+        return (
           <div
-            className={cn(
-              'mb-5 inline-flex items-center gap-1.5 rounded-full border border-[#1a1a1a]/15',
-              'bg-white/80 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#1a1a1a]/80',
-              'backdrop-blur-sm',
-              manrope.className
-            )}
+            key={step.n}
+            className="absolute z-[1] w-[200px] -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: `${(pin.x / VB.w) * 100}%`,
+              top: `${(pin.y / VB.h) * 100}%`,
+            }}
           >
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#E5B318]" aria-hidden />
-            cómo funciona
-          </div>
-          <h2
-            id="three-steps-heading"
-            className="text-2xl font-bold lowercase leading-tight tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl"
-          >
-            <span className="block">lo que sucede cuando vas a </span>
-            <span className="mt-1 block font-[family-name:var(--font-playfair-display)] italic text-[#E5B318]">
-              nuestras reuniones presenciales
-            </span>
-          </h2>
-        </div>
-
-        <div className="mx-auto grid max-w-[980px] grid-cols-1 gap-8 px-4 sm:px-6 md:grid-cols-3 md:gap-5">
-          {/* Paso 1 */}
-          <div className="flex flex-col gap-3.5">
             <div
               className={cn(
-                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#1a1a1a] text-xs font-bold text-white',
-                manrope.className
+                'absolute left-1/2 w-[200px] -translate-x-1/2 text-center',
+                pin.above ? 'bottom-[calc(100%+32px)]' : 'top-[calc(100%+32px)]'
               )}
             >
-              01
-            </div>
-            <div>
-              <p className={cn('mb-2 text-sm font-bold leading-snug text-[#1a1a1a]', manrope.className)}>
-                usamos los datos de tu{' '}
-                <span className="font-[family-name:var(--font-playfair-display)] text-base font-normal italic text-[#E5B318]">
-                  formulario
-                </span>
-              </p>
-              <p className="text-[12.5px] leading-relaxed text-neutral-600">
-                Identificamos tus intereses, desafíos y soluciones para construir tu perfil de compatibilidad
-                dentro de la red.
-              </p>
-            </div>
-            <div className="mt-auto flex flex-1 flex-col rounded-2xl border border-[#1a1a1a]/10 bg-white/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] backdrop-blur-sm">
-              <div className="mb-2 rounded-lg border border-[#1a1a1a]/10 bg-white px-2.5 py-2">
-                <p className={cn('mb-0.5 text-[9px] font-semibold uppercase tracking-wide text-neutral-400', manrope.className)}>
-                  Desafío actual
-                </p>
-                <p className="text-[11px] text-[#1a1a1a]/85">Escalar ventas B2B</p>
-              </div>
-              <div className="mb-2 rounded-lg border border-[#1a1a1a]/10 bg-white px-2.5 py-2">
-                <p className={cn('mb-0.5 text-[9px] font-semibold uppercase tracking-wide text-neutral-400', manrope.className)}>
-                  Solución que ofreces
-                </p>
-                <p className="text-[11px] text-[#1a1a1a]/85">Automatización logística</p>
-              </div>
-              <div className="mb-2 rounded-lg border border-[#1a1a1a]/10 bg-white px-2.5 py-2">
-                <p className={cn('mb-0.5 text-[9px] font-semibold uppercase tracking-wide text-neutral-400', manrope.className)}>
-                  Intereses
-                </p>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {(['Fintech', 'Growth', 'SaaS'] as const).map((t, i) => (
-                    <span
-                      key={t}
-                      className={cn('rounded px-1.5 py-0.5 text-[9px] font-semibold', manrope.className)}
-                      style={{ background: tagStyles[i].bg, color: tagStyles[i].color }}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div
-                className={cn(
-                  'mt-2 rounded-lg bg-[#E5B318] py-2 text-center text-[10px] font-bold text-[#1a1a1a]',
-                  manrope.className
-                )}
+              <p
+                className="text-[22px] leading-none tracking-tight text-[#E5B318]"
+                style={impact}
               >
-                Perfil guardado ✓
-              </div>
+                {step.n}
+              </p>
+              <p className="mt-0.5 text-base font-bold leading-none tracking-tight text-[#1a1a1a]">
+                {step.title}
+              </p>
+              <p className="mt-1 text-[12px] leading-[1.2] text-neutral-600">{step.body}</p>
+            </div>
+
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+              <span
+                className="block h-[26px] w-[26px] rounded-full bg-[#1a1a1a] shadow-[0_12px_28px_rgba(26,26,26,0.28)]"
+                aria-hidden
+              >
+                <span className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E5B318]" />
+              </span>
             </div>
           </div>
+        )
+      })}
+    </div>
+  )
+}
 
-          {/* Paso 2 */}
-          <div className="flex flex-col gap-3.5">
-            <div
-              className={cn(
-                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#1a1a1a] text-xs font-bold text-white',
-                manrope.className
-              )}
+function MobileTimeline({ steps }: { steps: StepItem[] }) {
+  return (
+    <ol className="relative mx-auto max-w-md px-4 sm:px-6 lg:hidden">
+      <span
+        className="absolute bottom-3 left-[7px] top-3 w-2 rounded-full bg-white shadow-[0_10px_28px_rgba(26,26,26,0.16)]"
+        aria-hidden
+      />
+      {steps.map((step) => (
+          <li key={step.n} className="relative flex gap-4 pb-8 last:pb-0 sm:gap-5 sm:pb-10">
+            <span
+              className="relative z-[1] mt-1.5 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[#1a1a1a] shadow-[0_10px_24px_rgba(26,26,26,0.28)]"
+              aria-hidden
             >
-              02
-            </div>
-            <div>
-              <p className={cn('mb-2 text-sm font-bold leading-snug text-[#1a1a1a]', manrope.className)}>
-                nuestro{' '}
-                <span className="font-[family-name:var(--font-playfair-display)] text-base font-normal italic text-[#E5B318]">
-                  algoritmo
-                </span>{' '}
-                calcula los mejores matches
+              <span className="h-2 w-2 rounded-full bg-[#E5B318]" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[22px] leading-none tracking-tight text-[#E5B318]" style={impact}>
+                {step.n}
               </p>
-              <p className="text-[12.5px] leading-relaxed text-neutral-600">
-                Cruzamos todos los perfiles y calculamos qué founders tienen mayor compatibilidad contigo antes
-                de cada reunión.
+              <p className="mt-0.5 text-base font-bold leading-none tracking-tight text-[#1a1a1a] sm:text-lg">
+                {step.title}
               </p>
+              <p className="mt-1 text-sm leading-[1.2] text-neutral-600">{step.body}</p>
             </div>
-            <div className="mt-auto flex flex-1 flex-col rounded-2xl border border-[#1a1a1a]/10 bg-white/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] backdrop-blur-sm">
-              <p className={cn('mb-2.5 text-[10px] font-bold text-[#1a1a1a]', manrope.className)}>
-                Calculando compatibilidades...
-              </p>
-              {[
-                { label: 'Desafíos compartidos', w: '94%' },
-                { label: 'Industria complementaria', w: '87%' },
-                { label: 'Soluciones alineadas', w: '91%' },
-              ].map((row) => (
-                <div key={row.label} className="mb-2">
-                  <div className="mb-1 flex justify-between">
-                    <span className={cn('text-[9px] font-semibold text-neutral-500', manrope.className)}>
-                      {row.label}
-                    </span>
-                    <span className={cn('text-[9px] font-semibold text-[#1a1a1a]', manrope.className)}>
-                      {row.w}
-                    </span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-neutral-200">
-                    <div className="h-full rounded-full bg-[#E5B318]" style={{ width: row.w }} />
-                  </div>
-                </div>
-              ))}
-              <div className="mt-2 flex items-center gap-2 rounded-lg border border-[#1a1a1a]/10 bg-white px-2 py-1.5">
-                <div
-                  className={cn(
-                    'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[8px] font-bold',
-                    manrope.className
-                  )}
-                  style={{ background: '#fef3c7', color: '#92400e' }}
-                >
-                  SV
-                </div>
-                <span className={cn('min-w-0 flex-1 truncate text-[10px] font-semibold text-[#1a1a1a]', manrope.className)}>
-                  Sara Vargas
-                </span>
-                <span className={cn('shrink-0 text-[9px] font-bold text-[#b45309]', manrope.className)}>Match alto</span>
-              </div>
-              <div className="mt-1.5 flex items-center gap-2 rounded-lg border border-[#1a1a1a]/10 bg-white px-2 py-1.5">
-                <div
-                  className={cn(
-                    'flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[8px] font-bold',
-                    manrope.className
-                  )}
-                  style={{ background: '#d1fae5', color: '#065f46' }}
-                >
-                  JM
-                </div>
-                <span className={cn('min-w-0 flex-1 truncate text-[10px] font-semibold text-[#1a1a1a]', manrope.className)}>
-                  Juan Molina
-                </span>
-                <span className={cn('shrink-0 text-[9px] font-bold text-[#b45309]', manrope.className)}>Match alto</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Paso 3 */}
-          <div className="flex flex-col gap-3.5">
-            <div
-              className={cn(
-                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-[#1a1a1a] text-xs font-bold text-white',
-                manrope.className
-              )}
-            >
-              03
-            </div>
-            <div>
-              <p className={cn('mb-2 text-sm font-bold leading-snug text-[#1a1a1a]', manrope.className)}>
-                conoces en persona tus{' '}
-                <span className="font-[family-name:var(--font-playfair-display)] text-base font-normal italic text-[#E5B318]">
-                  conexiones clave
-                </span>
-              </p>
-              <p className="text-[12.5px] leading-relaxed text-neutral-600">
-                Durante la reunión te presentamos a los empresarios más compatibles con lo que estás buscando. Sin
-                fricciones.
-              </p>
-            </div>
-            <div className="mt-auto flex flex-1 flex-col rounded-2xl border border-[#1a1a1a]/10 bg-white/80 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)] backdrop-blur-sm">
-              <div className="mb-2.5 flex items-center gap-2 rounded-lg bg-[#1a1a1a] px-2.5 py-2">
-                <span className="ts-ev-dot h-2 w-2 shrink-0 rounded-full bg-[#E5B318]" aria-hidden />
-                <div>
-                  <p className={cn('text-[10px] font-bold text-white', manrope.className)}>Synergy · Barranquilla</p>
-                  <p className="text-[9px] text-white/50">Reunión presencial · 40 asistentes</p>
-                </div>
-              </div>
-              {[
-                { initials: 'SV', bg: '#fef3c7', color: '#92400e', name: 'Sara Vargas', detail: 'Fintech · Barranquilla' },
-                { initials: 'JM', bg: '#d1fae5', color: '#065f46', name: 'Juan Molina', detail: 'SaaS · Cartagena' },
-                { initials: 'LC', bg: '#ffedd5', color: '#9a3412', name: 'Lina Castro', detail: 'Logística · Barranquilla' },
-              ].map((p) => (
-                <div
-                  key={p.name}
-                  className="mb-1.5 flex items-center gap-2 rounded-lg border border-[#1a1a1a]/10 bg-white px-2 py-1.5 last:mb-0"
-                >
-                  <div
-                    className={cn(
-                      'flex h-[26px] w-[26px] shrink-0 items-center justify-center rounded-full text-[8px] font-bold',
-                      manrope.className
-                    )}
-                    style={{ background: p.bg, color: p.color }}
-                  >
-                    {p.initials}
-                  </div>
-                  <div className="min-w-0 flex-1 text-right">
-                    <p className={cn('text-[10px] font-bold text-[#1a1a1a]', manrope.className)}>{p.name}</p>
-                    <p className="text-[9px] text-neutral-400">{p.detail}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 flex justify-center px-6">
-          <a
-            href="https://luma.com/snrg"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(
-              'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-xl bg-[#1a1a1a] px-7 py-3.5',
-              'text-sm font-semibold text-white transition-colors hover:bg-[#2d2d2d] sm:w-auto',
-              manrope.className
-            )}
-          >
-            Quiero ir a la próxima reunión
-            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-          </a>
-        </div>
-      </section>
-    </>
+          </li>
+      ))}
+    </ol>
   )
 }
