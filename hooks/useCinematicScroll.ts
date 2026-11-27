@@ -21,6 +21,7 @@ export function useCinematicScroll(containerRef: RefObject<HTMLElement | null>) 
 
     sections.forEach((section) => {
       const el = section as HTMLElement
+      if (el.hasAttribute('data-no-cinematic')) return
 
       triggers.push(
         ScrollTrigger.create({

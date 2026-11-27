@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowRight } from 'lucide-react'
 import { Manrope } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/components/i18n/LanguageProvider'
@@ -234,6 +235,22 @@ export default function ReviewsCarousel() {
             <div className="text-[11px] lowercase leading-snug text-neutral-500 sm:text-[13px]">{label}</div>
           </div>
         ))}
+      </div>
+
+      <div className="mt-10 flex justify-center px-4 sm:mt-12">
+        <a
+          href="https://www.snrg.lat/reunion"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-[#1a1a1a] px-7 py-3.5',
+            'text-sm font-semibold text-white transition-colors hover:bg-[#2d2d2d] sm:w-auto',
+            manrope.className
+          )}
+        >
+          {t.steps.cta}
+          <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+        </a>
       </div>
     </section>
   )

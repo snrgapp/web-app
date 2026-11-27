@@ -1,185 +1,185 @@
 'use client'
 
-import { useLayoutEffect, useRef, useState } from 'react'
-import { ArrowRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { useEffect, useRef, useState } from 'react'
+import {
+  Bell,
+  ClipboardList,
+  Handshake,
+  Sparkles,
+  UserRound,
+  Users,
+  type LucideIcon,
+} from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { Manrope } from 'next/font/google'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { cn } from '@/lib/utils'
 import { useI18n } from '@/components/i18n/LanguageProvider'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const manrope = Manrope({ subsets: ['latin'] })
-const impact: { fontFamily: string } = {
-  fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", "Franklin Gothic Bold", sans-serif',
-}
 
-const VB = { w: 1200, h: 640 }
-
-const PATH =
-  'M 40 340 C 140 340 160 480 280 480 S 410 175 530 175 S 640 485 750 485 S 840 190 940 190 S 1080 430 1170 400'
-
-const PIN_AT = [0.1, 0.17, 0.39, 0.61, 0.82, 0.97]
-const PIN_ABOVE = [true, false, true, false, true, false]
-
-type StepItem = { n: string; title: string; body: string }
-
-type Pin = { x: number; y: number; above: boolean }
+const NAV_OFFSET = 64
+const stepIcons: LucideIcon[] = [
+  ClipboardList,
+  UserRound,
+  Sparkles,
+  Bell,
+  Users,
+  Handshake,
+]
 
 export default function ThreeStepsSection() {
   const { t } = useI18n()
-  const steps = t.steps.items
+  const steps = t.steps.items.map((step, i) => ({
+    ...step,
+    Icon: stepIcons[i],
+  }))
+  const n = steps.length
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [active, setActive] = useState(0)
+  const step = steps[active] ?? steps[0]
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track || n === 0) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    const st = ScrollTrigger.create({
+      trigger: track,
+      start: `top top+=${NAV_OFFSET}`,
+      end: 'bottom bottom',
+      onUpdate: (self) => {
+        const i = Math.min(n - 1, Math.floor(self.progress * n))
+        setActive((prev) => (prev === i ? prev : i))
+      },
+    })
+
+    return () => st.kill()
+  }, [n])
+
+  const goTo = (index: number) => {
+    const track = trackRef.current
+    if (!track) return
+    const trackTop = track.getBoundingClientRect().top + window.scrollY
+    const startScroll = trackTop - NAV_OFFSET
+    const endScroll = trackTop + track.offsetHeight - window.innerHeight
+    const y = startScroll + ((index + 0.35) / n) * (endScroll - startScroll)
+    window.scrollTo({ top: y, behavior: 'smooth' })
+  }
 
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-24" aria-labelledby="three-steps-heading">
-      <div className="mb-8 px-4 text-center sm:mb-10 sm:px-6 lg:mb-4">
-        <h2
-          id="three-steps-heading"
-          className="scroll-mt-24 text-[1.375rem] font-bold lowercase leading-[1.15] tracking-tight text-[#1a1a1a] sm:text-2xl md:text-3xl lg:text-4xl"
-        >
-          <span className="block">{t.steps.heading[0]}</span>
-          <span className="mt-1 block text-[#E5B318]">{t.steps.heading[1]}</span>
-        </h2>
-      </div>
-
-      <MobileTimeline steps={steps} />
-      <RoadMap steps={steps} />
-
-      <div className="mt-10 flex justify-center px-4 sm:mt-12 sm:px-6 lg:mt-6">
-        <a
-          href="https://www.snrg.lat/reunion"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={cn(
-            'inline-flex w-full max-w-sm items-center justify-center gap-2 rounded-full bg-[#1a1a1a] px-7 py-3.5',
-            'text-sm font-semibold text-white transition-colors hover:bg-[#2d2d2d] sm:w-auto',
-            manrope.className
-          )}
-        >
-          {t.steps.cta}
-          <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-        </a>
-      </div>
-    </section>
-  )
-}
-
-function RoadMap({ steps }: { steps: StepItem[] }) {
-  const pathRef = useRef<SVGPathElement>(null)
-  const [pins, setPins] = useState<Pin[]>([])
-
-  useLayoutEffect(() => {
-    const path = pathRef.current
-    if (!path) return
-    const len = path.getTotalLength()
-    setPins(
-      PIN_AT.map((t, i) => {
-        const pt = path.getPointAtLength(len * t)
-        return { x: pt.x, y: pt.y, above: PIN_ABOVE[i] ?? pt.y < VB.h * 0.48 }
-      })
-    )
-  }, [])
-
-  return (
-    <div className="relative mx-auto hidden w-full max-w-[1180px] px-6 lg:block" style={{ aspectRatio: `${VB.w} / ${VB.h}` }}>
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox={`0 0 ${VB.w} ${VB.h}`}
-        fill="none"
-        aria-hidden
+    <section
+      data-no-cinematic
+      className="w-full"
+      aria-labelledby="three-steps-heading"
+    >
+      <div
+        ref={trackRef}
+        className="relative"
+        style={{ height: `${Math.max(n, 1) * 75}vh` }}
       >
-        <defs>
-          <filter id="ts-road-shadow" x="-20%" y="-20%" width="140%" height="160%">
-            <feDropShadow dx="0" dy="18" stdDeviation="24" floodColor="#1a1a1a" floodOpacity="0.18" />
-          </filter>
-        </defs>
-        <path
-          ref={pathRef}
-          d={PATH}
-          stroke="#ffffff"
-          strokeWidth="36"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          filter="url(#ts-road-shadow)"
-        />
-        <path
-          d={PATH}
-          stroke="#1a1a1a"
-          strokeOpacity="0.06"
-          strokeWidth="36"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
+        <div className="sticky top-16 z-[1] flex flex-col bg-[#f2f2f2] px-4 py-6 sm:px-6 lg:min-h-[calc(100svh-4rem)] lg:justify-center lg:px-8 lg:py-8">
+          <div className="mx-auto grid w-full max-w-[1080px] flex-1 items-center gap-8 lg:grid-cols-2 lg:gap-0">
+            <div className="lg:flex lg:justify-end lg:pr-14">
+              <div className="w-full max-w-[360px] lg:ml-auto">
+                <h2
+                  id="three-steps-heading"
+                  className="mb-5 scroll-mt-24 text-balance text-center text-[1.375rem] font-bold lowercase leading-[1.12] tracking-tight text-[#1a1a1a] sm:text-2xl lg:mb-10 lg:text-left lg:text-[1.85rem]"
+                >
+                  <span className="block">{t.steps.heading[0]}</span>
+                  <span className="block text-[#E5B318]">{t.steps.heading[1]}</span>
+                </h2>
 
-      {pins.map((pin, i) => {
-        const step = steps[i]
-        if (!step) return null
-        return (
-          <div
-            key={step.n}
-            className="absolute z-[1] w-[200px] -translate-x-1/2 -translate-y-1/2"
-            style={{
-              left: `${(pin.x / VB.w) * 100}%`,
-              top: `${(pin.y / VB.h) * 100}%`,
-            }}
-          >
-            <div
-              className={cn(
-                'absolute left-1/2 w-[200px] -translate-x-1/2 text-center',
-                pin.above ? 'bottom-[calc(100%+32px)]' : 'top-[calc(100%+32px)]'
-              )}
-            >
-              <p
-                className="text-[22px] leading-none tracking-tight text-[#E5B318]"
-                style={impact}
-              >
-                {step.n}
-              </p>
-              <p className="mt-0.5 text-base font-bold leading-none tracking-tight text-[#1a1a1a]">
-                {step.title}
-              </p>
-              <p className="mt-1 text-[12px] leading-[1.2] text-neutral-600">{step.body}</p>
+                <div className="flex items-stretch">
+                  <nav aria-label={t.steps.heading.join(' ')} className="min-w-0 flex-1">
+                    <ol className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:flex-col lg:gap-5 lg:overflow-visible lg:pb-0">
+                      {steps.map((item, i) => {
+                        const on = i === active
+                        return (
+                          <li key={item.n} className="shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => goTo(i)}
+                              aria-current={on ? 'step' : undefined}
+                              className={cn(
+                                'flex items-center gap-2.5 rounded-full px-3 py-2 text-left transition-colors lg:rounded-none lg:px-0 lg:py-0',
+                                on ? 'bg-white lg:bg-transparent' : 'bg-transparent'
+                              )}
+                            >
+                              <item.Icon
+                                className={cn(
+                                  'h-5 w-5 shrink-0 transition-colors',
+                                  on ? 'text-[#E5B318]' : 'text-neutral-400'
+                                )}
+                                strokeWidth={1.35}
+                                aria-hidden
+                              />
+                              <span
+                                className={cn(
+                                  'whitespace-nowrap text-sm lowercase tracking-tight transition-colors',
+                                  manrope.className,
+                                  on
+                                    ? 'font-bold text-[#1a1a1a]'
+                                    : 'font-medium text-neutral-400'
+                                )}
+                              >
+                                {item.title}
+                              </span>
+                            </button>
+                          </li>
+                        )
+                      })}
+                    </ol>
+                  </nav>
+                  <div className="relative ml-6 hidden w-px bg-black/10 lg:block" aria-hidden>
+                    <span
+                      className="absolute left-1/2 h-10 w-[3px] -translate-x-1/2 rounded-full bg-[#E5B318] transition-[top] duration-300 ease-out"
+                      style={{
+                        top: `calc(${((active + 0.5) / n) * 100}% - 20px)`,
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-              <span
-                className="block h-[26px] w-[26px] rounded-full bg-[#1a1a1a] shadow-[0_12px_28px_rgba(26,26,26,0.28)]"
-                aria-hidden
-              >
-                <span className="absolute left-1/2 top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E5B318]" />
-              </span>
+            <div className="flex items-start justify-center pt-2 lg:items-center lg:justify-start lg:pl-14 lg:pt-0">
+              <AnimatePresence mode="wait">
+                {step ? (
+                  <motion.div
+                    key={step.n}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.28, ease: 'easeOut' }}
+                    className="w-full max-w-md text-center lg:text-left"
+                  >
+                    <step.Icon
+                      className="mx-auto mb-6 h-14 w-14 text-[#1a1a1a]/35 lg:mx-0 lg:h-16 lg:w-16"
+                      strokeWidth={1.25}
+                      aria-hidden
+                    />
+                    <h3 className="mb-3 text-[1.75rem] font-extrabold lowercase leading-[0.95] tracking-tight text-[#1a1a1a] sm:text-3xl lg:text-4xl">
+                      {step.title}.
+                    </h3>
+                    <p
+                      className={cn(
+                        'mx-auto max-w-md text-[15px] leading-[1.25] text-neutral-600 lg:mx-0 lg:text-base',
+                        manrope.className
+                      )}
+                    >
+                      {step.body}
+                    </p>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
             </div>
           </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function MobileTimeline({ steps }: { steps: StepItem[] }) {
-  return (
-    <ol className="relative mx-auto max-w-md px-4 sm:px-6 lg:hidden">
-      <span
-        className="absolute bottom-3 left-[7px] top-3 w-2 rounded-full bg-white shadow-[0_10px_28px_rgba(26,26,26,0.16)]"
-        aria-hidden
-      />
-      {steps.map((step) => (
-          <li key={step.n} className="relative flex gap-4 pb-8 last:pb-0 sm:gap-5 sm:pb-10">
-            <span
-              className="relative z-[1] mt-1.5 flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-[#1a1a1a] shadow-[0_10px_24px_rgba(26,26,26,0.28)]"
-              aria-hidden
-            >
-              <span className="h-2 w-2 rounded-full bg-[#E5B318]" />
-            </span>
-            <div className="min-w-0">
-              <p className="text-[22px] leading-none tracking-tight text-[#E5B318]" style={impact}>
-                {step.n}
-              </p>
-              <p className="mt-0.5 text-base font-bold leading-none tracking-tight text-[#1a1a1a] sm:text-lg">
-                {step.title}
-              </p>
-              <p className="mt-1 text-sm leading-[1.2] text-neutral-600">{step.body}</p>
-            </div>
-          </li>
-      ))}
-    </ol>
+        </div>
+      </div>
+    </section>
   )
 }

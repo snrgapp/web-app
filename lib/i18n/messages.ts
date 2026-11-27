@@ -28,21 +28,21 @@ const es = {
     intro: 'Nuestra IA te conecta con los founders correctos, en el evento o después.',
     cards: [
       {
-        title: 'Tu perfil es el punto de partida',
+        title: ['Tu perfil', 'es el punto', 'de partida.'],
         body: 'Registras tus retos actuales, soluciones que ofreces e intereses. La IA construye tu grafo de afinidad con toda la red.',
       },
       {
-        title: 'La IA calcula compatibilidades',
+        title: ['La IA', 'calcula', 'compatibilidades.'],
         body: 'Cruza perfiles en tiempo real: quién resuelve lo que necesitas, comparte industria o está en tu misma ciudad.',
       },
       {
-        title: 'Te conectamos donde estés',
+        title: ['Te conectamos', 'donde', 'estés.'],
         body: 'Recibe recomendaciones semanales por WhatsApp, asistas o no. Si visitas un espacio, la conexión ocurre en persona.',
       },
     ],
   },
   steps: {
-    heading: ['lo que sucede cuando vas a ', 'nuestras reuniones presenciales'],
+    heading: ['lo que sucede', 'cuando vas a synergy'],
     cta: 'Quiero ir a la próxima reunión',
     items: [
       {
@@ -122,6 +122,41 @@ const es = {
       { name: 'Nuevas alianzas', badge: 'cierre' },
       { name: 'Espacio pop-up', badge: 'pop-up' },
       { name: 'Equipo y aliados', badge: 'backstage' },
+    ],
+  },
+  whyAttend: {
+    heading: ['por qué asisten', 'a synergy'],
+    intro: [
+      'Synergy es para founders y makers que quieren conexiones con intención: gente que resuelve lo que necesitas, en la misma mesa.',
+      'Tú llegas con tu proyecto. Nosotros hacemos el match, la mesa y el seguimiento, para que no dependas del azar.',
+    ],
+    cta: 'Quiero ir a la próxima reunión',
+    stats: [
+      { num: '4.9', label: 'valoración media', showStar: true },
+      { num: '500+', label: 'founders en eventos' },
+      { num: '98%', label: 'recomendarían volver' },
+    ],
+    reasons: [
+      {
+        n: '01',
+        title: 'encuentras a tu gente',
+        body: 'Un grupo curado de founders que entienden el camino y buscan alianzas reales, no tarjetas al azar.',
+      },
+      {
+        n: '02',
+        title: 'llegas con el match hecho',
+        body: 'Antes de la reunión, la IA cruza perfiles: quién resuelve lo que necesitas, comparte industria o está en tu ciudad.',
+      },
+      {
+        n: '03',
+        title: 'la conexión es en persona',
+        body: 'Espacios íntimos. Te ubicamos en mesa de forma estratégica, sin ruido y sin pitch forzado.',
+      },
+      {
+        n: '04',
+        title: 'la red no se apaga',
+        body: 'Recibes recomendaciones por WhatsApp, asistas o no. Si visitas un espacio, la conexión ocurre ahí.',
+      },
     ],
   },
   reviews: {
@@ -215,21 +250,21 @@ const en: Messages = {
     intro: 'Our AI connects you with the right founders, at the event or after.',
     cards: [
       {
-        title: 'Your profile is the starting point',
+        title: ['Your profile', 'is the starting', 'point.'],
         body: 'You log your current challenges, the solutions you offer and your interests. The AI builds your affinity graph across the network.',
       },
       {
-        title: 'AI calculates compatibility',
+        title: ['AI', 'calculates', 'compatibility.'],
         body: 'It crosses profiles in real time: who solves what you need, shares your industry or is in the same city.',
       },
       {
-        title: 'We connect you wherever you are',
+        title: ['We connect you', 'wherever', 'you are.'],
         body: 'Get weekly recommendations on WhatsApp, whether you attend or not. If you visit a space, the connection happens in person.',
       },
     ],
   },
   steps: {
-    heading: ['what happens when you go to ', 'our in-person meetups'],
+    heading: ['what happens', 'when you go to synergy'],
     cta: 'I want to go to the next meetup',
     items: [
       {
@@ -309,6 +344,41 @@ const en: Messages = {
       { name: 'New alliances', badge: 'closing' },
       { name: 'Pop-up space', badge: 'pop-up' },
       { name: 'Team and partners', badge: 'backstage' },
+    ],
+  },
+  whyAttend: {
+    heading: ['why people come', 'to synergy'],
+    intro: [
+      'Synergy is for founders and makers who want connections with intent: people who solve what you need, at the same table.',
+      'You show up with your project. We handle the match, the seating and the follow-up, so you don’t depend on chance.',
+    ],
+    cta: 'I want to go to the next meetup',
+    stats: [
+      { num: '4.9', label: 'average rating', showStar: true },
+      { num: '500+', label: 'founders at events' },
+      { num: '98%', label: 'would come back' },
+    ],
+    reasons: [
+      {
+        n: '01',
+        title: 'you find your people',
+        body: 'A curated group of founders who get the journey and want real alliances, not random business cards.',
+      },
+      {
+        n: '02',
+        title: 'you arrive already matched',
+        body: 'Before the meetup, AI crosses profiles: who solves what you need, shares your industry or is in your city.',
+      },
+      {
+        n: '03',
+        title: 'the connection is in person',
+        body: 'Intimate rooms. We seat you with founders on purpose — no noise, no forced pitch.',
+      },
+      {
+        n: '04',
+        title: 'the network stays on',
+        body: 'You get WhatsApp recommendations whether you attend or not. If you visit a space, the connection happens there.',
+      },
     ],
   },
   reviews: {
@@ -402,21 +472,21 @@ const pt: Messages = {
     intro: 'Nossa IA te conecta com os founders certos, no evento ou depois.',
     cards: [
       {
-        title: 'Seu perfil é o ponto de partida',
+        title: ['Seu perfil', 'é o ponto', 'de partida.'],
         body: 'Você registra seus desafios atuais, as soluções que oferece e seus interesses. A IA constrói seu grafo de afinidade com toda a rede.',
       },
       {
-        title: 'A IA calcula compatibilidades',
+        title: ['A IA', 'calcula', 'compatibilidades.'],
         body: 'Cruza perfis em tempo real: quem resolve o que você precisa, compartilha indústria ou está na mesma cidade.',
       },
       {
-        title: 'Conectamos você onde estiver',
+        title: ['Conectamos você', 'onde', 'estiver.'],
         body: 'Receba recomendações semanais no WhatsApp, compareça ou não. Se visitar um espaço, a conexão acontece pessoalmente.',
       },
     ],
   },
   steps: {
-    heading: ['o que acontece quando você vai às ', 'nossas reuniões presenciais'],
+    heading: ['o que acontece', 'quando você vai à synergy'],
     cta: 'Quero ir à próxima reunião',
     items: [
       {
@@ -496,6 +566,41 @@ const pt: Messages = {
       { name: 'Novas alianças', badge: 'encerramento' },
       { name: 'Espaço pop-up', badge: 'pop-up' },
       { name: 'Equipe e parceiros', badge: 'backstage' },
+    ],
+  },
+  whyAttend: {
+    heading: ['por que vão', 'à synergy'],
+    intro: [
+      'A Synergy é para founders e makers que querem conexões com intenção: gente que resolve o que você precisa, na mesma mesa.',
+      'Você chega com o seu projeto. Nós fazemos o match, a mesa e o acompanhamento, para você não depender do acaso.',
+    ],
+    cta: 'Quero ir à próxima reunião',
+    stats: [
+      { num: '4.9', label: 'avaliação média', showStar: true },
+      { num: '500+', label: 'founders em eventos' },
+      { num: '98%', label: 'voltariam de novo' },
+    ],
+    reasons: [
+      {
+        n: '01',
+        title: 'você encontra a sua gente',
+        body: 'Um grupo curado de founders que entendem o caminho e buscam alianças reais, não cartões ao acaso.',
+      },
+      {
+        n: '02',
+        title: 'você chega com o match feito',
+        body: 'Antes da reunião, a IA cruza perfis: quem resolve o que você precisa, compartilha indústria ou está na sua cidade.',
+      },
+      {
+        n: '03',
+        title: 'a conexão é pessoal',
+        body: 'Espaços íntimos. Sentamos você com founders de forma estratégica, sem ruído e sem pitch forçado.',
+      },
+      {
+        n: '04',
+        title: 'a rede não desliga',
+        body: 'Você recebe recomendações no WhatsApp, compareça ou não. Se visitar um espaço, a conexão acontece lá.',
+      },
     ],
   },
   reviews: {

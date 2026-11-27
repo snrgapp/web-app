@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import { Manrope } from 'next/font/google'
-import { IdCard, MessageCircle, Users } from 'lucide-react'
+import { MessageCircle, UserRound, Users } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/components/i18n/LanguageProvider'
 
@@ -11,29 +11,23 @@ const manrope = Manrope({ subsets: ['latin'] })
 const cardChrome = [
   {
     n: '01',
-    Icon: IdCard,
-    card: 'bg-[#FFF4C8] text-[#1a1a1a] shadow-[0_18px_40px_rgba(229,179,24,0.18)]',
-    bodyColor: 'text-[#1a1a1a]/70',
-    logo: '/images/matching/isotipo-negro.png',
+    Icon: UserRound,
     tilt: 'lg:-rotate-[3deg]',
   },
   {
     n: '02',
     Icon: Users,
-    card: 'bg-[#E5B318] text-[#1a1a1a] shadow-[0_22px_48px_rgba(229,179,24,0.35)]',
-    bodyColor: 'text-[#1a1a1a]/75',
-    logo: '/images/matching/isotipo-negro.png',
     tilt: 'lg:z-10 lg:-translate-y-6 lg:scale-[1.04]',
   },
   {
     n: '03',
     Icon: MessageCircle,
-    card: 'bg-[#1a1a1a] text-white shadow-[0_18px_40px_rgba(26,26,26,0.28)]',
-    bodyColor: 'text-white/70',
-    logo: '/images/matching/isotipo-blanco.png',
     tilt: 'lg:rotate-[3deg]',
   },
 ] as const
+
+const cardClass =
+  'bg-[#1a1a1a] text-white shadow-[0_18px_40px_rgba(26,26,26,0.28)]'
 
 export default function AIMatchingSection() {
   const { t } = useI18n()
@@ -63,30 +57,30 @@ export default function AIMatchingSection() {
           className={cn(
             'flex snap-x snap-mandatory gap-4 overflow-x-auto pb-6',
             '[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden',
-            'lg:mx-auto lg:max-w-[1080px] lg:items-end lg:justify-center lg:gap-5 lg:overflow-visible lg:pb-10'
+            'lg:mx-auto lg:max-w-[1080px] lg:items-stretch lg:justify-center lg:gap-5 lg:overflow-visible lg:pb-10'
           )}
         >
           {cards.map((card) => (
             <article
               key={card.n}
               className={cn(
-                'flex h-[460px] w-[min(280px,82vw)] shrink-0 snap-center flex-col rounded-[2rem] p-5 sm:h-[500px] sm:p-6',
-                'lg:h-[520px] lg:w-[300px] lg:transition-transform',
-                card.card,
+                'flex min-h-[320px] w-[min(230px,78vw)] shrink-0 snap-center flex-col rounded-[1.5rem] p-4 pb-5 sm:min-h-[348px] sm:p-5',
+                'lg:min-h-[368px] lg:w-[250px] lg:transition-transform',
+                cardClass,
                 card.tilt
               )}
             >
               <div className="flex items-center justify-between">
                 <Image
-                  src={card.logo}
+                  src="/images/matching/isotipo-blanco.png"
                   alt="Synergy"
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 object-contain"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 object-contain"
                 />
                 <span
                   className={cn(
-                    'text-[11px] font-semibold tracking-wide opacity-60',
+                    'text-[10px] font-semibold tracking-wide opacity-60',
                     manrope.className
                   )}
                 >
@@ -94,18 +88,23 @@ export default function AIMatchingSection() {
                 </span>
               </div>
 
-              <div className="mx-auto my-6 flex h-[120px] w-[120px] items-center justify-center sm:h-[132px] sm:w-[132px]">
+              <div className="mx-auto mb-2 mt-3 flex h-16 w-16 items-center justify-center sm:mb-2.5 sm:mt-4 sm:h-[72px] sm:w-[72px]">
                 <card.Icon
-                  className="h-16 w-16 sm:h-[4.5rem] sm:w-[4.5rem]"
-                  strokeWidth={1.25}
+                  className="h-12 w-12 fill-current sm:h-14 sm:w-14"
+                  fill="currentColor"
+                  strokeWidth={0}
                   aria-hidden
                 />
               </div>
 
-              <h3 className="mb-2 text-[1.65rem] font-bold leading-[1.12] tracking-tight">
-                {card.title}
+              <h3 className="mb-1.5 text-[1.15rem] font-extrabold leading-[0.95] tracking-tight text-white sm:text-xl">
+                {card.title.map((line) => (
+                  <span key={line} className="block leading-[0.95]">
+                    {line}
+                  </span>
+                ))}
               </h3>
-              <p className={cn('text-[14px] leading-relaxed', card.bodyColor)}>{card.body}</p>
+              <p className="text-[12px] leading-[1.2] text-white/70 sm:text-[13px]">{card.body}</p>
             </article>
           ))}
         </div>
