@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react'
 import { messages, type Messages } from '@/lib/i18n/messages'
-import { isLocale, type Locale } from '@/lib/i18n/types'
+import { isLocale, isRtlLocale, type Locale } from '@/lib/i18n/types'
 
 const STORAGE_KEY = 'snrg-locale'
 
@@ -26,8 +26,10 @@ function detectLocale(): Locale {
   if (typeof window === 'undefined') return 'es'
   const stored = window.localStorage.getItem(STORAGE_KEY)
   if (isLocale(stored)) return stored
-  const nav = window.navigator.language.slice(0, 2).toLowerCase()
-  if (nav === 'en' || nav === 'pt') return nav
+  const nav = window.navigator.language.toLowerCase()
+  if (nav.startsWith('nb') || nav.startsWith('nn') || nav.startsWith('no')) return 'no'
+  const short = nav.slice(0, 2)
+  if (isLocale(short)) return short
   return 'es'
 }
 
@@ -39,7 +41,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    document.documentElement.lang = locale
+    const root = document.documentElement
+    root.lang = locale
+    root.dir = isRtlLocale(locale) ? 'rtl' : 'ltr'
+    root.classList.toggle('font-ar', locale === 'ar')
   }, [locale])
 
   const setLocale = useCallback((next: Locale) => {

@@ -1,12 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Noto_Sans_Arabic, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getSiteBaseUrl, getOrganizationSameAs } from "@/lib/site";
 import Providers from "@/components/Providers";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin", "latin-ext"] });
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  variable: "--font-arabic",
+});
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair-display",
@@ -79,8 +83,8 @@ export default function RootLayout({
   }
 
   return (
-    <html lang="es">
-      <body className={`${inter.className} ${playfair.variable} antialiased`}>
+    <html lang="es" suppressHydrationWarning>
+      <body className={`${inter.className} ${playfair.variable} ${notoArabic.variable} antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

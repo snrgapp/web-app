@@ -68,7 +68,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-0.5 sm:gap-3">
           {contactLink && ContactIcon ? (
             <Link href={contactLink.href} className={`hidden md:flex ${linkClassName}`}>
               <ContactIcon className="h-4 w-4 shrink-0 opacity-90" strokeWidth={1.35} aria-hidden />

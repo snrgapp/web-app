@@ -15,6 +15,8 @@ const es = {
     es: 'Español',
     en: 'English',
     pt: 'Português',
+    ar: 'العربية',
+    no: 'Norsk',
   },
   hero: {
     title: ['El espacio', 'para conectar', 'founders'],
@@ -237,6 +239,8 @@ const en: Messages = {
     es: 'Español',
     en: 'English',
     pt: 'Português',
+    ar: 'العربية',
+    no: 'Norsk',
   },
   hero: {
     title: ['The space', 'to connect', 'founders'],
@@ -459,6 +463,8 @@ const pt: Messages = {
     es: 'Español',
     en: 'English',
     pt: 'Português',
+    ar: 'العربية',
+    no: 'Norsk',
   },
   hero: {
     title: ['O espaço', 'para conectar', 'founders'],
@@ -668,4 +674,449 @@ const pt: Messages = {
   },
 }
 
-export const messages: Record<Locale, Messages> = { es, en, pt }
+const ar: Messages = {
+  nav: {
+    events: 'الفعاليات',
+    resources: 'الموارد',
+    contact: 'تواصل',
+    openMenu: 'فتح القائمة',
+    closeMenu: 'إغلاق القائمة',
+    language: 'اللغة',
+  },
+  languages: {
+    es: 'Español',
+    en: 'English',
+    pt: 'Português',
+    ar: 'العربية',
+    no: 'Norsk',
+  },
+  hero: {
+    title: ['المساحة', 'لربط', 'المؤسسين'],
+    body: 'اطرح أسئلة، شارك أفكارك وابنِ علاقات مع رواد أعمال آخرين — على الطاولة، لا في محاضرة. سينرجي تجعل التشبيك استراتيجياً وقريباً وذا نتائج.',
+    cta: 'اذهب إلى اللقاء القادم',
+    howItWorks: 'كيف يعمل',
+    matchConfirmed: 'تم تأكيد التطابق',
+  },
+  matching: {
+    heading: ['علاقات لا تحدث', 'بالمصادفة'],
+    intro: 'ذكاءنا الاصطناعي يربطك بالمؤسسين المناسبين، في الحدث أو بعده.',
+    cards: [
+      {
+        title: ['ملفك', 'هو نقطة', 'الانطلاق.'],
+        body: 'تسجّل تحدياتك الحالية والحلول التي تقدمها واهتماماتك. الذكاء الاصطناعي يبني شبكة توافقك مع الجميع.',
+      },
+      {
+        title: ['الذكاء', 'يحسب', 'التوافق.'],
+        body: 'يعبر الملفات في الوقت الفعلي: من يحل ما تحتاجه، أو يشارك قطاعك، أو يكون في مدينتك.',
+      },
+      {
+        title: ['نصلك', 'أينما', 'كنت.'],
+        body: 'تصلك توصيات أسبوعية عبر واتساب، حضرت أم لا. إذا زرت مساحة، تحدث الصلة وجهاً لوجه.',
+      },
+    ],
+  },
+  steps: {
+    heading: ['ماذا يحدث', 'عندما تأتي إلى synergy'],
+    cta: 'أريد الذهاب إلى اللقاء القادم',
+    items: [
+      {
+        n: '01',
+        title: 'استمارتك',
+        body: 'تملأ ما تقدمه وما تحتاجه واهتماماتك. من هنا يبدأ مكانك في الشبكة.',
+      },
+      {
+        n: '02',
+        title: 'ملفك',
+        body: 'نحدد التحديات والحلول والقطاع لنبني خريطة توافقك.',
+      },
+      {
+        n: '03',
+        title: 'الخوارزمية',
+        body: 'نعبر الملفات ونحسب مع من تناسب أكثر — قبل كل لقاء.',
+      },
+      {
+        n: '04',
+        title: 'نُعلمك',
+        body: 'تصلك توصياتك عبر واتساب، حضرت اللقاء الحضوري أم لا.',
+      },
+      {
+        n: '05',
+        title: 'اللقاء',
+        body: 'تصل إلى مساحة حميمة. نجلسك مع مؤسسين بشكل استراتيجي.',
+      },
+      {
+        n: '06',
+        title: 'الصلة',
+        body: 'تلتقي الأشخاص المناسبين وجهاً لوجه. بلا ضوضاء، بلا بطاقات عشوائية.',
+      },
+    ],
+  },
+  experiences: {
+    pill: 'تجارب',
+    heading: ['محفظتنا من ', 'التجارب'],
+    intro: 'صيغ مختلفة للحظات مختلفة في طريقك كمؤسس.',
+    founders: 'مؤسسون',
+    status: {
+      ACTIVO: 'نشط',
+      PRÓXIMO: 'قادم',
+      COMPLETADO: 'مكتمل',
+    },
+    frequency: {
+      Trimestral: 'ربع سنوي',
+      Cuatrimestre: 'كل أربعة أشهر',
+      Semestral: 'نصف سنوي',
+    },
+    items: [
+      {
+        description: 'لقاءات حميمة بين مؤسسي الكاريبي للتواصل والتعاون وبناء تحالفات حقيقية.',
+      },
+      {
+        description: 'حدث في سينما مع لجنة خبراء وعروض من خمس شركات ناشئة أمام مستثمرين ومؤسسين.',
+      },
+      {
+        description: 'تجربة غامرة لعدة أيام يعيش فيها مؤسسو الشركات الناشئة ويبنون ويتبادلون الإرشاد.',
+      },
+    ],
+  },
+  gallery: {
+    headingBefore: 'صور لمن يبنون',
+    headingAccent: 'معاً',
+    intro: 'لمحة عن اللقاءات والعروض ومجتمع سينرجي في الكاريبي الكولومبي.',
+    photos: [
+      { name: 'تشبيك مفتوح', badge: 'after office' },
+      { name: 'صلات مباشرة', badge: 'networking' },
+      { name: 'عرض وحوار', badge: 'pitch' },
+      { name: 'جلسة المجتمع', badge: 'plenaria' },
+      { name: 'ترحيب باللقاء', badge: 'evento' },
+      { name: 'ورشة', badge: 'workshop' },
+      { name: 'ليلة المؤسسين', badge: 'comunidad' },
+      { name: 'تحالفات جديدة', badge: 'cierre' },
+      { name: 'مساحة مؤقتة', badge: 'pop-up' },
+      { name: 'الفريق والشركاء', badge: 'backstage' },
+    ],
+  },
+  whyAttend: {
+    heading: ['لماذا يحضرون', 'إلى synergy'],
+    intro: [
+      'سينرجي للمؤسسين وصنّاع المشاريع الذين يريدون علاقات بنية: أشخاص يحلّون ما تحتاجه، على الطاولة نفسها.',
+      'تأتي بمشروعك. نحن نتولى التطابق والطاولة والمتابعة، حتى لا تعتمد على الصدفة.',
+    ],
+    cta: 'أريد الذهاب إلى اللقاء القادم',
+    stats: [
+      { num: '4.9', label: 'متوسط التقييم', showStar: true },
+      { num: '500+', label: 'مؤسسون في الفعاليات' },
+      { num: '98%', label: 'سيعودون مجدداً' },
+    ],
+    reasons: [
+      {
+        n: '01',
+        title: 'تجد ناسك',
+        body: 'مجموعة منتقاة من المؤسسين يفهمون الطريق ويريدون تحالفات حقيقية، لا بطاقات عشوائية.',
+      },
+      {
+        n: '02',
+        title: 'تصل والتطابق جاهز',
+        body: 'قبل اللقاء، يعبُر الذكاء الاصطناعي الملفات: من يحل ما تحتاجه، أو يشارك قطاعك، أو يكون في مدينتك.',
+      },
+      {
+        n: '03',
+        title: 'الصلة وجهاً لوجه',
+        body: 'مساحات حميمة. نجلسك مع مؤسسين عن قصد — بلا ضوضاء وبلا عرض إجباري.',
+      },
+      {
+        n: '04',
+        title: 'الشبكة لا تنطفئ',
+        body: 'تصلك توصيات واتساب حضرت أم لا. إذا زرت مساحة، تحدث الصلة هناك.',
+      },
+    ],
+  },
+  reviews: {
+    heading: ['ماذا يقول من عاشوا', 'التجربة'],
+    stats: [
+      { num: '4.9', label: 'متوسط التقييم', showStar: true },
+      { num: '500+', label: 'مؤسسون في الفعاليات' },
+      { num: '98%', label: 'سيوصون بالتجربة' },
+    ],
+    quotes: [
+      'خرجت بثلاثة مواعيد مع أشخاص كانوا يبحثون تماماً عما نقدمه.',
+      'التطابق قبل الوصول يصنع الفرق. هذا ليس تشبيكاً عشوائياً.',
+      'العرض فتح لي أبواباً مع مرشدين ما كنت لألقاهم بطريقة أخرى.',
+      'الذكاء الاصطناعي لا يحل محل القهوة، بل يجعلها أجدى.',
+      'كمستثمر أبحث عن وضوح ومؤسسين بتقدم حقيقي، لا شرائح فقط.',
+      'رشّحنا مدينتنا وكانت العملية واضحة. يطلبون الموعد التالي منذ الآن.',
+      'استأنفت محادثات كانت قد بردت. إنها شبكة حية، لا قائمة.',
+    ],
+  },
+  faq: {
+    heading: ['كل ما ', 'تريد معرفته.'],
+    intro: 'إن لم تجد إجابتك هنا، اكتب لنا مباشرة.',
+    contact: 'تواصل معنا',
+    items: [
+      {
+        q: 'ما هي سينرجي ولمن هي؟',
+        a: 'سينرجي مجتمع لمؤسسين وصنّاع من الكاريبي الكولومبي وأمريكا اللاتينية. ننظم تجارب تشبيك، نربط الملفات بالذكاء الاصطناعي، ونبني منظومة يجد فيها رواد الأعمال تحالفات وموارد وتعاوناً حقيقياً. إن كنت تبني شيئاً، فهذا مكانك.',
+      },
+      {
+        q: 'كيف يعمل التطابق بالذكاء الاصطناعي؟',
+        a: 'عند تسجيلك، يقرأ ذكاؤنا الاصطناعي ملفك — ما تقدمه وما تحتاجه ومرحلة مشروعك — ويربطك بمؤسسين يكمّلون ما تبحث عنه. العملية تلقائية وتحدث قبل كل فعالية لتصل بصلات ذات صلة من الدقيقة الأولى.',
+      },
+      {
+        q: 'كم يكلف الانضمام إلى سينرجي؟',
+        a: 'التسجيل في المجتمع مجاني. لكل تجربة (Networking Meetings وFounder House وSpotlight) سعر دخول حسب الصيغة. راجع صفحة الفعاليات للأسعار المحدّثة.',
+      },
+      {
+        q: 'في أي مدن تعملون حالياً؟',
+        a: 'نعمل في بارانكيا كمقر رئيسي، مع حضور متزايد في الكاريبي الكولومبي. إذا أردت جلب سينرجي إلى مدينتك، يمكنك التقديم من قسم «رشّح مدينتك» في الموقع.',
+      },
+      {
+        q: 'ما الذي يميز سينرجي عن فعاليات التشبيك الأخرى؟',
+        a: 'معظم التشبيك التقليدي عشوائي. في سينرجي لكل صلة نية: نستخدم الذكاء الاصطناعي لتصل وأنت تعرف مع من تتحدث ولماذا. ونحن مجتمع مستمر، لا فعالية واحدة — يبقى المؤسسون متصلين بين الدورات.',
+      },
+      {
+        q: 'هل يمكنني أن أكون شريكاً أو راعياً لسينرجي؟',
+        a: 'نعم. نعمل مع جامعات وبرامج احتضان وشركات وعلامات تريد الارتباط بمنظومة المؤسسين في الكاريبي. اكتب لنا من قسم «اقترح شراكة» وننسّق حواراً.',
+      },
+    ],
+  },
+  footer: {
+    eventsTitle: 'فعاليات وتشبيك',
+    contactTitle: 'تواصل',
+    legalTitle: 'قانوني وثقة',
+    calendar: 'تقويم الفعاليات',
+    applyCity: 'رشّح مدينتك',
+    ia: 'ذكاء للربط',
+    questions: 'أسئلة واستفسارات',
+    partnership: 'اقترح شراكة',
+    privacy: 'سياسة الخصوصية',
+    terms: 'الشروط والأحكام',
+    cookies: 'سياسة ملفات التعريف',
+    data: 'استخدام البيانات والمجتمعات',
+    rights: 'جميع الحقوق محفوظة لمجتمع Synergy Founders & Makers',
+  },
+}
+
+const no: Messages = {
+  nav: {
+    events: 'arrangementer',
+    resources: 'ressurser',
+    contact: 'kontakt',
+    openMenu: 'Åpne meny',
+    closeMenu: 'Lukk meny',
+    language: 'Språk',
+  },
+  languages: {
+    es: 'Español',
+    en: 'English',
+    pt: 'Português',
+    ar: 'العربية',
+    no: 'Norsk',
+  },
+  hero: {
+    title: ['Rommet', 'for å knytte', 'founders'],
+    body: 'Still spørsmål, del ideer og bygg relasjoner med andre gründere — ved bordet, ikke i et foredrag. Synergy gjør nettverking strategisk, nært og resultatorientert.',
+    cta: 'Gå til neste møte',
+    howItWorks: 'Slik fungerer det',
+    matchConfirmed: 'match bekreftet',
+  },
+  matching: {
+    heading: ['relasjoner som ikke skjer', 'tilfeldig'],
+    intro: 'KI-en vår kobler deg med de riktige founderene, på arrangementet eller etterpå.',
+    cards: [
+      {
+        title: ['Profilen din', 'er start-', 'punktet.'],
+        body: 'Du registrerer utfordringer, løsninger du tilbyr og interesser. KI-en bygger affinitetsgrafen din mot hele nettverket.',
+      },
+      {
+        title: ['KI', 'beregner', 'kompatibilitet.'],
+        body: 'Den krysser profiler i sanntid: hvem løser det du trenger, deler bransje eller er i samme by.',
+      },
+      {
+        title: ['Vi kobler deg', 'der du', 'er.'],
+        body: 'Få ukentlige anbefalinger på WhatsApp, enten du deltar eller ikke. Besøker du et sted, skjer forbindelsen ansikt til ansikt.',
+      },
+    ],
+  },
+  steps: {
+    heading: ['det som skjer', 'når du kommer til synergy'],
+    cta: 'Jeg vil på neste møte',
+    items: [
+      {
+        n: '01',
+        title: 'skjemaet ditt',
+        body: 'Du fyller inn hva du tilbyr, hva du trenger og interessene dine. Der starter plassen din i nettverket.',
+      },
+      {
+        n: '02',
+        title: 'profilen din',
+        body: 'Vi kartlegger utfordringer, løsninger og bransje for å bygge kompatibilitetskartet ditt.',
+      },
+      {
+        n: '03',
+        title: 'algoritmen',
+        body: 'Vi krysser profiler og beregner hvem du passer best med — før hvert møte.',
+      },
+      {
+        n: '04',
+        title: 'vi gir beskjed',
+        body: 'Du får anbefalingene dine på WhatsApp, enten du møter opp eller ikke.',
+      },
+      {
+        n: '05',
+        title: 'møtet',
+        body: 'Du kommer til et intimt rom. Vi plasserer deg ved bord med founders med hensikt.',
+      },
+      {
+        n: '06',
+        title: 'forbindelsen',
+        body: 'Du møter de riktige menneskene ansikt til ansikt. Uten støy, uten tilfeldige visittkort.',
+      },
+    ],
+  },
+  experiences: {
+    pill: 'opplevelser',
+    heading: ['porteføljen vår av ', 'opplevelser'],
+    intro: 'ulike formater for ulike øyeblikk på veien som founder.',
+    founders: 'founders',
+    status: {
+      ACTIVO: 'AKTIV',
+      PRÓXIMO: 'KOMMENDE',
+      COMPLETADO: 'FULLFØRT',
+    },
+    frequency: {
+      Trimestral: 'Kvartalsvis',
+      Cuatrimestre: 'Hver 4. måned',
+      Semestral: 'Halvårlig',
+    },
+    items: [
+      {
+        description:
+          'Intime samlinger mellom karibiske founders for å knytte kontakt, samarbeide og bygge ekte allianser.',
+      },
+      {
+        description:
+          'Kinoarrangement med ekspertpanel og pitch fra 5 startups foran investorer og founders.',
+      },
+      {
+        description:
+          'En fler dagers oppslukende opplevelse der startup-founders bor, bygger og veileder hverandre.',
+      },
+    ],
+  },
+  gallery: {
+    headingBefore: 'bilder av dem som bygger',
+    headingAccent: 'sammen',
+    intro: 'et blikk på møter, pitcher og synergy-fellesskapet i det colombianske karibia.',
+    photos: [
+      { name: 'Åpen nettverking', badge: 'after office' },
+      { name: 'Forbindelser live', badge: 'networking' },
+      { name: 'Pitch og samtale', badge: 'pitch' },
+      { name: 'Fellesskapsplenum', badge: 'plenary' },
+      { name: 'Velkommen til møtet', badge: 'event' },
+      { name: 'Workshop', badge: 'workshop' },
+      { name: 'Founders-kveld', badge: 'community' },
+      { name: 'Nye allianser', badge: 'closing' },
+      { name: 'Pop-up-sted', badge: 'pop-up' },
+      { name: 'Team og partnere', badge: 'backstage' },
+    ],
+  },
+  whyAttend: {
+    heading: ['hvorfor de kommer', 'til synergy'],
+    intro: [
+      'Synergy er for founders og makers som vil ha relasjoner med intensjon: folk som løser det du trenger, ved samme bord.',
+      'Du kommer med prosjektet ditt. Vi tar match, plassering og oppfølging, så du ikke er avhengig av tilfeldigheter.',
+    ],
+    cta: 'Jeg vil på neste møte',
+    stats: [
+      { num: '4.9', label: 'gjennomsnittlig vurdering', showStar: true },
+      { num: '500+', label: 'founders på arrangementer' },
+      { num: '98%', label: 'ville kommet tilbake' },
+    ],
+    reasons: [
+      {
+        n: '01',
+        title: 'du finner dine folk',
+        body: 'En kuratert gruppe founders som kjenner reisen og vil ha ekte allianser, ikke tilfeldige visittkort.',
+      },
+      {
+        n: '02',
+        title: 'du ankommer allerede matchet',
+        body: 'Før møtet krysser KI profiler: hvem løser det du trenger, deler bransje eller er i byen din.',
+      },
+      {
+        n: '03',
+        title: 'forbindelsen er ansikt til ansikt',
+        body: 'Intime rom. Vi setter deg sammen med founders med hensikt — uten støy og uten tvungen pitch.',
+      },
+      {
+        n: '04',
+        title: 'nettverket slår ikke av',
+        body: 'Du får WhatsApp-anbefalinger enten du deltar eller ikke. Besøker du et sted, skjer forbindelsen der.',
+      },
+    ],
+  },
+  reviews: {
+    heading: ['det de sier som allerede', 'har levd opplevelsen'],
+    stats: [
+      { num: '4.9', label: 'gjennomsnittlig vurdering', showStar: true },
+      { num: '500+', label: 'founders på arrangementer' },
+      { num: '98%', label: 'ville anbefalt opplevelsen' },
+    ],
+    quotes: [
+      'Jeg gikk derfra med tre møter booket med folk som trengte akkurat det vi tilbyr.',
+      'Match før ankomst er forskjellen. Dette er ikke tilfeldig nettverking.',
+      'Pitchen åpnet dører til mentorer jeg ikke ville møtt på annen måte.',
+      'KI erstatter ikke kaffen — den gjør den mer effektiv.',
+      'Som investor ser jeg etter klarhet og founders med ekte trekkraft, ikke bare slides.',
+      'Vi søkte med byen vår og prosessen var tydelig. De ber allerede om neste dato.',
+      'Jeg tok opp samtaler som hadde blitt kalde. Det er et levende nettverk, ikke en liste.',
+    ],
+  },
+  faq: {
+    heading: ['alt du ', 'vil vite.'],
+    intro: 'Finner du ikke svaret her, skriv til oss direkte.',
+    contact: 'kontakt oss',
+    items: [
+      {
+        q: 'Hva er Synergy, og hvem er det for?',
+        a: 'Synergy er et fellesskap av founders og makers fra det colombianske Karibia og Latin-Amerika. Vi arrangerer nettverksopplevelser, matcher profiler med KI og bygger et økosystem der gründere finner allianser, ressurser og ekte samarbeid. Hvis du bygger noe, er dette stedet ditt.',
+      },
+      {
+        q: 'Hvordan fungerer KI-match?',
+        a: 'Når du registrerer deg, leser KI-en vår profilen din — hva du tilbyr, hva du trenger og hvor prosjektet står — og kobler deg med founders som utfyller det du leter etter. Det skjer automatisk før hvert arrangement, så du kommer med relevante relasjoner fra første minutt.',
+      },
+      {
+        q: 'Hva koster det å bli med i Synergy?',
+        a: 'Å bli med i fellesskapet er gratis. Hver opplevelse (Networking Meetings, Founder House, Spotlight) har sin egen billettpris etter format. Se arrangementssiden for oppdaterte priser.',
+      },
+      {
+        q: 'Hvilke byer er dere i nå?',
+        a: 'Vi er aktive i Barranquilla som hovedbase, med økende tilstedeværelse i det colombianske Karibia. Vil du ta Synergy til byen din, kan du søke fra seksjonen «Foreslå byen din» på nettstedet.',
+      },
+      {
+        q: 'Hva skiller Synergy fra andre nettverksarrangementer?',
+        a: 'Mest tradisjonell nettverking er tilfeldig. Hos Synergy har hver relasjon intensjon: vi bruker KI slik at du kommer og vet hvem du skal snakke med og hvorfor. Vi er også et løpende fellesskap, ikke et engangsarrangement — founders holder kontakten mellom utgavene.',
+      },
+      {
+        q: 'Kan jeg være partner eller sponsor for Synergy?',
+        a: 'Ja. Vi samarbeider med universiteter, inkubasjonsprogrammer, selskaper og merkevarer som vil knytte seg til founder-økosystemet i Karibia. Skriv til oss fra «Foreslå partnerskap», så setter vi opp en samtale.',
+      },
+    ],
+  },
+  footer: {
+    eventsTitle: 'Arrangementer & nettverk',
+    contactTitle: 'Kontakt',
+    legalTitle: 'Juridisk & tillit',
+    calendar: 'Arrangementskalender',
+    applyCity: 'Foreslå byen din',
+    ia: 'KI for å koble',
+    questions: 'Spørsmål',
+    partnership: 'Foreslå partnerskap',
+    privacy: 'Personvernerklæring',
+    terms: 'Vilkår og betingelser',
+    cookies: 'Informasjonskapsler',
+    data: 'Bruk av data og fellesskap',
+    rights: 'Alle rettigheter forbeholdt Synergy Founders & Makers community',
+  },
+}
+
+export const messages: Record<Locale, Messages> = { es, en, pt, ar, no }
